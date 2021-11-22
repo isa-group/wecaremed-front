@@ -8,10 +8,16 @@
     "test:unit": "vue-cli-service test:unit",
     "lint": "vue-cli-service lint"
   },
+  "keywords": [
+    "OAI"
+  ],
+  "license": "Unlicense",
   "dependencies": {
+    "@vueform/toggle": "^2.0.1",
     "core-js": "^3.6.5",
     "vue": "^3.0.0",
     "vue-router": "^4.0.0-0",
+    "vue-toggle-btn": "^0.1.2",
     "vuex": "^4.0.0-0"
   },
   "devDependencies": {
