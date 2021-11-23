@@ -1,13 +1,17 @@
 <template>
   <div id="nav">
 
-    <div class="homeDiv">
-      <router-link id="home" to="/"><Btn>Home</Btn></router-link>
-    </div>
+    <div>
 
-    <div class="appMode">
-      <label id="toggle-label">{{ text }}</label>
-      <Toggle v-model="toggleValue" labelledby="toggle-label" @click="toggleView"/>
+      <div class="homeDiv">
+        <router-link id="home" to="/"><Btn>Home</Btn></router-link>
+      </div>
+
+      <div class="appMode">
+        <label id="toggle-label">{{ text }}</label>
+        <Toggle v-model="toggleValue" labelledby="toggle-label" @click="toggleView"/>
+      </div>
+      
     </div>
 
     <div class="projectNameDiv">
@@ -50,9 +54,15 @@ export default {
 
 <style scoped>
 
+#nav {
+  padding: 30px 0;
+  background-color: white;
+}
+
 .appMode {
   position: absolute;
   top: 110px;
+  left: 38px;
 }
 
 h1 {
@@ -64,6 +74,11 @@ h1 {
   margin-right: 10px;
   top: 3px;
   position: relative;
+}
+
+#home {
+  position: relative;
+  left: 11px;
 }
 
 .homeDiv {

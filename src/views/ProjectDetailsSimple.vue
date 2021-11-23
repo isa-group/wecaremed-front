@@ -1,6 +1,6 @@
 <template>
   
-  <ProjectDetailsHeader />
+  <ProjectDetailsHeader class="fixedHeader"/>
 
   <div class="simpleData">
 
@@ -17,8 +17,9 @@
         <div class="partnersDiv">
           <fieldset class="partnersFieldset">
             <legend>Partners</legend>
-
             <table class="dataTable partnersTable">
+              <div class="newPartnerDiv"><Btn id="newPartner">New partner</Btn></div>
+
               <thead>
                 <tr>
                   <th>Name</th>
@@ -75,7 +76,7 @@
         </fieldset>
 
         </div> 
-
+          
         <u><h2>Equipment</h2></u>
         
         <div class="dropdownToggleDiv">
@@ -237,6 +238,8 @@
             <legend>Printable deliverables</legend>
 
             <table class="dataTable printableDeliverablesTable">
+              <div class="newPrintableDeliverableDiv"><Btn id="newPrintableDeliverable">New printable deliverable</Btn></div>
+
               <thead>
                 <tr>
                   <th>Deliverable type</th>
@@ -286,12 +289,14 @@ import deleteIcon from '@/assets/delete.png'
 import ProjectDetailsHeader from '@/components/ProjectDetailsHeader.vue'
 import Dropdown from 'vue-dropdowns';
 import { mapState } from 'vuex'
+import Btn from '@/components/Btn.vue'
 
 export default {
   name: 'ProjectDetailsSimple',
   components: {
     ProjectDetailsHeader,
-    Dropdown
+    Dropdown,
+    Btn
   },
   data() {
     return {
@@ -316,6 +321,15 @@ export default {
 
 <style scoped>
 
+.fixedHeader {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  /* background-color: #42b983; */
+  z-index: 1;
+}
+
 .dropdownToggleDiv {
   text-align: left;
 }
@@ -324,7 +338,7 @@ export default {
   border-radius: 5px;
 }
 .my-dropdown-toggle > .dropdown-toggle {
-    color: tomato;
+    color: #04AA6D;
     font-size: 25px;
     font-weight: 800;
 }
@@ -339,7 +353,7 @@ export default {
 }
 
 .simpleData {
-  margin: auto 60px;
+  margin: 200px 60px 0;
 }
 
 h2 {
@@ -351,6 +365,18 @@ h2 {
   text-align: left;
   position: relative;
   top: -15px;
+}
+
+.newPartnerDiv {
+  position: absolute;
+  right: 0;
+  top: -100px;
+}
+
+.newPrintableDeliverableDiv {
+  position: absolute;
+  right: 0;
+  top: -100px;
 }
 
 fieldset {

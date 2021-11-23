@@ -1,5 +1,5 @@
 <template>
-  <Header />
+  <Header class="fixedHeader"/>
 
   <div class="dataDiv">
     <h2 class="dataTitle">My projects</h2>
@@ -9,17 +9,23 @@
         <th>Project name</th>
         <th>From</th>
         <th>To</th>
-        <th>Initial CF-Index</th>
-        <th>Current CF-Index</th>
+        <template v-if="this.$store.state.toggleValue">
+          <th>Initial CF-Index</th>
+          <th>Current CF-Index</th>
+        </template>
+        <template v-else>
+          <th>CF Estimation</th>
+        </template>
         <th>Actions</th>
       </tr>
-      <!-- CF Estimation a secas -->
       <tr>
         <td>HADES Project</td>
         <td>2017</td>
         <td>2021</td>
         <td style="color: orange;">4.1</td>
-        <td style="color: green;">1.9</td>
+        <template v-if="this.$store.state.toggleValue">
+          <td style="color: green;">1.9</td>
+        </template>
         <td><img id="goArrowIcon" :src="goArrowIcon" /></td>
       </tr>
     </table>
@@ -59,6 +65,11 @@ export default {
 </script>
 
 <style>
+
+.fixedHeader {
+  position: sticky;
+}
+
 .dataDiv {
   /* display: flex; */
 }
