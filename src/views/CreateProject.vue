@@ -82,6 +82,8 @@ input {
   height: 30px;
   top: 10px;
   padding-left: 10px;
+  border: 2px solid #42b983;
+  border-radius: 5px;
 }
 
 input[type=text] {

@@ -146,4 +146,16 @@ export default {
   top: 669px;
 }
 
+.green {
+  color: green;
+}
+
+.orange {
+  color: orange;
+}
+
+.red {
+  color: red;
+}
+
 </style>
