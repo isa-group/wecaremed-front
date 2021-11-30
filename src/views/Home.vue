@@ -169,4 +169,52 @@ export default {
   color: red;
 }
 
+/* .p-inputnumber-button-up {
+  border-radius: 0 10px 10px 0;
+  background: #04AA6D;
+  border: 1px solid #04AA6D;
+} */
+
+.p-button.p-button-success, .p-buttonset.p-button-success > .p-button, .p-splitbutton.p-button-success > .p-button {
+    background: #86EFAC;
+    border: 1px solid #86EFAC;
+    border-radius: 0 10px 10px 0;
+}
+
+.p-button.p-button-success:enabled:hover, .p-buttonset.p-button-success > .p-button:enabled:hover, .p-splitbutton.p-button-success > .p-button:enabled:hover {
+    background: #65eb95;
+    color: #1c2127;
+    border-color: #65eb95;
+}
+
+.p-inputnumber-button-down {
+  border-radius: 10px 0 0 10px;
+  background: #f95454;
+  border: 1px solid #f95454;
+}
+
+.p-button.p-button-danger:enabled:hover, .p-buttonset.p-button-danger > .p-button:enabled:hover, .p-splitbutton.p-button-danger > .p-button:enabled:hover {
+    background: #fb7d7d;
+    border-color: #fb7d7d;
+}
+
+.p-button {
+    margin: 0;
+    display: -webkit-inline-box;
+    display: -ms-inline-flexbox;
+    display: inline-flex;
+    cursor: pointer;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    vertical-align: bottom;
+    text-align: center;
+    overflow: hidden;
+    position: relative;
+}
+
 </style>

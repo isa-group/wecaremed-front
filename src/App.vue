@@ -32,4 +32,8 @@
   color: #42b983;
 }
 
+.p-column-header-content {
+  justify-content: space-around;
+}
+
 </style>
