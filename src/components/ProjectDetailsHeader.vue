@@ -87,14 +87,14 @@ h1 {
   left: 38px;
 }
 
-#logoText {
+/* #logoText {
     color: black;
     font-family: fantasy;
     font-size: 2em;
     font-weight: bold;
     bottom: 30px;
     position: relative;
-}
+} */
 
 .loginDiv {
     position: absolute;
@@ -112,7 +112,7 @@ h1 {
 
 #initialCF {
   position: relative;
-  top: 40px;
+  /* top: 40px; */
   color: red;
   font-size: 25px;
 }

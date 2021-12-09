@@ -1,39 +1,45 @@
 <template>
-  <router-view/>
+	<div :class="containerClass">
+
+        <div class="layout-main-container">
+            <div class="layout-main">
+                <router-view />
+            </div>
+            <Footer />
+        </div>
+        
+    </div>
 </template>
 
 <script>
-  export default {}
+import Footer from '@/components/Footer.vue';
+
+  export default {
+    components: {
+        Footer
+    },
+    data() {
+        return {
+            layoutMode: 'static',
+            staticMenuInactive: false,
+            overlayMenuActive: false,
+            mobileMenuActive: false,
+        }
+    },
+    computed: {
+        containerClass() {
+            return ['layout-wrapper', {
+                'layout-static': this.layoutMode === 'static',
+            }];
+        }
+    }
+  }
 </script>
 
 <style>
-/* body {
+
+body {
   background-color: rgb(37, 37, 38);
-} */
-
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-}
-
-#nav {
-  padding: 30px;
-}
-
-#nav a {
-  font-weight: bold;
-  color: #2c3e50;
-}
-
-#nav a.router-link-exact-active {
-  color: #42b983;
-}
-
-.p-column-header-content {
-  justify-content: space-around;
-}
+} 
 
 </style>

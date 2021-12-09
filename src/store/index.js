@@ -5,13 +5,13 @@ export default createStore({
   plugins: [createPersistedState()],
   state: {
     toggleValue: false,
-    text: "Simple",
-    selectedPartnerForEquipmentSimple: "MEDIPLASMA SRL"
+    appModeText: "Simple",
+    selectedPartnerForEquipmentSimple: ""
   },
   mutations: {
     toggleView(state) {
       state.toggleValue = !state.toggleValue;
-      state.text = state.toggleValue ? "Advanced" : "Simple"
+      state.appModeText = state.toggleValue ? "Advanced" : "Simple"
     },
     updateSelectedPartner(state, selectedOption) {
       state.selectedPartnerForEquipmentSimple = selectedOption;

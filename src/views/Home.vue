@@ -1,64 +1,133 @@
 <template>
-  <Header class="fixedHeader"/>
 
-  <div class="dataDiv">
-    <h2 class="dataTitle">My projects</h2>
-    
-    <table class="dataTable myProjectsTable">
-      <tr>
-        <th>Project name</th>
-        <th>From</th>
-        <th>To</th>
-        <template v-if="this.$store.state.toggleValue">
-          <th>Initial CF-Index</th>
-          <th>Current CF-Index</th>
-        </template>
-        <template v-else>
-          <th>CF Estimation</th>
-        </template>
-        <th>Actions</th>
-      </tr>
-      <tr>
-        <td>HADES Project</td>
-        <td>2017</td>
-        <td>2021</td>
-        <td style="color: orange;">4.1</td>
-        <template v-if="this.$store.state.toggleValue">
-          <td style="color: green;">1.9</td>
-        </template>
-        <td><img id="goArrowIcon" :src="goArrowIcon" /></td>
-      </tr>
-    </table>
-
-    <fieldset class="legend">
-      <legend>CF-Index Colors</legend>
-      <div class="wrapper"><div class="greenSquare"/><p class="legendText">0-3: Ideal</p></div>
-      <div class="wrapper"><div class="orangeSquare"/><p class="legendText">3-5: Improvable</p></div>
-      <div class="wrapper"><div class="redSquare"/><p class="legendText">5-10: Needs attention</p></div>
-    </fieldset>
+  <Topbar />
   
-  </div>
+  <div class="card col-8">
+    <h1>My projects</h1>
 
-    <div id="createProjectDiv">
-      <router-link to="/createProject"><Btn id="createProject">Create a new project</Btn></router-link>
-    </div>
-        
+    <DataTable :value="projects" :paginator="true" class="p-datatable-gridlines" dataKey="id"
+    :rowHover="true" sortMode="multiple" :rows="5" :loading="loading" responsiveLayout="scroll">
+      
+      <template #header>
+          <div class="flex justify-content-between flex-column sm:flex-row">
+            <div>
+              <router-link to="/createProject">
+                <Button class="p-button-info"><i class="pi pi-plus mr-2"/>Create a new project</Button>
+              </router-link>
+            </div>
+          </div>
+      </template>
+
+      <template #empty>
+          No projects found.
+      </template>
+
+      <template #loading>
+          Loading projects. Please wait.
+      </template>
+
+      <Column field="name" header="Name" :sortable="true">
+        <template #body="slotProps">
+           {{slotProps.data.name}}
+        </template>
+      </Column>
+
+      <Column field="from" header="From" :sortable="true">
+        <template #body="slotProps">
+           {{slotProps.data.from}}
+        </template>
+      </Column>
+
+      <Column field="to" header="To" :sortable="true">
+       <template #body="slotProps">
+           {{slotProps.data.to}}
+        </template>
+      </Column>
+
+      <template v-if="!this.$store.state.toggleValue">
+        <Column field="initialCF" header="CF Estimation" :sortable="true">
+          <template #body="slotProps">
+            <span :class="getTextColorFromCFIndex(slotProps.data.initialCF)">{{slotProps.data.initialCF}}</span>
+          </template>
+        </Column>
+      </template>
+
+      <template v-else>
+        <Column field="initialCF" header="Initial CF" :sortable="true">
+          <template #body="slotProps">
+            <span :class="getTextColorFromCFIndex(slotProps.data.initialCF)">{{slotProps.data.initialCF}}</span>
+          </template>
+        </Column>
+
+        <Column field="currentCF" header="Current CF" :sortable="true">
+          <template #body="slotProps">
+            <span :class="getTextColorFromCFIndex(slotProps.data.currentCF)">{{slotProps.data.currentCF}}</span>
+          </template>
+        </Column>
+      </template>
+
+      <Column field="actions" header="Actions">
+        <template #body="slotProps">
+          <router-link :to="'/projects/' + this.projects[slotProps.index]._id + '?advancedMode=' + this.$store.state.toggleValue">
+            <i class="pi pi-arrow-circle-right" />
+          </router-link> 
+        </template>
+      </Column>
+    
+    </DataTable>
+  </div>
+  
+  <div class="card col-2">
+    <h5>{{this.$store.state.toggleValue ? "CF Index colors" : "CF Estimation colors"}}</h5>
+      <div class="wrapper"><div class="coloredSquare greenSquare mb-2 mr-2"/> <p class="legendText">0-3: Ideal</p></div>
+      <div class="wrapper"><div class="coloredSquare orangeSquare mb-2 mr-2"/><p class="legendText">3-5: Improvable</p></div>
+      <div class="wrapper"><div class="coloredSquare redSquare mr-2"/>   <p class="legendText">5-10: Needs attention</p></div>
+  </div>
+  
 </template>
 
 <script>
-import Header from '@/components/Header.vue'
-import Btn from '@/components/Btn.vue'
+import Button from 'primevue/button'
 import goArrowIcon from "@/assets/go.png"
+import DataTable from 'primevue/datatable'
+import Column from 'primevue/column'
+import Topbar from '@/components/Topbar.vue';
 
 export default {
   name: 'Home',
   components: {
-    Header,
-    Btn,
+    Button,
+    DataTable,
+    Column,
+    Topbar
   },
   data() {
     return {
-      goArrowIcon: goArrowIcon
+      goArrowIcon: goArrowIcon,
+      projects: []
+    }
+  },
+  created() {
+    this.getProjects();
+  },
+  methods: {
+    getProjects() {
+      this.axios.get('/projects')
+      .then((response) => {
+        console.log(response.data)
+        this.projects = response.data;
+      })
+      .catch((e)=>{
+        console.log('error' + e);
+      })
+    },
+    getTextColorFromCFIndex(cfIndex) {
+      if (cfIndex < 3)
+        return "greenText"
+      else if (cfIndex > 3 & cfIndex < 5)
+        return "orangeText"
+      else
+        return "redText"
     }
   }
 }
@@ -66,12 +135,58 @@ export default {
 
 <style>
 
-.fixedHeader {
-  position: sticky;
+.legend {
+  /* position: absolute; */
+  width: 200px;
+  height: 140px;
+  /* left: 195px; */
+  /* top: 400px; */
+  border: 2px solid rgb(0 0 0 / 70%);
+  text-align: left;
 }
 
-.dataDiv {
-  /* display: flex; */
+.coloredSquare {
+  width: 25px;
+  height: 25px;
+  border-radius: 5px;
+}
+
+.greenSquare {
+  background-color: rgb(21,153,97);
+}
+
+.orangeSquare {
+  background-color: rgb(253,198,8);
+}
+
+.redSquare {
+  background-color: rgb(179,7,27);
+}
+
+.greenText {
+  color: rgb(21,153,97);
+}
+
+.orangeText {
+  color: rgb(253,198,8);
+}
+
+.redText {
+  color: rgb(179,7,27);
+}
+
+.wrapper {
+  display: flex;
+}
+
+/* .legendText {
+  bottom: 10px;
+  position: relative;
+  left: 5px;
+} */
+
+/* .fixedHeader {
+  position: sticky;
 }
 
 #goArrowIcon {
@@ -113,67 +228,11 @@ export default {
   top: 90px;
 }
 
-.legend {
-  position: absolute;
-  width: 200px;
-  height: 140px;
-  left: 195px;
-  top: 400px;
-  border: 2px solid rgb(0 0 0 / 70%);
-  text-align: left;
-}
-
-.greenSquare {
-  background-color: green;
-  width: 25px;
-  height: 25px;
-}
-
-.orangeSquare {
-  background-color: orange;
-  width: 25px;
-  height: 25px;
-}
-
-.redSquare {
-  background-color: red;
-  width: 25px;
-  height: 25px;
-}
-
-.legendText {
-  bottom: 10px;
-  position: relative;
-  left: 5px;
-}
-
-.wrapper {
-  display: flex;
-}
-
 #createProjectDiv {
   position: absolute;
   left: 195px;
   top: 669px;
 }
-
-.green {
-  color: green;
-}
-
-.orange {
-  color: orange;
-}
-
-.red {
-  color: red;
-}
-
-/* .p-inputnumber-button-up {
-  border-radius: 0 10px 10px 0;
-  background: #04AA6D;
-  border: 1px solid #04AA6D;
-} */
 
 .p-button.p-button-success, .p-buttonset.p-button-success > .p-button, .p-splitbutton.p-button-success > .p-button {
     background: #86EFAC;
@@ -215,6 +274,6 @@ export default {
     text-align: center;
     overflow: hidden;
     position: relative;
-}
+} */
 
 </style>
