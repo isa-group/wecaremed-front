@@ -32,8 +32,11 @@
             <InputText v-model="newProject.proposalId" id="fundingId" name="fundingId" />
 					</div>
           <div class="field col-12 md:col-12" style="display: flex; justify-content: space-around;">
-            <div class="field col-12 md:col-4">
+            <div class="field col-12 md:col-4" v-if="!this.$route.params.id">
               <Button type="button" icon="pi pi-check" label="Create" class="p-button-info mt-4" @click="createProject()"/>
+            </div>
+            <div class="field col-12 md:col-4" v-else>
+              <Button type="button" icon="pi pi-refresh" label="Update" class="p-button-info mt-4" @click="updateProject()"/>
             </div>
             <div class="field col-12 md:col-4">
               <router-link id="cancel" to="/">
@@ -62,6 +65,18 @@ export default {
     InputNumber,
     Button,
     Topbar
+  },
+  created() {
+    if (this.$route.params.id) {
+      axios.get(`/projects/${this.$route.params.id}`)
+      .then((response) => {
+        console.log(response.data)
+        this.newProject = response.data;
+      })
+      .catch((e)=>{
+        console.log('error' + e);
+      })
+    }
   },
   data() {
     return {
@@ -110,6 +125,16 @@ export default {
       this.newProject._id = new mongoose.Types.ObjectId(); 
 
       axios.post('/projects', this.newProject)
+      .then((response) => {
+        console.log("Response: ", response.data)
+        this.$router.push({ path: `/projects/${this.newProject._id}` })
+      })
+      .catch((e)=>{
+        console.log('error' + e);
+      })
+    },
+    updateProject() {
+      axios.put('/projects/' + this.newProject._id, this.newProject)
       .then((response) => {
         console.log("Response: ", response.data)
         this.$router.push({ path: `/projects/${this.newProject._id}` })

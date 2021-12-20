@@ -24,9 +24,10 @@
         
         <template v-if="projectInfo">
             <div style="display: flex; align-items: center; margin: 2rem 0;">
-                <router-link to="/" class="layout-topbar-logo mr-5">
+                <router-link to="/" class="layout-topbar-logo mr-3">
                     <img alt="Logo" :src="RoseLogo" />
-                    <span>ROSE</span>
+                    <span class="mr-3">ROSE</span>
+                    <img alt="Wecaremed Logo" :src="WecaremedLogo" class="ml-2" />
                 </router-link>
                 
                 <InputSwitch id="appMode" v-model="toggleValue" @click="toggleView" />
@@ -57,9 +58,11 @@
         </template>
 
         <template v-else-if="!projectInfo">
-            <router-link to="/" class="layout-topbar-logo mr-5">
-                <img alt="Logo" :src="RoseLogo" />
-                <span>ROSE</span>
+            <router-link to="/" class="layout-topbar-logo mr-3">
+                <img alt="Rose Logo" :src="RoseLogo" />
+                <span class="mr-3">ROSE</span>
+                <img alt="Wecaremed Logo" :src="WecaremedLogo" class="ml-2" />
+
             </router-link>
             
             <InputSwitch id="appMode" v-model="toggleValue" @click="toggleView" />
@@ -94,6 +97,7 @@
 
 <script>
 import RoseLogo from '@/assets/ROSE Logo.png'
+import WecaremedLogo from '@/assets/Wecaremed Logo.png'
 import Menu from 'primevue/menu';
 import Dialog from 'primevue/dialog';
 import Button from 'primevue/button';
@@ -113,6 +117,7 @@ export default {
     data() {
         return {
             RoseLogo: RoseLogo,
+            WecaremedLogo: WecaremedLogo,
             displayConfirmation: false,
             overlayMenuItems: [
                 {
@@ -162,6 +167,6 @@ export default {
 
 <style scoped>
     h1 {
-        font-size: 4rem;
+        font-size: 3rem;
     }
 </style>

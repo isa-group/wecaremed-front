@@ -2,6 +2,21 @@
     padding: 16rem 2rem 2rem 4rem;
 }
 
+.layout-topbar .layout-topbar-logo {
+	width: 340px;
+}
+
+.p-badge.p-badge-xl {
+    font-size: 2rem;
+    min-width: 4rem;
+    height: 4rem;
+    line-height: 4rem;
+}
+
+.grid {
+	align-items: baseline;
+}
+
 h1, h2, h3, h4, h5, h6 {
     color: rgb(0,51,153);
 }
