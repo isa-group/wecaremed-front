@@ -10,14 +10,14 @@
                     <h1>{{projectInfo.to}})&nbsp;</h1> 
                     
                     <span v-if="this.$store.state.toggleValue">
-                        <Badge :value="this.projectInfo.currentCF" size="xlarge" :severity="getTextColorFromCFIndex(this.projectInfo.currentCF)" />
+                        <Badge :value="this.projectInfo.currentCF.toFixed(3)" size="xlarge" :severity="getTextColorFromCFIndex(this.projectInfo.currentCF)" />
                         &nbsp;<span style="font-size: 16px">/</span>&nbsp;
                     </span>
                     
-                    <Badge :value="projectInfo.initialCF" :size="this.$store.state.toggleValue ? 'large' : 'xlarge'"
+                    <Badge :value="projectInfo.initialCF.toFixed(3)" :size="this.$store.state.toggleValue ? 'large' : 'xlarge'"
                     :severity="getTextColorFromCFIndex(projectInfo.initialCF)" />
 
-                    <Button icon="pi pi-replay" class="p-button-rounded p-button-text p-button-plain ml-3"/>
+                    <!-- <Button icon="pi pi-replay" class="p-button-rounded p-button-text p-button-plain ml-3" @click="calculateCF" /> -->
                 </div>
             </div>
         </template>
@@ -141,6 +141,16 @@ export default {
         ...mapActions([
         "toggleView"
         ]),
+        // calculateCF() {
+        //     this.axios.put(`/projects/calculateCF/${this.$route.params.id}`)
+        //     .then((response) => {
+        //         // this.project = response.data;
+        //         console.log(response.data)
+        //     })
+        //     .catch((e)=>{
+        //         console.log('error' + e);
+        //     })
+        // },
         getTextColorFromCFIndex(cfIndex) {
             if (cfIndex < 3)
                 return "success"
