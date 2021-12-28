@@ -880,7 +880,8 @@ export default {
         copies: 1,
         avgPagesPerCopy: 1,
         size: "Select a paper size",
-        project: this.project._id}
+        project: this.project._id
+      }
 
       this.axios.post('/printableDeliverables', newPrintableDeliverable)
       .then((response) => {

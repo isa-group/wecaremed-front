@@ -6,7 +6,9 @@
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
     "test:unit": "vue-cli-service test:unit",
-    "lint": "vue-cli-service lint"
+    "lint": "vue-cli-service lint",
+    "test": "mocha tests/unit/*.js --timeout 15000",
+    "ci": "start-test \"npm run serve\" 8080 test"
   },
   "keywords": [
     "OAI"
@@ -15,13 +17,16 @@
   "dependencies": {
     "@vueform/toggle": "^2.0.1",
     "axios": "^0.24.0",
+    "chai-http": "^4.3.0",
     "core-js": "^3.6.5",
+    "mocha": "^9.1.3",
     "mongoose": "^6.1.0",
     "node-sass": "^6.0.1",
     "primeflex": "~3.0.0",
     "primeicons": "^5.0.0",
     "primevue": "^3.9.1",
     "prismjs": "1.9.0",
+    "start-server-and-test": "^1.14.0",
     "vue": "^3.0.0",
     "vue-axios": "^3.4.0",
     "vue-dropdowns": "^1.1.2",
@@ -40,7 +45,7 @@
     "@vue/compiler-sfc": "^3.0.0",
     "@vue/test-utils": "^2.0.0-0",
     "babel-eslint": "^10.1.0",
-    "chai": "^4.1.2",
+    "chai": "^4.3.4",
     "cypress": "^9.2.0",
     "eslint": "^6.7.2",
     "eslint-plugin-vue": "^7.0.0",
