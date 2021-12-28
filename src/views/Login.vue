@@ -18,7 +18,7 @@
                 <input type="password" v-model="newAuth.password" name="password" id="passwordId" />
             </div>
 
-            <Button type="button" icon="pi pi-check" label="Sign Up" class="p-button-info mt-4" @click="signUp()" />
+            <Button type="button" icon="pi pi-check" label="Sign Up" class="p-button-info mt-4" @click="signIn()" />
 
         </form>
 			</div>
@@ -47,7 +47,7 @@ export default {
     }
   },
   methods: {
-    signUp() {
+    signIn() {
 
       axios.post('/', {
         headers: {
@@ -55,7 +55,7 @@ export default {
           'Access-Control-Allow-Credentials':'true',
         },
         auth:{
-          login: this.newAuth.username,
+          username: this.newAuth.username,
           password: this.newAuth.password
         }
       })
@@ -66,7 +66,7 @@ export default {
       .catch((e)=>{
         console.log('error' + e);
       })
-    },
+    }
   }
 }
 </script>
