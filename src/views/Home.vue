@@ -162,7 +162,6 @@ export default {
         return "redText"
     },
     confirmDeleteProject(index) {
-      console.log("Hola: ", this.projectToDelete)
       this.projectToDelete = this.projects[index]
       this.deleteProjectDialog = true;
     },
