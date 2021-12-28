@@ -37,6 +37,9 @@ export default {
     Button,
     Topbar
   },
+  created(){
+    this.signIn();
+  },
   data() {
     return {
       newAuth: {
@@ -47,17 +50,15 @@ export default {
     }
   },
   methods: {
-    signIn() {
-
-      axios.post('/', {
-        headers: {
-          'Access-Control-Allow-Origin': '*',
-          'Access-Control-Allow-Credentials':'true',
-        },
-        auth:{
-          username: this.newAuth.username,
-          password: this.newAuth.password
-        }
+    async signIn() {
+      var url = '/';
+      var username = this.newAuth.username;
+      var password = this.newAuth.password;
+      var credentials = Buffer.from(username + ':' + password, 'utf8').toString('base64')
+      var basicAuth = 'Basic' + credentials;
+      console.log(credentials);
+      await axios.post(url, {
+        headers: {'Authorization' : basicAuth}
       })
       .then((response) => {
         console.log("Response: ", response.data)
@@ -66,6 +67,7 @@ export default {
       .catch((e)=>{
         console.log('error' + e);
       })
+      
     }
   }
 }
