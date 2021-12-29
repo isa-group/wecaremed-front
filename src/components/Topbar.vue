@@ -50,7 +50,7 @@
                         </div>
                         <template #footer>
                             <Button label="No" icon="pi pi-times" @click="closeConfirmation" class="p-button-text p-button-info"/>
-                            <Button label="Yes" icon="pi pi-check" @click="closeConfirmation" class="p-button-text p-button-info" autofocus />
+                            <Button label="Yes" icon="pi pi-check" @click="logout" class="p-button-text p-button-info" autofocus />
                         </template>
                     </Dialog>
                 </ul>
@@ -102,6 +102,7 @@ import Menu from 'primevue/menu';
 import Dialog from 'primevue/dialog';
 import Button from 'primevue/button';
 import InputSwitch from 'primevue/inputswitch';
+import axios from 'axios';
 import { mapState, mapActions } from 'vuex'
 import Badge from 'primevue/badge'
 
@@ -148,6 +149,15 @@ export default {
                 return "warning"
             else
                 return "danger"
+        },
+        logout() {
+            axios.get('/projects/logout').then(response => {
+                console.log(response);
+                this.$router.push('/login');
+            }).catch(err => {
+                console.log(err);
+                this.$router.push('/login');
+            });
         }
     },
     computed: {

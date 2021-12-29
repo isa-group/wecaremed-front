@@ -4,13 +4,9 @@ import ProjectDetailsSimple from '../views/ProjectDetailsSimple.vue'
 import Login from '../views/Login.vue'
 
 const routes = [
+  
   {
-    path: '/',
-    name: 'login',
-    component: Login
-  },
-  {
-    path: '/home', 
+    path: '/', 
     name: 'Home',
     component: Home
   },
@@ -28,7 +24,12 @@ const routes = [
     path: '/projects/:id',
     name: 'Project Details Simple',
     component: ProjectDetailsSimple
-  }
+  },
+  {
+    path: '/login',
+    name: 'login',
+    component: Login
+  },
 ]
 
 const router = createRouter({

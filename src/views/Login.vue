@@ -50,24 +50,22 @@ export default {
     }
   },
   methods: {
-    async signIn() {
-      var url = '/';
-      var username = this.newAuth.username;
-      var password = this.newAuth.password;
-      var credentials = Buffer.from(username + ':' + password, 'utf8').toString('base64')
-      var basicAuth = 'Basic' + credentials;
-      console.log(credentials);
-      await axios.post(url, {
-        headers: {'Authorization' : basicAuth}
+      signIn() {
+        console.log(this.newAuth.username);
+        console.log(this.newAuth.password);
+        axios.get('/projects', 
+          {
+          auth: {
+            username: this.newAuth.username,
+            password: this.newAuth.password
+          }
+        }).then(resp => {
+          console.log(resp.data);
+          this.$router.push('/');
+      }).catch(err => {
+        console.log(err);
+        this.$router.push('/login');
       })
-      .then((response) => {
-        console.log("Response: ", response.data)
-        this.$router.push({ path: `/home` })
-      })
-      .catch((e)=>{
-        console.log('error' + e);
-      })
-      
     }
   }
 }
