@@ -44,7 +44,7 @@ const router = createRouter({
 
 router.beforeEach((to, from, next) => {
   if (to.matched.some(record => record.meta.requiresAuth)) {
-    axios.get('/')
+    axios.get('/api/v1/projects')
     .catch(err => {
       if (err.response.status === 401) {
         next({
