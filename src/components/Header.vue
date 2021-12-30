@@ -6,11 +6,6 @@
       <Toggle v-model="toggleValue" labelledby="toggle-label" @click="toggleView"/>
     </div>
 
-    <div class="logoDiv">
-      <img id="roseLogo" :src="RoseLogo">
-      <label id="logoText">ROSE</label>
-    </div>
-
     <div class="loginDiv">
       <Btn>Logout</Btn>
       <p id="currentUser">Logged as XXXXXXXXX</p>
@@ -21,7 +16,6 @@
 
 <script>
 import Toggle from '@vueform/toggle'
-import RoseLogo from '@/assets/ROSE Logo.png'
 import Btn from './Btn.vue'
 import { mapState, mapActions } from 'vuex'
 
@@ -30,11 +24,6 @@ export default {
   components: {
     Toggle,
     Btn
-  },
-  data() {
-    return {
-      RoseLogo: RoseLogo
-    }
   },
   methods: {
     ...mapActions([
@@ -62,10 +51,6 @@ export default {
   margin-right: 10px;
   top: 3px;
   position: relative;
-}
-
-#roseLogo {
-  width: 100px;
 }
 
 #logoText {

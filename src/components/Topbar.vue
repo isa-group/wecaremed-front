@@ -3,39 +3,33 @@
 
         <template v-if="projectInfo">
             <div style="display: flex; align-items: center;">
-                <div style="display: flex;align-items: center;width: 100%;place-content: center;">
-                    
-                    <h1>{{projectInfo.name}}&nbsp;</h1>
-                    <h1>({{projectInfo.from}} -&nbsp;</h1>
-                    <h1>{{projectInfo.to}})&nbsp;</h1> 
-                    
-                    <span v-if="this.$store.state.toggleValue">
-                        <Badge :value="this.projectInfo.currentCF.toFixed(3)" size="xlarge" :severity="getTextColorFromCFIndex(this.projectInfo.currentCF)" />
-                        &nbsp;<span style="font-size: 16px">/</span>&nbsp;
-                    </span>
-                    
-                    <Badge :value="projectInfo.initialCF.toFixed(3)" :size="this.$store.state.toggleValue ? 'large' : 'xlarge'"
-                    :severity="getTextColorFromCFIndex(projectInfo.initialCF)" />
-
-                    <!-- <Button icon="pi pi-replay" class="p-button-rounded p-button-text p-button-plain ml-3" @click="calculateCF" /> -->
-                </div>
-            </div>
-        </template>
-        
-        <template v-if="projectInfo">
-            <div style="display: flex; align-items: center; margin: 2rem 0;">
                 <router-link to="/" class="layout-topbar-logo mr-3">
-                    <img alt="Logo" :src="RoseLogo" />
-                    <span class="mr-3">ROSE</span>
                     <img alt="Wecaremed Logo" :src="WecaremedLogo" class="ml-2" />
                 </router-link>
+
+                    <div style="display: flex;align-items: center;width: 100%;place-content: center;">
+                        
+                        <h2>{{projectInfo.name}}&nbsp;</h2>
+                        <h2>({{projectInfo.from}} -&nbsp;</h2>
+                        <h2>{{projectInfo.to}})&nbsp;</h2> 
+                        
+                        <span v-if="$store.state.toggleValue">
+                            <Badge :value="fixedCurrentCF" size="large" :severity="getTextColorFromCFIndex(fixedCurrentCF)" />
+                            &nbsp;<span style="font-size: 16px">/</span>&nbsp;
+                        </span>
+                        
+                        <Badge :value="fixedInitialCF" size="large"
+                        :severity="getTextColorFromCFIndex(fixedInitialCF)" />
+                    </div>
                 
-                <InputSwitch id="appMode" v-model="toggleValue" @click="toggleView" />
-                <label id="app-mode-label" for="appMode">{{appModeText}} use mode</label>
-                
-                <ul class="layout-topbar-menu hidden lg:flex origin-top">
+                <ul class="layout-topbar-menu lg:flex origin-top">
+                    <div class="layout-topbar-menu">
+                        <li>
+                            <label id="app-mode-label" for="appMode">{{appModeText}} use mode</label>
+                            <InputSwitch id="appMode" v-model="toggleValue" @click="toggleView" />
+                        </li>
+                    </div>
                     <li>
-                        <span>Logged in as Example User</span>
                         <button class="p-link layout-topbar-button user-button" @click="toggleMenu">
                             <i class="pi pi-user"></i>
                         </button>
@@ -50,7 +44,7 @@
                         </div>
                         <template #footer>
                             <Button label="No" icon="pi pi-times" @click="closeConfirmation" class="p-button-text p-button-info"/>
-                            <Button label="Yes" icon="pi pi-check" @click="closeConfirmation" class="p-button-text p-button-info" autofocus />
+                            <Button label="Yes" icon="pi pi-check" @click="logout" class="p-button-text p-button-info" autofocus />
                         </template>
                     </Dialog>
                 </ul>
@@ -59,18 +53,18 @@
 
         <template v-else-if="!projectInfo">
             <router-link to="/" class="layout-topbar-logo mr-3">
-                <img alt="Rose Logo" :src="RoseLogo" />
-                <span class="mr-3">ROSE</span>
                 <img alt="Wecaremed Logo" :src="WecaremedLogo" class="ml-2" />
 
             </router-link>
             
-            <InputSwitch id="appMode" v-model="toggleValue" @click="toggleView" />
-            <label id="app-mode-label" for="appMode">{{appModeText}} use mode</label>
-            
-            <ul class="layout-topbar-menu hidden lg:flex origin-top">
+            <ul class="layout-topbar-menu lg:flex origin-top">
+                <div class="layout-topbar-menu">
+                    <li>
+                        <label id="app-mode-label" for="appMode">{{appModeText}} use mode</label>
+                        <InputSwitch id="appMode" v-model="toggleValue" @click="toggleView" />
+                    </li>
+                </div>
                 <li>
-                    <span>Logged in as Example User</span>
                     <button class="p-link layout-topbar-button user-button" @click="toggleMenu">
                         <i class="pi pi-user"></i>
                     </button>
@@ -85,7 +79,7 @@
                     </div>
                     <template #footer>
                         <Button label="No" icon="pi pi-times" @click="closeConfirmation" class="p-button-text p-button-info"/>
-                        <Button label="Yes" icon="pi pi-check" @click="closeConfirmation" class="p-button-text p-button-info" autofocus />
+                        <Button label="Yes" icon="pi pi-check" @click="logout" class="p-button-text p-button-info" autofocus />
                     </template>
                 </Dialog>
             </ul>
@@ -96,12 +90,12 @@
 </template>
 
 <script>
-import RoseLogo from '@/assets/ROSE Logo.png'
 import WecaremedLogo from '@/assets/Wecaremed Logo.png'
 import Menu from 'primevue/menu';
 import Dialog from 'primevue/dialog';
 import Button from 'primevue/button';
 import InputSwitch from 'primevue/inputswitch';
+import axios from 'axios';
 import { mapState, mapActions } from 'vuex'
 import Badge from 'primevue/badge'
 
@@ -116,7 +110,6 @@ export default {
     props: ['projectInfo'],
     data() {
         return {
-            RoseLogo: RoseLogo,
             WecaremedLogo: WecaremedLogo,
             displayConfirmation: false,
             overlayMenuItems: [
@@ -126,6 +119,8 @@ export default {
                     command: () => {this.openConfirmation()}
                 },
             ],
+            fixedInitialCF: this.projectInfo.initialCF.toFixed(3),
+            fixedCurrentCF: this.projectInfo.currentCF.toFixed(3)
         }
     },
     methods: {
@@ -158,6 +153,18 @@ export default {
                 return "warning"
             else
                 return "danger"
+        },
+        logout() {
+            this.$store.dispatch("saveUsername", '');
+            this.$store.dispatch("savePassword", '');
+            axios.get('/logout').then(response => {
+                console.log(response);
+                window.location.href = '/login';
+            }).catch(err => {
+                console.log(err);
+                window.location.href = '/login';
+                this.$toast.add({severity:'success', summary: 'Successful', detail: 'Logged out successfully', life: 3000});
+            });
         }
     },
     computed: {
@@ -170,13 +177,19 @@ export default {
 
 <style>
     #app-mode-label {
-        margin-left: 0.75rem;
-        line-height: 1;
+        position: relative;
+        bottom: 7px;
+        margin-right: 0.75rem;
+    }
+
+    .layout-topbar-menu {
+        align-items: center;
+        width: max-content;
     }
 </style>
 
 <style scoped>
     h1 {
-        font-size: 3rem;
+        font-size: 2rem;
     }
 </style>
