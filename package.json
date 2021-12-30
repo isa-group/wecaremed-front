@@ -7,7 +7,7 @@
     "build": "vue-cli-service build",
     "test:unit": "vue-cli-service test:unit",
     "lint": "vue-cli-service lint",
-    "test": "mocha tests/unit/*.js --timeout 30000",
+    "test": "mocha tests/unit/*.js --timeout 15000",
     "ci": "start-test \"npm run serve\" 8080 test"
   },
   "keywords": [

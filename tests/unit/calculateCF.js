@@ -2,6 +2,7 @@ let chai = require('chai');
 let chaiHttp = require('chai-http');
 const expect = require('chai').expect;
 const mongoose = require("mongoose");
+const axios = require("axios")
 require("dotenv").config();
 
 chai.use(chaiHttp);
@@ -13,6 +14,7 @@ describe('Create a project: ', () => {
     it('should create a project', (done) => {
     chai.request(url)
       .post('projects')
+      .auth(process.env.LOGIN_USERNAME, process.env.LOGIN_PASSWORD)
       .send({
         _id: projectId,
         name: "TEST PROJECT",
@@ -52,19 +54,20 @@ describe('Create a project: ', () => {
         participatedOnSiteEventsAverageParticipants: 1,
         participatedOnSiteEventsAverageDuration: 3,
       })
-      .end(function(err,res) {
-        console.log(res.body)
-        projectId = res.body._id
-        expect(res).to.have.status(200);
-        done();
-      });
+    .end(function(err,res) {
+      console.log(res.body)
+      projectId = res.body._id
+      expect(res).to.have.status(200);
+      done();
     });
+  });
 });
 
 describe('Create a partner: ', () => {
   it('should create a partner', (done) => {
   chai.request(url)
     .post('partners')
+    .auth(process.env.LOGIN_USERNAME, process.env.LOGIN_PASSWORD)
     .send({
       _id: new mongoose.Types.ObjectId(),
       name: "TEST PARTNER",
@@ -105,6 +108,7 @@ describe('Create printable deliverables: ', () => {
   it('should create two printable deliverables', (done) => {
   chai.request(url)
     .post('printableDeliverables')
+    .auth(process.env.LOGIN_USERNAME, process.env.LOGIN_PASSWORD)
     .send({
       _id: new mongoose.Types.ObjectId(),
       deliverableType: "Digital or written communication",
@@ -121,6 +125,7 @@ describe('Create printable deliverables: ', () => {
 
   chai.request(url)
     .post('printableDeliverables')
+    .auth(process.env.LOGIN_USERNAME, process.env.LOGIN_PASSWORD)
     .send({
       _id: new mongoose.Types.ObjectId(),
       deliverableType: "Method",
@@ -142,6 +147,7 @@ describe('Calculate CF for the project: ', () => {
   it('should calculate CF for the project and assert that the calculated CF is correct', (done) => {
   chai.request(url)
     .put('projects/calculateCF/' + projectId)
+    .auth(process.env.LOGIN_USERNAME, process.env.LOGIN_PASSWORD)
     .end(function(err,res) {
       console.log(res.body)
       expect(res).to.have.status(200);
@@ -155,6 +161,7 @@ describe('Delete the project: ', () => {
   it('should delete the project', (done) => {
   chai.request(url)
     .delete('projects/' + projectId)
+    .auth(process.env.LOGIN_USERNAME, process.env.LOGIN_PASSWORD)
     .end(function(err,res) {
       console.log(res.body)
       expect(res).to.have.status(200);
