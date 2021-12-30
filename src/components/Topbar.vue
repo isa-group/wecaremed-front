@@ -85,7 +85,7 @@
                     </div>
                     <template #footer>
                         <Button label="No" icon="pi pi-times" @click="closeConfirmation" class="p-button-text p-button-info"/>
-                        <Button label="Yes" icon="pi pi-check" @click="closeConfirmation" class="p-button-text p-button-info" autofocus />
+                        <Button label="Yes" icon="pi pi-check" @click="logout" class="p-button-text p-button-info" autofocus />
                     </template>
                 </Dialog>
             </ul>
@@ -151,12 +151,14 @@ export default {
                 return "danger"
         },
         logout() {
+            this.$store.dispatch("saveUsername", '');
+            this.$store.dispatch("savePassword", '');
             axios.get('/projects/logout').then(response => {
                 console.log(response);
-                this.$router.push('/login');
+                window.location.href = '/login';
             }).catch(err => {
                 console.log(err);
-                this.$router.push('/login');
+                window.location.href = '/login';
             });
         }
     },

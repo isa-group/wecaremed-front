@@ -17,6 +17,10 @@ import ToastService from 'primevue/toastservice';
 import DataTable from 'primevue/datatable';
 
 axios.defaults.baseURL = 'http://localhost:3000/api/v1/';
+axios.defaults.auth = {
+    username: store.state.username,
+    password: store.state.password
+};
 
 const app = createApp(App);
 
@@ -30,6 +34,8 @@ app
 .use(ToastService)
 .component('DataTable', DataTable)
 .mount('#app');
+
+
 
 
 <style lang="scss">

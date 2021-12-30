@@ -10,12 +10,12 @@
 
             <div class="form-group">
                 <label>Username</label><br>
-                <input type="text" v-model="newAuth.username" name="username" id="usernamedId" />
+                <input type="text" v-model="username" name="username" id="usernamedId" />
             </div>
 
             <div class="form-group">
                 <label>Password</label><br>
-                <input type="password" v-model="newAuth.password" name="password" id="passwordId" />
+                <input type="password" v-model="password" name="password" id="passwordId" />
             </div>
 
             <Button type="button" icon="pi pi-check" label="Sign Up" class="p-button-info mt-4" @click="signIn()" />
@@ -42,30 +42,28 @@ export default {
   },
   data() {
     return {
-      newAuth: {
-        username: '',
-        password: ''
-      }
+        username: this.$store.state.username,
+        password: this.$store.state.password
       
     }
   },
   methods: {
-      signIn() {
-        console.log(this.newAuth.username);
-        console.log(this.newAuth.password);
-        axios.get('/projects', 
-          {
-          auth: {
-            username: this.newAuth.username,
-            password: this.newAuth.password
-          }
+    signIn() {
+      this.$store.dispatch("saveUsername", this.username);
+      this.$store.dispatch("savePassword", this.password);
+      
+        axios.get('/projects', {
+          auth : {
+              username: this.$store.state.username,
+              password: this.$store.state.password
+        }
         }).then(resp => {
-          console.log(resp.data);
-          this.$router.push('/');
-      }).catch(err => {
-        console.log(err);
-        this.$router.push('/login');
-      })
+            console.log(resp.data);
+          console.log(this.$store.state.username);
+          window.location.href = '/';
+        }).catch(err => {
+          console.log(err);
+        })    
     }
   }
 }

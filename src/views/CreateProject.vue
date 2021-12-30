@@ -124,7 +124,12 @@ export default {
     createProject() {
       this.newProject._id = new mongoose.Types.ObjectId(); 
 
-      axios.post('/projects', this.newProject)
+      axios.post('/projects', this.newProject,{
+        auth: {
+            username: this.$store.state.username,
+            password: this.$store.state.password
+          }
+      })
       .then((response) => {
         console.log("Response: ", response.data)
         this.$router.push({ path: `/projects/${this.newProject._id}` })
