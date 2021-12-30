@@ -17,13 +17,13 @@ import ToastService from 'primevue/toastservice';
 import DataTable from 'primevue/datatable';
 
 require("dotenv").config();
-axios.defaults.baseURL = 'http://localhost:3000/api/v1/';
+
+axios.defaults.baseURL = process.env.VUE_APP_BACKEND_URL || 'http://localhost:3000/api/v1/';
+
 axios.defaults.auth = {
     username: store.state.username,
     password: store.state.password
 };
-
-axios.defaults.baseURL = process.env.VUE_APP_BACKEND_URL || 'http://localhost:3000/api/v1/';
 
 const app = createApp(App);
 

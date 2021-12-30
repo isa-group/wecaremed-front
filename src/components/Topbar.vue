@@ -119,8 +119,8 @@ export default {
                     command: () => {this.openConfirmation()}
                 },
             ],
-            fixedInitialCF: this.projectInfo.initialCF.toFixed(3),
-            fixedCurrentCF: this.projectInfo.currentCF.toFixed(3)
+            fixedInitialCF: this.projectInfo ? this.projectInfo.initialCF.toFixed(3) : null,
+            fixedCurrentCF: this.projectInfo ? this.projectInfo.currentCF.toFixed(3) : null
         }
     },
     methods: {
