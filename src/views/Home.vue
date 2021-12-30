@@ -145,7 +145,11 @@ export default {
   },
   methods: {
     getProjects() {
-      this.axios.get('/projects')
+      this.axios.get('/projects', {
+        auth: {
+              username: "wecaremed",
+              password: "supersecret"
+          }})
       .then((response) => {
         console.log(response.data)
         this.projects = response.data;
