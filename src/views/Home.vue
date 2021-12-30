@@ -145,11 +145,7 @@ export default {
   },
   methods: {
     getProjects() {
-      this.axios.get('/projects', {
-        auth: {
-              username: "wecaremed",
-              password: "supersecret"
-          }})
+      this.axios.get('/projects')
       .then((response) => {
         console.log(response.data)
         this.projects = response.data;
@@ -167,7 +163,6 @@ export default {
         return "redText"
     },
     confirmDeleteProject(index) {
-      console.log("Hola: ", this.projectToDelete)
       this.projectToDelete = this.projects[index]
       this.deleteProjectDialog = true;
     },

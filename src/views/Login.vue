@@ -1,41 +1,46 @@
 <template>
   
-  <Topbar />
+  <Toast />
 
   <div class="grid" style="justify-content: center;">
     <div class="col-3">
 			<div class="card">
-        <form>
-            <h3>Sign In</h3>
+				<h2>Login</h2>
 
-            <div class="form-group">
-                <label>Username</label><br>
-                <input type="text" v-model="username" name="username" id="usernamedId" />
-            </div>
-
-            <div class="form-group">
-                <label>Password</label><br>
-                <input type="password" v-model="password" name="password" id="passwordId" />
-            </div>
-
-            <Button type="button" icon="pi pi-check" label="Sign Up" class="p-button-info mt-4" @click="signIn()" />
-
-        </form>
-			</div>
-		</div>
+				<div class="p-fluid formgrid grid">
+					<div class="field col-12 md:col-10">
+						<label for="usernameId">Username</label>
+            <InputText v-model="username" name="username" id="usernamedId" @keypress.enter="signIn()" />
+					</div>
+        </div>
+        <div class="p-fluid formgrid grid">
+          <div class="field col-12 md:col-10">
+						<label for="usernameId">Password</label>
+            <Password v-model="password" name="password" id="passwordId" @keypress.enter="signIn()" />
+					</div>
+        </div>
+        <div class="grid">
+          <Button type="button" icon="pi pi-check" label="Sign Up" class="p-button-info mt-4" @click="signIn()" />
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
 <script>
+import InputText from 'primevue/inputtext'
+import Password from 'primevue/password'
 import Button from 'primevue/button'
 import axios from "axios";
-import Topbar from '@/components/Topbar.vue';
+import Toast from 'primevue/toast';
 
 export default {
   name: 'Login',
   components: {
+    InputText,
+    Password,
     Button,
-    Topbar
+    Toast,
   },
   created(){
     this.signIn();
@@ -44,7 +49,6 @@ export default {
     return {
         username: this.$store.state.username,
         password: this.$store.state.password
-      
     }
   },
   methods: {
@@ -56,13 +60,17 @@ export default {
           auth : {
               username: this.$store.state.username,
               password: this.$store.state.password
-        }
-        }).then(resp => {
-            console.log(resp.data);
+          }
+        })
+        .then(resp => {
+          console.log(resp.data);
           console.log(this.$store.state.username);
           window.location.href = '/';
+          this.$toast.add({severity:'success', summary: 'Successful', detail: 'Logged in successfully', life: 3000});
         }).catch(err => {
           console.log(err);
+          if (this.username !== "" && this.password !== "")
+            this.$toast.add({severity:'error', summary: 'Error', detail: 'Incorrect user and password', life: 3000});
         })    
     }
   }
@@ -71,57 +79,7 @@ export default {
 
 <style scoped>
 
-/* .wizard {
-  position: relative;
-  top: 50px;
+.grid {
+  justify-content: center;
 }
-
-.formRow {
-  font-size: 40px;
-  margin-bottom: 40px;
-  display: flex;
-}
-
-label {
-  position: relative;
-  top: 6px;
-  left: 600px;
-  width: 300px;
-  text-align: left;
-  display: block;
-}
-
-input {
-  position: relative;
-  height: 30px;
-  top: 10px;
-  padding-left: 10px;
-  border: 2px solid #42b983;
-  border-radius: 5px;
-}
-
-input[type=text] {
-  left: 800px;
-  width: 300px;
-}
-
-input[type=number] {
-  left: 835px;
-  width: 100px;
-}
-
-.buttons {
-  position: relative;
-  top: 50px;
-}
-
-#create {
-  position: relative;
-  right: 50px;
-}
-
-#cancel {
-  position: relative;
-  left: 50px;
-} */
 </style>
