@@ -1,6 +1,6 @@
 <template>
   
-  <Topbar :projectInfo="project" />
+  <Topbar v-model:projectInfo="project" />
 
   <div class="projectDetailsSimpleGrid">
     
@@ -699,15 +699,15 @@
       </div>
     </div>
 
-    <div class="col-5">
+    <div class="col-6">
       <div class="card p-fluid" style="display: flex; flex-direction: column; align-items: center; justify-content: space-around;">
         <div>
           <h2>Tons of equivalent carbon dioxyde emited:
-            <Badge :value="project.initialCF" class="ml-3" size="xlarge" :severity="getTextColorFromCFIndex(project.initialCF)" />
+            <Badge :value="project.initialCF.toFixed(3)" class="ml-3" size="xlarge" :severity="getTextColorFromCFIndex(project.initialCF)" />
           </h2>
         </div>
         <Button icon="pi pi-replay" class="p-button-rounded p-button-outlined p-button-plain mr-5" label="Recalculate"
-                style="width: 15rem; font-size: 1.1rem"/>
+                style="width: 15rem; font-size: 1.1rem" @click="calculateCF" />
       </div>
     </div>
 
@@ -797,6 +797,26 @@ export default {
     this.loading = false;
   },
   methods: {
+    calculateCF() {
+      axios.put(`/projects/calculateCF/${this.$route.params.id}`)
+      .then((response) => {
+        let partners = this.project.partners
+        let printableDeliverables = this.project.printableDeliverables
+        let coordinator = this.project.coordinator
+        
+        this.project = response.data;
+        this.project.partners = partners
+        this.project.printableDeliverables = printableDeliverables
+        this.project.coordinator = coordinator
+
+        this.$toast.add({severity:'success', summary: 'Successful', detail: 'Project CF calculated', life: 3000});
+
+        // console.log(response.data)
+      })
+      .catch((e)=>{
+        console.log('error' + e);
+      })
+    },
     getTextColorFromCFIndex(cfIndex) {
         if (cfIndex < 3)
             return "success"
