@@ -104,7 +104,7 @@ export default {
         internalOnSiteEventsNumber: 0,
         internalOnSiteEventsAveragePhysicalParticipants: 0,
         internalOnSiteEventsAverageNonLocalPhysicalParticipants: 0,
-        internalOnSiteEvents: 0,
+        internalOnSiteEventsAverageDuration: 0,
         internalHybridEventsNumber: 0,
         internalHybridEventsAveragePhysicalParticipants: 0,
         internalHybridEventsAverageNonLocalPhysicalParticipants: 0,

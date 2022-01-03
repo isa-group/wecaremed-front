@@ -16,7 +16,10 @@ import './assets/flags/flags.css';
 import ToastService from 'primevue/toastservice';
 import DataTable from 'primevue/datatable';
 
-axios.defaults.baseURL = 'http://localhost:3000/api/v1/';
+require("dotenv").config();
+
+axios.defaults.baseURL = process.env.VUE_APP_BACKEND_URL || 'http://localhost:3000/api/v1/';
+
 axios.defaults.auth = {
     username: store.state.username,
     password: store.state.password

@@ -699,7 +699,7 @@
       </div>
     </div>
 
-    <div class="col-6">
+    <div class="col-7">
       <div class="card p-fluid" style="display: flex; flex-direction: column; align-items: center; justify-content: space-around;">
         <div>
           <h2>Tons of equivalent carbon dioxyde emited:
@@ -880,7 +880,8 @@ export default {
         copies: 1,
         avgPagesPerCopy: 1,
         size: "Select a paper size",
-        project: this.project._id}
+        project: this.project._id
+      }
 
       this.axios.post('/printableDeliverables', newPrintableDeliverable)
       .then((response) => {
@@ -1048,7 +1049,7 @@ export default {
         }
       });
 
-      axios.put("/partners/updateCoordinator", paramsData).then(() => {
+      axios.put(`/partners/updateCoordinator?=${this.$route.params.id}`, paramsData).then(() => {
         this.project.coordinator = partner._id
         this.$toast.add({severity:'success', summary: 'Successful', detail: 'Project coordinator updated', life: 3000});
       }).catch(error =>{

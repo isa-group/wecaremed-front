@@ -6,7 +6,6 @@
 
     <Toast position="bottom-right"/>
 
-    
     <div class="card col-8">
       <h1>My projects</h1>
 
