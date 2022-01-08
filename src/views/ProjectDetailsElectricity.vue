@@ -11,10 +11,172 @@
 					<TabPanel header="Data">
 						<TabView>
               <TabPanel header="General">
+                <div class="card">
+                  <h5>Partners</h5>
+
+                  <DataTable :value="project.partners" editMode="cell" :paginator="true" class="p-datatable-gridlines" dataKey="_id"
+                  :rowHover="true" @cell-edit-complete="onCellEditCompletePartner" sortMode="multiple" :rows="5" v-model:filters="partnerFilters"
+                  filterDisplay="menu" :loading="loading" :filters="partnerFilters" responsiveLayout="scroll"
+                  :globalFilterFields="['name','country','personMonths', 'coordinator']">
+                    
+                    <template #header>
+                        <div class="flex justify-content-between flex-column sm:flex-row">
+                          <div>
+                            <Button class="p-button-info mr-2" @click="addPartner"><i class="pi pi-plus mr-2" />New partner</Button>
+                            <span class="p-input-icon-left">
+                              <i class="pi pi-search" />
+                              <InputText v-model="partnerFilters['global'].value" placeholder="Keyword Search" style="width: 100%"/>
+                            </span>
+                          </div>
+                          
+                          <Button type="button" icon="pi pi-filter-slash" label="Clear" class="p-button-warning" @click="clearPartnerFilter()"/>
+                        </div>
+                    </template>
+
+                    <template #empty>
+                        No partners found.
+                    </template>
+
+                    <template #loading>
+                        Loading partners. Please wait.
+                    </template>
+
+                    <Column field="name" header="Name" :sortable="true">
+                      <template #editor="slotProps">
+                          <InputText v-model="slotProps.data[slotProps.field]" />
+                      </template>
+                      <template #filter="{filterModel, field}">
+                          <InputText type="text" v-model="filterModel.value" class="p-column-filter" :placeholder="'Filter by ' + field"/>
+                      </template>
+                    </Column>
+
+                    <Column field="country" header="Country" :sortable="true">
+                      <template #editor="slotProps">
+                        <Dropdown :options="countriesForDropdown" v-model="slotProps.data[slotProps.field]" />
+                      </template>
+                    </Column>
+
+                    <Column field="personMonths" header="PersonMonths" :sortable="true">
+                      <template #editor="slotProps" class="p-field">
+                        <InputNumber v-model="slotProps.data[slotProps.field]" mode="decimal" :maxFractionDigits="3"
+                        showButtons :step="0.25" decrementButtonClass="p-button-info"
+                        incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
+                        :allowEmpty="false" :min="0" />
+                      </template>
+                    </Column>
+
+                    <Column field="coordinator" header="Coordinator" :sortable="true">
+                      <template #body="slotProps">
+                        <RadioButton name="projectCoordinator" :value="slotProps.data._id" v-model="project.coordinator"
+                        @change="onCellEditCompletePartnerCoordinator(slotProps.data, $event)" />
+                      </template>
+                    </Column>
+
+                    <Column field="actions" header="Actions">
+                      <template #body="slotProps">
+                        <i class="pi pi-trash" @click="deletePartner(slotProps.index)" />
+                      </template>
+                    </Column>
+                  
+                  </DataTable>
+                </div>
 
               </TabPanel>
               <TabPanel header="Heat">
+                <div class="card">
 
+                  <DataTable :value="project.partners" editMode="cell" :paginator="true" class="p-datatable-gridlines" dataKey="_id"
+                  :rowHover="true" @cell-edit-complete="onCellEditCompletePartner" sortMode="multiple" :rows="5" v-model:filters="partnerFilters"
+                  filterDisplay="menu" :loading="loading" :filters="partnerFilters" responsiveLayout="scroll"
+                  :globalFilterFields="['country']">
+                    
+                    <template #header>
+                        <div class="flex justify-content-between flex-column sm:flex-row">
+                          <Button type="button" label="Clear" class="p-button-warning" @click="clearPartnerFilter()"/>
+                        </div>
+                    </template>
+
+                    <template #empty>
+                        No partners found.
+                    </template>
+
+                    <template #loading>
+                        Loading partners. Please wait.
+                    </template>
+
+                    <Column field="country" header="Country" :sortable="true">
+                      <template #editor="slotProps">
+                        <Dropdown :options="countriesForDropdown" v-model="slotProps.data[slotProps.field]" />
+                      </template>
+                    </Column>
+
+                    <Column field="personMonthsPP" header="PersonMonths" :sortable="true">
+                      <template #editor="slotProps" class="p-field">
+                        <InputNumber v-model="slotProps.data[slotProps.field]" mode="decimal" :maxFractionDigits="3"
+                        showButtons :step="0.25" decrementButtonClass="p-button-info"
+                        incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
+                        :allowEmpty="false" :min="0" />
+                      </template>
+                    </Column>
+
+                    <Column field="coordinator" header="Coordinator" :sortable="true">
+                      <template #body="slotProps">
+                        <RadioButton name="projectCoordinator" :value="slotProps.data._id" v-model="project.coordinator"
+                        @change="onCellEditCompletePartnerCoordinator(slotProps.data, $event)" />
+                      </template>
+                    </Column>
+
+                    <Column field="actions" header="Actions">
+                      <template #body="slotProps">
+                        <i class="pi pi-trash" @click="deletePartner(slotProps.index)" />
+                      </template>
+                    </Column>
+                  
+                  </DataTable>
+                </div>
+                <div class="card">
+                  <h5>Aditional custom defined electricity emission</h5>
+                  <DataTable :value="project.partners" editMode="cell" :paginator="true" class="p-datatable-gridlines" dataKey="_id"
+                    :rowHover="true" @cell-edit-complete="onCellEditCompletePartner" sortMode="multiple" :rows="5" v-model:filters="partnerFilters"
+                    filterDisplay="menu" :loading="loading" :filters="partnerFilters" responsiveLayout="scroll"
+                    :globalFilterFields="['name','country','personMonthsPP','personMonthsWPP', 'externalExpertsPersonMonths', 'employeesWorkingWPP', 
+                                          'seasonalEmployees', 'externalExperts', 'coordinator']">
+                      
+                      <template #header>
+                          <div class="flex justify-content-between flex-column sm:flex-row">
+                            <div>
+                              <Button class="p-button-info mr-2" @click="addPartner"><i class="pi pi-plus mr-2" />Add Heat Emission</Button>
+                            </div>
+                            <div>
+                              <Button type="button" label="Clear" class="p-button-warning" @click="clearPartnerFilter()"/>
+                            </div>
+                          </div>
+                      </template>
+
+                      <template #empty>
+                          No Transportation Emissions found.
+                      </template>
+
+                      <template #loading>
+                          Loading Electricity Emissions. Please wait.
+                      </template>
+
+                      <Column field="item" header="Item" :sortable="true">
+                        <template #editor="slotProps">
+                             <InputText v-model="slotProps.data[slotProps.field]" />
+                        </template>
+                      </Column>
+
+                      <Column field="customTransportationEmissionCO2" header="Estimated emission (CO2 gr)" :sortable="true">
+                        <template #editor="slotProps">
+                          <InputNumber v-model="slotProps.data[slotProps.field]" mode="decimal" :maxFractionDigits="3"
+                          showButtons :step="0.25" decrementButtonClass="p-button-info"
+                          incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
+                          :allowEmpty="false" :min="0" />
+                        </template>
+                      </Column>
+                    </DataTable>
+                </div>
               </TabPanel>
               <TabPanel header="Electricity">
                 <div class="card">
@@ -27,7 +189,7 @@
                       <template #header>
                           <div class="flex justify-content-between flex-column sm:flex-row">
                             <div>
-                              <Button type="button" icon="pi pi-filter-slash" label="Clear" class="p-button-warning" @click="clearPartnerFilter()"/>
+                              <Button type="button" label="Clear" class="p-button-warning" @click="clearPartnerFilter()"/>
                             </div>
                           </div>
                       </template>
@@ -79,7 +241,7 @@
                               <Button class="p-button-info mr-2" @click="addPartner"><i class="pi pi-plus mr-2" />Add Electricity Emission</Button>
                             </div>
                             <div>
-                              <Button type="button" icon="pi pi-filter-slash" label="Clear" class="p-button-warning" @click="clearPartnerFilter()"/>
+                              <Button type="button" label="Clear" class="p-button-warning" @click="clearPartnerFilter()"/>
                             </div>
                           </div>
                       </template>
@@ -98,7 +260,7 @@
                         </template>
                       </Column>
 
-                      <Column field="dailyConsumptionPerEmployee" header="Estimated emission (CO2 gr)" :sortable="true">
+                      <Column field="customElectricutyEmissionCO2" header="Estimated emission (CO2 gr)" :sortable="true">
                         <template #editor="slotProps">
                           <InputNumber v-model="slotProps.data[slotProps.field]" mode="decimal" :maxFractionDigits="3"
                           showButtons :step="0.25" decrementButtonClass="p-button-info"
@@ -110,7 +272,96 @@
                 </div>
               </TabPanel>
               <TabPanel header="Water">
+                <div class="card">
+                  <DataTable :value="project.partners" editMode="cell" :paginator="true" class="p-datatable-gridlines" dataKey="_id"
+                    :rowHover="true" @cell-edit-complete="onCellEditCompletePartner" sortMode="multiple" :rows="5" v-model:filters="partnerFilters"
+                    filterDisplay="menu" :loading="loading" :filters="partnerFilters" responsiveLayout="scroll"
+                    :globalFilterFields="['country']">
+                      
+                      <template #header>
+                          <div class="flex justify-content-between flex-column sm:flex-row">
+                            <div>
+                              <Button type="button" label="Clear" class="p-button-warning" @click="clearPartnerFilter()"/>
+                            </div>
+                          </div>
+                      </template>
 
+                      <template #empty>
+                          No partners found.
+                      </template>
+
+                      <template #loading>
+                          Loading partners. Please wait.
+                      </template>
+
+                      <Column field="countries" header="Countries" :sortable="true">
+                        <template #editor="slotProps">
+                            <Dropdown :options="countriesForDropdown" v-model="slotProps.data[slotProps.field]" />
+                        </template>
+                      </Column>
+
+                      <Column field="waterUsagePerEmployeeAnnually" header="Water usage per employee annually (m3)" :sortable="true">
+                        <template #editor="slotProps">
+                          <InputNumber v-model="slotProps.data[slotProps.field]" mode="decimal" :maxFractionDigits="3"
+                          showButtons :step="0.25" decrementButtonClass="p-button-info"
+                          incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
+                          :allowEmpty="false" :min="0" />
+                        </template>
+                      </Column>
+
+                      <Column field="waterDisposedPerEmployeeAnnually" header="Water disposed per employee annually (m3)" :sortable="true">
+                        <template #editor="slotProps">
+                          <InputNumber v-model="slotProps.data[slotProps.field]" mode="decimal" :maxFractionDigits="3"
+                          showButtons :step="0.25" decrementButtonClass="p-button-info"
+                          incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
+                          :allowEmpty="false" :min="0" />
+                        </template>
+                      </Column>
+                    </DataTable>
+                </div>
+                <div class="card">
+                  <h5>Aditional custom defined water emission</h5>
+                  <DataTable :value="project.partners" editMode="cell" :paginator="true" class="p-datatable-gridlines" dataKey="_id"
+                    :rowHover="true" @cell-edit-complete="onCellEditCompletePartner" sortMode="multiple" :rows="5" v-model:filters="partnerFilters"
+                    filterDisplay="menu" :loading="loading" :filters="partnerFilters" responsiveLayout="scroll"
+                    :globalFilterFields="['name','country','personMonthsPP','personMonthsWPP', 'externalExpertsPersonMonths', 'employeesWorkingWPP', 
+                                          'seasonalEmployees', 'externalExperts', 'coordinator']">
+                      
+                      <template #header>
+                          <div class="flex justify-content-between flex-column sm:flex-row">
+                            <div>
+                              <Button class="p-button-info mr-2" @click="addPartner"><i class="pi pi-plus mr-2" />Add Water Emission</Button>
+                            </div>
+                            <div>
+                              <Button type="button" label="Clear" class="p-button-warning" @click="clearPartnerFilter()"/>
+                            </div>
+                          </div>
+                      </template>
+
+                      <template #empty>
+                          No Water Emissions found.
+                      </template>
+
+                      <template #loading>
+                          Loading Water Emissions. Please wait.
+                      </template>
+
+                      <Column field="item" header="Item" :sortable="true">
+                        <template #editor="slotProps">
+                             <InputText v-model="slotProps.data[slotProps.field]" />
+                        </template>
+                      </Column>
+
+                      <Column field="customWaterEmissionCO2" header="Estimated emission (CO2 gr)" :sortable="true">
+                        <template #editor="slotProps">
+                          <InputNumber v-model="slotProps.data[slotProps.field]" mode="decimal" :maxFractionDigits="3"
+                          showButtons :step="0.25" decrementButtonClass="p-button-info"
+                          incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
+                          :allowEmpty="false" :min="0" />
+                        </template>
+                      </Column>
+                    </DataTable>
+                </div>
               </TabPanel>
               <TabPanel header="Transportation">
 
@@ -137,7 +388,7 @@
               </TabPanel>
               <TabPanel header="Electricity">
                 <div class="card">
-                  <Chart type="radar" :data="chartData" :options="chartOptions" />
+                  <Chart type="radar" :data="chartData" :options="chartOptions" style='width:50'/>
                 </div>
                 <div class="card">
                   <h5>Aditional custom defined electricity emission</h5>
@@ -153,7 +404,7 @@
                               <Button class="p-button-info mr-2" @click="addPartner"><i class="pi pi-plus mr-2" />Add Electricity Emission</Button>
                             </div>
                             <div>
-                              <Button type="button" icon="pi pi-filter-slash" label="Clear" class="p-button-warning" @click="clearPartnerFilter()"/>
+                              <Button type="button" label="Clear" class="p-button-warning" @click="clearPartnerFilter()"/>
                             </div>
                           </div>
                       </template>
