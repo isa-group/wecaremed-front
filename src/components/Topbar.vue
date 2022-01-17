@@ -14,12 +14,17 @@
                         <h2>{{projectInfo.to}})&nbsp;</h2> 
                         
                         <span v-if="$store.state.toggleValue">
-                            <Badge :value="fixedCurrentCF" size="large" :severity="getTextColorFromCFIndex(fixedCurrentCF)" />
+                            <Badge :value="currentCF" size="large" :severity="getTextColorFromCFIndex(currentCF)" />
                             &nbsp;<span style="font-size: 16px">/</span>&nbsp;
                         </span>
                         
-                        <Badge :value="fixedInitialCF" size="large"
-                        :severity="getTextColorFromCFIndex(fixedInitialCF)" />
+                        <Badge :value="initialCF" size="large" :severity="getTextColorFromCFIndex(initialCF)" />
+
+                        <!-- Al recalcular el CF, se devuelve el project con los nuevos datos, por tanto, es necesario actualizar
+                             la vista, y para ello hay que modificar informacion fuera de este componente, lo cual, complica las cosas -->
+                             
+                        <!-- <Button icon="pi pi-replay" class="p-button-rounded p-button-text p-button-plain ml-3" @click="calculateCF" /> -->
+
                     </div>
                 
                 <ul class="layout-topbar-menu lg:flex origin-top">
@@ -119,8 +124,6 @@ export default {
                     command: () => {this.openConfirmation()}
                 },
             ],
-            fixedInitialCF: this.projectInfo ? this.projectInfo.initialCF.toFixed(3) : null,
-            fixedCurrentCF: this.projectInfo ? this.projectInfo.currentCF.toFixed(3) : null
         }
     },
     methods: {
@@ -136,16 +139,16 @@ export default {
         ...mapActions([
         "toggleView"
         ]),
-        // calculateCF() {
-        //     this.axios.put(`/projects/calculateCF/${this.$route.params.id}`)
-        //     .then((response) => {
-        //         // this.project = response.data;
-        //         console.log(response.data)
-        //     })
-        //     .catch((e)=>{
-        //         console.log('error' + e);
-        //     })
-        // },
+        calculateCF() {
+            this.axios.put(`/projects/calculateCF/${this.$route.params.id}`)
+            .then((response) => {
+                // this.project = response.data;
+                console.log(response.data)
+            })
+            .catch((e)=>{
+                console.log('error' + e);
+            })
+        },
         getTextColorFromCFIndex(cfIndex) {
             if (cfIndex < 3)
                 return "success"
@@ -170,7 +173,13 @@ export default {
     computed: {
         ...mapState([
             'toggleValue', 'appModeText'
-        ])
+        ]),
+        initialCF() {
+            return this.projectInfo ? this.projectInfo.initialCF : null
+        },
+        currentCF() {
+            return this.projectInfo ? this.projectInfo.currentCF : null
+        }
     }
 }
 </script>

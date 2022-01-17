@@ -13,7 +13,7 @@
       :rowHover="true" @cell-edit-complete="onCellEditCompletePartner" sortMode="multiple" :rows="5" v-model:filters="partnerFilters"
       filterDisplay="menu" :loading="loading" :filters="partnerFilters" responsiveLayout="scroll"
       :globalFilterFields="['name','country','personMonthsPP','personMonthsWPP', 'externalExpertsPersonMonths', 'employeesWorkingWPP', 
-                            'seasonalEmployees', 'externalExperts', 'coordinator']">
+                            'seasonalEmployees', 'externalExperts', 'coordinator']" @page="currentPagePartnersTable = $event.page">
         
         <template #header>
             <div class="flex justify-content-between flex-column sm:flex-row">
@@ -112,7 +112,7 @@
 
         <Column field="actions" header="Actions">
           <template #body="slotProps">
-            <i class="pi pi-trash" @click="deletePartner(slotProps.index)" />
+            <i class="pi pi-trash" @click="deletePartner(slotProps.index + currentPagePartnersTable * 5)" />
           </template>
         </Column>
       
@@ -573,7 +573,7 @@
                   <InputNumber v-model="project.participatedOnSiteEventsAverageDuration" mode="decimal" :maxFractionDigits="3"
                   showButtons decrementButtonClass="p-button-info" :step="0.25" @keypress.enter="$event.target.blur()"
                   incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
-                  :allowEmpty="false" @focus="onFocusValue=project.participatedOnSiteEventsAverageDuration" 
+                  :allowEmpty="false" :min="0" @focus="onFocusValue=project.participatedOnSiteEventsAverageDuration" 
                   @focusout="onCellEditComplete('participatedOnSiteEventsAverageDuration', project.participatedOnSiteEventsAverageDuration)"
                   id ="participatedOnSiteEventsAverageDuration"/>
                 </div>
@@ -591,7 +591,8 @@
         <DataTable :value="project.printableDeliverables" editMode="cell" @cell-edit-complete="onCellEditCompletePrintableDeliverable" 
           sortMode="multiple" :paginator="true" :rows="5" v-model:filters="printableDeliverableFilters" filterDisplay="menu"
           :loading="loading" :filters="printableDeliverableFilters" responsiveLayout="scroll" :rowHover="true" class="p-datatable-gridlines"
-          :globalFilterFields="['deliverableType', 'deliverableName', 'copies', 'avgPagesPerCopy']">
+          :globalFilterFields="['deliverableType', 'deliverableName', 'copies', 'avgPagesPerCopy']"
+          @page="currentPagePrintableDeliverablesTable = $event.page">
 
           <template #header>
               <div class="flex justify-content-between flex-column sm:flex-row">
@@ -691,7 +692,7 @@
 
           <Column field="actions" header="Actions">
             <template #body="slotProps">
-              <i class="pi pi-trash" @click="deletePrintableDeliverable(slotProps.index)" />
+              <i class="pi pi-trash" @click="deletePrintableDeliverable(slotProps.index + currentPagePrintableDeliverablesTable * 5)" />
             </template>
           </Column>
 
@@ -703,7 +704,7 @@
       <div class="card p-fluid" style="display: flex; flex-direction: column; align-items: center; justify-content: space-around;">
         <div>
           <h2>Tons of equivalent carbon dioxyde emited:
-            <Badge :value="project.initialCF.toFixed(3)" class="ml-3" size="xlarge" :severity="getTextColorFromCFIndex(project.initialCF)" />
+            <Badge :value="project.initialCF" class="ml-3" size="xlarge" :severity="getTextColorFromCFIndex(project.initialCF)" />
           </h2>
         </div>
         <Button icon="pi pi-replay" class="p-button-rounded p-button-outlined p-button-plain mr-5" label="Recalculate"
@@ -785,7 +786,9 @@ export default {
       partnerFilters: null,
       printableDeliverableFilters: null,
       loading: true,
-      onFocusValue: null
+      onFocusValue: null,
+      currentPagePartnersTable: 0,
+      currentPagePrintableDeliverablesTable: 0,
     }
   },
   created() {
@@ -879,13 +882,13 @@ export default {
         deliverableName: "Select a deliverable name",
         copies: 1,
         avgPagesPerCopy: 1,
-        size: "Select a paper size",
+        size: "A4",
         project: this.project._id
       }
 
       this.axios.post('/printableDeliverables', newPrintableDeliverable)
       .then((response) => {
-        this.project.printableDeliverables.unshift(response.data)
+        this.project.printableDeliverables.push(response.data)
         this.$toast.add({severity:'success', summary: 'Successful', detail: 'Printable deliverable created', life: 3000});
       })
       .catch((e)=>{
@@ -929,7 +932,7 @@ export default {
         
       this.axios.post('/partners', newPartner)
       .then((response) => {
-        this.project.partners.unshift(response.data)
+        this.project.partners.push(response.data)
 
         if (noCoordinator) {
           this.onCellEditCompletePartnerCoordinator(this.project.partners[0])
