@@ -48,8 +48,8 @@
                             <span>Are you sure you want to log out?</span>
                         </div>
                         <template #footer>
-                            <Button label="No" icon="pi pi-times" @click="closeConfirmation" class="p-button-text p-button-info"/>
-                            <Button label="Yes" icon="pi pi-check" @click="logout" class="p-button-text p-button-info" autofocus />
+                            <Button label="No" icon="pi pi-times" @click="closeConfirmation" class="p-button-text p-button-info" autofocus/>
+                            <Button label="Yes" icon="pi pi-check" @click="logout" class="p-button-text p-button-info" />
                         </template>
                     </Dialog>
                 </ul>
@@ -83,8 +83,8 @@
                         <span>Are you sure you want to log out?</span>
                     </div>
                     <template #footer>
-                        <Button label="No" icon="pi pi-times" @click="closeConfirmation" class="p-button-text p-button-info"/>
-                        <Button label="Yes" icon="pi pi-check" @click="logout" class="p-button-text p-button-info" autofocus />
+                        <Button label="No" icon="pi pi-times" @click="closeConfirmation" class="p-button-text p-button-info" autofocus/>
+                        <Button label="Yes" icon="pi pi-check" @click="logout" class="p-button-text p-button-info" />
                     </template>
                 </Dialog>
             </ul>
@@ -139,16 +139,16 @@ export default {
         ...mapActions([
         "toggleView"
         ]),
-        calculateCF() {
-            this.axios.put(`/projects/calculateCF/${this.$route.params.id}`)
-            .then((response) => {
-                // this.project = response.data;
-                console.log(response.data)
-            })
-            .catch((e)=>{
-                console.log('error' + e);
-            })
-        },
+        // calculateCF() {
+        //     this.axios.put(`/projects/calculateCF/${this.$route.params.id}`)
+        //     .then((response) => {
+        //         // this.project = response.data;
+        //         console.log(response.data)
+        //     })
+        //     .catch((e)=>{
+        //         console.log('error' + e);
+        //     })
+        // },
         getTextColorFromCFIndex(cfIndex) {
             if (cfIndex < 3)
                 return "success"

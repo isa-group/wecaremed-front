@@ -851,26 +851,26 @@ export default {
       this.axios.get(`/projects/${this.$route.params.id}`)
       .then((response) => {
         this.project = response.data;
-      })
-      .catch((e)=>{
-        console.log('error' + e);
-      })
 
-      this.axios.get(`/partners?projectId=${this.$route.params.id}`)
-      .then((response) => {
-        this.project.partners = response.data;
-        if (response.data.length > 0) {
-          this.project.coordinator = response.data.find(p => p.coordinator)._id
-          this.$store.dispatch("updateSelectedPartner", response.data[0].name);
-        }
-      })
-      .catch((e)=>{
-        console.log('error' + e);
-      })
+        this.axios.get(`/partners?projectId=${this.$route.params.id}`)
+        .then((response) => {
+          this.project.partners = response.data;
+          if (response.data.length > 0) {
+            this.project.coordinator = response.data.find(p => p.coordinator)._id
+            this.$store.dispatch("updateSelectedPartner", response.data[0].name);
+          }
+        })
+        .catch((e)=>{
+          console.log('error' + e);
+        })
 
-      this.axios.get(`/printableDeliverables?projectId=${this.$route.params.id}`)
-      .then((response) => {
-        this.project.printableDeliverables = response.data;
+        this.axios.get(`/printableDeliverables?projectId=${this.$route.params.id}`)
+        .then((response) => {
+          this.project.printableDeliverables = response.data;
+        })
+        .catch((e)=>{
+          console.log('error' + e);
+        })
       })
       .catch((e)=>{
         console.log('error' + e);
