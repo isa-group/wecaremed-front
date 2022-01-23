@@ -1007,8 +1007,8 @@ export default {
     onCellEditComplete(field, newValue) {
       if (newValue === this.onFocusValue) return;
 
-      console.log("newValue", newValue)
-      console.log("this.onFocusValue", newValue)
+      // console.log("newValue", newValue)
+      // console.log("this.onFocusValue", newValue)
 
       const paramsData = {}
       paramsData[field] = newValue;
@@ -1060,9 +1060,9 @@ export default {
       })
     },
     onCellEditCompletePartnerEquipment(field, newValue) {
-      console.log("field", field)
-      console.log("newValue", newValue)
-      console.log("this.onFocusValue", this.onFocusValue)
+      // console.log("field", field)
+      // console.log("newValue", newValue)
+      // console.log("this.onFocusValue", this.onFocusValue)
       
       if (newValue === this.onFocusValue) return;
 
@@ -1070,7 +1070,7 @@ export default {
       const paramsData = {}
       paramsData[field] = newValue;
       
-      console.log("paramsData", paramsData)
+      // console.log("paramsData", paramsData)
 
       axios.put("/partners/" + partnerId, paramsData).then(() => {
         this.project[field] = newValue
