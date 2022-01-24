@@ -124,7 +124,7 @@
       </div>
     </div>
 
-    <div class="col-7">    
+    <div class="col-8">    
       <div class="card">
         <h4>Equipment</h4>
         <template v-if="selectedPartner">
@@ -264,7 +264,7 @@
       </div>
     </div>
 
-    <div class="col-7">
+    <div class="col-8">
       <div class="card">
         <h4>Events</h4>
 
@@ -584,7 +584,7 @@
       </div>
     </div>
 
-    <div class="col-7">
+    <div class="col-8">
       <div class="card">
         <h4>Printable deliverables</h4>
       
@@ -700,10 +700,10 @@
       </div>
     </div>
 
-    <div class="col-7">
+    <div class="col-8">
       <div class="card p-fluid" style="display: flex; flex-direction: column; align-items: center; justify-content: space-around;">
         <div>
-          <h2>Tons of equivalent carbon dioxyde emited:
+          <h2>Tons of equivalent carbon dioxide emitted:
             <Badge :value="project.initialCF" class="ml-3" size="xlarge" :severity="getTextColorFromCFIndex(project.initialCF)" />
           </h2>
         </div>
@@ -712,6 +712,63 @@
       </div>
     </div>
 
+    <div class="col-8">
+      <div class="card p-fluid" style="display: flex; flex-direction: column; align-items: center; justify-content: space-around;">
+        <h2>CF Breakdown (Tons)</h2>
+        <div class="col-12" style="display: flex; justify-content: space-evenly;">
+          <div class="card p-fluid col-2" style="display: flex; flex-direction: column; align-items: center; justify-content: space-around;">
+            <h2 class="font-medium text-3xl">Fuels Heat</h2>
+            <div class="flex align-items-center py-3 px-2 border-top-1 surface-border">
+              <Badge :value="project.fuelsHeatCF" size="xlarge" severity="info" />
+            </div>
+          </div>
+          <div class="card p-fluid col-2" style="display: flex; flex-direction: column; align-items: center; justify-content: space-around;">
+            <h2 class="font-medium text-3xl">Electricity</h2>
+            <div class="flex align-items-center py-3 px-2 border-top-1 surface-border">
+              <Badge :value="project.electricityCF" size="xlarge" severity="info" />
+            </div>
+          </div>
+          <div class="card p-fluid col-2" style="display: flex; flex-direction: column; align-items: center; justify-content: space-around;">
+            <h2 class="font-medium text-3xl">Water</h2>
+            <div class="flex align-items-center py-3 px-2 border-top-1 surface-border">
+              <Badge :value="project.waterCF" size="xlarge" severity="info" />
+            </div>
+          </div>
+          <div class="card p-fluid col-2" style="display: flex; flex-direction: column; align-items: center; justify-content: space-around;">
+            <h2 class="font-medium text-3xl">Transportation</h2>
+            <div class="flex align-items-center py-3 px-2 border-top-1 surface-border">
+              <Badge :value="project.transportationCF" size="xlarge" severity="info" />
+            </div>
+          </div>
+        </div>
+        <div class="col-12" style="display: flex; justify-content: space-evenly;">
+          <div class="card p-fluid col-2" style="display: flex; flex-direction: column; align-items: center; justify-content: space-around;">
+            <h2 class="font-medium text-3xl">Materials</h2>
+            <div class="flex align-items-center py-3 px-2 border-top-1 surface-border">
+              <Badge :value="project.materialsCF" size="xlarge" severity="info" />
+            </div>
+          </div>
+          <div class="card p-fluid col-2" style="display: flex; flex-direction: column; align-items: center; justify-content: space-around;">
+            <h2 class="font-medium text-3xl">Printable Deliverables</h2>
+            <div class="flex align-items-center py-3 px-2 border-top-1 surface-border">
+              <Badge :value="project.printableDeliverablesCF" size="xlarge" severity="info" />
+            </div>
+          </div>
+          <div class="card p-fluid col-2" style="display: flex; flex-direction: column; align-items: center; justify-content: space-around;">
+            <h2 class="font-medium text-3xl">Equipment</h2>
+            <div class="flex align-items-center py-3 px-2 border-top-1 surface-border">
+              <Badge :value="project.equipmentCF" size="xlarge" severity="info" />
+            </div>
+          </div>
+          <div class="card p-fluid col-2" style="display: flex; flex-direction: column; align-items: center; justify-content: space-around;">
+            <h2 class="font-medium text-3xl">Events</h2>
+            <div class="flex align-items-center py-3 px-2 border-top-1 surface-border">
+              <Badge :value="project.eventsCF" size="xlarge" severity="info" />
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 
 </template>
@@ -755,10 +812,9 @@ export default {
   data() {
     return {
       placeholder: "Select a partner",
-      arrayOfObjects: ["MEDIPLASMA SRL", "Q TECHNOLOGIES LTD", "CO2CRC Management Pty Ltd"],
       project: {},
       object: {},
-      countriesForDropdown: ["Albania", "Bosnia & Herzegovina", "Croatia", "Cyprus", "France", "Greece", "Italy", "Malta", "Montenegro", "Portugal", "Slovenia", "Spain", "Gibraltar"],
+      countriesForDropdown: ["Albania", "Bosnia & Herzegovina", "Croatia", "Cyprus", "France", "Greece", "Italy", "Malta", "Montenegro", "Portugal", "Slovenia", "Spain", "Bulgaria", "North Macedonia"],
       paperSizes: ["A0", "A1", "A2", "A3", "A4", "A5", "A6"],
       deliverableOptions: [
         {value: "Application form", deliverableNames: ["Application form"]},
