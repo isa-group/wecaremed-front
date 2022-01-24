@@ -13,7 +13,7 @@
       :rowHover="true" @cell-edit-complete="onCellEditCompletePartner" sortMode="multiple" :rows="5" v-model:filters="partnerFilters"
       filterDisplay="menu" :loading="loading" :filters="partnerFilters" responsiveLayout="scroll"
       :globalFilterFields="['name','country','personMonthsPP','personMonthsWPP', 'externalExpertsPersonMonths', 'employeesWorkingWPP', 
-                            'seasonalEmployees', 'externalExperts', 'coordinator']">
+                            'seasonalEmployees', 'externalExperts', 'coordinator']" @page="currentPagePartnersTable = $event.page">
         
         <template #header>
             <div class="flex justify-content-between flex-column sm:flex-row">
@@ -112,7 +112,7 @@
 
         <Column field="actions" header="Actions">
           <template #body="slotProps">
-            <i class="pi pi-trash" @click="deletePartner(slotProps.index)" />
+            <i class="pi pi-trash" @click="deletePartner(slotProps.index + currentPagePartnersTable * 5)" />
           </template>
         </Column>
       
@@ -124,7 +124,7 @@
       </div>
     </div>
 
-    <div class="col-7">    
+    <div class="col-8">    
       <div class="card">
         <h4>Equipment</h4>
         <template v-if="selectedPartner">
@@ -264,7 +264,7 @@
       </div>
     </div>
 
-    <div class="col-7">
+    <div class="col-8">
       <div class="card">
         <h4>Events</h4>
 
@@ -573,7 +573,7 @@
                   <InputNumber v-model="project.participatedOnSiteEventsAverageDuration" mode="decimal" :maxFractionDigits="3"
                   showButtons decrementButtonClass="p-button-info" :step="0.25" @keypress.enter="$event.target.blur()"
                   incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
-                  :allowEmpty="false" @focus="onFocusValue=project.participatedOnSiteEventsAverageDuration" 
+                  :allowEmpty="false" :min="0" @focus="onFocusValue=project.participatedOnSiteEventsAverageDuration" 
                   @focusout="onCellEditComplete('participatedOnSiteEventsAverageDuration', project.participatedOnSiteEventsAverageDuration)"
                   id ="participatedOnSiteEventsAverageDuration"/>
                 </div>
@@ -584,14 +584,15 @@
       </div>
     </div>
 
-    <div class="col-7">
+    <div class="col-8">
       <div class="card">
         <h4>Printable deliverables</h4>
       
         <DataTable :value="project.printableDeliverables" editMode="cell" @cell-edit-complete="onCellEditCompletePrintableDeliverable" 
           sortMode="multiple" :paginator="true" :rows="5" v-model:filters="printableDeliverableFilters" filterDisplay="menu"
           :loading="loading" :filters="printableDeliverableFilters" responsiveLayout="scroll" :rowHover="true" class="p-datatable-gridlines"
-          :globalFilterFields="['deliverableType', 'deliverableName', 'copies', 'avgPagesPerCopy']">
+          :globalFilterFields="['deliverableType', 'deliverableName', 'copies', 'avgPagesPerCopy']"
+          @page="currentPagePrintableDeliverablesTable = $event.page">
 
           <template #header>
               <div class="flex justify-content-between flex-column sm:flex-row">
@@ -691,7 +692,7 @@
 
           <Column field="actions" header="Actions">
             <template #body="slotProps">
-              <i class="pi pi-trash" @click="deletePrintableDeliverable(slotProps.index)" />
+              <i class="pi pi-trash" @click="deletePrintableDeliverable(slotProps.index + currentPagePrintableDeliverablesTable * 5)" />
             </template>
           </Column>
 
@@ -699,11 +700,11 @@
       </div>
     </div>
 
-    <div class="col-7">
+    <div class="col-8">
       <div class="card p-fluid" style="display: flex; flex-direction: column; align-items: center; justify-content: space-around;">
         <div>
-          <h2>Tons of equivalent carbon dioxyde emited:
-            <Badge :value="project.initialCF.toFixed(3)" class="ml-3" size="xlarge" :severity="getTextColorFromCFIndex(project.initialCF)" />
+          <h2>Tons of equivalent carbon dioxide emitted:
+            <Badge :value="project.initialCF" class="ml-3" size="xlarge" :severity="getTextColorFromCFIndex(project.initialCF)" />
           </h2>
         </div>
         <Button icon="pi pi-replay" class="p-button-rounded p-button-outlined p-button-plain mr-5" label="Recalculate"
@@ -711,6 +712,63 @@
       </div>
     </div>
 
+    <div class="col-8">
+      <div class="card p-fluid" style="display: flex; flex-direction: column; align-items: center; justify-content: space-around;">
+        <h2>CF Breakdown (Tons)</h2>
+        <div class="col-12" style="display: flex; justify-content: space-evenly;">
+          <div class="card p-fluid col-2" style="display: flex; flex-direction: column; align-items: center; justify-content: space-around;">
+            <h2 class="font-medium text-3xl">Fuels Heat</h2>
+            <div class="flex align-items-center py-3 px-2 border-top-1 surface-border">
+              <Badge :value="project.fuelsHeatCF" size="xlarge" severity="info" />
+            </div>
+          </div>
+          <div class="card p-fluid col-2" style="display: flex; flex-direction: column; align-items: center; justify-content: space-around;">
+            <h2 class="font-medium text-3xl">Electricity</h2>
+            <div class="flex align-items-center py-3 px-2 border-top-1 surface-border">
+              <Badge :value="project.electricityCF" size="xlarge" severity="info" />
+            </div>
+          </div>
+          <div class="card p-fluid col-2" style="display: flex; flex-direction: column; align-items: center; justify-content: space-around;">
+            <h2 class="font-medium text-3xl">Water</h2>
+            <div class="flex align-items-center py-3 px-2 border-top-1 surface-border">
+              <Badge :value="project.waterCF" size="xlarge" severity="info" />
+            </div>
+          </div>
+          <div class="card p-fluid col-2" style="display: flex; flex-direction: column; align-items: center; justify-content: space-around;">
+            <h2 class="font-medium text-3xl">Transportation</h2>
+            <div class="flex align-items-center py-3 px-2 border-top-1 surface-border">
+              <Badge :value="project.transportationCF" size="xlarge" severity="info" />
+            </div>
+          </div>
+        </div>
+        <div class="col-12" style="display: flex; justify-content: space-evenly;">
+          <div class="card p-fluid col-2" style="display: flex; flex-direction: column; align-items: center; justify-content: space-around;">
+            <h2 class="font-medium text-3xl">Materials</h2>
+            <div class="flex align-items-center py-3 px-2 border-top-1 surface-border">
+              <Badge :value="project.materialsCF" size="xlarge" severity="info" />
+            </div>
+          </div>
+          <div class="card p-fluid col-2" style="display: flex; flex-direction: column; align-items: center; justify-content: space-around;">
+            <h2 class="font-medium text-3xl">Printable Deliverables</h2>
+            <div class="flex align-items-center py-3 px-2 border-top-1 surface-border">
+              <Badge :value="project.printableDeliverablesCF" size="xlarge" severity="info" />
+            </div>
+          </div>
+          <div class="card p-fluid col-2" style="display: flex; flex-direction: column; align-items: center; justify-content: space-around;">
+            <h2 class="font-medium text-3xl">Equipment</h2>
+            <div class="flex align-items-center py-3 px-2 border-top-1 surface-border">
+              <Badge :value="project.equipmentCF" size="xlarge" severity="info" />
+            </div>
+          </div>
+          <div class="card p-fluid col-2" style="display: flex; flex-direction: column; align-items: center; justify-content: space-around;">
+            <h2 class="font-medium text-3xl">Events</h2>
+            <div class="flex align-items-center py-3 px-2 border-top-1 surface-border">
+              <Badge :value="project.eventsCF" size="xlarge" severity="info" />
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 
 </template>
@@ -754,10 +812,9 @@ export default {
   data() {
     return {
       placeholder: "Select a partner",
-      arrayOfObjects: ["MEDIPLASMA SRL", "Q TECHNOLOGIES LTD", "CO2CRC Management Pty Ltd"],
       project: {},
       object: {},
-      countriesForDropdown: ["Albania", "Bosnia & Herzegovina", "Croatia", "Cyprus", "France", "Greece", "Italy", "Malta", "Montenegro", "Portugal", "Slovenia", "Spain", "Gibraltar"],
+      countriesForDropdown: ["Albania", "Bosnia & Herzegovina", "Croatia", "Cyprus", "France", "Greece", "Italy", "Malta", "Montenegro", "Portugal", "Slovenia", "Spain", "Bulgaria", "North Macedonia"],
       paperSizes: ["A0", "A1", "A2", "A3", "A4", "A5", "A6"],
       deliverableOptions: [
         {value: "Application form", deliverableNames: ["Application form"]},
@@ -785,7 +842,9 @@ export default {
       partnerFilters: null,
       printableDeliverableFilters: null,
       loading: true,
-      onFocusValue: null
+      onFocusValue: null,
+      currentPagePartnersTable: 0,
+      currentPagePrintableDeliverablesTable: 0,
     }
   },
   created() {
@@ -848,26 +907,26 @@ export default {
       this.axios.get(`/projects/${this.$route.params.id}`)
       .then((response) => {
         this.project = response.data;
-      })
-      .catch((e)=>{
-        console.log('error' + e);
-      })
 
-      this.axios.get(`/partners?projectId=${this.$route.params.id}`)
-      .then((response) => {
-        this.project.partners = response.data;
-        if (response.data.length > 0) {
-          this.project.coordinator = response.data.find(p => p.coordinator)._id
-          this.$store.dispatch("updateSelectedPartner", response.data[0].name);
-        }
-      })
-      .catch((e)=>{
-        console.log('error' + e);
-      })
+        this.axios.get(`/partners?projectId=${this.$route.params.id}`)
+        .then((response) => {
+          this.project.partners = response.data;
+          if (response.data.length > 0) {
+            this.project.coordinator = response.data.find(p => p.coordinator)._id
+            this.$store.dispatch("updateSelectedPartner", response.data[0].name);
+          }
+        })
+        .catch((e)=>{
+          console.log('error' + e);
+        })
 
-      this.axios.get(`/printableDeliverables?projectId=${this.$route.params.id}`)
-      .then((response) => {
-        this.project.printableDeliverables = response.data;
+        this.axios.get(`/printableDeliverables?projectId=${this.$route.params.id}`)
+        .then((response) => {
+          this.project.printableDeliverables = response.data;
+        })
+        .catch((e)=>{
+          console.log('error' + e);
+        })
       })
       .catch((e)=>{
         console.log('error' + e);
@@ -879,13 +938,13 @@ export default {
         deliverableName: "Select a deliverable name",
         copies: 1,
         avgPagesPerCopy: 1,
-        size: "Select a paper size",
+        size: "A4",
         project: this.project._id
       }
 
       this.axios.post('/printableDeliverables', newPrintableDeliverable)
       .then((response) => {
-        this.project.printableDeliverables.unshift(response.data)
+        this.project.printableDeliverables.push(response.data)
         this.$toast.add({severity:'success', summary: 'Successful', detail: 'Printable deliverable created', life: 3000});
       })
       .catch((e)=>{
@@ -929,7 +988,7 @@ export default {
         
       this.axios.post('/partners', newPartner)
       .then((response) => {
-        this.project.partners.unshift(response.data)
+        this.project.partners.push(response.data)
 
         if (noCoordinator) {
           this.onCellEditCompletePartnerCoordinator(this.project.partners[0])
@@ -1004,8 +1063,8 @@ export default {
     onCellEditComplete(field, newValue) {
       if (newValue === this.onFocusValue) return;
 
-      console.log("newValue", newValue)
-      console.log("this.onFocusValue", newValue)
+      // console.log("newValue", newValue)
+      // console.log("this.onFocusValue", newValue)
 
       const paramsData = {}
       paramsData[field] = newValue;
@@ -1057,9 +1116,9 @@ export default {
       })
     },
     onCellEditCompletePartnerEquipment(field, newValue) {
-      console.log("field", field)
-      console.log("newValue", newValue)
-      console.log("this.onFocusValue", this.onFocusValue)
+      // console.log("field", field)
+      // console.log("newValue", newValue)
+      // console.log("this.onFocusValue", this.onFocusValue)
       
       if (newValue === this.onFocusValue) return;
 
@@ -1067,7 +1126,7 @@ export default {
       const paramsData = {}
       paramsData[field] = newValue;
       
-      console.log("paramsData", paramsData)
+      // console.log("paramsData", paramsData)
 
       axios.put("/partners/" + partnerId, paramsData).then(() => {
         this.project[field] = newValue

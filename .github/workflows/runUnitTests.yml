@@ -1,5 +1,5 @@
 name: execute-tests
-on: [push, pull_request]
+on: [push]
 jobs:
   execute-tests:
     runs-on: ubuntu-latest
@@ -12,9 +12,13 @@ jobs:
     - name: Create and populate .env file then deploy app and run tests
       env:
         VUE_APP_BACKEND_URL: ${{ secrets.VUE_APP_BACKEND_URL }}
+        LOGIN_USERNAME: ${{ secrets.LOGIN_USERNAME }}
+        LOGIN_PASSWORD: ${{ secrets.LOGIN_PASSWORD }}
       run: |
           touch .env
           echo VUE_APP_BACKEND_URL="$VUE_APP_BACKEND_URL" >> .env
+          echo LOGIN_USERNAME="$LOGIN_USERNAME" >> .env
+          echo LOGIN_PASSWORD="$LOGIN_PASSWORD" >> .env
           npm ci
           npm run ci
       shell: bash

@@ -10,7 +10,8 @@
       <h1>My projects</h1>
 
       <DataTable :value="projects" :paginator="true" class="p-datatable-gridlines" dataKey="id"
-      :rowHover="true" sortMode="multiple" :rows="5" :loading="loading" responsiveLayout="scroll">
+      :rowHover="true" sortMode="multiple" :rows="5" :loading="loading" responsiveLayout="scroll"
+      @page="currentPageProjectsTable = $event.page">
         
         <template #header>
             <div class="flex justify-content-between flex-column sm:flex-row">
@@ -72,14 +73,14 @@
 
         <Column field="actions" header="Actions">
           <template #body="slotProps">
-            <router-link :to="'/projects/' + this.projects[slotProps.index]._id + '?advancedMode=' + this.$store.state.toggleValue">
+            <router-link :to="'/projects/' + (this.projects[slotProps.index + currentPageProjectsTable * 5]._id) + '?advancedMode=' + this.$store.state.toggleValue">
               <i class="pi pi-arrow-circle-right mr-3" />
             </router-link>
-            <router-link :to="'/editProject/' + this.projects[slotProps.index]._id">
+            <router-link :to="'/editProject/' + (this.projects[slotProps.index + currentPageProjectsTable * 5]._id)">
               <i class="pi pi-pencil mr-3" />
             </router-link>
             <router-link to="/">
-              <i class="pi pi-trash" @click="confirmDeleteProject(slotProps.index)" />
+              <i class="pi pi-trash" @click="confirmDeleteProject(slotProps.index + currentPageProjectsTable * 5)" />
             </router-link>
           </template>
         </Column>
@@ -133,7 +134,8 @@ export default {
     return {
       deleteProjectDialog: false,
       loading: true,
-      projects: []
+      projects: [],
+      currentPageProjectsTable: 0,
     }
   },
   created() {
@@ -176,7 +178,7 @@ export default {
       .catch((e)=>{
         console.log('error' + e);
       })
-    }
+    },
   }
 }
 </script>

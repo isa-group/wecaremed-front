@@ -16,11 +16,11 @@
         <div class="p-fluid formgrid grid">
           <div class="field col-12 md:col-10">
 						<label for="usernameId">Password</label>
-            <Password v-model="password" name="password" id="passwordId" @keypress.enter="signIn()" />
+            <Password v-model="password" name="password" id="passwordId" :feedback="false" @keypress.enter="signIn()" />
 					</div>
         </div>
         <div class="grid">
-          <Button type="button" icon="pi pi-check" label="Sign Up" class="p-button-info mt-4" @click="signIn()" />
+          <Button type="button" icon="pi pi-check" label="Sign in" class="p-button-info mt-4" @click="signIn()" />
         </div>
       </div>
     </div>
