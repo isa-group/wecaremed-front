@@ -2,7 +2,7 @@ import { createRouter, createWebHistory } from 'vue-router'
 import Home from '../views/Home.vue'
 import ProjectDetailsSimple from '../views/ProjectDetailsSimple.vue'
 import Login from '../views/Login.vue'
-import ProjectElectricityAdvanced from '../views/ProjectDetailsElectricity.vue';
+import ProjectDetailsAdvanced from '../views/ProjectDetailsAdvanced.vue';
 import axios from 'axios'
 
 const routes = [
@@ -32,10 +32,10 @@ const routes = [
     component: ProjectDetailsSimple
   },
   {
-    path: '/projects/:id/ElectricityAdvanced',
-    name: 'Project Details Electricity Advanced',
+    path: '/projects/:id/ProjectDetailsAdvanced',
+    name: 'Project Details Advanced',
     meta: { requiresAuth: true },
-    component: ProjectElectricityAdvanced
+    component: ProjectDetailsAdvanced
   },
   {
     path: '/login',

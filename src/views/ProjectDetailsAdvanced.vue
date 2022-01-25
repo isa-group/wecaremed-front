@@ -4,7 +4,7 @@
 
   <div class="projectDetailsElectrictyGrid">
 
-    <div class="col-7">
+    <div class="colCustom">
       <div class="card">
 
 				<TabView>
@@ -17,7 +17,7 @@
                   <DataTable :value="project.partners" editMode="cell" :paginator="true" class="p-datatable-gridlines" dataKey="_id"
                   :rowHover="true" @cell-edit-complete="onCellEditCompletePartner" sortMode="multiple" :rows="5" v-model:filters="partnerFilters"
                   filterDisplay="menu" :loading="loading" :filters="partnerFilters" responsiveLayout="scroll"
-                  :globalFilterFields="['name','country','personMonths', 'coordinator']">
+                  :globalFilterFields="['name','country','personMonthsPP', 'coordinator']">
                     
                     <template #header>
                         <div class="flex justify-content-between flex-column sm:flex-row">
@@ -56,7 +56,7 @@
                       </template>
                     </Column>
 
-                    <Column field="personMonths" header="PersonMonths" :sortable="true">
+                    <Column field="personMonthsPP" header="PersonMonths" :sortable="true">
                       <template #editor="slotProps" class="p-field">
                         <InputNumber v-model="slotProps.data[slotProps.field]" mode="decimal" :maxFractionDigits="3"
                         showButtons :step="0.25" decrementButtonClass="p-button-info"
@@ -1273,8 +1273,8 @@ import { mapState } from 'vuex'
 import DataTable from 'primevue/datatable';
 import Column from 'primevue/column';
 import Button from 'primevue/button';
-//import InputText from 'primevue/inputtext';
-//import RadioButton from 'primevue/radiobutton';
+import InputText from 'primevue/inputtext';
+import RadioButton from 'primevue/radiobutton';
 import InputNumber from 'primevue/inputnumber';
 import axios from "axios";
 import {FilterMatchMode} from 'primevue/api';
@@ -1295,8 +1295,8 @@ export default {
     Button,
     DataTable,
     Column,
-    //InputText,
-    //RadioButton,
+    InputText,
+    RadioButton,
     InputNumber,
     TabView,
     TabPanel,
@@ -1311,7 +1311,7 @@ export default {
       arrayOfObjects: ["MEDIPLASMA SRL", "Q TECHNOLOGIES LTD", "CO2CRC Management Pty Ltd"],
       project: {},
       object: {},
-      countriesForDropdown: ["Albania", "Bosnia & Herzegovina", "Croatia", "Cyprus", "France", "Greece", "Italy", "Malta", "Montenegro", "Portugal", "Slovenia", "Spain", "Gibraltar"],
+      countriesForDropdown: ["Albania", "Bosnia & Herzegovina", "Croatia", "Cyprus", "France", "Greece", "Italy", "Malta", "Montenegro", "Portugal", "Slovenia", "Spain", "Bulgaria", "North Macedonia"],
       paperSizes: ["A0", "A1", "A2", "A3", "A4", "A5", "A6"],
       deliverableOptions: [
         {value: "Application form", deliverableNames: ["Application form"]},
@@ -1727,6 +1727,12 @@ export default {
   justify-content: space-around;
   align-items: center;
   flex-direction: column;
+}
+
+.colCustom {
+    flex: 0 0 auto;
+    padding: 0.5rem;
+    width: 100%;
 }
 
 </style>
