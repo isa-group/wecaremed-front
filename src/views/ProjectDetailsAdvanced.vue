@@ -7,11 +7,19 @@
     <div class="colCustom">
       <div class="card">
 
+        <!-- Data -->
+
 				<TabView>
 					<TabPanel header="Data">
 						<TabView>
+
+              <!-- General -->
+
               <TabPanel header="General">
                 <div class="card">
+
+                  <!-- Tabla Parners -->
+
                   <h5>Partners</h5>
 
                   <DataTable :value="project.partners" editMode="cell" :paginator="true" class="p-datatable-gridlines" dataKey="_id"
@@ -82,7 +90,13 @@
                 </div>
 
               </TabPanel>
+
+              <!-- Heat -->
+
               <TabPanel header="Heat">
+
+                <!-- Heat Table -->
+
                 <div class="card">
 
                   <DataTable :value="project.partners" editMode="cell" :paginator="true" class="p-datatable-gridlines" dataKey="_id"
@@ -134,13 +148,15 @@
                   
                   </DataTable>
                 </div>
+
+                <!-- Custom Heat Emissions -->
+
                 <div class="card">
-                  <h5>Aditional custom defined electricity emission</h5>
+                  <h5>Aditional custom defined transportation emission</h5>
                   <DataTable :value="project.partners" editMode="cell" :paginator="true" class="p-datatable-gridlines" dataKey="_id"
                     :rowHover="true" @cell-edit-complete="onCellEditCompletePartner" sortMode="multiple" :rows="5" v-model:filters="partnerFilters"
                     filterDisplay="menu" :loading="loading" :filters="partnerFilters" responsiveLayout="scroll"
-                    :globalFilterFields="['name','country','personMonthsPP','personMonthsWPP', 'externalExpertsPersonMonths', 'employeesWorkingWPP', 
-                                          'seasonalEmployees', 'externalExperts', 'coordinator']">
+                    :globalFilterFields="['itemCustomTransportationEmission']">
                       
                       <template #header>
                           <div class="flex justify-content-between flex-column sm:flex-row">
@@ -158,7 +174,7 @@
                       </template>
 
                       <template #loading>
-                          Loading Electricity Emissions. Please wait.
+                          Loading Transportation Emissions. Please wait.
                       </template>
 
                       <Column field="itemCustomTransportationEmission" header="Item" :sortable="true">
@@ -178,7 +194,13 @@
                     </DataTable>
                 </div>
               </TabPanel>
+
+              <!-- Electricity -->
+
               <TabPanel header="Electricity">
+
+                <!-- Electricity table -->
+
                 <div class="card">
                   <DataTable :value="project.partners" editMode="cell" :paginator="true" class="p-datatable-gridlines" dataKey="_id"
                     :rowHover="true" @cell-edit-complete="onCellEditCompletePartner" sortMode="multiple" :rows="5" v-model:filters="partnerFilters"
@@ -195,11 +217,11 @@
                       </template>
 
                       <template #empty>
-                          No partners found.
+                          No Electricity found.
                       </template>
 
                       <template #loading>
-                          Loading partners. Please wait.
+                          Loading electricity entries. Please wait.
                       </template>
 
                       <Column field="countries" header="Countries" :sortable="true">
@@ -227,6 +249,9 @@
                       </Column>
                     </DataTable>
                 </div>
+
+                <!-- Custom Electricity emission table -->
+
                 <div class="card">
                   <h5>Aditional custom defined electricity emission</h5>
                   <DataTable :value="project.partners" editMode="cell" :paginator="true" class="p-datatable-gridlines" dataKey="_id"

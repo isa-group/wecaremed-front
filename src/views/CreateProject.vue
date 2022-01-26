@@ -3,7 +3,7 @@
   <Topbar />
 
   <div class="grid" style="justify-content: center;">
-    <div class="col-3">
+    <div class="col-3-custom">
 			<div class="card">
 				<h2>Project general data</h2>
 				<div class="p-fluid formgrid grid">
@@ -207,4 +207,10 @@ input[type=number] {
   position: relative;
   left: 50px;
 } */
+
+.col-3-custom {
+  flex: 0 0 auto;
+    padding: 0.5rem;
+    width: 35%;
+}
 </style>

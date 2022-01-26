@@ -1,7 +1,7 @@
 <template>
 	<div :class="containerClass">
 
-        <div class="layout-main-container">
+        <div class="layout-main-container-custom">
             <div class="layout-main">
                 <router-view />
             </div>
@@ -41,5 +41,13 @@ import Footer from '@/components/Footer.vue';
 body {
   background-color: rgb(37, 37, 38);
 } 
+
+
+.layout-main-container-custom {
+    padding-top: 120px;
+    padding-left: 56px;
+    padding-right: 56px;
+    padding-bottom: 28px;
+}
 
 </style>

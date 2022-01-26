@@ -1186,4 +1186,9 @@ export default {
   flex-direction: column;
 }
 
+.col-12-custom {
+    flex: 0 0 auto;
+    width: 100%;
+}
+
 </style>
