@@ -124,7 +124,7 @@
       </div>
     </div>
 
-    <div class="col-8">    
+    <div class="col-12">    
       <div class="card">
         <h4>Equipment</h4>
         <template v-if="selectedPartner">
@@ -264,7 +264,7 @@
       </div>
     </div>
 
-    <div class="col-8">
+    <div class="col-12">
       <div class="card">
         <h4>Events</h4>
 
@@ -584,7 +584,7 @@
       </div>
     </div>
 
-    <div class="col-8">
+    <div class="col-12">
       <div class="card">
         <h4>Printable deliverables</h4>
       
@@ -700,7 +700,7 @@
       </div>
     </div>
 
-    <div class="col-8">
+    <div class="col-12">
       <div class="card p-fluid" style="display: flex; flex-direction: column; align-items: center; justify-content: space-around;">
         <div>
           <h2>Tons of equivalent carbon dioxide emitted:
@@ -712,7 +712,7 @@
       </div>
     </div>
 
-    <div class="col-8">
+    <div class="col-12">
       <div class="card p-fluid" style="display: flex; flex-direction: column; align-items: center; justify-content: space-around;">
         <h2>CF Breakdown (Tons)</h2>
         <div class="col-12" style="display: flex; justify-content: space-evenly;">
@@ -1184,6 +1184,11 @@ export default {
   justify-content: space-around;
   align-items: center;
   flex-direction: column;
+}
+
+.col-12-custom {
+    flex: 0 0 auto;
+    width: 100%;
 }
 
 </style>
