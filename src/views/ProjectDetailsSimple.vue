@@ -26,7 +26,7 @@
               </div>
 
               <div>
-                <Button label="Save" icon="pi pi-check" @click="savePrintableDeliverables" />
+                <Button label="Save" icon="pi pi-check" @click="savePartners" />
               </div>
               
               <Button type="button" icon="pi pi-filter-slash" label="Clear" class="p-button-warning" @click="clearPartnerFilter()"/>
@@ -1053,8 +1053,19 @@ export default {
       this.axios.put('/printableDeliverables/updateAll', this.project.printableDeliverables).then((req) => {
         console.log(req);
         this.$toast.add({severity:'success', summary: 'Successful', detail: 'All Printable Deliverables updated', life: 3000});
-      }).catch((req, error) =>{
+      }).catch((error) =>{
+        console.log(error)
+      })
+
+    },
+
+    savePartners() {
+
+      console.log(this.project.partners);
+      this.axios.put('/partners/updateAll', this.project.partners).then((req) => {
         console.log(req);
+        this.$toast.add({severity:'success', summary: 'Successful', detail: 'All Partners updated', life: 3000});
+      }).catch((error) =>{
         console.log(error)
       })
 
