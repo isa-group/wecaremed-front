@@ -24,6 +24,10 @@
                   <InputText v-model="partnerFilters['global'].value" placeholder="Keyword Search" style="width: 100%"/>
                 </span>
               </div>
+
+              <div>
+                <Button label="Save" icon="pi pi-check" @click="savePrintableDeliverables" />
+              </div>
               
               <Button type="button" icon="pi pi-filter-slash" label="Clear" class="p-button-warning" @click="clearPartnerFilter()"/>
             </div>
@@ -606,6 +610,11 @@
                     <InputText v-model="printableDeliverableFilters['global'].value" placeholder="Keyword Search" style="width: 100%"/>
                   </span>
                 </div>
+              
+              <div>
+                <Button label="Save" icon="pi pi-check" @click="savePrintableDeliverables" />
+              </div>
+
                 
                 <Button type="button" icon="pi pi-filter-slash" label="Clear" class="p-button-warning" @click="clearPrintableDeliverableFilter()"/>
               </div>
@@ -1037,6 +1046,20 @@ export default {
         console.log('error' + e);
       })
     },
+
+    savePrintableDeliverables() {
+
+      console.log(this.project.printableDeliverables);
+      this.axios.put('/printableDeliverables/updateAll', this.project.printableDeliverables).then((req) => {
+        console.log(req);
+        this.$toast.add({severity:'success', summary: 'Successful', detail: 'All Printable Deliverables updated', life: 3000});
+      }).catch((req, error) =>{
+        console.log(req);
+        console.log(error)
+      })
+
+    },
+
     getDeliverableNames(deliverableType) {
       for (let option in this.deliverableOptions) {
         if (this.deliverableOptions[option].value === deliverableType) {
