@@ -87,7 +87,7 @@
           </template>
         </Column>
 
-        <Column field="seasonalEmployees" header="Seasonal employees" :sortable="true">
+        <Column field="seasonalEmployees" header="Part-time employees" :sortable="true">
           <template #editor="slotProps">
             <InputNumber v-model="slotProps.data[slotProps.field]" mode="decimal" showButtons decrementButtonClass="p-button-info"
             incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
@@ -266,16 +266,16 @@
 
     <div class="col-12">
       <div class="card">
-        <h4>Events</h4>
+        <h4>Events*</h4>
 
 				<TabView>
 					<TabPanel header="Public events">
 						<div class="card">
-              <h5>On-site</h5>
+              <h5>In presence</h5>
 
               <div class="p-fluid formgrid grid">
                 <div class="field col-12 md:col-6">
-                  <label for="publicOnSiteEventsNumber">Number of on-site public events</label>
+                  <label for="publicOnSiteEventsNumber">Number of in presence public events</label>
                   <InputNumber v-model="project.publicOnSiteEventsNumber" mode="decimal"
                   showButtons decrementButtonClass="p-button-info" @keypress.enter="$event.target.blur()"
                   incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
@@ -313,11 +313,11 @@
               </div>
             </div>
             <div class="card">
-              <h5>Hybrid</h5>
+              <h5>Mixed mode: both in presence and on-line</h5>
 
               <div class="p-fluid formgrid grid">
                 <div class="field col-12 md:col-4">
-                  <label for="publicHybridEventsNumber">Number of hybrid public events</label>
+                  <label for="publicHybridEventsNumber">Number of mixed public events</label>
                   <InputNumber v-model="project.publicHybridEventsNumber" mode="decimal"
                   showButtons decrementButtonClass="p-button-info" @keypress.enter="$event.target.blur()"
                   incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
@@ -344,7 +344,7 @@
                   id ="publicHybridEventsAverageNonLocalPhysicalParticipants"/>
                 </div>
                 <div class="field col-12 md:col-4">
-                  <label for="publicHybridEventsAverageVirtualParticipants">Average virtual participants</label>
+                  <label for="publicHybridEventsAverageVirtualParticipants">Average on-line participants</label>
                   <InputNumber v-model="project.publicHybridEventsAverageVirtualParticipants" mode="decimal"
                   showButtons decrementButtonClass="p-button-info" @keypress.enter="$event.target.blur()"
                   incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
@@ -373,11 +373,11 @@
               </div>
             </div>
             <div class="card">
-              <h5>Virtual</h5>
+              <h5>On-line</h5>
 
               <div class="p-fluid formgrid grid">
                 <div class="field col-12 md:col-4">
-                  <label for="publicVirtualEventsNumber">Number of virtual public events</label>
+                  <label for="publicVirtualEventsNumber">Number of on-line public events</label>
                   <InputNumber v-model="project.publicVirtualEventsNumber" mode="decimal"
                   showButtons decrementButtonClass="p-button-info" @keypress.enter="$event.target.blur()"
                   incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
@@ -386,7 +386,7 @@
                   id ="publicVirtualEventsNumber"/>
                 </div>
                 <div class="field col-12 md:col-4">
-                  <label for="publicVirtualEventsAverageVirtualParticipants">Average virtual participants</label>
+                  <label for="publicVirtualEventsAverageVirtualParticipants">Average on-line participants</label>
                   <InputNumber v-model="project.publicVirtualEventsAverageVirtualParticipants" mode="decimal"
                   showButtons decrementButtonClass="p-button-info" @keypress.enter="$event.target.blur()"
                   incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
@@ -409,11 +409,11 @@
 
           <TabPanel header="Internal events/meetings">
 						<div class="card">
-              <h5>On-site</h5>
+              <h5>In presence</h5>
 
               <div class="p-fluid formgrid grid">
                 <div class="field col-12 md:col-6">
-                  <label for="internalOnSiteEventsNumber">Number of on-site internal events/meetings</label>
+                  <label for="internalOnSiteEventsNumber">Number of in presence internal events/meetings</label>
                   <InputNumber v-model="project.internalOnSiteEventsNumber" mode="decimal"
                   showButtons decrementButtonClass="p-button-info" @keypress.enter="$event.target.blur()"
                   incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
@@ -451,11 +451,11 @@
               </div>
             </div>
             <div class="card">
-              <h5>Hybrid</h5>
+              <h5>Mixed mode: both in presence and on-line</h5>
 
               <div class="p-fluid formgrid grid">
                 <div class="field col-12 md:col-4">
-                  <label for="internalHybridEventsNumber">Number of hybrid internal events/meetings</label>
+                  <label for="internalHybridEventsNumber">Number of mixed internal events/meetings</label>
                   <InputNumber v-model="project.internalHybridEventsNumber" mode="decimal"
                   showButtons decrementButtonClass="p-button-info" @keypress.enter="$event.target.blur()"
                   incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
@@ -482,7 +482,7 @@
                   id ="internalHybridEventsAverageNonLocalPhysicalParticipants"/>
                 </div>
                 <div class="field col-12 md:col-4">
-                  <label for="internalHybridEventsAverageVirtualParticipants">Average virtual participants</label>
+                  <label for="internalHybridEventsAverageVirtualParticipants">Average on-line participants</label>
                   <InputNumber v-model="project.internalHybridEventsAverageVirtualParticipants" mode="decimal"
                   showButtons decrementButtonClass="p-button-info" @keypress.enter="$event.target.blur()"
                   incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
@@ -511,11 +511,11 @@
               </div>
             </div>
             <div class="card">
-              <h5>Virtual</h5>
+              <h5>On-line</h5>
 
               <div class="p-fluid formgrid grid">
                 <div class="field col-12 md:col-4">
-                  <label for="internalVirtualEventsNumber">Number of virtual internal events/meetings</label>
+                  <label for="internalVirtualEventsNumber">Number of on-line internal events/meetings</label>
                   <InputNumber v-model="project.internalVirtualEventsNumber" mode="decimal"
                   showButtons decrementButtonClass="p-button-info" @keypress.enter="$event.target.blur()"
                   incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
@@ -524,7 +524,7 @@
                   id ="internalVirtualEventsNumber"/>
                 </div>
                 <div class="field col-12 md:col-4">
-                  <label for="internalVirtualEventsAverageVirtualParticipants">Average virtual participants</label>
+                  <label for="internalVirtualEventsAverageVirtualParticipants">Average on-line participants</label>
                   <InputNumber v-model="project.internalVirtualEventsAverageVirtualParticipants" mode="decimal"
                   showButtons decrementButtonClass="p-button-info" @keypress.enter="$event.target.blur()"
                   incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
@@ -547,11 +547,11 @@
 
 					<TabPanel header="Events participated by the project">
 						<div class="card">
-              <h5>On-site</h5>
+              <h5>In presence</h5>
 
               <div class="p-fluid formgrid grid">
                 <div class="field col-12 md:col-4">
-                  <label for="participatedOnSiteEventsNumber">Number of on-site events participated by the project</label>
+                  <label for="participatedOnSiteEventsNumber">Number of in presence events participated by the project</label>
                   <InputNumber v-model="project.participatedOnSiteEventsNumber" mode="decimal"
                   showButtons decrementButtonClass="p-button-info" @keypress.enter="$event.target.blur()"
                   incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
@@ -581,6 +581,9 @@
             </div>
 					</TabPanel>
 				</TabView>
+        <div style="text-align: left; margin-top: 10px">
+          * The values of this section are considered the same for each project partner
+        </div>
       </div>
     </div>
 
@@ -749,7 +752,7 @@
             </div>
           </div>
           <div class="card p-fluid col-2" style="display: flex; flex-direction: column; align-items: center; justify-content: space-around;">
-            <h2 class="font-medium text-3xl">Printable Deliverables</h2>
+            <h2 class="font-medium text-3xl">Printable<br>Deliverables</h2>
             <div class="flex align-items-center py-3 px-2 border-top-1 surface-border">
               <Badge :value="project.printableDeliverablesCF" size="xlarge" severity="info" />
             </div>
