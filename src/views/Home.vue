@@ -148,7 +148,6 @@ export default {
     getProjects() {
       this.axios.get('/projects')
       .then((response) => {
-        console.log(response.data)
         this.projects = response.data;
       })
       .catch((e)=>{

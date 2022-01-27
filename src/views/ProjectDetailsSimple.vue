@@ -715,6 +715,20 @@
       </div>
     </div>
 
+    <Dialog header="Error" v-model:visible="displayPartnersWithoutCountryDialog" class="col-4" :modal="true">
+        <div class="flex align-items-center justify-content-center">
+            <i class="pi pi-exclamation-triangle mr-3" style="font-size: 2rem" />
+            <div>
+            <p>You need to select a country for each partner in order to calculate the CF of the project!</p>
+            <p>Partners without country:</p>
+            <p v-for="partner in partnersWithoutCountry" :key="partner._id">{{partner.name}}</p>
+        </div>
+        </div>
+        <template #footer>
+            <Button label="Ok" @click="closePartnersWithoutCountryErrorDialog" class="p-button-text p-button-info" autofocus/>
+        </template>
+    </Dialog>
+
     <div class="col-12">
       <div class="card p-fluid" style="display: flex; flex-direction: column; align-items: center; justify-content: space-around;">
         <h2>CF Breakdown (Tons)</h2>
@@ -793,6 +807,7 @@ import Topbar from '@/components/Topbar.vue';
 import Mongoose from "mongoose"
 import Toast from 'primevue/toast';
 import Badge from 'primevue/badge';
+import Dialog from 'primevue/dialog';
 
 import 'primeicons/primeicons.css';
 
@@ -800,6 +815,7 @@ export default {
   name: 'ProjectDetailsSimple',
   components: {
     Dropdown,
+    Dialog,
     Button,
     DataTable,
     Column,
@@ -848,6 +864,8 @@ export default {
       onFocusValue: null,
       currentPagePartnersTable: 0,
       currentPagePrintableDeliverablesTable: 0,
+      displayPartnersWithoutCountryDialog: false,
+      partnersWithoutCountry: [],
     }
   },
   created() {
@@ -859,25 +877,43 @@ export default {
     this.loading = false;
   },
   methods: {
+    displayPartnersWithoutCountryErrorDialog() {
+      this.displayPartnersWithoutCountryDialog = true
+    },
+    closePartnersWithoutCountryErrorDialog() {
+      this.displayPartnersWithoutCountryDialog = false
+      this.partnersWithoutCountry = []
+    },
     calculateCF() {
-      axios.put(`/projects/calculateCF/${this.$route.params.id}`)
-      .then((response) => {
-        let partners = this.project.partners
-        let printableDeliverables = this.project.printableDeliverables
-        let coordinator = this.project.coordinator
-        
-        this.project = response.data;
-        this.project.partners = partners
-        this.project.printableDeliverables = printableDeliverables
-        this.project.coordinator = coordinator
+      
+      this.checkEventsNotFilled()
 
-        this.$toast.add({severity:'success', summary: 'Successful', detail: 'Project CF calculated', life: 3000});
+      for (let partner of this.project.partners) {
+        if (partner.country === "Select a country") {
+          this.partnersWithoutCountry.push(partner)
+        }
+      }
 
-        // console.log(response.data)
-      })
-      .catch((e)=>{
-        console.log('error' + e);
-      })
+      if (this.partnersWithoutCountry.length > 0) {
+        this.displayPartnersWithoutCountryErrorDialog()
+      } else {
+        axios.put(`/projects/calculateCF/${this.$route.params.id}`)
+        .then((response) => {
+          let partners = this.project.partners
+          let printableDeliverables = this.project.printableDeliverables
+          let coordinator = this.project.coordinator
+          
+          this.project = response.data;
+          this.project.partners = partners
+          this.project.printableDeliverables = printableDeliverables
+          this.project.coordinator = coordinator
+
+          this.$toast.add({severity:'success', summary: 'Successful', detail: 'Project CF calculated', life: 3000});
+        })
+        .catch((e)=>{
+          console.log('error' + e);
+        })
+      }
     },
     getTextColorFromCFIndex(cfIndex) {
         if (cfIndex < 3)
@@ -1016,16 +1052,18 @@ export default {
           this.project.partners = []
           this.$store.dispatch("updateSelectedPartner", "");
         } else {
+
+          this.project.partners.splice(index, 1)
+          
+          if (this.project.partners.filter(p => p.coordinator === true).length === 0)
+              this.onCellEditCompletePartnerCoordinator(this.project.partners[0])
+          
+          if (this.selectedPartnerForEquipmentSimple === partner.name)
+            this.$store.dispatch("updateSelectedPartner", this.project.partners.filter(p => p._id !== partner._id)[0].name)
+
           this.axios.get(`/partners?projectId=${this.$route.params.id}`)
           .then((response) => {
-
             this.project.partners = response.data;
-            
-            if (this.project.partners.filter(p => p.coordinator === true).length === 0)
-              this.onCellEditCompletePartnerCoordinator(this.project.partners[0])
-            
-            if (this.selectedPartnerForEquipmentSimple === partner.name)
-              this.$store.dispatch("updateSelectedPartner", this.project.partners.filter(p => p._id !== partner._id)[0].name)
           })
           .catch((e)=>{
             console.log('error' + e);
@@ -1119,9 +1157,6 @@ export default {
       })
     },
     onCellEditCompletePartnerEquipment(field, newValue) {
-      // console.log("field", field)
-      // console.log("newValue", newValue)
-      // console.log("this.onFocusValue", this.onFocusValue)
       
       if (newValue === this.onFocusValue) return;
 
@@ -1129,8 +1164,6 @@ export default {
       const paramsData = {}
       paramsData[field] = newValue;
       
-      // console.log("paramsData", paramsData)
-
       axios.put("/partners/" + partnerId, paramsData).then(() => {
         this.project[field] = newValue
         this.$toast.add({severity:'success', summary: 'Successful', detail: 'Partner equipment data updated', life: 3000});
@@ -1159,6 +1192,64 @@ export default {
       }).catch(error =>{
         console.log(error)
       })
+    },
+    checkEventsNotFilled() {
+      if (this.project.publicOnSiteEventsNumber === 0) {
+        if (this.project.publicOnSiteEventsAveragePhysicalParticipants !== 0
+            || this.project.publicOnSiteEventsAverageNonLocalPhysicalParticipants !== 0
+            || this.project.publicOnSiteEventsAverageDuration !== 0) {
+          this.$toast.add({severity:'warn', summary: 'Caution', detail: 'Some values were input while the number of public in presence events is 0!', life: 8000});
+        }
+      }
+
+      if (this.project.publicHybridEventsNumber === 0) {
+        if (this.project.publicHybridEventsAveragePhysicalParticipants !== 0
+            || this.project.publicHybridEventsAverageNonLocalPhysicalParticipants !== 0
+            || this.project.publicHybridEventsAverageVirtualParticipants !== 0
+            || this.project.publicHybridEventsAverageDuration !== 0
+            || this.project.publicHybridEventsAverageHoursPerDays !== 0) {
+          this.$toast.add({severity:'warn', summary: 'Caution', detail: 'Some values were input while the number of public mixed events is 0!', life: 8000});
+        }
+      }
+
+      if (this.project.publicVirtualEventsNumber === 0) {
+        if (this.project.publicVirtualEventsAverageVirtualParticipants !== 0
+            || this.project.publicVirtualEventsAverageDuration !== 0) {
+          this.$toast.add({severity:'warn', summary: 'Caution', detail: 'Some values were input while the number of public on-line events is 0!', life: 8000});
+        }
+      }
+  
+      if (this.project.internalOnSiteEventsNumber === 0) {
+        if (this.project.internalOnSiteEventsAveragePhysicalParticipants !== 0
+            || this.project.internalOnSiteEventsAverageNonLocalPhysicalParticipants !== 0
+            || this.project.internalOnSiteEventsAverageDuration !== 0) {
+          this.$toast.add({severity:'warn', summary: 'Caution', detail: 'Some values were input while the number of internal in presence events is 0!', life: 8000});
+        }
+      }
+
+      if (this.project.internalHybridEventsNumber === 0) {
+        if (this.project.internalHybridEventsAveragePhysicalParticipants !== 0
+            || this.project.internalHybridEventsAverageNonLocalPhysicalParticipants !== 0
+            || this.project.internalHybridEventsAverageVirtualParticipants !== 0
+            || this.project.internalHybridEventsAverageDuration !== 0
+            || this.project.internalHybridEventsAverageHoursPerDays !== 0) {
+          this.$toast.add({severity:'warn', summary: 'Caution', detail: 'Some values were input while the number of internal mixed events is 0!', life: 8000});
+        }
+      }
+
+      if (this.project.internalVirtualEventsNumber === 0) {
+        if (this.project.internalVirtualEventsAverageVirtualParticipants !== 0
+            || this.project.internalVirtualEventsAverageDuration !== 0) {
+          this.$toast.add({severity:'warn', summary: 'Caution', detail: 'Some values were input while the number of internal on-line events is 0!', life: 8000});
+        }
+      }
+  
+      if (this.project.participatedOnSiteEventsNumber === 0) {
+        if (this.project.participatedOnSiteEventsAverageParticipants !== 0
+            || this.project.participatedOnSiteEventsAverageDuration !== 0) {
+          this.$toast.add({severity:'warn', summary: 'Caution', detail: 'Some values were input while the number of participated in presence events is 0!', life: 8000});
+        }
+      }
     }
   },
   computed: {
@@ -1187,11 +1278,6 @@ export default {
   justify-content: space-around;
   align-items: center;
   flex-direction: column;
-}
-
-.col-12-custom {
-    flex: 0 0 auto;
-    width: 100%;
 }
 
 </style>
