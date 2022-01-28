@@ -23,6 +23,7 @@
                   <i class="pi pi-search" />
                   <InputText v-model="partnerFilters['global'].value" placeholder="Keyword Search" style="width: 100%"/>
                 </span>
+                <Button class="ml-2" label="Save" icon="pi pi-check" @click="savePartners" />
               </div>
               
               <Button type="button" icon="pi pi-filter-slash" label="Clear" class="p-button-warning" @click="clearPartnerFilter()"/>
@@ -605,6 +606,7 @@
                     <i class="pi pi-search" />
                     <InputText v-model="printableDeliverableFilters['global'].value" placeholder="Keyword Search" style="width: 100%"/>
                   </span>
+                  <Button class="ml-2" label="Save" icon="pi pi-check" @click="savePrintableDeliverables" />
                 </div>
                 
                 <Button type="button" icon="pi pi-filter-slash" label="Clear" class="p-button-warning" @click="clearPrintableDeliverableFilter()"/>
@@ -888,6 +890,13 @@ export default {
       
       this.checkEventsNotFilled()
 
+      let projectID = this.project._id;
+      this.axios.put('/projects/' + projectID, this.project).then((req) => {
+        console.log(req);
+      }).catch((error) => {
+        console.log(error);
+      })
+
       for (let partner of this.project.partners) {
         if (partner.country === "Select a country") {
           this.partnersWithoutCountry.push(partner)
@@ -1075,6 +1084,31 @@ export default {
         console.log('error' + e);
       })
     },
+
+    savePrintableDeliverables() {
+
+      console.log(this.project.printableDeliverables);
+      this.axios.put('/printableDeliverables/updateAll', this.project.printableDeliverables).then((req) => {
+        console.log(req);
+        this.$toast.add({severity:'success', summary: 'Successful', detail: 'All Printable Deliverables updated', life: 3000});
+      }).catch((error) =>{
+        console.log(error)
+      })
+
+    },
+
+    savePartners() {
+
+      console.log(this.project.partners);
+      this.axios.put('/partners/updateAll', this.project.partners).then((req) => {
+        console.log(req);
+        this.$toast.add({severity:'success', summary: 'Successful', detail: 'All Partners updated', life: 3000});
+      }).catch((error) =>{
+        console.log(error)
+      })
+
+    },
+
     getDeliverableNames(deliverableType) {
       for (let option in this.deliverableOptions) {
         if (this.deliverableOptions[option].value === deliverableType) {
