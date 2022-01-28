@@ -23,10 +23,7 @@
                   <i class="pi pi-search" />
                   <InputText v-model="partnerFilters['global'].value" placeholder="Keyword Search" style="width: 100%"/>
                 </span>
-              </div>
-
-              <div>
-                <Button label="Save" icon="pi pi-check" @click="savePartners" />
+                <Button class="ml-2" label="Save" icon="pi pi-check" @click="savePartners" />
               </div>
               
               <Button type="button" icon="pi pi-filter-slash" label="Clear" class="p-button-warning" @click="clearPartnerFilter()"/>
@@ -609,12 +606,8 @@
                     <i class="pi pi-search" />
                     <InputText v-model="printableDeliverableFilters['global'].value" placeholder="Keyword Search" style="width: 100%"/>
                   </span>
+                  <Button class="ml-2" label="Save" icon="pi pi-check" @click="savePrintableDeliverables" />
                 </div>
-              
-              <div>
-                <Button label="Save" icon="pi pi-check" @click="savePrintableDeliverables" />
-              </div>
-
                 
                 <Button type="button" icon="pi pi-filter-slash" label="Clear" class="p-button-warning" @click="clearPrintableDeliverableFilter()"/>
               </div>
