@@ -862,6 +862,15 @@ export default {
   },
   methods: {
     calculateCF() {
+
+      let projectID = this.project._id;
+      this.axios.put('/projects/' + projectID, this.project).then((req) => {
+        console.log(req);
+        this.$toast.add({severity:'success', summary: 'Successful', detail: 'Project updated', life: 3000});
+      }).catch((error) => {
+        console.log(error);
+      })
+
       axios.put(`/projects/calculateCF/${this.$route.params.id}`)
       .then((response) => {
         let partners = this.project.partners
