@@ -205,58 +205,6 @@
               </div>
             </div>
           </div>
-
-          <div class="p-fluid formgrid grid">
-            <div class="card col-3 ml-2 mr-2">
-              <h5>Other electrical equipment</h5>
-
-              <div class="p-fluid formgrid grid">
-                <div class="field col-12 md:col-12">
-                  <label for="totalWeightOtherElectricalEquipment">Total weight (T) of other electrical equipment</label>
-                  <InputNumber v-model="selectedPartner.totalWeightOtherElectricalEquipment" mode="decimal" :maxFractionDigits="3"
-                  showButtons decrementButtonClass="p-button-info" :step="0.001" @keypress.enter="$event.target.blur()"
-                  incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
-                  :allowEmpty="false" :min="0" @focus="onFocusValue=selectedPartner.totalWeightOtherElectricalEquipment" 
-                  @focusout="onCellEditCompletePartnerEquipment('totalWeightOtherElectricalEquipment', selectedPartner.totalWeightOtherElectricalEquipment)"
-                  id="totalWeightOtherElectricalEquipment"/>
-                </div>
-              </div>
-            </div>
-
-            <div class="card col-9" style="width: 72.75%">
-              <h5>Tools and machines</h5>
-              
-              <div class="p-fluid formgrid grid">
-                <div class="field col-12 md:col-4">
-                  <label for="totalWeightVehicles">Total weight of vehicles (T)</label>
-                  <InputNumber v-model="selectedPartner.totalWeightVehicles" mode="decimal" :maxFractionDigits="3"
-                  showButtons decrementButtonClass="p-button-info" :step="0.001" @keypress.enter="$event.target.blur()"
-                  incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
-                  :allowEmpty="false" :min="0" @focus="onFocusValue=selectedPartner.totalWeightVehicles" 
-                  @focusout="onCellEditCompletePartnerEquipment('totalWeightVehicles', selectedPartner.totalWeightVehicles)"
-                  id ="totalWeightVehicles"/>
-                </div>
-                <div class="field col-12 md:col-4">
-                  <label for="totalWeightMachines">Total weight of machines (T)</label>
-                  <InputNumber v-model="selectedPartner.totalWeightMachines" mode="decimal" :maxFractionDigits="3"
-                  showButtons decrementButtonClass="p-button-info" :step="0.001" @keypress.enter="$event.target.blur()"
-                  incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
-                  :allowEmpty="false" :min="0" @focus="onFocusValue=selectedPartner.totalWeightMachines" 
-                  @focusout="onCellEditCompletePartnerEquipment('totalWeightMachines', selectedPartner.totalWeightMachines)"
-                  id="totalWeightMachines"/>
-                </div>
-                <div class="field col-12 md:col-4">
-                  <label for="totalWeightFurniture">Total weight of furniture (T)</label>
-                  <InputNumber v-model="selectedPartner.totalWeightFurniture" mode="decimal" :maxFractionDigits="3"
-                  showButtons decrementButtonClass="p-button-info" :step="0.001" @keypress.enter="$event.target.blur()"
-                  incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
-                  :allowEmpty="false" :min="0" @focus="onFocusValue=selectedPartner.totalWeightFurniture" 
-                  @focusout="onCellEditCompletePartnerEquipment('totalWeightFurniture', selectedPartner.totalWeightFurniture)"
-                  id="totalWeightFurniture"/>
-                </div>
-              </div>
-            </div>
-          </div>
         </template>
 
         <template v-else>
@@ -890,13 +838,6 @@ export default {
       
       this.checkEventsNotFilled()
 
-      let projectID = this.project._id;
-      this.axios.put('/projects/' + projectID, this.project).then((req) => {
-        console.log(req);
-      }).catch((error) => {
-        console.log(error);
-      })
-
       for (let partner of this.project.partners) {
         if (partner.country === "Select a country") {
           this.partnersWithoutCountry.push(partner)
@@ -906,6 +847,15 @@ export default {
       if (this.partnersWithoutCountry.length > 0) {
         this.displayPartnersWithoutCountryErrorDialog()
       } else {
+
+        axios.put(`/projects/${this.$route.params.id}`, this.project)
+        .catch((error) => {
+          console.log(error);
+        })
+
+        this.savePrintableDeliverables()
+        this.savePartners()
+
         axios.put(`/projects/calculateCF/${this.$route.params.id}`)
         .then((response) => {
           let partners = this.project.partners
@@ -1084,31 +1034,22 @@ export default {
         console.log('error' + e);
       })
     },
-
     savePrintableDeliverables() {
-
-      console.log(this.project.printableDeliverables);
-      this.axios.put('/printableDeliverables/updateAll', this.project.printableDeliverables).then((req) => {
-        console.log(req);
+      this.axios.put('/printableDeliverables/updateAll', this.project.printableDeliverables)
+      .then(() => {
         this.$toast.add({severity:'success', summary: 'Successful', detail: 'All Printable Deliverables updated', life: 3000});
       }).catch((error) =>{
         console.log(error)
       })
-
     },
-
     savePartners() {
-
-      console.log(this.project.partners);
-      this.axios.put('/partners/updateAll', this.project.partners).then((req) => {
-        console.log(req);
+      this.axios.put('/partners/updateAll', this.project.partners)
+      .then(() => {
         this.$toast.add({severity:'success', summary: 'Successful', detail: 'All Partners updated', life: 3000});
       }).catch((error) =>{
         console.log(error)
       })
-
     },
-
     getDeliverableNames(deliverableType) {
       for (let option in this.deliverableOptions) {
         if (this.deliverableOptions[option].value === deliverableType) {
@@ -1137,9 +1078,6 @@ export default {
     },
     onCellEditComplete(field, newValue) {
       if (newValue === this.onFocusValue) return;
-
-      // console.log("newValue", newValue)
-      // console.log("this.onFocusValue", newValue)
 
       const paramsData = {}
       paramsData[field] = newValue;
