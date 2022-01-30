@@ -3,24 +3,32 @@
   <Topbar />
 
   <div class="grid" style="justify-content: center;">
-    <div class="col-3-custom">
+    <div class="col-5">
 			<div class="card">
 				<h2>Project general data</h2>
 				<div class="p-fluid formgrid grid">
 					<div class="field col-12 md:col-12">
 						<label for="projectName">Project Name</label>
-            <InputText v-model="newProject.name" id="projectName" name="projectName" />
-					</div>
-          <div class="field col-12 md:col-12" style="display: flex; justify-content: space-around;">
-            <div class="field col-12 md:col-4">
-              <label for="projectInitialDuration">Project Starting Year</label>
-              <InputNumber v-model="newProject.from" id="projectInitialDuration" name="projectInitialDuration" showButtons :min="0" mode="decimal"
-              decrementButtonClass="p-button-info" incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"/>
+            <InputText v-model="newProject.name" id="projectName" name="projectName" :class="{'p-invalid': submitted && errors.filter(e => e.field === 'name').length > 0}" />
+            <small style="margin-top: 5px" class="p-error" v-for="error in errors.filter(e => submitted && e.field === 'name')" :key="error.message">{{error.message}}</small>
+          </div>
+          <div class="field col-12 md:col-12">
+            <div class="col-12 md:col-12" style="display: flex; justify-content: space-around;">
+              <div class="field col-12 md:col-4">
+                <label for="projectInitialDuration">Project Starting Year</label>
+                <InputNumber v-model="newProject.from" id="projectInitialDuration" name="projectInitialDuration" showButtons :min="0" mode="decimal"
+                decrementButtonClass="p-button-info" incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
+                :class="{'p-invalid': submitted && errors.filter(e => e.field === 'duration').length > 0}" />
+              </div>
+              <div class="field col-12 md:col-4">
+                <label for="projectFinalDuration">Project Finishing Year</label>
+                <InputNumber v-model="newProject.to" id="projectFinalDuration" name="projectFinalDuration" showButtons :min="0" mode="decimal"
+                decrementButtonClass="p-button-info" incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
+                :class="{'p-invalid': submitted && errors.filter(e => e.field === 'duration').length > 0}" />
+              </div>
             </div>
-            <div class="field col-12 md:col-4">
-              <label for="projectFinalDuration">Project Finishing Year</label>
-              <InputNumber v-model="newProject.to" id="projectFinalDuration" name="projectFinalDuration" showButtons :min="0" mode="decimal"
-              decrementButtonClass="p-button-info" incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"/>
+            <div class="col-12 md:col-12" style="display: flex; justify-content: center;">
+              <small class="p-error" v-for="error in errors.filter(e => submitted && e.field === 'duration')" :key="error.message">{{error.message}}</small>
             </div>
           </div>
 					<div class="field col-12 md:col-12">
@@ -66,18 +74,6 @@ export default {
     Button,
     Topbar
   },
-  created() {
-    if (this.$route.params.id) {
-      axios.get(`/projects/${this.$route.params.id}`)
-      .then((response) => {
-        console.log(response.data)
-        this.newProject = response.data;
-      })
-      .catch((e)=>{
-        console.log('error' + e);
-      })
-    }
-  },
   data() {
     return {
       newProject: {
@@ -117,11 +113,25 @@ export default {
         participatedOnSiteEventsNumber: 0,
         participatedOnSiteEventsAverageParticipants: 0,
         participatedOnSiteEventsAverageDuration: 0,
-      }
+      },
+      errors: [],
+      submitted: false,
+    }
+  },
+  created() {
+    if (this.$route.params.id) {
+      axios.get(`/projects/${this.$route.params.id}`)
+      .then((response) => {
+        this.newProject = response.data;
+      })
+      .catch((e)=>{
+        console.log('error' + e);
+      })
     }
   },
   methods: {
     createProject() {
+      this.submitted = true
       this.newProject._id = new mongoose.Types.ObjectId(); 
 
       axios.post('/projects', this.newProject,{
@@ -130,87 +140,23 @@ export default {
             password: this.$store.state.password
           }
       })
-      .then((response) => {
-        console.log("Response: ", response.data)
+      .then(() => {
         this.$router.push({ path: `/projects/${this.newProject._id}` })
       })
-      .catch((e)=>{
-        console.log('error' + e);
+      .catch((error)=>{
+        this.errors = error.response.data
       })
     },
     updateProject() {
+      this.submitted = true
       axios.put('/projects/' + this.newProject._id, this.newProject)
-      .then((response) => {
-        console.log("Response: ", response.data)
+      .then(() => {
         this.$router.push({ path: `/projects/${this.newProject._id}` })
       })
-      .catch((e)=>{
-        console.log('error' + e);
+      .catch((error)=>{
+        this.errors = error.response.data
       })
     }
   }
 }
 </script>
-
-<style scoped>
-
-/* .wizard {
-  position: relative;
-  top: 50px;
-}
-
-.formRow {
-  font-size: 40px;
-  margin-bottom: 40px;
-  display: flex;
-}
-
-label {
-  position: relative;
-  top: 6px;
-  left: 600px;
-  width: 300px;
-  text-align: left;
-  display: block;
-}
-
-input {
-  position: relative;
-  height: 30px;
-  top: 10px;
-  padding-left: 10px;
-  border: 2px solid #42b983;
-  border-radius: 5px;
-}
-
-input[type=text] {
-  left: 800px;
-  width: 300px;
-}
-
-input[type=number] {
-  left: 835px;
-  width: 100px;
-}
-
-.buttons {
-  position: relative;
-  top: 50px;
-}
-
-#create {
-  position: relative;
-  right: 50px;
-}
-
-#cancel {
-  position: relative;
-  left: 50px;
-} */
-
-.col-3-custom {
-  flex: 0 0 auto;
-    padding: 0.5rem;
-    width: 35%;
-}
-</style>
