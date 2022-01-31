@@ -582,7 +582,7 @@
                   </span>
                 </template>
                 <template #option="slotProps">
-                    <span>{{slotProps.option.value}}</span>
+                    <span>{{slotProps.option.value}} ({{slotProps.option.avgPagesPerCopy}} pages, {{slotProps.option.size}})</span>
                 </template>
               </Dropdown>
             </template>
@@ -786,6 +786,12 @@ export default {
       countriesForDropdown: ["Albania", "Bosnia & Herzegovina", "Croatia", "Cyprus", "France", "Greece", "Italy", "Malta", "Montenegro", "Portugal", "Slovenia", "Spain", "Bulgaria", "North Macedonia"],
       paperSizes: ["A0", "A1", "A2", "A3", "A4", "A5", "A6"],
       deliverableOptions: [
+        {value: "Report type", deliverableNames: ["Report", "Plan", "Analysis", "Study", "Methodology", "Manual", "Guidance", "Roadmap", "Strategy", "Proceedings"], avgPagesPerCopy: 50, size: "A4"},
+        {value: "Articles/Newsletter/Booklet", deliverableNames: ["Articles", "Newsletter", "Booklet"], avgPagesPerCopy: 10, size: "A4"},
+        {value: "Brochure/Flyer", deliverableNames: ["Brochure", "Flyer"], avgPagesPerCopy: 2, size: "A4"},
+        {value: "Poster", deliverableNames: ["Poster"], avgPagesPerCopy: 1, size: "A0"},
+      ],
+      deliverableAdvancedOptions: [
         {value: "Application form", deliverableNames: ["Application form"]},
         {value: "Data", deliverableNames: ["Database", "Evaluation report", "Good practices", "Thematic data collection", "Stakeholders and beneficiaries"]},
         {value: "Digital or written communication", deliverableNames: ["Article", "Booklet", "Brochure", "Flyer", "Goodies", "Newsletter", "Poster", "Proceedings", "Social networks", "Story telling", "Widget"]},
@@ -1156,6 +1162,13 @@ export default {
       if (field === "deliverableType") {
         paramsData["deliverableName"] = "Select a deliverable name"
         newData["deliverableName"] = "Select a deliverable name"
+
+        let newPrintableDeliverable = this.deliverableOptions.filter(d => d.value == newValue)[0]
+
+        paramsData["avgPagesPerCopy"] = newPrintableDeliverable.avgPagesPerCopy
+        newData["avgPagesPerCopy"] = newPrintableDeliverable.avgPagesPerCopy
+        paramsData["size"] = newPrintableDeliverable.size
+        newData["size"] = newPrintableDeliverable.size
       }
       
       axios.put("/printableDeliverables/" + data._id, paramsData).then(() => {
