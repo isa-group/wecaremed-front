@@ -35,6 +35,9 @@
                               <i class="pi pi-search" />
                               <InputText v-model="partnerFilters['global'].value" placeholder="Keyword Search" style="width: 100%"/>
                             </span>
+
+                            <Button class="ml-2" label="Save" icon="pi pi-check" @click="savePartners" />
+
                           </div>
                           
                           <Button type="button" icon="pi pi-filter-slash" label="Clear" class="p-button-warning" @click="clearPartnerFilter()"/>
@@ -111,11 +114,11 @@
                     </template>
 
                     <template #empty>
-                        No partners found.
+                        No heat items found.
                     </template>
 
                     <template #loading>
-                        Loading partners. Please wait.
+                        Loading items. Please wait.
                     </template>
 
                     <Column field="country" header="Country" :sortable="true">
@@ -124,12 +127,9 @@
                       </template>
                     </Column>
 
-                    <Column field="personMonthsPP" header="PersonMonths" :sortable="true">
+                    <Column field="fuelTypeHeat" header="FuelType" :sortable="true">
                       <template #editor="slotProps" class="p-field">
-                        <InputNumber v-model="slotProps.data[slotProps.field]" mode="decimal" :maxFractionDigits="3"
-                        showButtons :step="0.25" decrementButtonClass="p-button-info"
-                        incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
-                        :allowEmpty="false" :min="0" />
+                        <Dropdown :options="fuelTypesForDropdown" v-model="slotProps.data[slotProps.field]" />
                       </template>
                     </Column>
 
@@ -1338,6 +1338,7 @@ export default {
       object: {},
       countriesForDropdown: ["Albania", "Bosnia & Herzegovina", "Croatia", "Cyprus", "France", "Greece", "Italy", "Malta", "Montenegro", "Portugal", "Slovenia", "Spain", "Bulgaria", "North Macedonia"],
       paperSizes: ["A0", "A1", "A2", "A3", "A4", "A5", "A6"],
+      fuelTypesForDropdown: ["Biomass", "Coal", "District Heat", "Gas oil", "Natural Gas"],
       deliverableOptions: [
         {value: "Application form", deliverableNames: ["Application form"]},
         {value: "Data", deliverableNames: ["Database", "Evaluation report", "Good practices", "Thematic data collection", "Stakeholders and beneficiaries"]},
@@ -1724,7 +1725,23 @@ export default {
       }).catch(error =>{
         console.log(error)
       })
-    }
+    },
+    savePartners() {
+      this.axios.put('/partners/updateAll', this.project.partners)
+      .then(() => {
+        this.$toast.add({severity:'success', summary: 'Successful', detail: 'All Partners updated', life: 3000});
+      }).catch((error) =>{
+        console.log(error)
+      })
+    },
+    savePrintableDeliverables() {
+      this.axios.put('/printableDeliverables/updateAll', this.project.printableDeliverables)
+      .then(() => {
+        this.$toast.add({severity:'success', summary: 'Successful', detail: 'All Printable Deliverables updated', life: 3000});
+      }).catch((error) =>{
+        console.log(error)
+      })
+    },
   },
   computed: {
     ...mapState([
