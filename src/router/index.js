@@ -4,6 +4,7 @@ import ProjectDetailsSimple from '../views/ProjectDetailsSimple.vue'
 import Login from '../views/Login.vue'
 // import ProjectDetailsAdvanced from '../views/ProjectDetailsAdvanced.vue';
 import axios from 'axios'
+import store from '../store'
 
 const routes = [
   
@@ -75,7 +76,7 @@ const router = createRouter({
 
 router.beforeEach((to, from, next) => {
   if (to.matched.some(record => record.meta.requiresAuth)) {
-    axios.get('/projects')
+    axios.post('/auth/login', {email: store.state.username, password: store.state.password})
     .then((req) => {
       if (req.config.headers.Authorization){
         next()
@@ -86,15 +87,11 @@ router.beforeEach((to, from, next) => {
         })
       }
     })
-    .catch(err => {
-      if (err.response.status === 401) {
+    .catch(() => {
         next({
           path: '/login',
           query: { redirect: to.fullPath }
         })
-      } else {
-        next()
-      }
     });
   } else {
     next()

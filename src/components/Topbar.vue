@@ -160,11 +160,10 @@ export default {
         logout() {
             this.$store.dispatch("saveUsername", '');
             this.$store.dispatch("savePassword", '');
-            axios.get('/logout').then(response => {
-                console.log(response);
+            
+            axios.post('/auth/logout').then(() => {
                 window.location.href = '/login';
-            }).catch(err => {
-                console.log(err);
+            }).catch(() => {
                 window.location.href = '/login';
                 this.$toast.add({severity:'success', summary: 'Successful', detail: 'Logged out successfully', life: 3000});
             });
