@@ -160,8 +160,9 @@ export default {
         logout() {
             this.$store.dispatch("saveUsername", '');
             this.$store.dispatch("savePassword", '');
-            
-            axios.post('/auth/logout').then(() => {
+            this.$store.dispatch("saveUserId", '');
+            this.$store.dispatch("saveIsSuperUser", false);
+            axios.post('/auth/logout').then(() => { 
                 window.location.href = '/login';
             }).catch(() => {
                 window.location.href = '/login';

@@ -113,6 +113,7 @@ export default {
         participatedOnSiteEventsNumber: 0,
         participatedOnSiteEventsAverageParticipants: 0,
         participatedOnSiteEventsAverageDuration: 0,
+        user : this.$store.state.userId
       },
       errors: [],
       submitted: false,
@@ -133,6 +134,7 @@ export default {
     createProject() {
       this.submitted = true
       this.newProject._id = new mongoose.Types.ObjectId(); 
+      this.newUserId = this.$store.state.userId;
 
       axios.post('/projects', this.newProject,{
         auth: {

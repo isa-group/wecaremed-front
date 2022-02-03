@@ -146,7 +146,10 @@ export default {
   },
   methods: {
     getProjects() {
-      this.axios.get('/projects')
+      this.axios.get('/projects', { params: {
+        userId: this.$store.state.userId,
+        isSuperUser: this.$store.state.isSuperUser
+      }})
       .then((response) => {
         this.projects = response.data;
       })
