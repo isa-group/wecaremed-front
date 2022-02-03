@@ -68,7 +68,10 @@ export default {
       this.$store.dispatch("savePassword", this.password);
       
       axios.post('/auth/login', {email: this.username, password: this.password})
-      .then(() => {
+      .then((response) => {
+        console.log("Ha logeado de forma correcta");
+        this.$store.dispatch("saveUserId", response.data.userId);  
+        this.$store.dispatch("saveIsSuperUser", response.data.userIsSuperUser);  
         window.location.href = '/';
         this.$toast.add({severity:'success', summary: 'Successful', detail: 'Logged in successfully', life: 3000});
       }).catch(err => {
@@ -81,7 +84,10 @@ export default {
       this.$store.dispatch("savePassword", this.password);
       
       axios.post('/auth/register', {email: this.username, password: this.password})
-      .then(() => {
+      .then((response ) => {
+        this.$store.dispatch("saveUserId", response.data.userId); 
+        console.log(response.data); 
+        this.$store.dispatch("saveIsSuperUser", response.data.userIsSuperUser);
         window.location.href = '/';
         this.$toast.add({severity:'success', summary: 'Successful', detail: 'Registered successfully', life: 3000});
       }).catch(err => {
