@@ -69,7 +69,6 @@ export default {
       
       axios.post('/auth/login', {email: this.username, password: this.password})
       .then((response) => {
-        console.log("Ha logeado de forma correcta");
         this.$store.dispatch("saveUserId", response.data.userId);  
         this.$store.dispatch("saveIsSuperUser", response.data.userIsSuperUser);  
         window.location.href = '/';

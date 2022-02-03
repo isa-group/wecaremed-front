@@ -910,9 +910,7 @@ export default {
     getProject(){
       this.axios.get(`/projects/${this.$route.params.id}`)
       .then((response) => {
-        console.log(response.data);
         this.project = response.data;
-
         this.axios.get(`/partners?projectId=${this.$route.params.id}`)
         .then((response) => {
           this.project.partners = response.data;
