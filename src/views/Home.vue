@@ -50,7 +50,7 @@
         </Column>
 
         <template v-if="!this.$store.state.toggleValue">
-          <Column field="initialCF" header="CF Estimation" :sortable="true">
+          <Column field="initialCF" header="CF Estimation (t CO2e)" :sortable="true">
             <template #body="slotProps">
               <span :class="getTextColorFromCFIndex(slotProps.data.initialCF)">{{slotProps.data.initialCF}}</span>
             </template>
@@ -102,9 +102,9 @@
     
     <div class="card col-2" style="height: fit-content;">
       <h5>{{this.$store.state.toggleValue ? "CF Index colors" : "CF Estimation colors"}}</h5>
-        <div class="wrapper"><div class="coloredSquare greenSquare mb-2 mr-2"/> <p class="legendText">0-3: Ideal</p></div>
-        <div class="wrapper"><div class="coloredSquare orangeSquare mb-2 mr-2"/><p class="legendText">3-5: Improvable</p></div>
-        <div class="wrapper"><div class="coloredSquare redSquare mr-2"/>   <p class="legendText">5-10: Needs attention</p></div>
+        <div class="wrapper"><div class="coloredSquare greenSquare mb-2 mr-2"/> <p class="legendText">0-150: Ideal</p></div>
+        <div class="wrapper"><div class="coloredSquare orangeSquare mb-2 mr-2"/><p class="legendText">150-250: Improvable</p></div>
+        <div class="wrapper"><div class="coloredSquare redSquare mr-2"/>   <p class="legendText">>250: Needs attention</p></div>
     </div>
   
   </div>
@@ -157,9 +157,9 @@ export default {
       })
     },
     getTextColorFromCFIndex(cfIndex) {
-      if (cfIndex < 3)
+      if (cfIndex < 150)
         return "greenText"
-      else if (cfIndex > 3 & cfIndex < 5)
+      else if (cfIndex > 150 & cfIndex < 250)
         return "orangeText"
       else
         return "redText"
