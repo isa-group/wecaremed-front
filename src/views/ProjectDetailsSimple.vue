@@ -23,6 +23,7 @@
                   <i class="pi pi-search" />
                   <InputText v-model="partnerFilters['global'].value" placeholder="Keyword Search" style="width: 100%"/>
                 </span>
+                <Button class="ml-2" label="Save" icon="pi pi-check" @click="savePartners" />
               </div>
               
               <Button type="button" icon="pi pi-filter-slash" label="Clear" class="p-button-warning" @click="clearPartnerFilter()"/>
@@ -87,7 +88,7 @@
           </template>
         </Column>
 
-        <Column field="seasonalEmployees" header="Seasonal employees" :sortable="true">
+        <Column field="seasonalEmployees" header="Part-time employees" :sortable="true">
           <template #editor="slotProps">
             <InputNumber v-model="slotProps.data[slotProps.field]" mode="decimal" showButtons decrementButtonClass="p-button-info"
             incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
@@ -124,7 +125,7 @@
       </div>
     </div>
 
-    <div class="col-7">    
+    <div class="col-12">    
       <div class="card">
         <h4>Equipment</h4>
         <template v-if="selectedPartner">
@@ -204,58 +205,6 @@
               </div>
             </div>
           </div>
-
-          <div class="p-fluid formgrid grid">
-            <div class="card col-3 ml-2 mr-2">
-              <h5>Other electrical equipment</h5>
-
-              <div class="p-fluid formgrid grid">
-                <div class="field col-12 md:col-12">
-                  <label for="totalWeightOtherElectricalEquipment">Total weight (T) of other electrical equipment</label>
-                  <InputNumber v-model="selectedPartner.totalWeightOtherElectricalEquipment" mode="decimal" :maxFractionDigits="3"
-                  showButtons decrementButtonClass="p-button-info" :step="0.001" @keypress.enter="$event.target.blur()"
-                  incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
-                  :allowEmpty="false" :min="0" @focus="onFocusValue=selectedPartner.totalWeightOtherElectricalEquipment" 
-                  @focusout="onCellEditCompletePartnerEquipment('totalWeightOtherElectricalEquipment', selectedPartner.totalWeightOtherElectricalEquipment)"
-                  id="totalWeightOtherElectricalEquipment"/>
-                </div>
-              </div>
-            </div>
-
-            <div class="card col-9" style="width: 72.75%">
-              <h5>Tools and machines</h5>
-              
-              <div class="p-fluid formgrid grid">
-                <div class="field col-12 md:col-4">
-                  <label for="totalWeightVehicles">Total weight of vehicles (T)</label>
-                  <InputNumber v-model="selectedPartner.totalWeightVehicles" mode="decimal" :maxFractionDigits="3"
-                  showButtons decrementButtonClass="p-button-info" :step="0.001" @keypress.enter="$event.target.blur()"
-                  incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
-                  :allowEmpty="false" :min="0" @focus="onFocusValue=selectedPartner.totalWeightVehicles" 
-                  @focusout="onCellEditCompletePartnerEquipment('totalWeightVehicles', selectedPartner.totalWeightVehicles)"
-                  id ="totalWeightVehicles"/>
-                </div>
-                <div class="field col-12 md:col-4">
-                  <label for="totalWeightMachines">Total weight of machines (T)</label>
-                  <InputNumber v-model="selectedPartner.totalWeightMachines" mode="decimal" :maxFractionDigits="3"
-                  showButtons decrementButtonClass="p-button-info" :step="0.001" @keypress.enter="$event.target.blur()"
-                  incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
-                  :allowEmpty="false" :min="0" @focus="onFocusValue=selectedPartner.totalWeightMachines" 
-                  @focusout="onCellEditCompletePartnerEquipment('totalWeightMachines', selectedPartner.totalWeightMachines)"
-                  id="totalWeightMachines"/>
-                </div>
-                <div class="field col-12 md:col-4">
-                  <label for="totalWeightFurniture">Total weight of furniture (T)</label>
-                  <InputNumber v-model="selectedPartner.totalWeightFurniture" mode="decimal" :maxFractionDigits="3"
-                  showButtons decrementButtonClass="p-button-info" :step="0.001" @keypress.enter="$event.target.blur()"
-                  incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
-                  :allowEmpty="false" :min="0" @focus="onFocusValue=selectedPartner.totalWeightFurniture" 
-                  @focusout="onCellEditCompletePartnerEquipment('totalWeightFurniture', selectedPartner.totalWeightFurniture)"
-                  id="totalWeightFurniture"/>
-                </div>
-              </div>
-            </div>
-          </div>
         </template>
 
         <template v-else>
@@ -264,18 +213,18 @@
       </div>
     </div>
 
-    <div class="col-7">
+    <div class="col-12">
       <div class="card">
-        <h4>Events</h4>
+        <h4>Events*</h4>
 
 				<TabView>
 					<TabPanel header="Public events">
 						<div class="card">
-              <h5>On-site</h5>
+              <h5>In presence</h5>
 
               <div class="p-fluid formgrid grid">
                 <div class="field col-12 md:col-6">
-                  <label for="publicOnSiteEventsNumber">Number of on-site public events</label>
+                  <label for="publicOnSiteEventsNumber">Number of in presence public events</label>
                   <InputNumber v-model="project.publicOnSiteEventsNumber" mode="decimal"
                   showButtons decrementButtonClass="p-button-info" @keypress.enter="$event.target.blur()"
                   incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
@@ -313,11 +262,11 @@
               </div>
             </div>
             <div class="card">
-              <h5>Hybrid</h5>
+              <h5>Mixed mode: both in presence and on-line</h5>
 
               <div class="p-fluid formgrid grid">
                 <div class="field col-12 md:col-4">
-                  <label for="publicHybridEventsNumber">Number of hybrid public events</label>
+                  <label for="publicHybridEventsNumber">Number of mixed public events</label>
                   <InputNumber v-model="project.publicHybridEventsNumber" mode="decimal"
                   showButtons decrementButtonClass="p-button-info" @keypress.enter="$event.target.blur()"
                   incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
@@ -344,7 +293,7 @@
                   id ="publicHybridEventsAverageNonLocalPhysicalParticipants"/>
                 </div>
                 <div class="field col-12 md:col-4">
-                  <label for="publicHybridEventsAverageVirtualParticipants">Average virtual participants</label>
+                  <label for="publicHybridEventsAverageVirtualParticipants">Average on-line participants</label>
                   <InputNumber v-model="project.publicHybridEventsAverageVirtualParticipants" mode="decimal"
                   showButtons decrementButtonClass="p-button-info" @keypress.enter="$event.target.blur()"
                   incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
@@ -373,11 +322,11 @@
               </div>
             </div>
             <div class="card">
-              <h5>Virtual</h5>
+              <h5>On-line</h5>
 
               <div class="p-fluid formgrid grid">
                 <div class="field col-12 md:col-4">
-                  <label for="publicVirtualEventsNumber">Number of virtual public events</label>
+                  <label for="publicVirtualEventsNumber">Number of on-line public events</label>
                   <InputNumber v-model="project.publicVirtualEventsNumber" mode="decimal"
                   showButtons decrementButtonClass="p-button-info" @keypress.enter="$event.target.blur()"
                   incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
@@ -386,7 +335,7 @@
                   id ="publicVirtualEventsNumber"/>
                 </div>
                 <div class="field col-12 md:col-4">
-                  <label for="publicVirtualEventsAverageVirtualParticipants">Average virtual participants</label>
+                  <label for="publicVirtualEventsAverageVirtualParticipants">Average on-line participants</label>
                   <InputNumber v-model="project.publicVirtualEventsAverageVirtualParticipants" mode="decimal"
                   showButtons decrementButtonClass="p-button-info" @keypress.enter="$event.target.blur()"
                   incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
@@ -409,11 +358,11 @@
 
           <TabPanel header="Internal events/meetings">
 						<div class="card">
-              <h5>On-site</h5>
+              <h5>In presence</h5>
 
               <div class="p-fluid formgrid grid">
                 <div class="field col-12 md:col-6">
-                  <label for="internalOnSiteEventsNumber">Number of on-site internal events/meetings</label>
+                  <label for="internalOnSiteEventsNumber">Number of in presence internal events/meetings</label>
                   <InputNumber v-model="project.internalOnSiteEventsNumber" mode="decimal"
                   showButtons decrementButtonClass="p-button-info" @keypress.enter="$event.target.blur()"
                   incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
@@ -451,11 +400,11 @@
               </div>
             </div>
             <div class="card">
-              <h5>Hybrid</h5>
+              <h5>Mixed mode: both in presence and on-line</h5>
 
               <div class="p-fluid formgrid grid">
                 <div class="field col-12 md:col-4">
-                  <label for="internalHybridEventsNumber">Number of hybrid internal events/meetings</label>
+                  <label for="internalHybridEventsNumber">Number of mixed internal events/meetings</label>
                   <InputNumber v-model="project.internalHybridEventsNumber" mode="decimal"
                   showButtons decrementButtonClass="p-button-info" @keypress.enter="$event.target.blur()"
                   incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
@@ -482,7 +431,7 @@
                   id ="internalHybridEventsAverageNonLocalPhysicalParticipants"/>
                 </div>
                 <div class="field col-12 md:col-4">
-                  <label for="internalHybridEventsAverageVirtualParticipants">Average virtual participants</label>
+                  <label for="internalHybridEventsAverageVirtualParticipants">Average on-line participants</label>
                   <InputNumber v-model="project.internalHybridEventsAverageVirtualParticipants" mode="decimal"
                   showButtons decrementButtonClass="p-button-info" @keypress.enter="$event.target.blur()"
                   incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
@@ -511,11 +460,11 @@
               </div>
             </div>
             <div class="card">
-              <h5>Virtual</h5>
+              <h5>On-line</h5>
 
               <div class="p-fluid formgrid grid">
                 <div class="field col-12 md:col-4">
-                  <label for="internalVirtualEventsNumber">Number of virtual internal events/meetings</label>
+                  <label for="internalVirtualEventsNumber">Number of on-line internal events/meetings</label>
                   <InputNumber v-model="project.internalVirtualEventsNumber" mode="decimal"
                   showButtons decrementButtonClass="p-button-info" @keypress.enter="$event.target.blur()"
                   incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
@@ -524,7 +473,7 @@
                   id ="internalVirtualEventsNumber"/>
                 </div>
                 <div class="field col-12 md:col-4">
-                  <label for="internalVirtualEventsAverageVirtualParticipants">Average virtual participants</label>
+                  <label for="internalVirtualEventsAverageVirtualParticipants">Average on-line participants</label>
                   <InputNumber v-model="project.internalVirtualEventsAverageVirtualParticipants" mode="decimal"
                   showButtons decrementButtonClass="p-button-info" @keypress.enter="$event.target.blur()"
                   incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
@@ -547,11 +496,11 @@
 
 					<TabPanel header="Events participated by the project">
 						<div class="card">
-              <h5>On-site</h5>
+              <h5>In presence</h5>
 
               <div class="p-fluid formgrid grid">
                 <div class="field col-12 md:col-4">
-                  <label for="participatedOnSiteEventsNumber">Number of on-site events participated by the project</label>
+                  <label for="participatedOnSiteEventsNumber">Number of in presence events participated by the project</label>
                   <InputNumber v-model="project.participatedOnSiteEventsNumber" mode="decimal"
                   showButtons decrementButtonClass="p-button-info" @keypress.enter="$event.target.blur()"
                   incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
@@ -581,10 +530,13 @@
             </div>
 					</TabPanel>
 				</TabView>
+        <div style="text-align: left; margin-top: 10px">
+          * The values of this section are considered the same for each project partner
+        </div>
       </div>
     </div>
 
-    <div class="col-7">
+    <div class="col-12">
       <div class="card">
         <h4>Printable deliverables</h4>
       
@@ -602,6 +554,7 @@
                     <i class="pi pi-search" />
                     <InputText v-model="printableDeliverableFilters['global'].value" placeholder="Keyword Search" style="width: 100%"/>
                   </span>
+                  <Button class="ml-2" label="Save" icon="pi pi-check" @click="savePrintableDeliverables" />
                 </div>
                 
                 <Button type="button" icon="pi pi-filter-slash" label="Clear" class="p-button-warning" @click="clearPrintableDeliverableFilter()"/>
@@ -629,7 +582,7 @@
                   </span>
                 </template>
                 <template #option="slotProps">
-                    <span>{{slotProps.option.value}}</span>
+                    <span>{{slotProps.option.value}} ({{slotProps.option.avgPagesPerCopy}} pages, {{slotProps.option.size}})</span>
                 </template>
               </Dropdown>
             </template>
@@ -700,10 +653,10 @@
       </div>
     </div>
 
-    <div class="col-7">
+    <div class="col-12">
       <div class="card p-fluid" style="display: flex; flex-direction: column; align-items: center; justify-content: space-around;">
         <div>
-          <h2>Tons of equivalent carbon dioxyde emited:
+          <h2>Tons of equivalent carbon dioxide emitted:
             <Badge :value="project.initialCF" class="ml-3" size="xlarge" :severity="getTextColorFromCFIndex(project.initialCF)" />
           </h2>
         </div>
@@ -712,6 +665,77 @@
       </div>
     </div>
 
+    <Dialog header="Error" v-model:visible="displayPartnersWithoutCountryDialog" class="col-4" :modal="true">
+        <div class="flex align-items-center justify-content-center">
+            <i class="pi pi-exclamation-triangle mr-3" style="font-size: 2rem" />
+            <div>
+            <p>You need to select a country for each partner in order to calculate the CF of the project!</p>
+            <p>Partners without country:</p>
+            <p v-for="partner in partnersWithoutCountry" :key="partner._id">{{partner.name}}</p>
+        </div>
+        </div>
+        <template #footer>
+            <Button label="Ok" @click="closePartnersWithoutCountryErrorDialog" class="p-button-text p-button-info" autofocus/>
+        </template>
+    </Dialog>
+
+    <div class="col-12">
+      <div class="card p-fluid" style="display: flex; flex-direction: column; align-items: center; justify-content: space-around;">
+        <h2>CF Breakdown (Tons)</h2>
+        <div class="col-12" style="display: flex; justify-content: space-evenly;">
+          <div class="card p-fluid col-2" style="display: flex; flex-direction: column; align-items: center; justify-content: space-around;">
+            <h2 class="font-medium text-3xl">Fuels Heat</h2>
+            <div class="flex align-items-center py-3 px-2 border-top-1 surface-border">
+              <Badge :value="project.fuelsHeatCF" size="xlarge" severity="info" />
+            </div>
+          </div>
+          <div class="card p-fluid col-2" style="display: flex; flex-direction: column; align-items: center; justify-content: space-around;">
+            <h2 class="font-medium text-3xl">Electricity</h2>
+            <div class="flex align-items-center py-3 px-2 border-top-1 surface-border">
+              <Badge :value="project.electricityCF" size="xlarge" severity="info" />
+            </div>
+          </div>
+          <div class="card p-fluid col-2" style="display: flex; flex-direction: column; align-items: center; justify-content: space-around;">
+            <h2 class="font-medium text-3xl">Water</h2>
+            <div class="flex align-items-center py-3 px-2 border-top-1 surface-border">
+              <Badge :value="project.waterCF" size="xlarge" severity="info" />
+            </div>
+          </div>
+          <div class="card p-fluid col-2" style="display: flex; flex-direction: column; align-items: center; justify-content: space-around;">
+            <h2 class="font-medium text-3xl">Transportation</h2>
+            <div class="flex align-items-center py-3 px-2 border-top-1 surface-border">
+              <Badge :value="project.transportationCF" size="xlarge" severity="info" />
+            </div>
+          </div>
+        </div>
+        <div class="col-12" style="display: flex; justify-content: space-evenly;">
+          <div class="card p-fluid col-2" style="display: flex; flex-direction: column; align-items: center; justify-content: space-around;">
+            <h2 class="font-medium text-3xl">Materials</h2>
+            <div class="flex align-items-center py-3 px-2 border-top-1 surface-border">
+              <Badge :value="project.materialsCF" size="xlarge" severity="info" />
+            </div>
+          </div>
+          <div class="card p-fluid col-2" style="display: flex; flex-direction: column; align-items: center; justify-content: space-around;">
+            <h2 class="font-medium text-3xl">Printable<br>Deliverables</h2>
+            <div class="flex align-items-center py-3 px-2 border-top-1 surface-border">
+              <Badge :value="project.printableDeliverablesCF" size="xlarge" severity="info" />
+            </div>
+          </div>
+          <div class="card p-fluid col-2" style="display: flex; flex-direction: column; align-items: center; justify-content: space-around;">
+            <h2 class="font-medium text-3xl">Equipment</h2>
+            <div class="flex align-items-center py-3 px-2 border-top-1 surface-border">
+              <Badge :value="project.equipmentCF" size="xlarge" severity="info" />
+            </div>
+          </div>
+          <div class="card p-fluid col-2" style="display: flex; flex-direction: column; align-items: center; justify-content: space-around;">
+            <h2 class="font-medium text-3xl">Events</h2>
+            <div class="flex align-items-center py-3 px-2 border-top-1 surface-border">
+              <Badge :value="project.eventsCF" size="xlarge" severity="info" />
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 
 </template>
@@ -733,6 +757,7 @@ import Topbar from '@/components/Topbar.vue';
 import Mongoose from "mongoose"
 import Toast from 'primevue/toast';
 import Badge from 'primevue/badge';
+import Dialog from 'primevue/dialog';
 
 import 'primeicons/primeicons.css';
 
@@ -740,6 +765,7 @@ export default {
   name: 'ProjectDetailsSimple',
   components: {
     Dropdown,
+    Dialog,
     Button,
     DataTable,
     Column,
@@ -755,12 +781,17 @@ export default {
   data() {
     return {
       placeholder: "Select a partner",
-      arrayOfObjects: ["MEDIPLASMA SRL", "Q TECHNOLOGIES LTD", "CO2CRC Management Pty Ltd"],
       project: {},
       object: {},
-      countriesForDropdown: ["Albania", "Bosnia & Herzegovina", "Croatia", "Cyprus", "France", "Greece", "Italy", "Malta", "Montenegro", "Portugal", "Slovenia", "Spain", "Gibraltar"],
+      countriesForDropdown: ["Albania", "Bosnia & Herzegovina", "Croatia", "Cyprus", "France", "Greece", "Italy", "Malta", "Montenegro", "Portugal", "Slovenia", "Spain", "Bulgaria", "North Macedonia"],
       paperSizes: ["A0", "A1", "A2", "A3", "A4", "A5", "A6"],
       deliverableOptions: [
+        {value: "Report type", deliverableNames: ["Report", "Plan", "Analysis", "Study", "Methodology", "Manual", "Guidance", "Roadmap", "Strategy", "Proceedings"], avgPagesPerCopy: 50, size: "A4"},
+        {value: "Articles/Newsletter/Booklet", deliverableNames: ["Articles", "Newsletter", "Booklet"], avgPagesPerCopy: 10, size: "A4"},
+        {value: "Brochure/Flyer", deliverableNames: ["Brochure", "Flyer"], avgPagesPerCopy: 2, size: "A4"},
+        {value: "Poster", deliverableNames: ["Poster"], avgPagesPerCopy: 1, size: "A0"},
+      ],
+      deliverableAdvancedOptions: [
         {value: "Application form", deliverableNames: ["Application form"]},
         {value: "Data", deliverableNames: ["Database", "Evaluation report", "Good practices", "Thematic data collection", "Stakeholders and beneficiaries"]},
         {value: "Digital or written communication", deliverableNames: ["Article", "Booklet", "Brochure", "Flyer", "Goodies", "Newsletter", "Poster", "Proceedings", "Social networks", "Story telling", "Widget"]},
@@ -789,6 +820,8 @@ export default {
       onFocusValue: null,
       currentPagePartnersTable: 0,
       currentPagePrintableDeliverablesTable: 0,
+      displayPartnersWithoutCountryDialog: false,
+      partnersWithoutCountry: [],
     }
   },
   created() {
@@ -800,30 +833,57 @@ export default {
     this.loading = false;
   },
   methods: {
+    displayPartnersWithoutCountryErrorDialog() {
+      this.displayPartnersWithoutCountryDialog = true
+    },
+    closePartnersWithoutCountryErrorDialog() {
+      this.displayPartnersWithoutCountryDialog = false
+      this.partnersWithoutCountry = []
+    },
     calculateCF() {
-      axios.put(`/projects/calculateCF/${this.$route.params.id}`)
-      .then((response) => {
-        let partners = this.project.partners
-        let printableDeliverables = this.project.printableDeliverables
-        let coordinator = this.project.coordinator
-        
-        this.project = response.data;
-        this.project.partners = partners
-        this.project.printableDeliverables = printableDeliverables
-        this.project.coordinator = coordinator
+      
+      this.checkEventsNotFilled()
 
-        this.$toast.add({severity:'success', summary: 'Successful', detail: 'Project CF calculated', life: 3000});
+      for (let partner of this.project.partners) {
+        if (partner.country === "Select a country") {
+          this.partnersWithoutCountry.push(partner)
+        }
+      }
 
-        // console.log(response.data)
-      })
-      .catch((e)=>{
-        console.log('error' + e);
-      })
+      if (this.partnersWithoutCountry.length > 0) {
+        this.displayPartnersWithoutCountryErrorDialog()
+      } else {
+
+        axios.put(`/projects/${this.$route.params.id}`, this.project)
+        .catch((error) => {
+          console.log(error);
+        })
+
+        this.savePrintableDeliverables()
+        this.savePartners()
+
+        axios.put(`/projects/calculateCF/${this.$route.params.id}`)
+        .then((response) => {
+          let partners = this.project.partners
+          let printableDeliverables = this.project.printableDeliverables
+          let coordinator = this.project.coordinator
+          
+          this.project = response.data;
+          this.project.partners = partners
+          this.project.printableDeliverables = printableDeliverables
+          this.project.coordinator = coordinator
+
+          this.$toast.add({severity:'success', summary: 'Successful', detail: 'Project CF calculated', life: 3000});
+        })
+        .catch((e)=>{
+          console.log('error' + e);
+        })
+      }
     },
     getTextColorFromCFIndex(cfIndex) {
-        if (cfIndex < 3)
+        if (cfIndex < 150)
             return "success"
-        else if (cfIndex > 3 & cfIndex < 5)
+        else if (cfIndex > 150 & cfIndex < 250)
             return "warning"
         else
             return "danger"
@@ -851,7 +911,6 @@ export default {
       this.axios.get(`/projects/${this.$route.params.id}`)
       .then((response) => {
         this.project = response.data;
-
         this.axios.get(`/partners?projectId=${this.$route.params.id}`)
         .then((response) => {
           this.project.partners = response.data;
@@ -957,16 +1016,18 @@ export default {
           this.project.partners = []
           this.$store.dispatch("updateSelectedPartner", "");
         } else {
+
+          this.project.partners.splice(index, 1)
+          
+          if (this.project.partners.filter(p => p.coordinator === true).length === 0)
+              this.onCellEditCompletePartnerCoordinator(this.project.partners[0])
+          
+          if (this.selectedPartnerForEquipmentSimple === partner.name)
+            this.$store.dispatch("updateSelectedPartner", this.project.partners.filter(p => p._id !== partner._id)[0].name)
+
           this.axios.get(`/partners?projectId=${this.$route.params.id}`)
           .then((response) => {
-
             this.project.partners = response.data;
-            
-            if (this.project.partners.filter(p => p.coordinator === true).length === 0)
-              this.onCellEditCompletePartnerCoordinator(this.project.partners[0])
-            
-            if (this.selectedPartnerForEquipmentSimple === partner.name)
-              this.$store.dispatch("updateSelectedPartner", this.project.partners.filter(p => p._id !== partner._id)[0].name)
           })
           .catch((e)=>{
             console.log('error' + e);
@@ -976,6 +1037,22 @@ export default {
       })
       .catch((e)=>{
         console.log('error' + e);
+      })
+    },
+    savePrintableDeliverables() {
+      this.axios.put('/printableDeliverables/updateAll', this.project.printableDeliverables)
+      .then(() => {
+        this.$toast.add({severity:'success', summary: 'Successful', detail: 'All Printable Deliverables updated', life: 3000});
+      }).catch((error) =>{
+        console.log(error)
+      })
+    },
+    savePartners() {
+      this.axios.put('/partners/updateAll', this.project.partners)
+      .then(() => {
+        this.$toast.add({severity:'success', summary: 'Successful', detail: 'All Partners updated', life: 3000});
+      }).catch((error) =>{
+        console.log(error)
       })
     },
     getDeliverableNames(deliverableType) {
@@ -1006,9 +1083,6 @@ export default {
     },
     onCellEditComplete(field, newValue) {
       if (newValue === this.onFocusValue) return;
-
-      // console.log("newValue", newValue)
-      // console.log("this.onFocusValue", newValue)
 
       const paramsData = {}
       paramsData[field] = newValue;
@@ -1060,9 +1134,6 @@ export default {
       })
     },
     onCellEditCompletePartnerEquipment(field, newValue) {
-      // console.log("field", field)
-      // console.log("newValue", newValue)
-      // console.log("this.onFocusValue", this.onFocusValue)
       
       if (newValue === this.onFocusValue) return;
 
@@ -1070,8 +1141,6 @@ export default {
       const paramsData = {}
       paramsData[field] = newValue;
       
-      // console.log("paramsData", paramsData)
-
       axios.put("/partners/" + partnerId, paramsData).then(() => {
         this.project[field] = newValue
         this.$toast.add({severity:'success', summary: 'Successful', detail: 'Partner equipment data updated', life: 3000});
@@ -1092,6 +1161,13 @@ export default {
       if (field === "deliverableType") {
         paramsData["deliverableName"] = "Select a deliverable name"
         newData["deliverableName"] = "Select a deliverable name"
+
+        let newPrintableDeliverable = this.deliverableOptions.filter(d => d.value == newValue)[0]
+
+        paramsData["avgPagesPerCopy"] = newPrintableDeliverable.avgPagesPerCopy
+        newData["avgPagesPerCopy"] = newPrintableDeliverable.avgPagesPerCopy
+        paramsData["size"] = newPrintableDeliverable.size
+        newData["size"] = newPrintableDeliverable.size
       }
       
       axios.put("/printableDeliverables/" + data._id, paramsData).then(() => {
@@ -1100,6 +1176,64 @@ export default {
       }).catch(error =>{
         console.log(error)
       })
+    },
+    checkEventsNotFilled() {
+      if (this.project.publicOnSiteEventsNumber === 0) {
+        if (this.project.publicOnSiteEventsAveragePhysicalParticipants !== 0
+            || this.project.publicOnSiteEventsAverageNonLocalPhysicalParticipants !== 0
+            || this.project.publicOnSiteEventsAverageDuration !== 0) {
+          this.$toast.add({severity:'warn', summary: 'Caution', detail: 'Some values were input while the number of public in presence events is 0!', life: 8000});
+        }
+      }
+
+      if (this.project.publicHybridEventsNumber === 0) {
+        if (this.project.publicHybridEventsAveragePhysicalParticipants !== 0
+            || this.project.publicHybridEventsAverageNonLocalPhysicalParticipants !== 0
+            || this.project.publicHybridEventsAverageVirtualParticipants !== 0
+            || this.project.publicHybridEventsAverageDuration !== 0
+            || this.project.publicHybridEventsAverageHoursPerDays !== 0) {
+          this.$toast.add({severity:'warn', summary: 'Caution', detail: 'Some values were input while the number of public mixed events is 0!', life: 8000});
+        }
+      }
+
+      if (this.project.publicVirtualEventsNumber === 0) {
+        if (this.project.publicVirtualEventsAverageVirtualParticipants !== 0
+            || this.project.publicVirtualEventsAverageDuration !== 0) {
+          this.$toast.add({severity:'warn', summary: 'Caution', detail: 'Some values were input while the number of public on-line events is 0!', life: 8000});
+        }
+      }
+  
+      if (this.project.internalOnSiteEventsNumber === 0) {
+        if (this.project.internalOnSiteEventsAveragePhysicalParticipants !== 0
+            || this.project.internalOnSiteEventsAverageNonLocalPhysicalParticipants !== 0
+            || this.project.internalOnSiteEventsAverageDuration !== 0) {
+          this.$toast.add({severity:'warn', summary: 'Caution', detail: 'Some values were input while the number of internal in presence events is 0!', life: 8000});
+        }
+      }
+
+      if (this.project.internalHybridEventsNumber === 0) {
+        if (this.project.internalHybridEventsAveragePhysicalParticipants !== 0
+            || this.project.internalHybridEventsAverageNonLocalPhysicalParticipants !== 0
+            || this.project.internalHybridEventsAverageVirtualParticipants !== 0
+            || this.project.internalHybridEventsAverageDuration !== 0
+            || this.project.internalHybridEventsAverageHoursPerDays !== 0) {
+          this.$toast.add({severity:'warn', summary: 'Caution', detail: 'Some values were input while the number of internal mixed events is 0!', life: 8000});
+        }
+      }
+
+      if (this.project.internalVirtualEventsNumber === 0) {
+        if (this.project.internalVirtualEventsAverageVirtualParticipants !== 0
+            || this.project.internalVirtualEventsAverageDuration !== 0) {
+          this.$toast.add({severity:'warn', summary: 'Caution', detail: 'Some values were input while the number of internal on-line events is 0!', life: 8000});
+        }
+      }
+  
+      if (this.project.participatedOnSiteEventsNumber === 0) {
+        if (this.project.participatedOnSiteEventsAverageParticipants !== 0
+            || this.project.participatedOnSiteEventsAverageDuration !== 0) {
+          this.$toast.add({severity:'warn', summary: 'Caution', detail: 'Some values were input while the number of participated in presence events is 0!', life: 8000});
+        }
+      }
     }
   },
   computed: {

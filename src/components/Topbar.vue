@@ -150,9 +150,9 @@ export default {
         //     })
         // },
         getTextColorFromCFIndex(cfIndex) {
-            if (cfIndex < 3)
+            if (cfIndex < 150)
                 return "success"
-            else if (cfIndex > 3 & cfIndex < 5)
+            else if (cfIndex > 150 & cfIndex < 250)
                 return "warning"
             else
                 return "danger"
@@ -160,11 +160,10 @@ export default {
         logout() {
             this.$store.dispatch("saveUsername", '');
             this.$store.dispatch("savePassword", '');
-            axios.get('/logout').then(response => {
-                console.log(response);
+            this.$store.dispatch("saveUserId", '');
+            axios.post('/auth/logout').then(() => { 
                 window.location.href = '/login';
-            }).catch(err => {
-                console.log(err);
+            }).catch(() => {
                 window.location.href = '/login';
                 this.$toast.add({severity:'success', summary: 'Successful', detail: 'Logged out successfully', life: 3000});
             });

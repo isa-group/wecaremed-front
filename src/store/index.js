@@ -8,7 +8,8 @@ export default createStore({
     appModeText: "Simple",
     selectedPartnerForEquipmentSimple: "",
     username: '',
-    password: ''
+    password: '',
+    userId: ''
   },
   mutations: {
     toggleView(state) {
@@ -27,6 +28,9 @@ export default createStore({
     removeCredentialsUser(state){
       state.username = '';
       state.password = '';
+    },
+    saveUserId(state, userId){
+      state.userId = userId;
     }
   },
   actions: {
@@ -44,6 +48,9 @@ export default createStore({
     },
     removeCredentialsUser({commit}){
       commit("removeCredentialsUser");
+    },
+    saveUserId({commit}, userId) {
+      commit("saveUserId", userId);
     }
   },
   modules: {
