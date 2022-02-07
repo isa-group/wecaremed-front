@@ -9,8 +9,7 @@ export default createStore({
     selectedPartnerForEquipmentSimple: "",
     username: '',
     password: '',
-    userId: '',
-    isSuperUser : Boolean
+    userId: ''
   },
   mutations: {
     toggleView(state) {
@@ -29,9 +28,6 @@ export default createStore({
     removeCredentialsUser(state){
       state.username = '';
       state.password = '';
-    },
-    saveIsSuperUser(state, superUser){
-      state.isSuperUser = superUser;
     },
     saveUserId(state, userId){
       state.userId = userId;
@@ -52,9 +48,6 @@ export default createStore({
     },
     removeCredentialsUser({commit}){
       commit("removeCredentialsUser");
-    },
-    saveIsSuperUser({commit}, superUser) {
-      commit("saveIsSuperUser", superUser);
     },
     saveUserId({commit}, userId) {
       commit("saveUserId", userId);

@@ -150,9 +150,9 @@ export default {
         //     })
         // },
         getTextColorFromCFIndex(cfIndex) {
-            if (cfIndex < 3)
+            if (cfIndex < 150)
                 return "success"
-            else if (cfIndex > 3 & cfIndex < 5)
+            else if (cfIndex > 150 & cfIndex < 250)
                 return "warning"
             else
                 return "danger"
@@ -161,7 +161,6 @@ export default {
             this.$store.dispatch("saveUsername", '');
             this.$store.dispatch("savePassword", '');
             this.$store.dispatch("saveUserId", '');
-            this.$store.dispatch("saveIsSuperUser", false);
             axios.post('/auth/logout').then(() => { 
                 window.location.href = '/login';
             }).catch(() => {

@@ -69,8 +69,7 @@ export default {
       
       axios.post('/auth/login', {email: this.username, password: this.password})
       .then((response) => {
-        this.$store.dispatch("saveUserId", response.data.userId);  
-        this.$store.dispatch("saveIsSuperUser", response.data.userIsSuperUser);  
+        this.$store.dispatch("saveUserId", response.data.userId);
         window.location.href = '/';
         this.$toast.add({severity:'success', summary: 'Successful', detail: 'Logged in successfully', life: 3000});
       }).catch(err => {
@@ -85,8 +84,7 @@ export default {
       axios.post('/auth/register', {email: this.username, password: this.password})
       .then((response ) => {
         this.$store.dispatch("saveUserId", response.data.userId); 
-        console.log(response.data); 
-        this.$store.dispatch("saveIsSuperUser", response.data.userIsSuperUser);
+        console.log(response.data);
         window.location.href = '/';
         this.$toast.add({severity:'success', summary: 'Successful', detail: 'Registered successfully', life: 3000});
       }).catch(err => {
