@@ -14,11 +14,11 @@
                         <h2>{{projectInfo.to}})&nbsp;</h2> 
                         
                         <span v-if="$store.state.toggleValue">
-                            <Badge :value="currentCF" size="large" :severity="getTextColorFromCFIndex(currentCF)" />
+                            <Badge :value="currentCF + ' t CO2e'" size="large" :severity="getTextColorFromCFIndex(currentCF)" />
                             &nbsp;<span style="font-size: 16px">/</span>&nbsp;
                         </span>
                         
-                        <Badge :value="initialCF" size="large" :severity="getTextColorFromCFIndex(initialCF)" />
+                        <Badge :value="initialCF + ' t CO2e'" size="large" :severity="getTextColorFromCFIndex(initialCF)" />
 
                         <!-- Al recalcular el CF, se devuelve el project con los nuevos datos, por tanto, es necesario actualizar
                              la vista, y para ello hay que modificar informacion fuera de este componente, lo cual, complica las cosas -->

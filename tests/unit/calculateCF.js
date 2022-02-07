@@ -145,17 +145,16 @@ axios.post('/auth/login', {email: process.env.LOGIN_USERNAME, password: process.
     });
   });
 
-  describe('Calculate CF for the project: ', () => {
-    it('should calculate CF for the project and assert that the calculated CF is correct', (done) => {
-    chai.request(url)
-      .put('projects/calculateCF/' + projectId)
-      .auth(process.env.LOGIN_USERNAME, process.env.LOGIN_PASSWORD)
-      .end(function(err,res) {
-        console.log(res.body)
-        expect(res).to.have.status(200);
-        expect(res.body.initialCF).to.equal(80.23)
-        done();
-      });
+describe('Calculate CF for the project: ', () => {
+  it('should calculate CF for the project and assert that the calculated CF is correct', (done) => {
+  chai.request(url)
+    .put('projects/calculateCF/' + projectId)
+    .auth(process.env.LOGIN_USERNAME, process.env.LOGIN_PASSWORD)
+    .end(function(err,res) {
+      console.log(res.body)
+      expect(res).to.have.status(200);
+      expect(res.body.initialCF).to.equal(80.23)
+      done();
     });
   });
 
@@ -171,6 +170,4 @@ axios.post('/auth/login', {email: process.env.LOGIN_USERNAME, password: process.
       });
     });
   });
-}).catch(err => {
-  this.error = err.response.data
-})    
+});
