@@ -344,7 +344,7 @@
                   id ="publicVirtualEventsAverageVirtualParticipants"/>
                 </div>
                 <div class="field col-12 md:col-4">
-                  <label for="publicVirtualEventsAverageDuration">Average duration (days)</label>
+                  <label for="publicVirtualEventsAverageDuration">Average duration (hours)</label>
                   <InputNumber v-model="project.publicVirtualEventsAverageDuration" mode="decimal" :maxFractionDigits="3"
                   showButtons decrementButtonClass="p-button-info" :step="0.25" @keypress.enter="$event.target.blur()"
                   incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
@@ -482,7 +482,7 @@
                   id ="internalVirtualEventsAverageVirtualParticipants"/>
                 </div>
                 <div class="field col-12 md:col-4">
-                  <label for="internalVirtualEventsAverageDuration">Average duration (days)</label>
+                  <label for="internalVirtualEventsAverageDuration">Average duration (hours)</label>
                   <InputNumber v-model="project.internalVirtualEventsAverageDuration" mode="decimal" :maxFractionDigits="3"
                   showButtons decrementButtonClass="p-button-info" :step="0.25" @keypress.enter="$event.target.blur()"
                   incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
@@ -531,7 +531,7 @@
 					</TabPanel>
 				</TabView>
         <div style="text-align: left; margin-top: 10px">
-          * The values of this section are considered the same for each project partner
+          * The values of this section are referred to the whole project partnership
         </div>
       </div>
     </div>
@@ -588,25 +588,6 @@
             </template>
           </Column>
 
-          <Column field="deliverableName" header="Deliverable Name" :sortable="true">
-            <template #editor="slotProps">
-              <Dropdown :options="getDeliverableNames(slotProps.data.deliverableType)" v-model="slotProps.data[slotProps.field]" 
-                        placeholder="Select a deliverable name" emptyMessage="Select a deliverable type first">
-                <template #value="slotProps">
-                  <div v-if="slotProps.value">
-                    <span>{{slotProps.value}}</span>
-                  </div>
-                  <span v-else>
-                      {{slotProps.placeholder}}
-                  </span>
-                </template>
-                <template #option="slotProps">
-                    <span>{{slotProps.option}}</span>
-                </template>
-              </Dropdown>
-            </template>
-          </Column>
-
           <Column field="copies" header="Copies" :sortable="true">
             <template #editor="slotProps">
                 <InputNumber v-model="slotProps.data[slotProps.field]" mode="decimal"
@@ -650,6 +631,9 @@
           </Column>
 
         </DataTable>
+        <div style="text-align: left; margin-top: 10px">
+          * Report type includes the following deliverables: Report/Plan/Analysis/Study/Methodology/Manual/Guidance/Roadmap/Strategy/Proceedings
+        </div>
       </div>
     </div>
 
@@ -786,10 +770,10 @@ export default {
       countriesForDropdown: ["Albania", "Bosnia & Herzegovina", "Croatia", "Cyprus", "France", "Greece", "Italy", "Malta", "Montenegro", "Portugal", "Slovenia", "Spain", "Bulgaria", "North Macedonia"],
       paperSizes: ["A0", "A1", "A2", "A3", "A4", "A5", "A6"],
       deliverableOptions: [
-        {value: "Report type", deliverableNames: ["Report", "Plan", "Analysis", "Study", "Methodology", "Manual", "Guidance", "Roadmap", "Strategy", "Proceedings"], avgPagesPerCopy: 50, size: "A4"},
-        {value: "Articles/Newsletter/Booklet", deliverableNames: ["Articles", "Newsletter", "Booklet"], avgPagesPerCopy: 10, size: "A4"},
-        {value: "Brochure/Flyer", deliverableNames: ["Brochure", "Flyer"], avgPagesPerCopy: 2, size: "A4"},
-        {value: "Poster", deliverableNames: ["Poster"], avgPagesPerCopy: 1, size: "A0"},
+        {value: "Report type*", avgPagesPerCopy: 50, size: "A4"},
+        {value: "Articles/Newsletter/Booklet", avgPagesPerCopy: 10, size: "A4"},
+        {value: "Brochure/Flyer", avgPagesPerCopy: 2, size: "A4"},
+        {value: "Poster", avgPagesPerCopy: 1, size: "A0"},
       ],
       deliverableAdvancedOptions: [
         {value: "Application form", deliverableNames: ["Application form"]},
