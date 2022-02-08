@@ -62,6 +62,12 @@ const routes = [
   //     }
   //   }
   },
+  // {
+  //   path: '/projects/:id/projectDetailsAdvanced',
+  //   name: 'Project Details Advanced',
+  //   meta: { requiresAuth: true },
+  //   component: ProjectDetailsAdvanced,
+  // },
   {
     path: '/login',
     name: 'login',

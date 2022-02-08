@@ -22,74 +22,82 @@
 
                   <h5>Partners</h5>
 
-                  <DataTable :value="project.partners" editMode="cell" :paginator="true" class="p-datatable-gridlines" dataKey="_id"
-                  :rowHover="true" @cell-edit-complete="onCellEditCompletePartner" sortMode="multiple" :rows="5" v-model:filters="partnerFilters"
-                  filterDisplay="menu" :loading="loading" :filters="partnerFilters" responsiveLayout="scroll"
-                  :globalFilterFields="['name','country','personMonthsPP', 'coordinator']">
-                    
-                    <template #header>
-                        <div class="flex justify-content-between flex-column sm:flex-row">
-                          <div>
-                            <Button class="p-button-info mr-2" @click="addPartner"><i class="pi pi-plus mr-2" />New partner</Button>
-                            <span class="p-input-icon-left">
-                              <i class="pi pi-search" />
-                              <InputText v-model="partnerFilters['global'].value" placeholder="Keyword Search" style="width: 100%"/>
-                            </span>
-
-                            <Button class="ml-2" label="Save" icon="pi pi-check" @click="savePartners" />
-
-                          </div>
-                          
-                          <Button type="button" icon="pi pi-filter-slash" label="Clear" class="p-button-warning" @click="clearPartnerFilter()"/>
-                        </div>
-                    </template>
-
-                    <template #empty>
-                        No partners found.
-                    </template>
-
-                    <template #loading>
-                        Loading partners. Please wait.
-                    </template>
-
-                    <Column field="name" header="Name" :sortable="true">
-                      <template #editor="slotProps">
-                          <InputText v-model="slotProps.data[slotProps.field]" />
-                      </template>
-                      <template #filter="{filterModel, field}">
-                          <InputText type="text" v-model="filterModel.value" class="p-column-filter" :placeholder="'Filter by ' + field"/>
-                      </template>
-                    </Column>
-
-                    <Column field="country" header="Country" :sortable="true">
-                      <template #editor="slotProps">
-                        <Dropdown :options="countriesForDropdown" v-model="slotProps.data[slotProps.field]" />
-                      </template>
-                    </Column>
-
-                    <Column field="personMonthsPP" header="PersonMonths" :sortable="true">
-                      <template #editor="slotProps" class="p-field">
-                        <InputNumber v-model="slotProps.data[slotProps.field]" mode="decimal" :maxFractionDigits="3"
-                        showButtons :step="0.25" decrementButtonClass="p-button-info"
-                        incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
-                        :allowEmpty="false" :min="0" />
-                      </template>
-                    </Column>
-
-                    <Column field="coordinator" header="Coordinator" :sortable="true">
-                      <template #body="slotProps">
-                        <RadioButton name="projectCoordinator" :value="slotProps.data._id" v-model="project.coordinator"
-                        @change="onCellEditCompletePartnerCoordinator(slotProps.data, $event)" />
-                      </template>
-                    </Column>
-
-                    <Column field="actions" header="Actions">
-                      <template #body="slotProps">
-                        <i class="pi pi-trash" @click="deletePartner(slotProps.index)" />
-                      </template>
-                    </Column>
+                <DataTable :value="project.partners" editMode="cell" :paginator="true" class="p-datatable-gridlines" dataKey="_id"
+                :rowHover="true" @cell-edit-complete="onCellEditCompletePartner" sortMode="multiple" :rows="5" v-model:filters="partnerFilters"
+                filterDisplay="menu" :loading="loading" :filters="partnerFilters" responsiveLayout="scroll"
+                :globalFilterFields="['name','country','personMonthsPP','personMonthsWPP', 'externalExpertsPersonMonths', 'employeesWorkingWPP', 
+                                      'seasonalEmployees', 'externalExperts', 'coordinator']" @page="currentPagePartnersTable = $event.page">
                   
-                  </DataTable>
+                  <template #header>
+                      <div class="flex justify-content-between flex-column sm:flex-row">
+                        <div>
+                          <Button class="p-button-info mr-2" @click="addPartner"><i class="pi pi-plus mr-2" />New partner</Button>
+                          <span class="p-input-icon-left">
+                            <i class="pi pi-search" />
+                            <InputText v-model="partnerFilters['global'].value" placeholder="Keyword Search" style="width: 100%"/>
+                          </span>
+                          <Button class="ml-2" label="Save" icon="pi pi-check" @click="savePartners" />
+                        </div>
+                        
+                        <Button type="button" icon="pi pi-filter-slash" label="Clear" class="p-button-warning" @click="clearPartnerFilter()"/>
+                      </div>
+                  </template>
+
+                  <template #empty>
+                      No partners found.
+                  </template>
+
+                  <template #loading>
+                      Loading partners. Please wait.
+                  </template>
+
+                  <Column field="name" header="Name" :sortable="true">
+                    <template #editor="slotProps">
+                        <InputText v-model="slotProps.data[slotProps.field]" />
+                    </template>
+                    <template #filter="{filterModel, field}">
+                        <InputText type="text" v-model="filterModel.value" class="p-column-filter" :placeholder="'Filter by ' + field"/>
+                    </template>
+                  </Column>
+
+                  <Column field="country" header="Country" :sortable="true">
+                    <template #editor="slotProps">
+                      <Dropdown :options="countriesForDropdown" v-model="slotProps.data[slotProps.field]" />
+                    </template>
+                  </Column>
+
+                  <Column field="personMonthsPP" header="PersonMonths PP*" :sortable="true">
+                    <template #editor="slotProps" class="p-field">
+                      <InputNumber v-model="slotProps.data[slotProps.field]" mode="decimal" :maxFractionDigits="3"
+                      showButtons :step="0.25" decrementButtonClass="p-button-info"
+                      incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
+                      :allowEmpty="false" :min="0" />
+                    </template>
+                  </Column>
+
+                  <Column field="personMonthsWPP" header="PersonMonths WPP*" :sortable="true">
+                    <template #editor="slotProps">
+                      <InputNumber v-model="slotProps.data[slotProps.field]" mode="decimal" :maxFractionDigits="3"
+                      showButtons :step="0.25" decrementButtonClass="p-button-info"
+                      incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
+                      :allowEmpty="false" :min="0" />
+                    </template>
+                  </Column>
+                  
+                  <Column field="coordinator" header="Coordinator" :sortable="true">
+                    <template #body="slotProps">
+                      <RadioButton name="projectCoordinator" :value="slotProps.data._id" v-model="project.coordinator"
+                      @change="onCellEditCompletePartnerCoordinator(slotProps.data, $event)" />
+                    </template>
+                  </Column>
+
+                  <Column field="actions" header="Actions">
+                    <template #body="slotProps">
+                      <i class="pi pi-trash" @click="deletePartner(slotProps.index + currentPagePartnersTable * 5)" />
+                    </template>
+                  </Column>
+                
+                </DataTable>
                 </div>
 
               </TabPanel>
@@ -153,45 +161,7 @@
 
                 <div class="card">
                   <h5>Aditional custom defined transportation emission</h5>
-                  <DataTable :value="project.partners" editMode="cell" :paginator="true" class="p-datatable-gridlines" dataKey="_id"
-                    :rowHover="true" @cell-edit-complete="onCellEditCompletePartner" sortMode="multiple" :rows="5" v-model:filters="partnerFilters"
-                    filterDisplay="menu" :loading="loading" :filters="partnerFilters" responsiveLayout="scroll"
-                    :globalFilterFields="['itemCustomTransportationEmission']">
-                      
-                      <template #header>
-                          <div class="flex justify-content-between flex-column sm:flex-row">
-                            <div>
-                              <Button class="p-button-info mr-2" @click="addPartner"><i class="pi pi-plus mr-2" />Add Heat Emission</Button>
-                            </div>
-                            <div>
-                              <Button type="button" label="Clear" class="p-button-warning" @click="clearPartnerFilter()"/>
-                            </div>
-                          </div>
-                      </template>
-
-                      <template #empty>
-                          No Transportation Emissions found.
-                      </template>
-
-                      <template #loading>
-                          Loading Transportation Emissions. Please wait.
-                      </template>
-
-                      <Column field="itemCustomTransportationEmission" header="Item" :sortable="true">
-                        <template #editor="slotProps">
-                             <InputText v-model="slotProps.data[slotProps.field]" />
-                        </template>
-                      </Column>
-
-                      <Column field="customTransportationEmissionCO2" header="Estimated emission (CO2 gr)" :sortable="true">
-                        <template #editor="slotProps">
-                          <InputNumber v-model="slotProps.data[slotProps.field]" mode="decimal" :maxFractionDigits="3"
-                          showButtons :step="0.25" decrementButtonClass="p-button-info"
-                          incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
-                          :allowEmpty="false" :min="0" />
-                        </template>
-                      </Column>
-                    </DataTable>
+                  
                 </div>
               </TabPanel>
 
@@ -202,967 +172,67 @@
                 <!-- Electricity table -->
 
                 <div class="card">
-                  <DataTable :value="project.partners" editMode="cell" :paginator="true" class="p-datatable-gridlines" dataKey="_id"
-                    :rowHover="true" @cell-edit-complete="onCellEditCompletePartner" sortMode="multiple" :rows="5" v-model:filters="partnerFilters"
-                    filterDisplay="menu" :loading="loading" :filters="partnerFilters" responsiveLayout="scroll"
-                    :globalFilterFields="['name','country','personMonthsPP','personMonthsWPP', 'externalExpertsPersonMonths', 'employeesWorkingWPP', 
-                                          'seasonalEmployees', 'externalExperts', 'coordinator']">
-                      
-                      <template #header>
-                          <div class="flex justify-content-between flex-column sm:flex-row">
-                            <div>
-                              <Button type="button" label="Clear" class="p-button-warning" @click="clearPartnerFilter()"/>
-                            </div>
-                          </div>
-                      </template>
-
-                      <template #empty>
-                          No Electricity found.
-                      </template>
-
-                      <template #loading>
-                          Loading electricity entries. Please wait.
-                      </template>
-
-                      <Column field="countries" header="Countries" :sortable="true">
-                        <template #editor="slotProps">
-                            <Dropdown :options="countriesForDropdown" v-model="slotProps.data[slotProps.field]" />
-                        </template>
-                      </Column>
-
-                      <Column field="dailyConsumptionPerEmployee" header="Daily consumption per employee (kWh)" :sortable="true">
-                        <template #editor="slotProps">
-                          <InputNumber v-model="slotProps.data[slotProps.field]" mode="decimal" :maxFractionDigits="3"
-                          showButtons :step="0.25" decrementButtonClass="p-button-info"
-                          incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
-                          :allowEmpty="false" :min="0" />
-                        </template>
-                      </Column>
-
-                      <Column field="dailyConsumptionPerEmployee" header="Daily consumption per employee (kWh)" :sortable="true">
-                        <template #editor="slotProps">
-                          <InputNumber v-model="slotProps.data[slotProps.field]" mode="decimal" :maxFractionDigits="3"
-                          showButtons :step="0.25" decrementButtonClass="p-button-info"
-                          incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
-                          :allowEmpty="false" :min="0" />
-                        </template>
-                      </Column>
-                    </DataTable>
+                  
                 </div>
 
                 <!-- Custom Electricity emission table -->
 
                 <div class="card">
                   <h5>Aditional custom defined electricity emission</h5>
-                  <DataTable :value="project.partners" editMode="cell" :paginator="true" class="p-datatable-gridlines" dataKey="_id"
-                    :rowHover="true" @cell-edit-complete="onCellEditCompletePartner" sortMode="multiple" :rows="5" v-model:filters="partnerFilters"
-                    filterDisplay="menu" :loading="loading" :filters="partnerFilters" responsiveLayout="scroll"
-                    :globalFilterFields="['name','country','personMonthsPP','personMonthsWPP', 'externalExpertsPersonMonths', 'employeesWorkingWPP', 
-                                          'seasonalEmployees', 'externalExperts', 'coordinator']">
-                      
-                      <template #header>
-                          <div class="flex justify-content-between flex-column sm:flex-row">
-                            <div>
-                              <Button class="p-button-info mr-2" @click="addPartner"><i class="pi pi-plus mr-2" />Add Electricity Emission</Button>
-                            </div>
-                            <div>
-                              <Button type="button" label="Clear" class="p-button-warning" @click="clearPartnerFilter()"/>
-                            </div>
-                          </div>
-                      </template>
-
-                      <template #empty>
-                          No Electricity Emissions found.
-                      </template>
-
-                      <template #loading>
-                          Loading Electricity Emissions. Please wait.
-                      </template>
-
-                      <Column field="itemCustomElectricityEmission" header="Item" :sortable="true">
-                        <template #editor="slotProps">
-                             <InputText v-model="slotProps.data[slotProps.field]" />
-                        </template>
-                      </Column>
-
-                      <Column field="customElectricutyEmissionCO2" header="Estimated emission (CO2 gr)" :sortable="true">
-                        <template #editor="slotProps">
-                          <InputNumber v-model="slotProps.data[slotProps.field]" mode="decimal" :maxFractionDigits="3"
-                          showButtons :step="0.25" decrementButtonClass="p-button-info"
-                          incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
-                          :allowEmpty="false" :min="0" />
-                        </template>
-                      </Column>
-                    </DataTable>
+                  
                 </div>
               </TabPanel>
+
+              <!-- Water -->
+
               <TabPanel header="Water">
+
+                <!-- Water table -->
+
                 <div class="card">
-                  <DataTable :value="project.partners" editMode="cell" :paginator="true" class="p-datatable-gridlines" dataKey="_id"
-                    :rowHover="true" @cell-edit-complete="onCellEditCompletePartner" sortMode="multiple" :rows="5" v-model:filters="partnerFilters"
-                    filterDisplay="menu" :loading="loading" :filters="partnerFilters" responsiveLayout="scroll"
-                    :globalFilterFields="['country']">
-                      
-                      <template #header>
-                          <div class="flex justify-content-between flex-column sm:flex-row">
-                            <div>
-                              <Button type="button" label="Clear" class="p-button-warning" @click="clearPartnerFilter()"/>
-                            </div>
-                          </div>
-                      </template>
-
-                      <template #empty>
-                          No partners found.
-                      </template>
-
-                      <template #loading>
-                          Loading partners. Please wait.
-                      </template>
-
-                      <Column field="countries" header="Countries" :sortable="true">
-                        <template #editor="slotProps">
-                            <Dropdown :options="countriesForDropdown" v-model="slotProps.data[slotProps.field]" />
-                        </template>
-                      </Column>
-
-                      <Column field="waterUsagePerEmployeeAnnually" header="Water usage per employee annually (m3)" :sortable="true">
-                        <template #editor="slotProps">
-                          <InputNumber v-model="slotProps.data[slotProps.field]" mode="decimal" :maxFractionDigits="3"
-                          showButtons :step="0.25" decrementButtonClass="p-button-info"
-                          incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
-                          :allowEmpty="false" :min="0" />
-                        </template>
-                      </Column>
-
-                      <Column field="waterDisposedPerEmployeeAnnually" header="Water disposed per employee annually (m3)" :sortable="true">
-                        <template #editor="slotProps">
-                          <InputNumber v-model="slotProps.data[slotProps.field]" mode="decimal" :maxFractionDigits="3"
-                          showButtons :step="0.25" decrementButtonClass="p-button-info"
-                          incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
-                          :allowEmpty="false" :min="0" />
-                        </template>
-                      </Column>
-                    </DataTable>
+                  
                 </div>
+
+                <!-- Water custom table -->
+
                 <div class="card">
                   <h5>Aditional custom defined water emission</h5>
-                  <DataTable :value="project.partners" editMode="cell" :paginator="true" class="p-datatable-gridlines" dataKey="_id"
-                    :rowHover="true" @cell-edit-complete="onCellEditCompletePartner" sortMode="multiple" :rows="5" v-model:filters="partnerFilters"
-                    filterDisplay="menu" :loading="loading" :filters="partnerFilters" responsiveLayout="scroll"
-                    :globalFilterFields="['name','country','personMonthsPP','personMonthsWPP', 'externalExpertsPersonMonths', 'employeesWorkingWPP', 
-                                          'seasonalEmployees', 'externalExperts', 'coordinator']">
-                      
-                      <template #header>
-                          <div class="flex justify-content-between flex-column sm:flex-row">
-                            <div>
-                              <Button class="p-button-info mr-2" @click="addPartner"><i class="pi pi-plus mr-2" />Add Water Emission</Button>
-                            </div>
-                            <div>
-                              <Button type="button" label="Clear" class="p-button-warning" @click="clearPartnerFilter()"/>
-                            </div>
-                          </div>
-                      </template>
-
-                      <template #empty>
-                          No Water Emissions found.
-                      </template>
-
-                      <template #loading>
-                          Loading Water Emissions. Please wait.
-                      </template>
-
-                      <Column field="itemCustomWaterEmission" header="Item" :sortable="true">
-                        <template #editor="slotProps">
-                             <InputText v-model="slotProps.data[slotProps.field]" />
-                        </template>
-                      </Column>
-
-                      <Column field="customWaterEmissionCO2" header="Estimated emission (CO2 gr)" :sortable="true">
-                        <template #editor="slotProps">
-                          <InputNumber v-model="slotProps.data[slotProps.field]" mode="decimal" :maxFractionDigits="3"
-                          showButtons :step="0.25" decrementButtonClass="p-button-info"
-                          incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
-                          :allowEmpty="false" :min="0" />
-                        </template>
-                      </Column>
-                    </DataTable>
+                  
                 </div>
               </TabPanel>
+
+              <!-- Transportation -->
+
               <TabPanel header="Transportation">
+
+                <!-- Transportation table -->
                 <div class="card">
-                  <h5>Partners</h5>
-
-                  <DataTable :value="project.partners" editMode="cell" :paginator="true" class="p-datatable-gridlines" dataKey="_id"
-                  :rowHover="true" @cell-edit-complete="onCellEditCompletePartner" sortMode="multiple" :rows="5" v-model:filters="partnerFilters"
-                  filterDisplay="menu" :loading="loading" :filters="partnerFilters" responsiveLayout="scroll"
-                  :globalFilterFields="['name']">
-                    
-                    <template #header>
-                        <div class="flex justify-content-between flex-column sm:flex-row">
-                          <div>
-                            <Button class="p-button-info mr-2" @click="addPartner"><i class="pi pi-plus mr-2" />New partner</Button>
-                            <span class="p-input-icon-left">
-                              <i class="pi pi-search" />
-                              <InputText v-model="partnerFilters['global'].value" placeholder="Keyword Search" style="width: 100%"/>
-                            </span>
-                          </div>
-                          
-                          <Button type="button" label="Clear" class="p-button-warning" @click="clearPartnerFilter()"/>
-                        </div>
-                    </template>
-
-                    <template #empty>
-                        No partners found.
-                    </template>
-
-                    <template #loading>
-                        Loading partners. Please wait.
-                    </template>
-
-                    <Column field="name" header="Name" :sortable="true">
-                      <template #editor="slotProps">
-                          <InputText v-model="slotProps.data[slotProps.field]" />
-                      </template>
-                      <template #filter="{filterModel, field}">
-                          <InputText type="text" v-model="filterModel.value" class="p-column-filter" :placeholder="'Filter by ' + field"/>
-                      </template>
-                    </Column>
-                    <Column field="numberOfTwoWayTravel" header="Number of two-way travels" :sortable="true">
-                      <template #editor="slotProps" class="p-field">
-                        <InputNumber v-model="slotProps.data[slotProps.field]" mode="decimal" :maxFractionDigits="3"
-                        showButtons :step="0.25" decrementButtonClass="p-button-info"
-                        incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
-                        :allowEmpty="false" :min="0" />
-                      </template>
-                    </Column>
-
-                    <Column field="actions" header="Actions">
-                      <template #body="slotProps">
-                        <i class="pi pi-trash" @click="deletePartner(slotProps.index)" />
-                      </template>
-                    </Column>
                   
-                  </DataTable>
                 </div>
 
-                <div class="card">
-                  <h5>Distribution of travels</h5>
-                  <DataTable :value="project.partners" editMode="cell" :paginator="true" class="p-datatable-gridlines" dataKey="_id"
-                    :rowHover="true" @cell-edit-complete="onCellEditCompletePartner" sortMode="multiple" :rows="5" v-model:filters="partnerFilters"
-                    filterDisplay="menu" :loading="loading" :filters="partnerFilters" responsiveLayout="scroll"
-                    :globalFilterFields="['country']">
-                      
-                      <template #header>
-                          <div class="flex justify-content-between flex-column sm:flex-row">
-                            <div>
-                              <Button type="button" label="Clear" class="p-button-warning" @click="clearPartnerFilter()"/>
-                            </div>
-                          </div>
-                      </template>
-
-                      <template #empty>
-                          No travels found.
-                      </template>
-
-                      <template #loading>
-                          Loading travels. Please wait.
-                      </template>
-
-                      <Column field="countries" header="Countries" :sortable="true">
-                        <template #editor="slotProps">
-                            <Dropdown :options="countriesForDropdown" v-model="slotProps.data[slotProps.field]" />
-                        </template>
-                      </Column>
-
-                      <Column field="foot" header="Foot" :sortable="true">
-                        <template #editor="slotProps">
-                          <InputNumber v-model="slotProps.data[slotProps.field]" mode="decimal" :maxFractionDigits="3"
-                          showButtons :step="0.25" decrementButtonClass="p-button-info"
-                          incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
-                          :allowEmpty="false" :min="0" />
-                        </template>
-                      </Column>
-
-                      <Column field="bikes" header="Bikes" :sortable="true">
-                        <template #editor="slotProps">
-                          <InputNumber v-model="slotProps.data[slotProps.field]" mode="decimal" :maxFractionDigits="3"
-                          showButtons :step="0.25" decrementButtonClass="p-button-info"
-                          incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
-                          :allowEmpty="false" :min="0" />
-                        </template>
-                      </Column>
-
-                      <Column field="car" header="Car" :sortable="true">
-                        <template #editor="slotProps">
-                          <InputNumber v-model="slotProps.data[slotProps.field]" mode="decimal" :maxFractionDigits="3"
-                          showButtons :step="0.25" decrementButtonClass="p-button-info"
-                          incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
-                          :allowEmpty="false" :min="0" />
-                        </template>
-                      </Column>
-
-                      <Column field="motorbike" header="Motorbike" :sortable="true">
-                        <template #editor="slotProps">
-                          <InputNumber v-model="slotProps.data[slotProps.field]" mode="decimal" :maxFractionDigits="3"
-                          showButtons :step="0.25" decrementButtonClass="p-button-info"
-                          incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
-                          :allowEmpty="false" :min="0" />
-                        </template>
-                      </Column>
-
-                      <Column field="bus" header="Bus" :sortable="true">
-                        <template #editor="slotProps">
-                          <InputNumber v-model="slotProps.data[slotProps.field]" mode="decimal" :maxFractionDigits="3"
-                          showButtons :step="0.25" decrementButtonClass="p-button-info"
-                          incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
-                          :allowEmpty="false" :min="0" />
-                        </template>
-                      </Column>
-
-                      <Column field="taxi" header="Taxi" :sortable="true">
-                        <template #editor="slotProps">
-                          <InputNumber v-model="slotProps.data[slotProps.field]" mode="decimal" :maxFractionDigits="3"
-                          showButtons :step="0.25" decrementButtonClass="p-button-info"
-                          incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
-                          :allowEmpty="false" :min="0" />
-                        </template>
-                      </Column>
-
-                      <Column field="nationalRail" header="National rail" :sortable="true">
-                        <template #editor="slotProps">
-                          <InputNumber v-model="slotProps.data[slotProps.field]" mode="decimal" :maxFractionDigits="3"
-                          showButtons :step="0.25" decrementButtonClass="p-button-info"
-                          incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
-                          :allowEmpty="false" :min="0" />
-                        </template>
-                      </Column>
-
-                      <Column field="tram" header="Tram" :sortable="true">
-                        <template #editor="slotProps">
-                          <InputNumber v-model="slotProps.data[slotProps.field]" mode="decimal" :maxFractionDigits="3"
-                          showButtons :step="0.25" decrementButtonClass="p-button-info"
-                          incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
-                          :allowEmpty="false" :min="0" />
-                        </template>
-                      </Column>
-
-                      <Column field="underground" header="Underground" :sortable="true">
-                        <template #editor="slotProps">
-                          <InputNumber v-model="slotProps.data[slotProps.field]" mode="decimal" :maxFractionDigits="3"
-                          showButtons :step="0.25" decrementButtonClass="p-button-info"
-                          incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
-                          :allowEmpty="false" :min="0" />
-                        </template>
-                      </Column>
-
-                    </DataTable>
-                </div>
-
-                <div class="card">
-                  <h5>Travels at sea</h5>
-                  <DataTable :value="project.partners" editMode="cell" :paginator="true" class="p-datatable-gridlines" dataKey="_id"
-                    :rowHover="true" @cell-edit-complete="onCellEditCompletePartner" sortMode="multiple" :rows="5" v-model:filters="partnerFilters"
-                    filterDisplay="menu" :loading="loading" :filters="partnerFilters" responsiveLayout="scroll"
-                    :globalFilterFields="['country']">
-                      
-                      <template #header>
-                          <div class="flex justify-content-between flex-column sm:flex-row">
-                            <div>
-                              <Button type="button" label="Clear" class="p-button-warning" @click="clearPartnerFilter()"/>
-                            </div>
-                          </div>
-                      </template>
-
-                      <template #empty>
-                          No travels found.
-                      </template>
-
-                      <template #loading>
-                          Loading travels. Please wait.
-                      </template>
-
-                      <Column field="fromCountriesSea" header="From" :sortable="true">
-                        <template #editor="slotProps">
-                            <Dropdown :options="countriesForDropdown" v-model="slotProps.data[slotProps.field]" />
-                        </template>
-                      </Column>
-
-                      <Column field="toContriesSea" header="To" :sortable="true">
-                        <template #editor="slotProps">
-                            <Dropdown :options="countriesForDropdown" v-model="slotProps.data[slotProps.field]" />
-                        </template>
-                      </Column>
-
-                      <Column field="distanceTravelsAtSea" header="Distance (Km)" :sortable="true">
-                        <template #editor="slotProps">
-                          <InputNumber v-model="slotProps.data[slotProps.field]" mode="decimal" :maxFractionDigits="3"
-                          showButtons :step="0.25" decrementButtonClass="p-button-info"
-                          incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
-                          :allowEmpty="false" :min="0" />
-                        </template>
-                      </Column>
-                      
-                    </DataTable>
-                </div>
-
-                <div class="card">
-                  <h5>Distribution of cars fleet</h5>
-                  <DataTable :value="project.partners" editMode="cell" :paginator="true" class="p-datatable-gridlines" dataKey="_id"
-                    :rowHover="true" @cell-edit-complete="onCellEditCompletePartner" sortMode="multiple" :rows="5" v-model:filters="partnerFilters"
-                    filterDisplay="menu" :loading="loading" :filters="partnerFilters" responsiveLayout="scroll"
-                    :globalFilterFields="['country']">
-                      
-                      <template #header>
-                          <div class="flex justify-content-between flex-column sm:flex-row">
-                            <div>
-                              <Button type="button" label="Clear" class="p-button-warning" @click="clearPartnerFilter()"/>
-                            </div>
-                          </div>
-                      </template>
-
-                      <template #empty>
-                          No travels found.
-                      </template>
-
-                      <template #loading>
-                          Loading travels. Please wait.
-                      </template>
-
-                      <Column field="countries" header="Country" :sortable="true">
-                        <template #editor="slotProps">
-                            <Dropdown :options="countriesForDropdown" v-model="slotProps.data[slotProps.field]" />
-                        </template>
-                      </Column>
-
-                      <Column field="petrol" header="Petrol" :sortable="true">
-                        <template #editor="slotProps">
-                          <InputNumber v-model="slotProps.data[slotProps.field]" mode="decimal" :maxFractionDigits="3"
-                          showButtons :step="0.25" decrementButtonClass="p-button-info"
-                          incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
-                          :allowEmpty="false" :min="0" />
-                        </template>
-                      </Column>
-
-                      <Column field="diesel" header="Diesel" :sortable="true">
-                        <template #editor="slotProps">
-                          <InputNumber v-model="slotProps.data[slotProps.field]" mode="decimal" :maxFractionDigits="3"
-                          showButtons :step="0.25" decrementButtonClass="p-button-info"
-                          incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
-                          :allowEmpty="false" :min="0" />
-                        </template>
-                      </Column>
-
-                      <Column field="hybrid" header="Hybrid" :sortable="true">
-                        <template #editor="slotProps">
-                          <InputNumber v-model="slotProps.data[slotProps.field]" mode="decimal" :maxFractionDigits="3"
-                          showButtons :step="0.25" decrementButtonClass="p-button-info"
-                          incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
-                          :allowEmpty="false" :min="0" />
-                        </template>
-                      </Column>
-
-                      <Column field="plugInHybrid" header="Plug-In Hybrid" :sortable="true">
-                        <template #editor="slotProps">
-                          <InputNumber v-model="slotProps.data[slotProps.field]" mode="decimal" :maxFractionDigits="3"
-                          showButtons :step="0.25" decrementButtonClass="p-button-info"
-                          incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
-                          :allowEmpty="false" :min="0" />
-                        </template>
-                      </Column>
-
-                      <Column field="electric" header="Electric" :sortable="true">
-                        <template #editor="slotProps">
-                          <InputNumber v-model="slotProps.data[slotProps.field]" mode="decimal" :maxFractionDigits="3"
-                          showButtons :step="0.25" decrementButtonClass="p-button-info"
-                          incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
-                          :allowEmpty="false" :min="0" />
-                        </template>
-                      </Column>
-
-                      <Column field="cng" header="CNG" :sortable="true">
-                        <template #editor="slotProps">
-                          <InputNumber v-model="slotProps.data[slotProps.field]" mode="decimal" :maxFractionDigits="3"
-                          showButtons :step="0.25" decrementButtonClass="p-button-info"
-                          incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
-                          :allowEmpty="false" :min="0" />
-                        </template>
-                      </Column>
-
-                      <Column field="lpg" header="LPG" :sortable="true">
-                        <template #editor="slotProps">
-                          <InputNumber v-model="slotProps.data[slotProps.field]" mode="decimal" :maxFractionDigits="3"
-                          showButtons :step="0.25" decrementButtonClass="p-button-info"
-                          incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
-                          :allowEmpty="false" :min="0" />
-                        </template>
-                      </Column>
-
-                      <Column field="alternativeFuel" header="Alternative fuel" :sortable="true">
-                        <template #editor="slotProps">
-                          <InputNumber v-model="slotProps.data[slotProps.field]" mode="decimal" :maxFractionDigits="3"
-                          showButtons :step="0.25" decrementButtonClass="p-button-info"
-                          incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
-                          :allowEmpty="false" :min="0" />
-                        </template>
-                      </Column>
-
-                      <Column field="unknown" header="Unknown" :sortable="true">
-                        <template #editor="slotProps">
-                          <InputNumber v-model="slotProps.data[slotProps.field]" mode="decimal" :maxFractionDigits="3"
-                          showButtons :step="0.25" decrementButtonClass="p-button-info"
-                          incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
-                          :allowEmpty="false" :min="0" />
-                        </template>
-                      </Column>
-
-                    </DataTable>
-                </div>
-
-                <div class="card">
-                  <h5>Travels in land</h5>
-                  <DataTable :value="project.partners" editMode="cell" :paginator="true" class="p-datatable-gridlines" dataKey="_id"
-                    :rowHover="true" @cell-edit-complete="onCellEditCompletePartner" sortMode="multiple" :rows="5" v-model:filters="partnerFilters"
-                    filterDisplay="menu" :loading="loading" :filters="partnerFilters" responsiveLayout="scroll"
-                    :globalFilterFields="['country']">
-                      
-                      <template #header>
-                          <div class="flex justify-content-between flex-column sm:flex-row">
-                            <div>
-                              <Button type="button" label="Clear" class="p-button-warning" @click="clearPartnerFilter()"/>
-                            </div>
-                          </div>
-                      </template>
-
-                      <template #empty>
-                          No travels found.
-                      </template>
-
-                      <template #loading>
-                          Loading travels. Please wait.
-                      </template>
-
-                      <Column field="fromCountriesLand" header="From" :sortable="true">
-                        <template #editor="slotProps">
-                            <Dropdown :options="countriesForDropdown" v-model="slotProps.data[slotProps.field]" />
-                        </template>
-                      </Column>
-
-                      <Column field="toContrieLand" header="To" :sortable="true">
-                        <template #editor="slotProps">
-                            <Dropdown :options="countriesForDropdown" v-model="slotProps.data[slotProps.field]" />
-                        </template>
-                      </Column>
-
-                      <Column field="distanceTravelsInLand" header="Distance (Km)" :sortable="true">
-                        <template #editor="slotProps">
-                          <InputNumber v-model="slotProps.data[slotProps.field]" mode="decimal" :maxFractionDigits="3"
-                          showButtons :step="0.25" decrementButtonClass="p-button-info"
-                          incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
-                          :allowEmpty="false" :min="0" />
-                        </template>
-                      </Column>
-                      
-                    </DataTable>
-                </div>
+                <!-- Custom transportation table -->
 
                 <div class="card">
                   <h5>Aditional custom defined transportation emission</h5>
-                  <DataTable :value="project.partners" editMode="cell" :paginator="true" class="p-datatable-gridlines" dataKey="_id"
-                    :rowHover="true" @cell-edit-complete="onCellEditCompletePartner" sortMode="multiple" :rows="5" v-model:filters="partnerFilters"
-                    filterDisplay="menu" :loading="loading" :filters="partnerFilters" responsiveLayout="scroll"
-                    :globalFilterFields="['name','country','personMonthsPP','personMonthsWPP', 'externalExpertsPersonMonths', 'employeesWorkingWPP', 
-                                          'seasonalEmployees', 'externalExperts', 'coordinator']">
-                      
-                      <template #header>
-                          <div class="flex justify-content-between flex-column sm:flex-row">
-                            <div>
-                              <Button class="p-button-info mr-2" @click="addPartner"><i class="pi pi-plus mr-2" />Add Transportation Emission</Button>
-                            </div>
-                            <div>
-                              <Button type="button" label="Clear" class="p-button-warning" @click="clearPartnerFilter()"/>
-                            </div>
-                          </div>
-                      </template>
-
-                      <template #empty>
-                          No Transportation Emissions found.
-                      </template>
-
-                      <template #loading>
-                          Loading Transportation Emissions. Please wait.
-                      </template>
-
-                      <Column field="itemCustomTransportationEmission" header="Item" :sortable="true">
-                        <template #editor="slotProps">
-                             <InputText v-model="slotProps.data[slotProps.field]" />
-                        </template>
-                      </Column>
-
-                      <Column field="customTransportationEmissionCO2" header="Estimated emission (CO2 gr)" :sortable="true">
-                        <template #editor="slotProps">
-                          <InputNumber v-model="slotProps.data[slotProps.field]" mode="decimal" :maxFractionDigits="3"
-                          showButtons :step="0.25" decrementButtonClass="p-button-info"
-                          incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
-                          :allowEmpty="false" :min="0" />
-                        </template>
-                      </Column>
-                    </DataTable>
+                  
                 </div>
               </TabPanel>
+
+              <!-- Materials -->
+
               <TabPanel header="Materials">
 
+                <!-- Materials table -->
                 <div class="card">
                   <h5>Distribution of materials usage</h5>
-                  <DataTable :value="project.partners" editMode="cell" :paginator="true" class="p-datatable-gridlines" dataKey="_id"
-                    :rowHover="true" @cell-edit-complete="onCellEditCompletePartner" sortMode="multiple" :rows="5" v-model:filters="partnerFilters"
-                    filterDisplay="menu" :loading="loading" :filters="partnerFilters" responsiveLayout="scroll"
-                    :globalFilterFields="['country']">
-                      
-                      <template #header>
-                          <div class="flex justify-content-between flex-column sm:flex-row">
-                            <div>
-                              <Button type="button" label="Clear" class="p-button-warning" @click="clearPartnerFilter()"/>
-                            </div>
-                          </div>
-                      </template>
-
-                      <template #empty>
-                          No travels found.
-                      </template>
-
-                      <template #loading>
-                          Loading travels. Please wait.
-                      </template>
-
-                      <Column field="countries" header="Country" :sortable="true">
-                        <template #editor="slotProps">
-                            <Dropdown :options="countriesForDropdown" v-model="slotProps.data[slotProps.field]" />
-                        </template>
-                      </Column>
-
-                      <Column field="primaryMaterial" header="Primary" :sortable="true">
-                        <template #editor="slotProps">
-                          <InputNumber v-model="slotProps.data[slotProps.field]" mode="decimal" :maxFractionDigits="3"
-                          showButtons :step="0.25" decrementButtonClass="p-button-info"
-                          incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
-                          :allowEmpty="false" :min="0" />
-                        </template>
-                      </Column>
-
-                      <Column field="recycledMaterial" header="Recycled" :sortable="true">
-                        <template #editor="slotProps">
-                          <InputNumber v-model="slotProps.data[slotProps.field]" mode="decimal" :maxFractionDigits="3"
-                          showButtons :step="0.25" decrementButtonClass="p-button-info"
-                          incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
-                          :allowEmpty="false" :min="0" />
-                        </template>
-                      </Column>
-
-                    </DataTable>
+                  
                 </div>
 
-                <div class="card">
-                  <h5>Distribution of type of disposal</h5>
-                  <DataTable :value="project.partners" editMode="cell" :paginator="true" class="p-datatable-gridlines" dataKey="_id"
-                    :rowHover="true" @cell-edit-complete="onCellEditCompletePartner" sortMode="multiple" :rows="5" v-model:filters="partnerFilters"
-                    filterDisplay="menu" :loading="loading" :filters="partnerFilters" responsiveLayout="scroll"
-                    :globalFilterFields="['country']">
-                      
-                      <template #header>
-                          <div class="flex justify-content-between flex-column sm:flex-row">
-                            <div>
-                              <Button type="button" label="Clear" class="p-button-warning" @click="clearPartnerFilter()"/>
-                            </div>
-                          </div>
-                      </template>
 
-                      <template #empty>
-                          No Distribution of type of disposal found.
-                      </template>
-
-                      <template #loading>
-                          Loading distribution of type disposals. Please wait.
-                      </template>
-
-                      <Column field="countries" header="Country" :sortable="true">
-                        <template #editor="slotProps">
-                            <Dropdown :options="countriesForDropdown" v-model="slotProps.data[slotProps.field]" />
-                        </template>
-                      </Column>
-
-                      <Column field="reUseMaterials" header="Re-Use" :sortable="true">
-                        <template #editor="slotProps">
-                          <InputNumber v-model="slotProps.data[slotProps.field]" mode="decimal" :maxFractionDigits="3"
-                          showButtons :step="0.25" decrementButtonClass="p-button-info"
-                          incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
-                          :allowEmpty="false" :min="0" />
-                        </template>
-                      </Column>
-
-                      <Column field="openClosedLoopMaterials" header="Open/Closed loop" :sortable="true">
-                        <template #editor="slotProps">
-                          <InputNumber v-model="slotProps.data[slotProps.field]" mode="decimal" :maxFractionDigits="3"
-                          showButtons :step="0.25" decrementButtonClass="p-button-info"
-                          incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
-                          :allowEmpty="false" :min="0" />
-                        </template>
-                      </Column>
-
-                      <Column field="combustionMaterials" header="Combustion" :sortable="true">
-                        <template #editor="slotProps">
-                          <InputNumber v-model="slotProps.data[slotProps.field]" mode="decimal" :maxFractionDigits="3"
-                          showButtons :step="0.25" decrementButtonClass="p-button-info"
-                          incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
-                          :allowEmpty="false" :min="0" />
-                        </template>
-                      </Column>
-
-                      <Column field="compostingMaterials" header="Composting" :sortable="true">
-                        <template #editor="slotProps">
-                          <InputNumber v-model="slotProps.data[slotProps.field]" mode="decimal" :maxFractionDigits="3"
-                          showButtons :step="0.25" decrementButtonClass="p-button-info"
-                          incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
-                          :allowEmpty="false" :min="0" />
-                        </template>
-                      </Column>
-
-                      <Column field="landFillMaterials" header="Landfill" :sortable="true">
-                        <template #editor="slotProps">
-                          <InputNumber v-model="slotProps.data[slotProps.field]" mode="decimal" :maxFractionDigits="3"
-                          showButtons :step="0.25" decrementButtonClass="p-button-info"
-                          incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
-                          :allowEmpty="false" :min="0" />
-                        </template>
-                      </Column>
-
-                      <Column field="anaerobicDigestionMaterials" header="Anaerobic digestion" :sortable="true">
-                        <template #editor="slotProps">
-                          <InputNumber v-model="slotProps.data[slotProps.field]" mode="decimal" :maxFractionDigits="3"
-                          showButtons :step="0.25" decrementButtonClass="p-button-info"
-                          incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
-                          :allowEmpty="false" :min="0" />
-                        </template>
-                      </Column>
-
-                    </DataTable>
-                </div>
-
-                <div class="card">
-                
-                  <DataTable :value="project.partners" editMode="cell" :paginator="true" class="p-datatable-gridlines" dataKey="_id"
-                    :rowHover="true" @cell-edit-complete="onCellEditCompletePartner" sortMode="multiple" :rows="5" v-model:filters="partnerFilters"
-                    filterDisplay="menu" :loading="loading" :filters="partnerFilters" responsiveLayout="scroll"
-                    :globalFilterFields="['country']">
-                      
-                      <template #header>
-                          <div class="flex justify-content-between flex-column sm:flex-row">
-                            <div>
-                              <Button type="button" label="Clear" class="p-button-warning" @click="clearPartnerFilter()"/>
-                            </div>
-                          </div>
-                      </template>
-
-                      <template #empty>
-                          No materials found.
-                      </template>
-
-                      <template #loading>
-                          Loading materials. Please wait.
-                      </template>
-
-                      <Column field="countries" header="Country" :sortable="true">
-                        <template #editor="slotProps">
-                            <Dropdown :options="countriesForDropdown" v-model="slotProps.data[slotProps.field]" />
-                        </template>
-                      </Column>
-
-                      <Column field="paperUseAnnuallyMaterials" header="Paper use annually (T)" :sortable="true">
-                        <template #editor="slotProps">
-                          <InputNumber v-model="slotProps.data[slotProps.field]" mode="decimal" :maxFractionDigits="3"
-                          showButtons :step="0.25" decrementButtonClass="p-button-info"
-                          incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
-                          :allowEmpty="false" :min="0" />
-                        </template>
-                      </Column>
-
-                      <Column field="plasticsUseAnnuallyMaterials" header="Plastics use annually (T)" :sortable="true">
-                        <template #editor="slotProps">
-                          <InputNumber v-model="slotProps.data[slotProps.field]" mode="decimal" :maxFractionDigits="3"
-                          showButtons :step="0.25" decrementButtonClass="p-button-info"
-                          incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
-                          :allowEmpty="false" :min="0" />
-                        </template>
-                      </Column>
-
-                      <Column field="foodUseAnnuallyMaterials" header="Foot use annually (T)" :sortable="true">
-                        <template #editor="slotProps">
-                          <InputNumber v-model="slotProps.data[slotProps.field]" mode="decimal" :maxFractionDigits="3"
-                          showButtons :step="0.25" decrementButtonClass="p-button-info"
-                          incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
-                          :allowEmpty="false" :min="0" />
-                        </template>
-                      </Column>
-
-                      <Column field="drinkUseAnnuallyMaterials" header="Drink use annually (T)" :sortable="true">
-                        <template #editor="slotProps">
-                          <InputNumber v-model="slotProps.data[slotProps.field]" mode="decimal" :maxFractionDigits="3"
-                          showButtons :step="0.25" decrementButtonClass="p-button-info"
-                          incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
-                          :allowEmpty="false" :min="0" />
-                        </template>
-                      </Column>
-
-                      <Column field="glassUseAnnuallyMaterials" header="Glass use annually (T)" :sortable="true">
-                        <template #editor="slotProps">
-                          <InputNumber v-model="slotProps.data[slotProps.field]" mode="decimal" :maxFractionDigits="3"
-                          showButtons :step="0.25" decrementButtonClass="p-button-info"
-                          incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
-                          :allowEmpty="false" :min="0" />
-                        </template>
-                      </Column>
-
-                      <Column field="aluminumUseAnnuallyMaterials" header="Aluminum use annually (T)" :sortable="true">
-                        <template #editor="slotProps">
-                          <InputNumber v-model="slotProps.data[slotProps.field]" mode="decimal" :maxFractionDigits="3"
-                          showButtons :step="0.25" decrementButtonClass="p-button-info"
-                          incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
-                          :allowEmpty="false" :min="0" />
-                        </template>
-                      </Column>
-
-                    </DataTable>
-                </div>
-
-                <div class="card">
-                
-                  <DataTable :value="project.partners" editMode="cell" :paginator="true" class="p-datatable-gridlines" dataKey="_id"
-                    :rowHover="true" @cell-edit-complete="onCellEditCompletePartner" sortMode="multiple" :rows="5" v-model:filters="partnerFilters"
-                    filterDisplay="menu" :loading="loading" :filters="partnerFilters" responsiveLayout="scroll"
-                    :globalFilterFields="['country']">
-                      
-                      <template #header>
-                          <div class="flex justify-content-between flex-column sm:flex-row">
-                            <div>
-                              <Button type="button" label="Clear" class="p-button-warning" @click="clearPartnerFilter()"/>
-                            </div>
-                          </div>
-                      </template>
-
-                      <template #empty>
-                          No materials found.
-                      </template>
-
-                      <template #loading>
-                          Loading materials. Please wait.
-                      </template>
-
-                      <Column field="countries" header="Country" :sortable="true">
-                        <template #editor="slotProps">
-                            <Dropdown :options="countriesForDropdown" v-model="slotProps.data[slotProps.field]" />
-                        </template>
-                      </Column>
-
-                      <Column field="paperWasteAnnuallyMaterials" header="Paper waste annually (T)" :sortable="true">
-                        <template #editor="slotProps">
-                          <InputNumber v-model="slotProps.data[slotProps.field]" mode="decimal" :maxFractionDigits="3"
-                          showButtons :step="0.25" decrementButtonClass="p-button-info"
-                          incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
-                          :allowEmpty="false" :min="0" />
-                        </template>
-                      </Column>
-
-                      <Column field="plasticsWasteAnnuallyMaterials" header="Plastics waste annually (T)" :sortable="true">
-                        <template #editor="slotProps">
-                          <InputNumber v-model="slotProps.data[slotProps.field]" mode="decimal" :maxFractionDigits="3"
-                          showButtons :step="0.25" decrementButtonClass="p-button-info"
-                          incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
-                          :allowEmpty="false" :min="0" />
-                        </template>
-                      </Column>
-
-                      <Column field="foodWasteAnnuallyMaterials" header="Foot waste annually (T)" :sortable="true">
-                        <template #editor="slotProps">
-                          <InputNumber v-model="slotProps.data[slotProps.field]" mode="decimal" :maxFractionDigits="3"
-                          showButtons :step="0.25" decrementButtonClass="p-button-info"
-                          incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
-                          :allowEmpty="false" :min="0" />
-                        </template>
-                      </Column>
-
-                      <Column field="drinkWasteAnnuallyMaterials" header="Drink waste annually (T)" :sortable="true">
-                        <template #editor="slotProps">
-                          <InputNumber v-model="slotProps.data[slotProps.field]" mode="decimal" :maxFractionDigits="3"
-                          showButtons :step="0.25" decrementButtonClass="p-button-info"
-                          incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
-                          :allowEmpty="false" :min="0" />
-                        </template>
-                      </Column>
-
-                      <Column field="glassWasteAnnuallyMaterials" header="Glass waste annually (T)" :sortable="true">
-                        <template #editor="slotProps">
-                          <InputNumber v-model="slotProps.data[slotProps.field]" mode="decimal" :maxFractionDigits="3"
-                          showButtons :step="0.25" decrementButtonClass="p-button-info"
-                          incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
-                          :allowEmpty="false" :min="0" />
-                        </template>
-                      </Column>
-
-                      <Column field="aluminumWasteAnnuallyMaterials" header="Aluminum waste annually (T)" :sortable="true">
-                        <template #editor="slotProps">
-                          <InputNumber v-model="slotProps.data[slotProps.field]" mode="decimal" :maxFractionDigits="3"
-                          showButtons :step="0.25" decrementButtonClass="p-button-info"
-                          incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
-                          :allowEmpty="false" :min="0" />
-                        </template>
-                      </Column>
-
-                      <p>(Each value is calculated per employee in working places)</p>
-
-                    </DataTable>
-                </div>
-
+               <!-- Custom Materials table --> 
                 <div class="card">
                   <h5>Aditional custom defined material emission</h5>
-                  <DataTable :value="project.partners" editMode="cell" :paginator="true" class="p-datatable-gridlines" dataKey="_id"
-                    :rowHover="true" @cell-edit-complete="onCellEditCompletePartner" sortMode="multiple" :rows="5" v-model:filters="partnerFilters"
-                    filterDisplay="menu" :loading="loading" :filters="partnerFilters" responsiveLayout="scroll"
-                    :globalFilterFields="['name','country','personMonthsPP','personMonthsWPP', 'externalExpertsPersonMonths', 'employeesWorkingWPP', 
-                                          'seasonalEmployees', 'externalExperts', 'coordinator']">
-                      
-                      <template #header>
-                          <div class="flex justify-content-between flex-column sm:flex-row">
-                            <div>
-                              <Button class="p-button-info mr-2" @click="addPartner"><i class="pi pi-plus mr-2" />Add Transportation Emission</Button>
-                            </div>
-                            <div>
-                              <Button type="button" label="Clear" class="p-button-warning" @click="clearPartnerFilter()"/>
-                            </div>
-                          </div>
-                      </template>
 
-                      <template #empty>
-                          No Transportation Emissions found.
-                      </template>
-
-                      <template #loading>
-                          Loading Transportation Emissions. Please wait.
-                      </template>
-
-                      <Column field="itemCustomMaterialEmission" header="Item" :sortable="true">
-                        <template #editor="slotProps">
-                             <InputText v-model="slotProps.data[slotProps.field]" />
-                        </template>
-                      </Column>
-
-                      <Column field="customMaterialEmissionCO2" header="Estimated emission (CO2 gr)" :sortable="true">
-                        <template #editor="slotProps">
-                          <InputNumber v-model="slotProps.data[slotProps.field]" mode="decimal" :maxFractionDigits="3"
-                          showButtons :step="0.25" decrementButtonClass="p-button-info"
-                          incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
-                          :allowEmpty="false" :min="0" />
-                        </template>
-                      </Column>
-                    </DataTable>
                 </div>
 
               </TabPanel>
@@ -1170,7 +240,190 @@
 
               </TabPanel>
               <TabPanel header="Printable deliverables">
+                <div class="col-12">
+                  <div class="card">
+                    <h4>Printable deliverables</h4>
+                  
+                    <DataTable :value="project.printableDeliverables" editMode="cell" @cell-edit-complete="onCellEditCompletePrintableDeliverable" 
+                      sortMode="multiple" :paginator="true" :rows="5" v-model:filters="printableDeliverableFilters" filterDisplay="menu"
+                      :loading="loading" :filters="printableDeliverableFilters" responsiveLayout="scroll" :rowHover="true" class="p-datatable-gridlines"
+                      :globalFilterFields="['deliverableType', 'deliverableName', 'copies', 'avgPagesPerCopy']"
+                      @page="currentPagePrintableDeliverablesTable = $event.page">
 
+                      <template #header>
+                          <div class="flex justify-content-between flex-column sm:flex-row">
+                            <div>
+                              <Button class="p-button-info mr-2" @click="addPrintableDeliverable"><i class="pi pi-plus mr-2" />New printable deliverable</Button>
+                              <span class="p-input-icon-left">
+                                <i class="pi pi-search" />
+                                <InputText v-model="printableDeliverableFilters['global'].value" placeholder="Keyword Search" style="width: 100%"/>
+                              </span>
+                              <Button class="ml-2" label="Save" icon="pi pi-check" @click="savePrintableDeliverables" />
+                            </div>
+                            
+                            <Button type="button" icon="pi pi-filter-slash" label="Clear" class="p-button-warning" @click="clearPrintableDeliverableFilter()"/>
+                          </div>
+                      </template>
+
+                      <template #empty>
+                          No printable deliverables found.
+                      </template>
+
+                      <template #loading>
+                          Loading printable deliverables. Please wait.
+                      </template>
+
+                      <Column field="deliverableType" header="Deliverable type" :sortable="true">
+                        <template #editor="slotProps">
+                          <Dropdown :options="deliverableOptions" v-model="slotProps.data[slotProps.field]" optionLabel="value" optionValue="value"
+                                    placeholder="Select a deliverable type">
+                            <template #value="slotProps">
+                              <div v-if="slotProps.value">
+                                <span>{{slotProps.value}}</span>
+                              </div>
+                              <span v-else>
+                                  {{slotProps.placeholder}}
+                              </span>
+                            </template>
+                            <template #option="slotProps">
+                                <span>{{slotProps.option.value}} ({{slotProps.option.avgPagesPerCopy}} pages, {{slotProps.option.size}})</span>
+                            </template>
+                          </Dropdown>
+                        </template>
+                      </Column>
+
+                      <Column field="copies" header="Copies" :sortable="true">
+                        <template #editor="slotProps">
+                            <InputNumber v-model="slotProps.data[slotProps.field]" mode="decimal"
+                                  showButtons decrementButtonClass="p-button-info"
+                                  incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
+                                  :allowEmpty="false" :min="0" />
+                        </template>
+                      </Column>
+
+                      <Column field="avgPagesPerCopy" header="Average pages per copy" :sortable="true">
+                        <template #editor="slotProps">
+                            <InputNumber v-model="slotProps.data[slotProps.field]" mode="decimal"
+                                  showButtons decrementButtonClass="p-button-info"
+                                  incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
+                                  :allowEmpty="false" :min="0" />
+                        </template>
+                      </Column>
+
+                      <Column field="size" header="Paper size" :sortable="true">
+                        <template #editor="slotProps">
+                          <Dropdown :options="paperSizes" v-model="slotProps.data[slotProps.field]" placeholder="Select a paper size">
+                            <template #value="slotProps">
+                              <div v-if="slotProps.value">
+                                <span>{{slotProps.value}}</span>
+                              </div>
+                              <span v-else>
+                                  {{slotProps.placeholder}}
+                              </span>
+                            </template>
+                            <template #option="slotProps">
+                                <span>{{slotProps.option}}</span>
+                            </template>
+                          </Dropdown>
+                        </template>
+                      </Column>
+
+                      <Column field="actions" header="Actions">
+                        <template #body="slotProps">
+                          <i class="pi pi-trash" @click="deletePrintableDeliverable(slotProps.index + currentPagePrintableDeliverablesTable * 5)" />
+                        </template>
+                      </Column>
+
+                    </DataTable>
+                    <div style="text-align: left; margin-top: 10px">
+                      * Report type includes the following deliverables: Report/Plan/Analysis/Study/Methodology/Manual/Guidance/Roadmap/Strategy/Proceedings
+                    </div>
+                  </div>
+                </div>
+
+                <div class="col-12">
+                  <div class="card p-fluid" style="display: flex; flex-direction: column; align-items: center; justify-content: space-around;">
+                    <div>
+                      <h2>Tons of equivalent carbon dioxide emitted:
+                        <Badge :value="project.initialCF" class="ml-3" size="xlarge" :severity="getTextColorFromCFIndex(project.initialCF)" />
+                      </h2>
+                    </div>
+                    <Button icon="pi pi-replay" class="p-button-rounded p-button-outlined p-button-plain mr-5" label="Recalculate"
+                            style="width: 15rem; font-size: 1.1rem" @click="calculateCF" />
+                  </div>
+                </div>
+
+                <Dialog header="Error" v-model:visible="displayPartnersWithoutCountryDialog" class="col-4" :modal="true">
+                    <div class="flex align-items-center justify-content-center">
+                        <i class="pi pi-exclamation-triangle mr-3" style="font-size: 2rem" />
+                        <div>
+                        <p>You need to select a country for each partner in order to calculate the CF of the project!</p>
+                        <p>Partners without country:</p>
+                        <p v-for="partner in partnersWithoutCountry" :key="partner._id">{{partner.name}}</p>
+                    </div>
+                    </div>
+                    <template #footer>
+                        <Button label="Ok" @click="closePartnersWithoutCountryErrorDialog" class="p-button-text p-button-info" autofocus/>
+                    </template>
+                </Dialog>
+
+                <div class="col-12">
+                  <div class="card p-fluid" style="display: flex; flex-direction: column; align-items: center; justify-content: space-around;">
+                    <h2>CF Breakdown (Tons)</h2>
+                    <div class="col-12" style="display: flex; justify-content: space-evenly;">
+                      <div class="card p-fluid col-2" style="display: flex; flex-direction: column; align-items: center; justify-content: space-around;">
+                        <h2 class="font-medium text-3xl">Fuels Heat</h2>
+                        <div class="flex align-items-center py-3 px-2 border-top-1 surface-border">
+                          <Badge :value="project.fuelsHeatCF" size="xlarge" severity="info" />
+                        </div>
+                      </div>
+                      <div class="card p-fluid col-2" style="display: flex; flex-direction: column; align-items: center; justify-content: space-around;">
+                        <h2 class="font-medium text-3xl">Electricity</h2>
+                        <div class="flex align-items-center py-3 px-2 border-top-1 surface-border">
+                          <Badge :value="project.electricityCF" size="xlarge" severity="info" />
+                        </div>
+                      </div>
+                      <div class="card p-fluid col-2" style="display: flex; flex-direction: column; align-items: center; justify-content: space-around;">
+                        <h2 class="font-medium text-3xl">Water</h2>
+                        <div class="flex align-items-center py-3 px-2 border-top-1 surface-border">
+                          <Badge :value="project.waterCF" size="xlarge" severity="info" />
+                        </div>
+                      </div>
+                      <div class="card p-fluid col-2" style="display: flex; flex-direction: column; align-items: center; justify-content: space-around;">
+                        <h2 class="font-medium text-3xl">Transportation</h2>
+                        <div class="flex align-items-center py-3 px-2 border-top-1 surface-border">
+                          <Badge :value="project.transportationCF" size="xlarge" severity="info" />
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-12" style="display: flex; justify-content: space-evenly;">
+                      <div class="card p-fluid col-2" style="display: flex; flex-direction: column; align-items: center; justify-content: space-around;">
+                        <h2 class="font-medium text-3xl">Materials</h2>
+                        <div class="flex align-items-center py-3 px-2 border-top-1 surface-border">
+                          <Badge :value="project.materialsCF" size="xlarge" severity="info" />
+                        </div>
+                      </div>
+                      <div class="card p-fluid col-2" style="display: flex; flex-direction: column; align-items: center; justify-content: space-around;">
+                        <h2 class="font-medium text-3xl">Printable<br>Deliverables</h2>
+                        <div class="flex align-items-center py-3 px-2 border-top-1 surface-border">
+                          <Badge :value="project.printableDeliverablesCF" size="xlarge" severity="info" />
+                        </div>
+                      </div>
+                      <div class="card p-fluid col-2" style="display: flex; flex-direction: column; align-items: center; justify-content: space-around;">
+                        <h2 class="font-medium text-3xl">Equipment</h2>
+                        <div class="flex align-items-center py-3 px-2 border-top-1 surface-border">
+                          <Badge :value="project.equipmentCF" size="xlarge" severity="info" />
+                        </div>
+                      </div>
+                      <div class="card p-fluid col-2" style="display: flex; flex-direction: column; align-items: center; justify-content: space-around;">
+                        <h2 class="font-medium text-3xl">Events</h2>
+                        <div class="flex align-items-center py-3 px-2 border-top-1 surface-border">
+                          <Badge :value="project.eventsCF" size="xlarge" severity="info" />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
               </TabPanel>
             </TabView>
           </TabPanel>
@@ -1243,6 +496,7 @@
               <TabPanel header="Events">
 
               </TabPanel>
+              
               <TabPanel header="Printable deliverables">
 
               </TabPanel>
@@ -1307,16 +561,17 @@ import TabView from 'primevue/tabview';
 import TabPanel from 'primevue/tabpanel';
 import Topbar from '@/components/Topbar.vue';
 import Mongoose from "mongoose"
-//import Toast from 'primevue/toast';
-//import Badge from 'primevue/badge';
+// import Toast from 'primevue/toast';
+// import Badge from 'primevue/badge';
+// import Dialog from 'primevue/dialog';
 import Chart from 'primevue/chart'
-
 import 'primeicons/primeicons.css';
 
 export default {
   name: 'ProjectDetailsSimple',
   components: {
     Dropdown,
+    // Dialog,
     Button,
     DataTable,
     Column,
@@ -1326,20 +581,24 @@ export default {
     TabView,
     TabPanel,
     Topbar,
-    //Toast,
-    //Badge,
+    // Toast,
+    // Badge,
     Chart
   },
   data() {
     return {
       placeholder: "Select a partner",
-      arrayOfObjects: ["MEDIPLASMA SRL", "Q TECHNOLOGIES LTD", "CO2CRC Management Pty Ltd"],
       project: {},
       object: {},
       countriesForDropdown: ["Albania", "Bosnia & Herzegovina", "Croatia", "Cyprus", "France", "Greece", "Italy", "Malta", "Montenegro", "Portugal", "Slovenia", "Spain", "Bulgaria", "North Macedonia"],
       paperSizes: ["A0", "A1", "A2", "A3", "A4", "A5", "A6"],
-      fuelTypesForDropdown: ["Biomass", "Coal", "District Heat", "Gas oil", "Natural Gas"],
       deliverableOptions: [
+        {value: "Report type*", avgPagesPerCopy: 50, size: "A4"},
+        {value: "Articles/Newsletter/Booklet", avgPagesPerCopy: 10, size: "A4"},
+        {value: "Brochure/Flyer", avgPagesPerCopy: 2, size: "A4"},
+        {value: "Poster", avgPagesPerCopy: 1, size: "A0"},
+      ],
+      deliverableAdvancedOptions: [
         {value: "Application form", deliverableNames: ["Application form"]},
         {value: "Data", deliverableNames: ["Database", "Evaluation report", "Good practices", "Thematic data collection", "Stakeholders and beneficiaries"]},
         {value: "Digital or written communication", deliverableNames: ["Article", "Booklet", "Brochure", "Flyer", "Goodies", "Newsletter", "Poster", "Proceedings", "Social networks", "Story telling", "Widget"]},
@@ -1360,8 +619,7 @@ export default {
         {value: "Tool", deliverableNames: ["Collecting information tool instructions", "Course", "Decision tool", "GIS", "Guidance", "Intranet guidance", "Legal acts", "Manual", "Maps", "Monitoring tool", "Plan", "Protocol", "Questionnaire", "Survey", "Toolbox", "Training", "Training material"]},
         {value: "Tool Service", deliverableNames: ["Facilities", "Software support/service", "Testing report"]},
         {value: "Training course", deliverableNames: ["Methodology", "Training report"]},
-        {value: "Training material", deliverableNames: ["E-learning platform", "Training course material"]},
-        
+        {value: "Training material", deliverableNames: ["E-learning platform", "Training course material"]}
       ],
       chartData: {
 				labels: ['Electricity', 'Water', 'Printable deliverables', 'Events', 'Materials', 'Transportation', 'Heat'],
@@ -1413,7 +671,11 @@ export default {
       partnerFilters: null,
       printableDeliverableFilters: null,
       loading: true,
-      onFocusValue: null
+      onFocusValue: null,
+      currentPagePartnersTable: 0,
+      currentPagePrintableDeliverablesTable: 0,
+      displayPartnersWithoutCountryDialog: false,
+      partnersWithoutCountry: [],
     }
   },
   created() {
@@ -1425,30 +687,57 @@ export default {
     this.loading = false;
   },
   methods: {
+    displayPartnersWithoutCountryErrorDialog() {
+      this.displayPartnersWithoutCountryDialog = true
+    },
+    closePartnersWithoutCountryErrorDialog() {
+      this.displayPartnersWithoutCountryDialog = false
+      this.partnersWithoutCountry = []
+    },
     calculateCF() {
-      axios.put(`/projects/calculateCF/${this.$route.params.id}`)
-      .then((response) => {
-        let partners = this.project.partners
-        let printableDeliverables = this.project.printableDeliverables
-        let coordinator = this.project.coordinator
-        
-        this.project = response.data;
-        this.project.partners = partners
-        this.project.printableDeliverables = printableDeliverables
-        this.project.coordinator = coordinator
+      
+      this.checkEventsNotFilled()
 
-        this.$toast.add({severity:'success', summary: 'Successful', detail: 'Project CF calculated', life: 3000});
+      for (let partner of this.project.partners) {
+        if (partner.country === "Select a country") {
+          this.partnersWithoutCountry.push(partner)
+        }
+      }
 
-        // console.log(response.data)
-      })
-      .catch((e)=>{
-        console.log('error' + e);
-      })
+      if (this.partnersWithoutCountry.length > 0) {
+        this.displayPartnersWithoutCountryErrorDialog()
+      } else {
+
+        axios.put(`/projects/${this.$route.params.id}`, this.project)
+        .catch((error) => {
+          console.log(error);
+        })
+
+        this.savePrintableDeliverables()
+        this.savePartners()
+
+        axios.put(`/projects/calculateCF/${this.$route.params.id}`)
+        .then((response) => {
+          let partners = this.project.partners
+          let printableDeliverables = this.project.printableDeliverables
+          let coordinator = this.project.coordinator
+          
+          this.project = response.data;
+          this.project.partners = partners
+          this.project.printableDeliverables = printableDeliverables
+          this.project.coordinator = coordinator
+
+          this.$toast.add({severity:'success', summary: 'Successful', detail: 'Project CF calculated', life: 3000});
+        })
+        .catch((e)=>{
+          console.log('error' + e);
+        })
+      }
     },
     getTextColorFromCFIndex(cfIndex) {
-        if (cfIndex < 3)
+        if (cfIndex < 150)
             return "success"
-        else if (cfIndex > 3 & cfIndex < 5)
+        else if (cfIndex > 150 & cfIndex < 250)
             return "warning"
         else
             return "danger"
@@ -1476,26 +765,25 @@ export default {
       this.axios.get(`/projects/${this.$route.params.id}`)
       .then((response) => {
         this.project = response.data;
-      })
-      .catch((e)=>{
-        console.log('error' + e);
-      })
+        this.axios.get(`/partners?projectId=${this.$route.params.id}`)
+        .then((response) => {
+          this.project.partners = response.data;
+          if (response.data.length > 0) {
+            this.project.coordinator = response.data.find(p => p.coordinator)._id
+            this.$store.dispatch("updateSelectedPartner", response.data[0].name);
+          }
+        })
+        .catch((e)=>{
+          console.log('error' + e);
+        })
 
-      this.axios.get(`/partners?projectId=${this.$route.params.id}`)
-      .then((response) => {
-        this.project.partners = response.data;
-        if (response.data.length > 0) {
-          this.project.coordinator = response.data.find(p => p.coordinator)._id
-          this.$store.dispatch("updateSelectedPartner", response.data[0].name);
-        }
-      })
-      .catch((e)=>{
-        console.log('error' + e);
-      })
-
-      this.axios.get(`/printableDeliverables?projectId=${this.$route.params.id}`)
-      .then((response) => {
-        this.project.printableDeliverables = response.data;
+        this.axios.get(`/printableDeliverables?projectId=${this.$route.params.id}`)
+        .then((response) => {
+          this.project.printableDeliverables = response.data;
+        })
+        .catch((e)=>{
+          console.log('error' + e);
+        })
       })
       .catch((e)=>{
         console.log('error' + e);
@@ -1507,13 +795,13 @@ export default {
         deliverableName: "Select a deliverable name",
         copies: 1,
         avgPagesPerCopy: 1,
-        size: "Select a paper size",
+        size: "A4",
         project: this.project._id
       }
 
       this.axios.post('/printableDeliverables', newPrintableDeliverable)
       .then((response) => {
-        this.project.printableDeliverables.unshift(response.data)
+        this.project.printableDeliverables.push(response.data)
         this.$toast.add({severity:'success', summary: 'Successful', detail: 'Printable deliverable created', life: 3000});
       })
       .catch((e)=>{
@@ -1557,7 +845,7 @@ export default {
         
       this.axios.post('/partners', newPartner)
       .then((response) => {
-        this.project.partners.unshift(response.data)
+        this.project.partners.push(response.data)
 
         if (noCoordinator) {
           this.onCellEditCompletePartnerCoordinator(this.project.partners[0])
@@ -1582,16 +870,18 @@ export default {
           this.project.partners = []
           this.$store.dispatch("updateSelectedPartner", "");
         } else {
+
+          this.project.partners.splice(index, 1)
+          
+          if (this.project.partners.filter(p => p.coordinator === true).length === 0)
+              this.onCellEditCompletePartnerCoordinator(this.project.partners[0])
+          
+          if (this.selectedPartnerForEquipmentSimple === partner.name)
+            this.$store.dispatch("updateSelectedPartner", this.project.partners.filter(p => p._id !== partner._id)[0].name)
+
           this.axios.get(`/partners?projectId=${this.$route.params.id}`)
           .then((response) => {
-
             this.project.partners = response.data;
-            
-            if (this.project.partners.filter(p => p.coordinator === true).length === 0)
-              this.onCellEditCompletePartnerCoordinator(this.project.partners[0])
-            
-            if (this.selectedPartnerForEquipmentSimple === partner.name)
-              this.$store.dispatch("updateSelectedPartner", this.project.partners.filter(p => p._id !== partner._id)[0].name)
           })
           .catch((e)=>{
             console.log('error' + e);
@@ -1601,6 +891,22 @@ export default {
       })
       .catch((e)=>{
         console.log('error' + e);
+      })
+    },
+    savePrintableDeliverables() {
+      this.axios.put('/printableDeliverables/updateAll', this.project.printableDeliverables)
+      .then(() => {
+        this.$toast.add({severity:'success', summary: 'Successful', detail: 'All Printable Deliverables updated', life: 3000});
+      }).catch((error) =>{
+        console.log(error)
+      })
+    },
+    savePartners() {
+      this.axios.put('/partners/updateAll', this.project.partners)
+      .then(() => {
+        this.$toast.add({severity:'success', summary: 'Successful', detail: 'All Partners updated', life: 3000});
+      }).catch((error) =>{
+        console.log(error)
       })
     },
     getDeliverableNames(deliverableType) {
@@ -1631,9 +937,6 @@ export default {
     },
     onCellEditComplete(field, newValue) {
       if (newValue === this.onFocusValue) return;
-
-      console.log("newValue", newValue)
-      console.log("this.onFocusValue", newValue)
 
       const paramsData = {}
       paramsData[field] = newValue;
@@ -1685,9 +988,6 @@ export default {
       })
     },
     onCellEditCompletePartnerEquipment(field, newValue) {
-      console.log("field", field)
-      console.log("newValue", newValue)
-      console.log("this.onFocusValue", this.onFocusValue)
       
       if (newValue === this.onFocusValue) return;
 
@@ -1695,8 +995,6 @@ export default {
       const paramsData = {}
       paramsData[field] = newValue;
       
-      console.log("paramsData", paramsData)
-
       axios.put("/partners/" + partnerId, paramsData).then(() => {
         this.project[field] = newValue
         this.$toast.add({severity:'success', summary: 'Successful', detail: 'Partner equipment data updated', life: 3000});
@@ -1717,6 +1015,13 @@ export default {
       if (field === "deliverableType") {
         paramsData["deliverableName"] = "Select a deliverable name"
         newData["deliverableName"] = "Select a deliverable name"
+
+        let newPrintableDeliverable = this.deliverableOptions.filter(d => d.value == newValue)[0]
+
+        paramsData["avgPagesPerCopy"] = newPrintableDeliverable.avgPagesPerCopy
+        newData["avgPagesPerCopy"] = newPrintableDeliverable.avgPagesPerCopy
+        paramsData["size"] = newPrintableDeliverable.size
+        newData["size"] = newPrintableDeliverable.size
       }
       
       axios.put("/printableDeliverables/" + data._id, paramsData).then(() => {
@@ -1726,22 +1031,64 @@ export default {
         console.log(error)
       })
     },
-    savePartners() {
-      this.axios.put('/partners/updateAll', this.project.partners)
-      .then(() => {
-        this.$toast.add({severity:'success', summary: 'Successful', detail: 'All Partners updated', life: 3000});
-      }).catch((error) =>{
-        console.log(error)
-      })
-    },
-    savePrintableDeliverables() {
-      this.axios.put('/printableDeliverables/updateAll', this.project.printableDeliverables)
-      .then(() => {
-        this.$toast.add({severity:'success', summary: 'Successful', detail: 'All Printable Deliverables updated', life: 3000});
-      }).catch((error) =>{
-        console.log(error)
-      })
-    },
+    checkEventsNotFilled() {
+      if (this.project.publicOnSiteEventsNumber === 0) {
+        if (this.project.publicOnSiteEventsAveragePhysicalParticipants !== 0
+            || this.project.publicOnSiteEventsAverageNonLocalPhysicalParticipants !== 0
+            || this.project.publicOnSiteEventsAverageDuration !== 0) {
+          this.$toast.add({severity:'warn', summary: 'Caution', detail: 'Some values were input while the number of public in presence events is 0!', life: 8000});
+        }
+      }
+
+      if (this.project.publicHybridEventsNumber === 0) {
+        if (this.project.publicHybridEventsAveragePhysicalParticipants !== 0
+            || this.project.publicHybridEventsAverageNonLocalPhysicalParticipants !== 0
+            || this.project.publicHybridEventsAverageVirtualParticipants !== 0
+            || this.project.publicHybridEventsAverageDuration !== 0
+            || this.project.publicHybridEventsAverageHoursPerDays !== 0) {
+          this.$toast.add({severity:'warn', summary: 'Caution', detail: 'Some values were input while the number of public mixed events is 0!', life: 8000});
+        }
+      }
+
+      if (this.project.publicVirtualEventsNumber === 0) {
+        if (this.project.publicVirtualEventsAverageVirtualParticipants !== 0
+            || this.project.publicVirtualEventsAverageDuration !== 0) {
+          this.$toast.add({severity:'warn', summary: 'Caution', detail: 'Some values were input while the number of public on-line events is 0!', life: 8000});
+        }
+      }
+  
+      if (this.project.internalOnSiteEventsNumber === 0) {
+        if (this.project.internalOnSiteEventsAveragePhysicalParticipants !== 0
+            || this.project.internalOnSiteEventsAverageNonLocalPhysicalParticipants !== 0
+            || this.project.internalOnSiteEventsAverageDuration !== 0) {
+          this.$toast.add({severity:'warn', summary: 'Caution', detail: 'Some values were input while the number of internal in presence events is 0!', life: 8000});
+        }
+      }
+
+      if (this.project.internalHybridEventsNumber === 0) {
+        if (this.project.internalHybridEventsAveragePhysicalParticipants !== 0
+            || this.project.internalHybridEventsAverageNonLocalPhysicalParticipants !== 0
+            || this.project.internalHybridEventsAverageVirtualParticipants !== 0
+            || this.project.internalHybridEventsAverageDuration !== 0
+            || this.project.internalHybridEventsAverageHoursPerDays !== 0) {
+          this.$toast.add({severity:'warn', summary: 'Caution', detail: 'Some values were input while the number of internal mixed events is 0!', life: 8000});
+        }
+      }
+
+      if (this.project.internalVirtualEventsNumber === 0) {
+        if (this.project.internalVirtualEventsAverageVirtualParticipants !== 0
+            || this.project.internalVirtualEventsAverageDuration !== 0) {
+          this.$toast.add({severity:'warn', summary: 'Caution', detail: 'Some values were input while the number of internal on-line events is 0!', life: 8000});
+        }
+      }
+  
+      if (this.project.participatedOnSiteEventsNumber === 0) {
+        if (this.project.participatedOnSiteEventsAverageParticipants !== 0
+            || this.project.participatedOnSiteEventsAverageDuration !== 0) {
+          this.$toast.add({severity:'warn', summary: 'Caution', detail: 'Some values were input while the number of participated in presence events is 0!', life: 8000});
+        }
+      }
+    }
   },
   computed: {
     ...mapState([
