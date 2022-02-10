@@ -18,13 +18,13 @@
                 <label for="projectInitialDuration">Project Starting Year</label>
                 <InputNumber v-model="newProject.from" id="projectInitialDuration" name="projectInitialDuration" showButtons :min="0" mode="decimal"
                 decrementButtonClass="p-button-info" incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
-                :class="{'p-invalid': submitted && errors.filter(e => e.field === 'duration').length > 0}" />
+                :useGrouping="false" :class="{'p-invalid': submitted && errors.filter(e => e.field === 'duration').length > 0}" />
               </div>
               <div class="field col-12 md:col-4">
                 <label for="projectFinalDuration">Project Finishing Year</label>
                 <InputNumber v-model="newProject.to" id="projectFinalDuration" name="projectFinalDuration" showButtons :min="0" mode="decimal"
                 decrementButtonClass="p-button-info" incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
-                :class="{'p-invalid': submitted && errors.filter(e => e.field === 'duration').length > 0}" />
+                :useGrouping="false" :class="{'p-invalid': submitted && errors.filter(e => e.field === 'duration').length > 0}" />
               </div>
             </div>
             <div class="col-12 md:col-12" style="display: flex; justify-content: center;">
