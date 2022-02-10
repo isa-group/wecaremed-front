@@ -63,6 +63,7 @@
             </router-link>
             
             <ul class="layout-topbar-menu lg:flex origin-top">
+                
                 <div class="layout-topbar-menu">
                     <li>
                         <label id="app-mode-label" for="appMode">{{appModeText}} use mode</label>
@@ -129,6 +130,7 @@ export default {
     methods: {
         toggleMenu(event) {
             this.$refs.menu.toggle(event);
+            this.$store.state.dispatch("toggleValue");
         },
         openConfirmation() {
             this.displayConfirmation = true;

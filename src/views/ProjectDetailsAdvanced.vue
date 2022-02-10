@@ -341,89 +341,68 @@
                   </div>
                 </div>
 
-                <div class="col-12">
-                  <div class="card p-fluid" style="display: flex; flex-direction: column; align-items: center; justify-content: space-around;">
-                    <div>
-                      <h2>Tons of equivalent carbon dioxide emitted:
-                        <Badge :value="project.initialCF" class="ml-3" size="xlarge" :severity="getTextColorFromCFIndex(project.initialCF)" />
-                      </h2>
-                    </div>
-                    <Button icon="pi pi-replay" class="p-button-rounded p-button-outlined p-button-plain mr-5" label="Recalculate"
-                            style="width: 15rem; font-size: 1.1rem" @click="calculateCF" />
-                  </div>
-                </div>
+                <div class="card">
 
-                <Dialog header="Error" v-model:visible="displayPartnersWithoutCountryDialog" class="col-4" :modal="true">
-                    <div class="flex align-items-center justify-content-center">
-                        <i class="pi pi-exclamation-triangle mr-3" style="font-size: 2rem" />
+                  <!-- Tabla Custom Printable Deliverables -->
+
+                <h5>Additional custom defined printable deliverable emission</h5>
+
+                <DataTable :value="this.project.customPrintableDeliverables" editMode="cell" :paginator="true" class="p-datatable-gridlines" dataKey="_id"
+                :rowHover="true" @cell-edit-complete="onCellEditCompleteCustomPrintableDeliverable" sortMode="multiple" :rows="5" v-model:filters="partnerFilters"
+                filterDisplay="menu" :loading="loading" :filters="partnerFilters" responsiveLayout="scroll"
+                :globalFilterFields="['nameCustom','valueCustom']" @page="currentPageCustomPrintableDeliverablesTable = $event.page">
+                  
+                  <template #header>
+                      <div class="flex justify-content-between flex-column sm:flex-row">
                         <div>
-                        <p>You need to select a country for each partner in order to calculate the CF of the project!</p>
-                        <p>Partners without country:</p>
-                        <p v-for="partner in partnersWithoutCountry" :key="partner._id">{{partner.name}}</p>
-                    </div>
-                    </div>
-                    <template #footer>
-                        <Button label="Ok" @click="closePartnersWithoutCountryErrorDialog" class="p-button-text p-button-info" autofocus/>
-                    </template>
-                </Dialog>
+                          <Button class="p-button-info mr-2" @click="addCustomPrintableDeliverable(this.customTypes[6].value)"><i class="pi pi-plus mr-2" />New additional custom printable deliverable</Button>
+                          <span class="p-input-icon-left">
+                            <i class="pi pi-search" />
+                            <InputText v-model="partnerFilters['global'].value" placeholder="Keyword Search" style="width: 100%"/>
+                          </span>
+                          <Button class="ml-2" label="Save" icon="pi pi-check" @click="saveCustoms" />
+                        </div>
+                        
+                        <Button type="button" icon="pi pi-filter-slash" label="Clear" class="p-button-warning" @click="clearPartnerFilter()"/>
+                      </div>
+                  </template>
 
-                <div class="col-12">
-                  <div class="card p-fluid" style="display: flex; flex-direction: column; align-items: center; justify-content: space-around;">
-                    <h2>CF Breakdown (Tons)</h2>
-                    <div class="col-12" style="display: flex; justify-content: space-evenly;">
-                      <div class="card p-fluid col-2" style="display: flex; flex-direction: column; align-items: center; justify-content: space-around;">
-                        <h2 class="font-medium text-3xl">Fuels Heat</h2>
-                        <div class="flex align-items-center py-3 px-2 border-top-1 surface-border">
-                          <Badge :value="project.fuelsHeatCF" size="xlarge" severity="info" />
-                        </div>
-                      </div>
-                      <div class="card p-fluid col-2" style="display: flex; flex-direction: column; align-items: center; justify-content: space-around;">
-                        <h2 class="font-medium text-3xl">Electricity</h2>
-                        <div class="flex align-items-center py-3 px-2 border-top-1 surface-border">
-                          <Badge :value="project.electricityCF" size="xlarge" severity="info" />
-                        </div>
-                      </div>
-                      <div class="card p-fluid col-2" style="display: flex; flex-direction: column; align-items: center; justify-content: space-around;">
-                        <h2 class="font-medium text-3xl">Water</h2>
-                        <div class="flex align-items-center py-3 px-2 border-top-1 surface-border">
-                          <Badge :value="project.waterCF" size="xlarge" severity="info" />
-                        </div>
-                      </div>
-                      <div class="card p-fluid col-2" style="display: flex; flex-direction: column; align-items: center; justify-content: space-around;">
-                        <h2 class="font-medium text-3xl">Transportation</h2>
-                        <div class="flex align-items-center py-3 px-2 border-top-1 surface-border">
-                          <Badge :value="project.transportationCF" size="xlarge" severity="info" />
-                        </div>
-                      </div>
-                    </div>
-                    <div class="col-12" style="display: flex; justify-content: space-evenly;">
-                      <div class="card p-fluid col-2" style="display: flex; flex-direction: column; align-items: center; justify-content: space-around;">
-                        <h2 class="font-medium text-3xl">Materials</h2>
-                        <div class="flex align-items-center py-3 px-2 border-top-1 surface-border">
-                          <Badge :value="project.materialsCF" size="xlarge" severity="info" />
-                        </div>
-                      </div>
-                      <div class="card p-fluid col-2" style="display: flex; flex-direction: column; align-items: center; justify-content: space-around;">
-                        <h2 class="font-medium text-3xl">Printable<br>Deliverables</h2>
-                        <div class="flex align-items-center py-3 px-2 border-top-1 surface-border">
-                          <Badge :value="project.printableDeliverablesCF" size="xlarge" severity="info" />
-                        </div>
-                      </div>
-                      <div class="card p-fluid col-2" style="display: flex; flex-direction: column; align-items: center; justify-content: space-around;">
-                        <h2 class="font-medium text-3xl">Equipment</h2>
-                        <div class="flex align-items-center py-3 px-2 border-top-1 surface-border">
-                          <Badge :value="project.equipmentCF" size="xlarge" severity="info" />
-                        </div>
-                      </div>
-                      <div class="card p-fluid col-2" style="display: flex; flex-direction: column; align-items: center; justify-content: space-around;">
-                        <h2 class="font-medium text-3xl">Events</h2>
-                        <div class="flex align-items-center py-3 px-2 border-top-1 surface-border">
-                          <Badge :value="project.eventsCF" size="xlarge" severity="info" />
-                        </div>
-                      </div>
-                    </div>
-                  </div>
+                  <template #empty>
+                      No additional custom printable deliverables found.
+                  </template>
+
+                  <template #loading>
+                      Loading custom printable deliverables. Please wait.
+                  </template>
+
+                  <Column field="name" header="Item" :sortable="true">
+                    <template #editor="slotProps">
+                        <InputText v-model="slotProps.data[slotProps.field]" />
+                    </template>
+                    <template #filter="{filterModel, field}">
+                        <InputText type="text" v-model="filterModel.value" class="p-column-filter" :placeholder="'Filter by ' + field"/>
+                    </template>
+                  </Column>
+
+                  <Column field="value" header="Value" :sortable="true">
+                    <template #editor="slotProps" class="p-field">
+                      <InputNumber v-model="slotProps.data[slotProps.field]" mode="decimal" :maxFractionDigits="3"
+                      showButtons :step="0.25" decrementButtonClass="p-button-info"
+                      incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
+                      :allowEmpty="false" :min="0" />
+                    </template>
+                  </Column>
+
+                  
+                  <Column field="actions" header="Actions">
+                    <template #body="slotProps">
+                      <i class="pi pi-trash" @click="deleteCustomPrintableDeliverable(slotProps.index + currentPageCustomPrintableDeliverablesTable * 5)" />
+                    </template>
+                  </Column>
+                
+                </DataTable>
                 </div>
+
               </TabPanel>
             </TabView>
           </TabPanel>
@@ -568,7 +547,7 @@ import Chart from 'primevue/chart'
 import 'primeicons/primeicons.css';
 
 export default {
-  name: 'ProjectDetailsSimple',
+  name: 'ProjectDetailsAdvanced',
   components: {
     Dropdown,
     // Dialog,
@@ -589,6 +568,13 @@ export default {
     return {
       placeholder: "Select a partner",
       project: {},
+      customHeat: [{}],
+      customElectricity: [{}],
+      customWater: [{}],
+      customTransportation: [{}],
+      customMaterials: [{}],
+      customEvents: [{}],
+      customPrintableDeliverables: [{}],
       object: {},
       countriesForDropdown: ["Albania", "Bosnia & Herzegovina", "Croatia", "Cyprus", "France", "Greece", "Italy", "Malta", "Montenegro", "Portugal", "Slovenia", "Spain", "Bulgaria", "North Macedonia"],
       paperSizes: ["A0", "A1", "A2", "A3", "A4", "A5", "A6"],
@@ -620,6 +606,15 @@ export default {
         {value: "Tool Service", deliverableNames: ["Facilities", "Software support/service", "Testing report"]},
         {value: "Training course", deliverableNames: ["Methodology", "Training report"]},
         {value: "Training material", deliverableNames: ["E-learning platform", "Training course material"]}
+      ],
+      customTypes : [
+        {value: "Heat"},
+        {value: "Electrity"},
+        {value: "Water"},
+        {value: "Transportation"},
+        {value: "Materials"},
+        {value: "Events"},
+        {value: "Printable Deliverables"}
       ],
       chartData: {
 				labels: ['Electricity', 'Water', 'Printable deliverables', 'Events', 'Materials', 'Transportation', 'Heat'],
@@ -674,6 +669,7 @@ export default {
       onFocusValue: null,
       currentPagePartnersTable: 0,
       currentPagePrintableDeliverablesTable: 0,
+      currentPageCustomPrintableDeliverablesTable: 0,
       displayPartnersWithoutCountryDialog: false,
       partnersWithoutCountry: [],
     }
@@ -784,6 +780,44 @@ export default {
         .catch((e)=>{
           console.log('error' + e);
         })
+      
+        let projectID = this.$route.params.id;
+        axios.get('/customs?projectId=' + projectID, { params: {
+          projectId: projectID
+        }})
+        .then((response) => {
+      
+          for(let i = 0; i < response.data.length; i++){
+            if (response.data[i].type.endsWith("Heat")) {
+              this.customHeat.push(response.data[i]);
+            } else if(response.data[i].type.endsWith("Electricity")){
+              this.customElectricity.push(response.data[i]);
+            } else if(response.data[i].type.endsWith("Water")) {
+              this.customWater.push(response.data[i]);
+            } else if(response.data[i].type.endsWith("Transportation")) {
+              this.customTransportation.push(response.data[i]);
+            } else if(response.data[i].type.endsWith("Materials")) {
+              this.customMaterials.push(response.data[i]);
+            } else if(response.data[i].type.endsWith("Events")) {
+              this.customEvents.push(response.data[i]);
+            } else if(response.data[i].type.endsWith("Deliverables")) {
+              this.customPrintableDeliverables.push(response.data[i]);
+            }
+            this.project.customHeat = this.customHeat;
+            this.project.customElectricity = this.customElectricity;
+            this.project.customWater = this.customWater;
+            this.project.customTransportation = this.customTransportation;
+            this.project.customMaterials = this.customMaterials;
+            this.project.customEvents = this.customEvents;
+            this.project.customPrintableDeliverables = this.customPrintableDeliverables;
+          }
+        })
+        .catch((e)=>{
+          console.log('error' + e);
+        })
+
+
+
       })
       .catch((e)=>{
         console.log('error' + e);
@@ -1088,6 +1122,101 @@ export default {
           this.$toast.add({severity:'warn', summary: 'Caution', detail: 'Some values were input while the number of participated in presence events is 0!', life: 8000});
         }
       }
+    },
+    addCustomPrintableDeliverable(customType){
+      console.log("Custom type: ", customType);
+      let newCustom = {
+        _id: new Mongoose.Types.ObjectId(),
+        name: "New Custom Item",
+        type: customType,
+        value: 0,
+        project: this.project._id
+      }
+        
+      this.axios.post('/customs', newCustom)
+      .then((response) => {
+        this.project.customPrintableDeliverables.push(response.data)
+        
+        this.$toast.add({severity:'success', summary: 'Successful', detail: 'Custom Printable Deliverables created', life: 3000});
+      })
+      .catch((e)=>{
+        console.log('error' + e);
+      })
+    },
+    onCellEditCompleteCustomPrintableDeliverable(event) {
+      let { data, newValue, newData, field } = event;
+
+      console.log(event);
+
+      if (newValue === data[field]) return;
+
+      const paramsData = {}
+
+      newData[field] = newValue;
+      paramsData[field] = newValue;
+      
+      axios.put("/customs/" + data._id, paramsData).then(() => {
+        this.project.customPrintableDeliverables.splice(this.project.customPrintableDeliverables.indexOf(data), 1, newData)
+        this.$toast.add({severity:'success', summary: 'Successful', detail: 'Custom Printable deliverables updated', life: 3000});
+      }).catch(error =>{
+        console.log(error)
+      })
+    },
+    
+    saveCustoms() {
+      this.axios.put('/customs/updateAll', this.customs)
+      .then(() => {
+        this.$toast.add({severity:'success', summary: 'Successful', detail: 'All Customs updated', life: 3000});
+      }).catch((error) =>{
+        console.log(error)
+      })
+    },
+    deleteCustomPrintableDeliverable(index) {
+      let customPrintableDeliverable = this.project.customPrintableDeliverables[index]
+
+      this.axios.delete('/customs/' + customPrintableDeliverable._id)
+      .then(() => {
+
+        let projectID = this.$route.params.id;
+        axios.get('/customs?projectId=' + projectID, { params: {
+          projectId: projectID
+        }})
+        .then((response) => {
+      
+          for(let i = 0; i < response.data.length; i++){
+            if (response.data[i].type.endsWith("Heat")) {
+              this.customHeat.push(response.data[i]);
+            } else if(response.data[i].type.endsWith("Electricity")){
+              this.customElectricity.push(response.data[i]);
+            } else if(response.data[i].type.endsWith("Water")) {
+              this.customWater.push(response.data[i]);
+            } else if(response.data[i].type.endsWith("Transportation")) {
+              this.customTransportation.push(response.data[i]);
+            } else if(response.data[i].type.endsWith("Materials")) {
+              this.customMaterials.push(response.data[i]);
+            } else if(response.data[i].type.endsWith("Events")) {
+              this.customEvents.push(response.data[i]);
+            } else if(response.data[i].type.endsWith("Deliverables")) {
+              this.customPrintableDeliverables.push(response.data[i]);
+            }
+            this.project.customHeat = this.customHeat;
+            this.project.customElectricity = this.customElectricity;
+            this.project.customWater = this.customWater;
+            this.project.customTransportation = this.customTransportation;
+            this.project.customMaterials = this.customMaterials;
+            this.project.customEvents = this.customEvents;
+            this.project.customPrintableDeliverables = this.customPrintableDeliverables;
+          }
+        })
+        .catch((e)=>{
+          console.log('error' + e);
+        })
+
+        this.$toast.add({severity:'success', summary: 'Successful', detail: 'Custom Printable deliverable deleted', life: 3000});
+      })
+      .catch((e)=>{
+        console.log('error' + e);
+      })
     }
   },
   computed: {
