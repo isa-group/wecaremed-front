@@ -836,7 +836,7 @@ export default {
 
       if (this.partnersWithoutCountry.length > 0) {
         this.displayPartnersWithoutCountryErrorDialog()
-      } else {
+      } else if (!this.checkHoursNotGreaterThan24() && !this.checkNonLocalPhysicalGreaterThanPhysicalParticipants()) {
 
         axios.put(`/projects/${this.$route.params.id}`, this.project)
         .catch((error) => {
@@ -1217,19 +1217,26 @@ export default {
             || this.project.participatedOnSiteEventsAverageDuration !== 0) {
           this.$toast.add({severity:'warn', summary: 'Caution', detail: 'Some values were input while the number of participated in presence events is 0!', life: 8000});
         }
+      }  
+    },
+    checkHoursNotGreaterThan24(){
+      let res = false;
+      if (this.project.publicHybridEventsAverageHoursPerDays > 24 || this.project.internalHybridEventsAverageHoursPerDays > 24) {
+        res = true;
+        this.$toast.add({severity:'error', summary: 'Caution', detail: 'The value of Average duration (hours/day) should be lower than 24', life: 8000});
       }
-
+      return res;
+    },
+    checkNonLocalPhysicalGreaterThanPhysicalParticipants(){
+      let res = false;
       if (this.project.publicOnSiteEventsAverageNonLocalPhysicalParticipants > this.project.publicOnSiteEventsAveragePhysicalParticipants 
         || this.project.publicHybridEventsAverageNonLocalPhysicalParticipants > this.project.publicHybridEventsAveragePhysicalParticipants
         || this.project.internalOnSiteEventsAverageNonLocalPhysicalParticipants > this.project.internalOnSiteEventsAveragePhysicalParticipants
         || this.project.internalHybridEventsAverageNonLocalPhysicalParticipants > this.project.internalHybridEventsAveragePhysicalParticipants) {
+          res = true;
         this.$toast.add({severity:'error', summary: 'Caution', detail: 'Average number of non-local physical participants cannot be greater than the value of Average number of physical participants', life: 8000});
       }
-
-      if (this.project.publicHybridEventsAverageHoursPerDays > 24 || this.project.internalHybridEventsAverageHoursPerDays > 24) {
-        this.$toast.add({severity:'error', summary: 'Caution', detail: 'The value of Average duration (hours/day) should be lower than 24', life: 8000});
-      }
-      
+      return res;
     }
   },
   computed: {
