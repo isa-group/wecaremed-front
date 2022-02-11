@@ -360,7 +360,7 @@
                             <i class="pi pi-search" />
                             <InputText v-model="partnerFilters['global'].value" placeholder="Keyword Search" style="width: 100%"/>
                           </span>
-                          <Button class="ml-2" label="Save" icon="pi pi-check" @click="saveCustoms" />
+                          <Button class="ml-2" label="Save" icon="pi pi-check" @click="saveCustomPrintableDeliverables" />
                         </div>
                         
                         <Button type="button" icon="pi pi-filter-slash" label="Clear" class="p-button-warning" @click="clearPartnerFilter()"/>
@@ -568,13 +568,13 @@ export default {
     return {
       placeholder: "Select a partner",
       project: {},
-      customHeat: [{}],
-      customElectricity: [{}],
-      customWater: [{}],
-      customTransportation: [{}],
-      customMaterials: [{}],
-      customEvents: [{}],
-      customPrintableDeliverables: [{}],
+      customHeat: [],
+      customElectricity: [],
+      customWater: [],
+      customTransportation: [],
+      customMaterials: [],
+      customEvents: [],
+      customPrintableDeliverables: [],
       object: {},
       countriesForDropdown: ["Albania", "Bosnia & Herzegovina", "Croatia", "Cyprus", "France", "Greece", "Italy", "Malta", "Montenegro", "Portugal", "Slovenia", "Spain", "Bulgaria", "North Macedonia"],
       paperSizes: ["A0", "A1", "A2", "A3", "A4", "A5", "A6"],
@@ -810,6 +810,7 @@ export default {
             this.project.customMaterials = this.customMaterials;
             this.project.customEvents = this.customEvents;
             this.project.customPrintableDeliverables = this.customPrintableDeliverables;
+            console.log("Custom PD:", this.project.customPrintableDeliverables);
           }
         })
         .catch((e)=>{
@@ -1163,8 +1164,8 @@ export default {
       })
     },
     
-    saveCustoms() {
-      this.axios.put('/customs/updateAll', this.customs)
+    saveCustomPrintableDeliverables() {
+      this.axios.put('/customs/updateAll', this.project.customPrintableDeliverables)
       .then(() => {
         this.$toast.add({severity:'success', summary: 'Successful', detail: 'All Customs updated', life: 3000});
       }).catch((error) =>{
@@ -1172,9 +1173,9 @@ export default {
       })
     },
     deleteCustomPrintableDeliverable(index) {
-      let customPrintableDeliverable = this.project.customPrintableDeliverables[index]
+      let customPrintableDeliverables = this.project.customPrintableDeliverables[index]
 
-      this.axios.delete('/customs/' + customPrintableDeliverable._id)
+      this.axios.delete('/customs/' + customPrintableDeliverables._id)
       .then(() => {
 
         let projectID = this.$route.params.id;
@@ -1182,31 +1183,7 @@ export default {
           projectId: projectID
         }})
         .then((response) => {
-      
-          for(let i = 0; i < response.data.length; i++){
-            if (response.data[i].type.endsWith("Heat")) {
-              this.customHeat.push(response.data[i]);
-            } else if(response.data[i].type.endsWith("Electricity")){
-              this.customElectricity.push(response.data[i]);
-            } else if(response.data[i].type.endsWith("Water")) {
-              this.customWater.push(response.data[i]);
-            } else if(response.data[i].type.endsWith("Transportation")) {
-              this.customTransportation.push(response.data[i]);
-            } else if(response.data[i].type.endsWith("Materials")) {
-              this.customMaterials.push(response.data[i]);
-            } else if(response.data[i].type.endsWith("Events")) {
-              this.customEvents.push(response.data[i]);
-            } else if(response.data[i].type.endsWith("Deliverables")) {
-              this.customPrintableDeliverables.push(response.data[i]);
-            }
-            this.project.customHeat = this.customHeat;
-            this.project.customElectricity = this.customElectricity;
-            this.project.customWater = this.customWater;
-            this.project.customTransportation = this.customTransportation;
-            this.project.customMaterials = this.customMaterials;
-            this.project.customEvents = this.customEvents;
-            this.project.customPrintableDeliverables = this.customPrintableDeliverables;
-          }
+          this.project.customPrintableDeliverables = response.data;
         })
         .catch((e)=>{
           console.log('error' + e);
