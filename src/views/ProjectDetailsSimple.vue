@@ -88,7 +88,7 @@
           </template>
         </Column>
 
-        <Column field="seasonalEmployees" header="Part-time employees" :sortable="true">
+        <Column field="seasonalEmployees" header="Part-time/temporary employees" :sortable="true">
           <template #editor="slotProps">
             <InputNumber v-model="slotProps.data[slotProps.field]" mode="decimal" showButtons decrementButtonClass="p-button-info"
             incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
@@ -233,7 +233,7 @@
                   id ="publicOnSiteEventsNumber"/>
                 </div>
                 <div class="field col-12 md:col-6">
-                  <label for="publicOnSiteEventsAveragePhysicalParticipants">Average physical participants</label>
+                  <label for="publicOnSiteEventsAveragePhysicalParticipants">Average number of physical participants</label>
                   <InputNumber v-model="project.publicOnSiteEventsAveragePhysicalParticipants" mode="decimal"
                   showButtons decrementButtonClass="p-button-info" @keypress.enter="$event.target.blur()"
                   incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
@@ -242,7 +242,7 @@
                   id ="publicOnSiteEventsAveragePhysicalParticipants"/>
                 </div>
                 <div class="field col-12 md:col-6">
-                  <label for="publicOnSiteEventsAverageNonLocalPhysicalParticipants">Average non-local physical participants</label>
+                  <label for="publicOnSiteEventsAverageNonLocalPhysicalParticipants">Average number of non-local physical participants</label>
                   <InputNumber v-model="project.publicOnSiteEventsAverageNonLocalPhysicalParticipants" mode="decimal"
                   showButtons decrementButtonClass="p-button-info" @keypress.enter="$event.target.blur()"
                   incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
@@ -275,7 +275,7 @@
                   id ="publicHybridEventsNumber"/>
                 </div>
                 <div class="field col-12 md:col-4">
-                  <label for="publicHybridEventsAveragePhysicalParticipants">Average physical participants</label>
+                  <label for="publicHybridEventsAveragePhysicalParticipants">Average number of physical participants</label>
                   <InputNumber v-model="project.publicHybridEventsAveragePhysicalParticipants" mode="decimal"
                   showButtons decrementButtonClass="p-button-info" @keypress.enter="$event.target.blur()"
                   incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
@@ -284,7 +284,7 @@
                   id ="publicHybridEventsAveragePhysicalParticipants"/>
                 </div>
                 <div class="field col-12 md:col-4">
-                  <label for="publicHybridEventsAverageNonLocalPhysicalParticipants">Average non-local physical participants</label>
+                  <label for="publicHybridEventsAverageNonLocalPhysicalParticipants">Average number of non-local physical participants</label>
                   <InputNumber v-model="project.publicHybridEventsAverageNonLocalPhysicalParticipants" mode="decimal"
                   showButtons decrementButtonClass="p-button-info" @keypress.enter="$event.target.blur()"
                   incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
@@ -293,7 +293,7 @@
                   id ="publicHybridEventsAverageNonLocalPhysicalParticipants"/>
                 </div>
                 <div class="field col-12 md:col-4">
-                  <label for="publicHybridEventsAverageVirtualParticipants">Average on-line participants</label>
+                  <label for="publicHybridEventsAverageVirtualParticipants">Average number of on-line participants</label>
                   <InputNumber v-model="project.publicHybridEventsAverageVirtualParticipants" mode="decimal"
                   showButtons decrementButtonClass="p-button-info" @keypress.enter="$event.target.blur()"
                   incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
@@ -311,7 +311,7 @@
                   id ="publicHybridEventsAverageDuration "/>
                 </div>
                 <div class="field col-12 md:col-4">
-                  <label for="publicHybridEventsAverageHoursPerDays">Average hours/day</label>
+                  <label for="publicHybridEventsAverageHoursPerDays">Average duration (hours/day)</label>
                   <InputNumber v-model="project.publicHybridEventsAverageHoursPerDays" mode="decimal" :maxFractionDigits="3"
                   showButtons decrementButtonClass="p-button-info" :step="0.25" @keypress.enter="$event.target.blur()"
                   incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
@@ -335,7 +335,7 @@
                   id ="publicVirtualEventsNumber"/>
                 </div>
                 <div class="field col-12 md:col-4">
-                  <label for="publicVirtualEventsAverageVirtualParticipants">Average on-line participants</label>
+                  <label for="publicVirtualEventsAverageVirtualParticipants">Average number of on-line participants</label>
                   <InputNumber v-model="project.publicVirtualEventsAverageVirtualParticipants" mode="decimal"
                   showButtons decrementButtonClass="p-button-info" @keypress.enter="$event.target.blur()"
                   incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
@@ -371,7 +371,7 @@
                   id ="internalOnSiteEventsNumber"/>
                 </div>
                 <div class="field col-12 md:col-6">
-                  <label for="internalOnSiteEventsAveragePhysicalParticipants">Average physical participants</label>
+                  <label for="internalOnSiteEventsAveragePhysicalParticipants">Average number of physical participants</label>
                   <InputNumber v-model="project.internalOnSiteEventsAveragePhysicalParticipants" mode="decimal"
                   showButtons decrementButtonClass="p-button-info" @keypress.enter="$event.target.blur()"
                   incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
@@ -380,7 +380,7 @@
                   id ="internalOnSiteEventsAveragePhysicalParticipants"/>
                 </div>
                 <div class="field col-12 md:col-6">
-                  <label for="internalOnSiteEventsAverageNonLocalPhysicalParticipants">Average non-local physical participants</label>
+                  <label for="internalOnSiteEventsAverageNonLocalPhysicalParticipants">Average number of non-local physical participants</label>
                   <InputNumber v-model="project.internalOnSiteEventsAverageNonLocalPhysicalParticipants" mode="decimal"
                   showButtons decrementButtonClass="p-button-info" @keypress.enter="$event.target.blur()"
                   incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
@@ -413,7 +413,7 @@
                   id ="internalHybridEventsNumber"/>
                 </div>
                 <div class="field col-12 md:col-4">
-                  <label for="internalHybridEventsAveragePhysicalParticipants">Average physical participants</label>
+                  <label for="internalHybridEventsAveragePhysicalParticipants">Average number of physical participants</label>
                   <InputNumber v-model="project.internalHybridEventsAveragePhysicalParticipants" mode="decimal"
                   showButtons decrementButtonClass="p-button-info" @keypress.enter="$event.target.blur()"
                   incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
@@ -422,7 +422,7 @@
                   id ="internalHybridEventsAveragePhysicalParticipants"/>
                 </div>
                 <div class="field col-12 md:col-4">
-                  <label for="internalHybridEventsAverageNonLocalPhysicalParticipants">Average non-local physical participants</label>
+                  <label for="internalHybridEventsAverageNonLocalPhysicalParticipants">Average number of non-local physical participants</label>
                   <InputNumber v-model="project.internalHybridEventsAverageNonLocalPhysicalParticipants" mode="decimal"
                   showButtons decrementButtonClass="p-button-info" @keypress.enter="$event.target.blur()"
                   incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
@@ -431,7 +431,7 @@
                   id ="internalHybridEventsAverageNonLocalPhysicalParticipants"/>
                 </div>
                 <div class="field col-12 md:col-4">
-                  <label for="internalHybridEventsAverageVirtualParticipants">Average on-line participants</label>
+                  <label for="internalHybridEventsAverageVirtualParticipants">Average number of on-line participants</label>
                   <InputNumber v-model="project.internalHybridEventsAverageVirtualParticipants" mode="decimal"
                   showButtons decrementButtonClass="p-button-info" @keypress.enter="$event.target.blur()"
                   incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
@@ -449,7 +449,7 @@
                   id ="internalHybridEventsAverageDuration "/>
                 </div>
                 <div class="field col-12 md:col-4">
-                  <label for="internalHybridEventsAverageHoursPerDays">Average hours/day</label>
+                  <label for="internalHybridEventsAverageHoursPerDays">Average duration (hours/day)</label>
                   <InputNumber v-model="project.internalHybridEventsAverageHoursPerDays" mode="decimal" :maxFractionDigits="3"
                   showButtons decrementButtonClass="p-button-info" :step="0.25" @keypress.enter="$event.target.blur()"
                   incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
@@ -473,7 +473,7 @@
                   id ="internalVirtualEventsNumber"/>
                 </div>
                 <div class="field col-12 md:col-4">
-                  <label for="internalVirtualEventsAverageVirtualParticipants">Average on-line participants</label>
+                  <label for="internalVirtualEventsAverageVirtualParticipants">Average number of on-line participants</label>
                   <InputNumber v-model="project.internalVirtualEventsAverageVirtualParticipants" mode="decimal"
                   showButtons decrementButtonClass="p-button-info" @keypress.enter="$event.target.blur()"
                   incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
@@ -509,7 +509,7 @@
                   id ="participatedOnSiteEventsNumber"/>
                 </div>
                 <div class="field col-12 md:col-4">
-                  <label for="participatedOnSiteEventsAverageParticipants">Average number of participants</label>
+                  <label for="participatedOnSiteEventsAverageParticipants">Average number of participants of the project</label>
                   <InputNumber v-model="project.participatedOnSiteEventsAverageParticipants" mode="decimal" :maxFractionDigits="3"
                   showButtons decrementButtonClass="p-button-info" :step="0.25" @keypress.enter="$event.target.blur()"
                   incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
@@ -836,7 +836,7 @@ export default {
 
       if (this.partnersWithoutCountry.length > 0) {
         this.displayPartnersWithoutCountryErrorDialog()
-      } else {
+      } else if (!this.checkHoursNotGreaterThan24() && !this.checkNonLocalPhysicalGreaterThanPhysicalParticipants()) {
 
         axios.put(`/projects/${this.$route.params.id}`, this.project)
         .catch((error) => {
@@ -1217,7 +1217,26 @@ export default {
             || this.project.participatedOnSiteEventsAverageDuration !== 0) {
           this.$toast.add({severity:'warn', summary: 'Caution', detail: 'Some values were input while the number of participated in presence events is 0!', life: 8000});
         }
+      }  
+    },
+    checkHoursNotGreaterThan24(){
+      let res = false;
+      if (this.project.publicHybridEventsAverageHoursPerDays > 24 || this.project.internalHybridEventsAverageHoursPerDays > 24) {
+        res = true;
+        this.$toast.add({severity:'error', summary: 'Caution', detail: 'The value of Average duration (hours/day) should be lower than 24', life: 8000});
       }
+      return res;
+    },
+    checkNonLocalPhysicalGreaterThanPhysicalParticipants(){
+      let res = false;
+      if (this.project.publicOnSiteEventsAverageNonLocalPhysicalParticipants > this.project.publicOnSiteEventsAveragePhysicalParticipants 
+        || this.project.publicHybridEventsAverageNonLocalPhysicalParticipants > this.project.publicHybridEventsAveragePhysicalParticipants
+        || this.project.internalOnSiteEventsAverageNonLocalPhysicalParticipants > this.project.internalOnSiteEventsAveragePhysicalParticipants
+        || this.project.internalHybridEventsAverageNonLocalPhysicalParticipants > this.project.internalHybridEventsAveragePhysicalParticipants) {
+          res = true;
+        this.$toast.add({severity:'error', summary: 'Caution', detail: 'Average number of non-local physical participants cannot be greater than the value of Average number of physical participants', life: 8000});
+      }
+      return res;
     }
   },
   computed: {
