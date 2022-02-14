@@ -638,6 +638,13 @@
     </div>
 
     <div class="col-12">
+
+      <div class="card p-fluid" style="display: flex; flex-direction: column; align-items: center; justify-content: space-around;">
+        <Button class="ml-2" label="Save current project" @click="saveCurrentProject" />
+      </div>
+    </div>
+
+    <div class="col-12">
       <div class="card p-fluid" style="display: flex; flex-direction: column; align-items: center; justify-content: space-around;">
         <div>
           <h2>Tons of equivalent carbon dioxide emitted:
@@ -1237,6 +1244,15 @@ export default {
         this.$toast.add({severity:'error', summary: 'Caution', detail: 'Average number of non-local physical participants cannot be greater than the value of Average number of physical participants', life: 8000});
       }
       return res;
+    },
+    saveCurrentProject(){
+        this.savePrintableDeliverables();
+        this.savePartners();
+        axios.put("/projects/" + this.project._id, this.project).then(() => {
+          this.$toast.add({severity:'success', summary: 'Successful', detail: 'Project saved', life: 3000});
+        }).catch(error =>{
+          console.log(error)
+       })
     }
   },
   computed: {
