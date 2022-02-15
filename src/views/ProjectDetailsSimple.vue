@@ -242,7 +242,7 @@
                   id ="publicOnSiteEventsAveragePhysicalParticipants"/>
                 </div>
                 <div class="field col-12 md:col-6">
-                  <label for="publicOnSiteEventsAverageNonLocalPhysicalParticipants">Average number of non-local physical participants</label>
+                  <label for="publicOnSiteEventsAverageNonLocalPhysicalParticipants">Average number of non-local physical participants**</label>
                   <InputNumber v-model="project.publicOnSiteEventsAverageNonLocalPhysicalParticipants" mode="decimal"
                   showButtons decrementButtonClass="p-button-info" @keypress.enter="$event.target.blur()"
                   incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
@@ -284,7 +284,7 @@
                   id ="publicHybridEventsAveragePhysicalParticipants"/>
                 </div>
                 <div class="field col-12 md:col-4">
-                  <label for="publicHybridEventsAverageNonLocalPhysicalParticipants">Average number of non-local physical participants</label>
+                  <label for="publicHybridEventsAverageNonLocalPhysicalParticipants">Average number of non-local physical participants**</label>
                   <InputNumber v-model="project.publicHybridEventsAverageNonLocalPhysicalParticipants" mode="decimal"
                   showButtons decrementButtonClass="p-button-info" @keypress.enter="$event.target.blur()"
                   incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
@@ -380,7 +380,7 @@
                   id ="internalOnSiteEventsAveragePhysicalParticipants"/>
                 </div>
                 <div class="field col-12 md:col-6">
-                  <label for="internalOnSiteEventsAverageNonLocalPhysicalParticipants">Average number of non-local physical participants</label>
+                  <label for="internalOnSiteEventsAverageNonLocalPhysicalParticipants">Average number of non-local physical participants**</label>
                   <InputNumber v-model="project.internalOnSiteEventsAverageNonLocalPhysicalParticipants" mode="decimal"
                   showButtons decrementButtonClass="p-button-info" @keypress.enter="$event.target.blur()"
                   incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
@@ -422,7 +422,7 @@
                   id ="internalHybridEventsAveragePhysicalParticipants"/>
                 </div>
                 <div class="field col-12 md:col-4">
-                  <label for="internalHybridEventsAverageNonLocalPhysicalParticipants">Average number of non-local physical participants</label>
+                  <label for="internalHybridEventsAverageNonLocalPhysicalParticipants">Average number of non-local physical participants**</label>
                   <InputNumber v-model="project.internalHybridEventsAverageNonLocalPhysicalParticipants" mode="decimal"
                   showButtons decrementButtonClass="p-button-info" @keypress.enter="$event.target.blur()"
                   incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
@@ -532,6 +532,10 @@
 				</TabView>
         <div style="text-align: left; margin-top: 10px">
           * The values of this section are referred to the whole project partnership
+        </div>
+
+        <div style="text-align: left; margin-top: 10px">
+          ** Participants travelling to the hosting city (national/international travel) only for the participation to the event
         </div>
       </div>
     </div>
