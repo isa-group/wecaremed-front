@@ -780,7 +780,7 @@ export default {
         {value: "Report type*", avgPagesPerCopy: 50, size: "A4"},
         {value: "Articles/Newsletter/Booklet", avgPagesPerCopy: 10, size: "A4"},
         {value: "Brochure/Flyer", avgPagesPerCopy: 2, size: "A4"},
-        {value: "Poster", avgPagesPerCopy: 1, size: "A0"},
+        {value: "Poster/Rollup", avgPagesPerCopy: 1, size: "A0"},
       ],
       deliverableAdvancedOptions: [
         {value: "Application form", deliverableNames: ["Application form"]},
