@@ -12,7 +12,7 @@
       <DataTable :value="project.partners" editMode="cell" :paginator="true" class="p-datatable-gridlines" dataKey="_id"
       :rowHover="true" @cell-edit-complete="onCellEditCompletePartner" sortMode="multiple" :rows="5" v-model:filters="partnerFilters"
       filterDisplay="menu" :loading="loading" :filters="partnerFilters" responsiveLayout="scroll"
-      :globalFilterFields="['name','country','personMonthsPP','personMonthsWPP', 'externalExpertsPersonMonths', 'employeesWorkingWPP', 
+      :globalFilterFields="['name','country','employeesPersonMonths', 'externalExpertsPersonMonths', 'employeesWorkingWPP', 
                             'seasonalEmployees', 'externalExperts', 'coordinator']" @page="currentPagePartnersTable = $event.page">
         
         <template #header>
@@ -76,7 +76,7 @@
         </Column>
 
 
-        <Column field="personMonthsPP" header="PersonMonths PP*" :sortable="true">
+        <Column field="employeesPersonMonths" header="Sum person months (full time + part time)" :sortable="true">
           <template #editor="slotProps" class="p-field">
             <InputNumber v-model="slotProps.data[slotProps.field]" mode="decimal" :maxFractionDigits="3"
             showButtons :step="0.25" decrementButtonClass="p-button-info"
@@ -84,16 +84,6 @@
             :allowEmpty="false" :min="0" />
           </template>
         </Column>
-
-        <Column field="personMonthsWPP" header="PersonMonths WPP*" :sortable="true">
-          <template #editor="slotProps">
-            <InputNumber v-model="slotProps.data[slotProps.field]" mode="decimal" :maxFractionDigits="3"
-            showButtons :step="0.25" decrementButtonClass="p-button-info"
-            incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
-            :allowEmpty="false" :min="0" />
-          </template>
-        </Column>
-
 
         <Column field="externalExperts" header="Number of external experts" :sortable="true">
           <template #editor="slotProps">
@@ -836,8 +826,7 @@ export default {
 
       for(let partner of this.project.partners) {
         console.log(partner);
-        if(partner.personMonthsPP === null ||
-            partner.personMonthsWPP === null ||
+        if(partner.employeesPersonMonths === null ||
             partner.externalExpertsPersonMonths === null ||
             partner.employeesWorkingWPP === null || 
             partner.seasonalEmployees === null ||
@@ -956,8 +945,7 @@ export default {
         _id: new Mongoose.Types.ObjectId(),
         name: "New partner",
         country: "Select a country",
-        personMonthsPP: "",
-        personMonthsWPP:"",
+        employeesPersonMonths: "",
         externalExpertsPersonMonths: "",
         employeesWorkingWPP: "",
         seasonalEmployees: "",
