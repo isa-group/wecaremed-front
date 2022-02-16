@@ -33,12 +33,17 @@ const routes = [
     component: ProjectDetailsSimple,
   //   beforeEnter: (to, from, next) => {
   //     if (to.query.advancedMode === "true") {
+  //       console.log("Ha entrado desde el modo simple y lo manda al avanzado ahora");
+  //       console.log("To completo: ", to);
+  //       let projectId = to.params.id;
   //       next({
-  //         path: "/projects/:id/advanced",
+  //         path: '/projects/' + projectId + '/advanced',
   //         query: { advancedMode: to.query.advancedMode },
   //         params: {id: to.params.id},
   //       })
   //     } else {
+  //       console.log("Ha entrado en el modo simple y va a redirigir al project details simple")
+  //       console.log("To complete: ", to);
   //       next()
   //     }
   //   }
@@ -49,11 +54,14 @@ const routes = [
   //   meta: { requiresAuth: true },
   //   component: ProjectDetailsAdvanced,
   //   beforeEnter: (to, from, next) => {
-  //     console.log("To: ", to)
-  //     console.log("From: ", from)
+  //     console.log("To complete: ", to);
+  //     console.log("To: ", to.query)
+  //     console.log("From: ", from.query)
   //     if (to.query.advancedMode === "true") {
+  //       console.log("Ha entrado desde el modo avanzado")
   //       next()
   //     } else {
+  //       console.log("Ha entrado desde el modo avanzado y va hacia el modo simple")
   //       next({
   //         path: "/projects/:id",
   //         query: { advancedMode: to.query.advancedMode },
@@ -62,6 +70,12 @@ const routes = [
   //     }
   //   }
   },
+  // {
+  //   path: '/projects/:id/projectDetailsAdvanced',
+  //   name: 'Project Details Advanced',
+  //   meta: { requiresAuth: true },
+  //   component: ProjectDetailsAdvanced,
+  // },
   {
     path: '/login',
     name: 'login',

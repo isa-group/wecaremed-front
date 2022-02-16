@@ -37,6 +37,12 @@
         <template #loading>
             Loading partners. Please wait.
         </template>
+        <Column field="coordinator" header="Coordinator" :sortable="true">
+          <template #body="slotProps">
+            <RadioButton name="projectCoordinator" :value="slotProps.data._id" v-model="project.coordinator"
+            @change="onCellEditCompletePartnerCoordinator(slotProps.data, $event)" />
+          </template>
+        </Column>
 
         <Column field="name" header="Name" :sortable="true">
           <template #editor="slotProps">
@@ -52,6 +58,23 @@
             <Dropdown :options="countriesForDropdown" v-model="slotProps.data[slotProps.field]" />
           </template>
         </Column>
+
+        <Column field="employeesWorkingWPP" header="Number full time employees" :sortable="true">
+          <template #editor="slotProps">
+            <InputNumber v-model="slotProps.data[slotProps.field]" mode="decimal" showButtons decrementButtonClass="p-button-info"
+            incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
+            :allowEmpty="false" :min="0" />
+          </template>
+        </Column>
+
+        <Column field="seasonalEmployees" header="Number part time employees" :sortable="true">
+          <template #editor="slotProps">
+            <InputNumber v-model="slotProps.data[slotProps.field]" mode="decimal" showButtons decrementButtonClass="p-button-info"
+            incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
+            :allowEmpty="false" :min="0" />
+          </template>
+        </Column>
+
 
         <Column field="personMonthsPP" header="PersonMonths PP*" :sortable="true">
           <template #editor="slotProps" class="p-field">
@@ -71,7 +94,16 @@
           </template>
         </Column>
 
-        <Column field="externalExpertsPersonMonths" header="External experts PersonMonths" :sortable="true">
+
+        <Column field="externalExperts" header="Number of external experts" :sortable="true">
+          <template #editor="slotProps">
+            <InputNumber v-model="slotProps.data[slotProps.field]" mode="decimal" showButtons decrementButtonClass="p-button-info"
+            incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
+            :allowEmpty="false" :min="0" />
+          </template>
+        </Column>
+
+        <Column field="externalExpertsPersonMonths" header="Sum person months for the external experts" :sortable="true">
           <template #editor="slotProps">
             <InputNumber v-model="slotProps.data[slotProps.field]" mode="decimal" :maxFractionDigits="3"
             showButtons :step="0.25" decrementButtonClass="p-button-info"
@@ -80,36 +112,6 @@
           </template>
         </Column>
 
-        <Column field="employeesWorkingWPP" header="WPP* employees" :sortable="true">
-          <template #editor="slotProps">
-            <InputNumber v-model="slotProps.data[slotProps.field]" mode="decimal" showButtons decrementButtonClass="p-button-info"
-            incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
-            :allowEmpty="false" :min="0" />
-          </template>
-        </Column>
-
-        <Column field="seasonalEmployees" header="Part-time/temporary employees" :sortable="true">
-          <template #editor="slotProps">
-            <InputNumber v-model="slotProps.data[slotProps.field]" mode="decimal" showButtons decrementButtonClass="p-button-info"
-            incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
-            :allowEmpty="false" :min="0" />
-          </template>
-        </Column>
-
-        <Column field="externalExperts" header="External experts" :sortable="true">
-          <template #editor="slotProps">
-            <InputNumber v-model="slotProps.data[slotProps.field]" mode="decimal" showButtons decrementButtonClass="p-button-info"
-            incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
-            :allowEmpty="false" :min="0" />
-          </template>
-        </Column>
-
-        <Column field="coordinator" header="Coordinator" :sortable="true">
-          <template #body="slotProps">
-            <RadioButton name="projectCoordinator" :value="slotProps.data._id" v-model="project.coordinator"
-            @change="onCellEditCompletePartnerCoordinator(slotProps.data, $event)" />
-          </template>
-        </Column>
 
         <Column field="actions" header="Actions">
           <template #body="slotProps">
@@ -242,7 +244,7 @@
                   id ="publicOnSiteEventsAveragePhysicalParticipants"/>
                 </div>
                 <div class="field col-12 md:col-6">
-                  <label for="publicOnSiteEventsAverageNonLocalPhysicalParticipants">Average number of non-local physical participants</label>
+                  <label for="publicOnSiteEventsAverageNonLocalPhysicalParticipants">Average number of non-local physical participants**</label>
                   <InputNumber v-model="project.publicOnSiteEventsAverageNonLocalPhysicalParticipants" mode="decimal"
                   showButtons decrementButtonClass="p-button-info" @keypress.enter="$event.target.blur()"
                   incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
@@ -284,7 +286,7 @@
                   id ="publicHybridEventsAveragePhysicalParticipants"/>
                 </div>
                 <div class="field col-12 md:col-4">
-                  <label for="publicHybridEventsAverageNonLocalPhysicalParticipants">Average number of non-local physical participants</label>
+                  <label for="publicHybridEventsAverageNonLocalPhysicalParticipants">Average number of non-local physical participants**</label>
                   <InputNumber v-model="project.publicHybridEventsAverageNonLocalPhysicalParticipants" mode="decimal"
                   showButtons decrementButtonClass="p-button-info" @keypress.enter="$event.target.blur()"
                   incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
@@ -380,7 +382,7 @@
                   id ="internalOnSiteEventsAveragePhysicalParticipants"/>
                 </div>
                 <div class="field col-12 md:col-6">
-                  <label for="internalOnSiteEventsAverageNonLocalPhysicalParticipants">Average number of non-local physical participants</label>
+                  <label for="internalOnSiteEventsAverageNonLocalPhysicalParticipants">Average number of non-local physical participants**</label>
                   <InputNumber v-model="project.internalOnSiteEventsAverageNonLocalPhysicalParticipants" mode="decimal"
                   showButtons decrementButtonClass="p-button-info" @keypress.enter="$event.target.blur()"
                   incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
@@ -422,7 +424,7 @@
                   id ="internalHybridEventsAveragePhysicalParticipants"/>
                 </div>
                 <div class="field col-12 md:col-4">
-                  <label for="internalHybridEventsAverageNonLocalPhysicalParticipants">Average number of non-local physical participants</label>
+                  <label for="internalHybridEventsAverageNonLocalPhysicalParticipants">Average number of non-local physical participants**</label>
                   <InputNumber v-model="project.internalHybridEventsAverageNonLocalPhysicalParticipants" mode="decimal"
                   showButtons decrementButtonClass="p-button-info" @keypress.enter="$event.target.blur()"
                   incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
@@ -533,6 +535,10 @@
         <div style="text-align: left; margin-top: 10px">
           * The values of this section are referred to the whole project partnership
         </div>
+
+        <div style="text-align: left; margin-top: 10px">
+          ** Participants travelling to the hosting city (national/international travel) only for the participation to the event
+        </div>
       </div>
     </div>
 
@@ -597,33 +603,7 @@
             </template>
           </Column>
 
-          <Column field="avgPagesPerCopy" header="Average pages per copy" :sortable="true">
-            <template #editor="slotProps">
-                <InputNumber v-model="slotProps.data[slotProps.field]" mode="decimal"
-                      showButtons decrementButtonClass="p-button-info"
-                      incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
-                      :allowEmpty="false" :min="0" />
-            </template>
-          </Column>
-
-          <Column field="size" header="Paper size" :sortable="true">
-            <template #editor="slotProps">
-              <Dropdown :options="paperSizes" v-model="slotProps.data[slotProps.field]" placeholder="Select a paper size">
-                <template #value="slotProps">
-                  <div v-if="slotProps.value">
-                    <span>{{slotProps.value}}</span>
-                  </div>
-                  <span v-else>
-                      {{slotProps.placeholder}}
-                  </span>
-                </template>
-                <template #option="slotProps">
-                    <span>{{slotProps.option}}</span>
-                </template>
-              </Dropdown>
-            </template>
-          </Column>
-
+          
           <Column field="actions" header="Actions">
             <template #body="slotProps">
               <i class="pi pi-trash" @click="deletePrintableDeliverable(slotProps.index + currentPagePrintableDeliverablesTable * 5)" />
@@ -634,6 +614,13 @@
         <div style="text-align: left; margin-top: 10px">
           * Report type includes the following deliverables: Report/Plan/Analysis/Study/Methodology/Manual/Guidance/Roadmap/Strategy/Proceedings
         </div>
+      </div>
+    </div>
+
+    <div class="col-12">
+
+      <div class="card p-fluid" style="display: flex; flex-direction: column; align-items: center; justify-content: space-around;">
+        <Button class="ml-2" label="Save current project" @click="saveCurrentProject" />
       </div>
     </div>
 
@@ -650,13 +637,21 @@
     </div>
 
     <Dialog header="Error" v-model:visible="displayPartnersWithoutCountryDialog" class="col-4" :modal="true">
-        <div class="flex align-items-center justify-content-center">
+        <div class="flex align-items-center  pb-5">
             <i class="pi pi-exclamation-triangle mr-3" style="font-size: 2rem" />
             <div>
-            <p>You need to select a country for each partner in order to calculate the CF of the project!</p>
-            <p>Partners without country:</p>
-            <p v-for="partner in partnersWithoutCountry" :key="partner._id">{{partner.name}}</p>
+              <p>You need to select a country for each partner in order to calculate the CF of the project!</p>
+              <p>Partners without country:</p>
+              <p v-for="partner in partnersWithoutCountry" :key="partner._id">{{partner.name}}</p>
+            </div>
         </div>
+        <div v-if="displayPartnersWithDefaultValues" class="flex align-items-center border-top-1 surface-border pt-5">
+            <i class="pi pi-exclamation-triangle mr-3" style="font-size: 2rem" />
+            <div>
+              <p>There are partners with empty values!</p>
+              <p>Partners with empty values:</p>
+              <p v-for="partner in partnersWithDefaultValues" :key="partner._id">{{partner.name}}</p>
+            </div>
         </div>
         <template #footer>
             <Button label="Ok" @click="closePartnersWithoutCountryErrorDialog" class="p-button-text p-button-info" autofocus/>
@@ -773,7 +768,7 @@ export default {
         {value: "Report type*", avgPagesPerCopy: 50, size: "A4"},
         {value: "Articles/Newsletter/Booklet", avgPagesPerCopy: 10, size: "A4"},
         {value: "Brochure/Flyer", avgPagesPerCopy: 2, size: "A4"},
-        {value: "Poster", avgPagesPerCopy: 1, size: "A0"},
+        {value: "Poster/Rollup", avgPagesPerCopy: 1, size: "A0"},
       ],
       deliverableAdvancedOptions: [
         {value: "Application form", deliverableNames: ["Application form"]},
@@ -805,7 +800,9 @@ export default {
       currentPagePartnersTable: 0,
       currentPagePrintableDeliverablesTable: 0,
       displayPartnersWithoutCountryDialog: false,
+      displayPartnersWithDefaultValues: false,
       partnersWithoutCountry: [],
+      partnersWithDefaultValues: []
     }
   },
   created() {
@@ -818,11 +815,14 @@ export default {
   },
   methods: {
     displayPartnersWithoutCountryErrorDialog() {
+      console.log(this.partnersWithDefaultValues);
       this.displayPartnersWithoutCountryDialog = true
     },
     closePartnersWithoutCountryErrorDialog() {
       this.displayPartnersWithoutCountryDialog = false
       this.partnersWithoutCountry = []
+      this.displayPartnersWithDefaultValues = false;
+      this.partnersWithDefaultValues = [];
     },
     calculateCF() {
       
@@ -834,7 +834,20 @@ export default {
         }
       }
 
-      if (this.partnersWithoutCountry.length > 0) {
+      for(let partner of this.project.partners) {
+        console.log(partner);
+        if(partner.personMonthsPP === null ||
+            partner.personMonthsWPP === null ||
+            partner.externalExpertsPersonMonths === null ||
+            partner.employeesWorkingWPP === null || 
+            partner.seasonalEmployees === null ||
+            partner.externalExperts === null) {
+              this.partnersWithDefaultValues.push(partner);
+              this.displayPartnersWithDefaultValues = true;
+            }
+      }
+
+      if (this.partnersWithoutCountry.length > 0 || this.partnersWithDefaultValues > 0) {
         this.displayPartnersWithoutCountryErrorDialog()
       } else if (!this.checkHoursNotGreaterThan24() && !this.checkNonLocalPhysicalGreaterThanPhysicalParticipants()) {
 
@@ -943,12 +956,12 @@ export default {
         _id: new Mongoose.Types.ObjectId(),
         name: "New partner",
         country: "Select a country",
-        personMonthsPP: 1,
-        personMonthsWPP: 1,
-        externalExpertsPersonMonths: 1,
-        employeesWorkingWPP: 1,
-        seasonalEmployees: 1,
-        externalExperts: 1,
+        personMonthsPP: "",
+        personMonthsWPP:"",
+        externalExpertsPersonMonths: "",
+        employeesWorkingWPP: "",
+        seasonalEmployees: "",
+        externalExperts: "",
         coordinator: false,
 
         pcsBoughtDuringProject: 0,
@@ -1237,6 +1250,15 @@ export default {
         this.$toast.add({severity:'error', summary: 'Caution', detail: 'Average number of non-local physical participants cannot be greater than the value of Average number of physical participants', life: 8000});
       }
       return res;
+    },
+    saveCurrentProject(){
+        this.savePrintableDeliverables();
+        this.savePartners();
+        axios.put("/projects/" + this.project._id, this.project).then(() => {
+          this.$toast.add({severity:'success', summary: 'Successful', detail: 'Project saved', life: 3000});
+        }).catch(error =>{
+          console.log(error)
+       })
     }
   },
   computed: {
