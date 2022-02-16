@@ -661,13 +661,21 @@
     </div>
 
     <Dialog header="Error" v-model:visible="displayPartnersWithoutCountryDialog" class="col-4" :modal="true">
-        <div class="flex align-items-center justify-content-center">
+        <div class="flex align-items-center  pb-5">
             <i class="pi pi-exclamation-triangle mr-3" style="font-size: 2rem" />
             <div>
-            <p>You need to select a country for each partner in order to calculate the CF of the project!</p>
-            <p>Partners without country:</p>
-            <p v-for="partner in partnersWithoutCountry" :key="partner._id">{{partner.name}}</p>
+              <p>You need to select a country for each partner in order to calculate the CF of the project!</p>
+              <p>Partners without country:</p>
+              <p v-for="partner in partnersWithoutCountry" :key="partner._id">{{partner.name}}</p>
+            </div>
         </div>
+        <div v-if="displayPartnersWithDefaultValues" class="flex align-items-center border-top-1 surface-border pt-5">
+            <i class="pi pi-exclamation-triangle mr-3" style="font-size: 2rem" />
+            <div>
+              <p>There are partners with empty values!</p>
+              <p>Partners with empty values:</p>
+              <p v-for="partner in partnersWithDefaultValues" :key="partner._id">{{partner.name}}</p>
+            </div>
         </div>
         <template #footer>
             <Button label="Ok" @click="closePartnersWithoutCountryErrorDialog" class="p-button-text p-button-info" autofocus/>
@@ -816,7 +824,9 @@ export default {
       currentPagePartnersTable: 0,
       currentPagePrintableDeliverablesTable: 0,
       displayPartnersWithoutCountryDialog: false,
+      displayPartnersWithDefaultValues: false,
       partnersWithoutCountry: [],
+      partnersWithDefaultValues: []
     }
   },
   created() {
@@ -829,11 +839,14 @@ export default {
   },
   methods: {
     displayPartnersWithoutCountryErrorDialog() {
+      console.log(this.partnersWithDefaultValues);
       this.displayPartnersWithoutCountryDialog = true
     },
     closePartnersWithoutCountryErrorDialog() {
       this.displayPartnersWithoutCountryDialog = false
       this.partnersWithoutCountry = []
+      this.displayPartnersWithDefaultValues = false;
+      this.partnersWithDefaultValues = [];
     },
     calculateCF() {
       
@@ -845,7 +858,20 @@ export default {
         }
       }
 
-      if (this.partnersWithoutCountry.length > 0) {
+      for(let partner of this.project.partners) {
+        console.log(partner);
+        if(partner.personMonthsPP === null ||
+            partner.personMonthsWPP === null ||
+            partner.externalExpertsPersonMonths === null ||
+            partner.employeesWorkingWPP === null || 
+            partner.seasonalEmployees === null ||
+            partner.externalExperts === null) {
+              this.partnersWithDefaultValues.push(partner);
+              this.displayPartnersWithDefaultValues = true;
+            }
+      }
+
+      if (this.partnersWithoutCountry.length > 0 || this.partnersWithDefaultValues > 0) {
         this.displayPartnersWithoutCountryErrorDialog()
       } else if (!this.checkHoursNotGreaterThan24() && !this.checkNonLocalPhysicalGreaterThanPhysicalParticipants()) {
 
