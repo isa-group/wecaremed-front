@@ -37,6 +37,12 @@
         <template #loading>
             Loading partners. Please wait.
         </template>
+        <Column field="coordinator" header="Coordinator" :sortable="true">
+          <template #body="slotProps">
+            <RadioButton name="projectCoordinator" :value="slotProps.data._id" v-model="project.coordinator"
+            @change="onCellEditCompletePartnerCoordinator(slotProps.data, $event)" />
+          </template>
+        </Column>
 
         <Column field="name" header="Name" :sortable="true">
           <template #editor="slotProps">
@@ -52,6 +58,23 @@
             <Dropdown :options="countriesForDropdown" v-model="slotProps.data[slotProps.field]" />
           </template>
         </Column>
+
+        <Column field="employeesWorkingWPP" header="Number full time employees" :sortable="true">
+          <template #editor="slotProps">
+            <InputNumber v-model="slotProps.data[slotProps.field]" mode="decimal" showButtons decrementButtonClass="p-button-info"
+            incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
+            :allowEmpty="false" :min="0" />
+          </template>
+        </Column>
+
+        <Column field="seasonalEmployees" header="Number part time employees" :sortable="true">
+          <template #editor="slotProps">
+            <InputNumber v-model="slotProps.data[slotProps.field]" mode="decimal" showButtons decrementButtonClass="p-button-info"
+            incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
+            :allowEmpty="false" :min="0" />
+          </template>
+        </Column>
+
 
         <Column field="personMonthsPP" header="PersonMonths PP*" :sortable="true">
           <template #editor="slotProps" class="p-field">
@@ -71,7 +94,16 @@
           </template>
         </Column>
 
-        <Column field="externalExpertsPersonMonths" header="External experts PersonMonths" :sortable="true">
+
+        <Column field="externalExperts" header="Number of external experts" :sortable="true">
+          <template #editor="slotProps">
+            <InputNumber v-model="slotProps.data[slotProps.field]" mode="decimal" showButtons decrementButtonClass="p-button-info"
+            incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
+            :allowEmpty="false" :min="0" />
+          </template>
+        </Column>
+
+        <Column field="externalExpertsPersonMonths" header="Sum person months for the external experts" :sortable="true">
           <template #editor="slotProps">
             <InputNumber v-model="slotProps.data[slotProps.field]" mode="decimal" :maxFractionDigits="3"
             showButtons :step="0.25" decrementButtonClass="p-button-info"
@@ -80,36 +112,6 @@
           </template>
         </Column>
 
-        <Column field="employeesWorkingWPP" header="WPP* employees" :sortable="true">
-          <template #editor="slotProps">
-            <InputNumber v-model="slotProps.data[slotProps.field]" mode="decimal" showButtons decrementButtonClass="p-button-info"
-            incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
-            :allowEmpty="false" :min="0" />
-          </template>
-        </Column>
-
-        <Column field="seasonalEmployees" header="Part-time/temporary employees" :sortable="true">
-          <template #editor="slotProps">
-            <InputNumber v-model="slotProps.data[slotProps.field]" mode="decimal" showButtons decrementButtonClass="p-button-info"
-            incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
-            :allowEmpty="false" :min="0" />
-          </template>
-        </Column>
-
-        <Column field="externalExperts" header="External experts" :sortable="true">
-          <template #editor="slotProps">
-            <InputNumber v-model="slotProps.data[slotProps.field]" mode="decimal" showButtons decrementButtonClass="p-button-info"
-            incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
-            :allowEmpty="false" :min="0" />
-          </template>
-        </Column>
-
-        <Column field="coordinator" header="Coordinator" :sortable="true">
-          <template #body="slotProps">
-            <RadioButton name="projectCoordinator" :value="slotProps.data._id" v-model="project.coordinator"
-            @change="onCellEditCompletePartnerCoordinator(slotProps.data, $event)" />
-          </template>
-        </Column>
 
         <Column field="actions" header="Actions">
           <template #body="slotProps">
@@ -601,33 +603,7 @@
             </template>
           </Column>
 
-          <Column field="avgPagesPerCopy" header="Average pages per copy" :sortable="true">
-            <template #editor="slotProps">
-                <InputNumber v-model="slotProps.data[slotProps.field]" mode="decimal"
-                      showButtons decrementButtonClass="p-button-info"
-                      incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
-                      :allowEmpty="false" :min="0" />
-            </template>
-          </Column>
-
-          <Column field="size" header="Paper size" :sortable="true">
-            <template #editor="slotProps">
-              <Dropdown :options="paperSizes" v-model="slotProps.data[slotProps.field]" placeholder="Select a paper size">
-                <template #value="slotProps">
-                  <div v-if="slotProps.value">
-                    <span>{{slotProps.value}}</span>
-                  </div>
-                  <span v-else>
-                      {{slotProps.placeholder}}
-                  </span>
-                </template>
-                <template #option="slotProps">
-                    <span>{{slotProps.option}}</span>
-                </template>
-              </Dropdown>
-            </template>
-          </Column>
-
+          
           <Column field="actions" header="Actions">
             <template #body="slotProps">
               <i class="pi pi-trash" @click="deletePrintableDeliverable(slotProps.index + currentPagePrintableDeliverablesTable * 5)" />
