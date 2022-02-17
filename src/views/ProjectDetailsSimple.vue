@@ -161,14 +161,6 @@
                 @focusout="onCellEditCompletePartnerEquipment('flatScreensBoughtDuringProject', selectedPartner.flatScreensBoughtDuringProject)" />
               </div>
               <div class="field col-12 md:col-3">
-                <label for="cppsBoughtDuringProject">Computer Central Processes</label>
-                <InputNumber v-model="selectedPartner.cppsBoughtDuringProject" mode="decimal"
-                showButtons decrementButtonClass="p-button-info" :allowEmpty="false" :min="0" id="cppsBoughtDuringProject"
-                incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
-                @focus="onFocusValue=selectedPartner.cppsBoughtDuringProject; $event.target.select()" @keypress.enter="$event.target.blur()"
-                @focusout="onCellEditCompletePartnerEquipment('cppsBoughtDuringProject', selectedPartner.cppsBoughtDuringProject)" />
-              </div>
-              <div class="field col-12 md:col-3">
                 <label for="printersBoughtDuringProject">Printers</label>
                 <InputNumber v-model="selectedPartner.printersBoughtDuringProject" mode="decimal"
                 showButtons decrementButtonClass="p-button-info" incrementButtonClass="p-button-info"
@@ -953,7 +945,6 @@ export default {
         pcsFlatScreenBoughtDuringProject: 0,
         laptopsBoughtDuringProject: 0,
         flatScreensBoughtDuringProject: 0,
-        cppsBoughtDuringProject: 0,
         printersBoughtDuringProject: 0,
         copyMachinesBoughtDuringProject: 0,
         faxMachinesBoughtDuringProject: 0,

@@ -85,7 +85,6 @@ axios.post('/auth/login', {email: process.env.LOGIN_USERNAME, password: process.
         pcsFlatScreenBoughtDuringProject: 0,
         laptopsBoughtDuringProject: 1,
         flatScreensBoughtDuringProject: 0,
-        cppsBoughtDuringProject: 1,
         printersBoughtDuringProject: 0,
         copyMachinesBoughtDuringProject: 0,
         faxMachinesBoughtDuringProject: 0,
