@@ -860,7 +860,6 @@ export default {
         pcsFlatScreenBoughtDuringProject: 0,
         laptopsBoughtDuringProject: 0,
         flatScreensBoughtDuringProject: 0,
-        cppsBoughtDuringProject: 0,
         printersBoughtDuringProject: 0,
         copyMachinesBoughtDuringProject: 0,
         faxMachinesBoughtDuringProject: 0,
