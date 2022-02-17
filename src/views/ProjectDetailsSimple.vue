@@ -48,9 +48,6 @@
           <template #editor="slotProps">
               <InputText v-model="slotProps.data[slotProps.field]" />
           </template>
-          <template #filter="{filterModel, field}">
-              <InputText type="text" v-model="filterModel.value" class="p-column-filter" :placeholder="'Filter by ' + field"/>
-          </template>
         </Column>
 
         <Column field="country" header="Country" :sortable="true">
@@ -63,7 +60,7 @@
           <template #editor="slotProps">
             <InputNumber v-model="slotProps.data[slotProps.field]" mode="decimal" showButtons decrementButtonClass="p-button-info"
             incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
-            :allowEmpty="false" :min="0" />
+            :allowEmpty="false" :min="0" @focus="$event.target.select()" />
           </template>
         </Column>
 
@@ -71,7 +68,7 @@
           <template #editor="slotProps">
             <InputNumber v-model="slotProps.data[slotProps.field]" mode="decimal" showButtons decrementButtonClass="p-button-info"
             incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
-            :allowEmpty="false" :min="0" />
+            :allowEmpty="false" :min="0" @focus="$event.target.select()" />
           </template>
         </Column>
 
@@ -81,7 +78,7 @@
             <InputNumber v-model="slotProps.data[slotProps.field]" mode="decimal" :maxFractionDigits="3"
             showButtons :step="0.25" decrementButtonClass="p-button-info"
             incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
-            :allowEmpty="false" :min="0" />
+            :allowEmpty="false" :min="0" @focus="$event.target.select()" />
           </template>
         </Column>
 
@@ -89,7 +86,7 @@
           <template #editor="slotProps">
             <InputNumber v-model="slotProps.data[slotProps.field]" mode="decimal" showButtons decrementButtonClass="p-button-info"
             incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
-            :allowEmpty="false" :min="0" />
+            :allowEmpty="false" :min="0" @focus="$event.target.select()" />
           </template>
         </Column>
 
@@ -98,7 +95,7 @@
             <InputNumber v-model="slotProps.data[slotProps.field]" mode="decimal" :maxFractionDigits="3"
             showButtons :step="0.25" decrementButtonClass="p-button-info"
             incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
-            :allowEmpty="false" :min="0" />
+            :allowEmpty="false" :min="0" @focus="$event.target.select()" />
           </template>
         </Column>
 
@@ -136,7 +133,7 @@
                 <InputNumber v-model="selectedPartner.pcsBoughtDuringProject" decrementButtonClass="p-button-info"
                 incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus" mode="decimal"
                 showButtons :allowEmpty="false" :min="0" id="pcsBoughtDuringProject"
-                @focus="onFocusValue=selectedPartner.pcsBoughtDuringProject" @keypress.enter="$event.target.blur()"
+                @focus="onFocusValue=selectedPartner.pcsBoughtDuringProject; $event.target.select()" @keypress.enter="$event.target.blur()"
                 @focusout="onCellEditCompletePartnerEquipment('pcsBoughtDuringProject', selectedPartner.pcsBoughtDuringProject)" />
               </div>
               <div class="field col-12 md:col-3">
@@ -144,7 +141,7 @@
                 <InputNumber v-model="selectedPartner.pcsFlatScreenBoughtDuringProject" mode="decimal" decrementButtonClass="p-button-info"
                 showButtons incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
                 :allowEmpty="false" :min="0" id="pcsFlatScreenBoughtDuringProject" 
-                @focus="onFocusValue=selectedPartner.pcsFlatScreenBoughtDuringProject" @keypress.enter="$event.target.blur()"
+                @focus="onFocusValue=selectedPartner.pcsFlatScreenBoughtDuringProject; $event.target.select()" @keypress.enter="$event.target.blur()"
                 @focusout="onCellEditCompletePartnerEquipment('pcsFlatScreenBoughtDuringProject', selectedPartner.pcsFlatScreenBoughtDuringProject)" />
               </div>
               <div class="field col-12 md:col-3">
@@ -152,7 +149,7 @@
                 <InputNumber v-model="selectedPartner.laptopsBoughtDuringProject" mode="decimal"
                 showButtons decrementButtonClass="p-button-info" incrementButtonClass="p-button-info"
                 incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus" :allowEmpty="false" :min="0" id="laptopsBoughtDuringProject"
-                @focus="onFocusValue=selectedPartner.laptopsBoughtDuringProject" @keypress.enter="$event.target.blur()"
+                @focus="onFocusValue=selectedPartner.laptopsBoughtDuringProject; $event.target.select()" @keypress.enter="$event.target.blur()"
                 @focusout="onCellEditCompletePartnerEquipment('laptopsBoughtDuringProject', selectedPartner.laptopsBoughtDuringProject)" />
               </div>
               <div class="field col-12 md:col-3">
@@ -160,7 +157,7 @@
                 <InputNumber v-model="selectedPartner.flatScreensBoughtDuringProject" mode="decimal"
                 showButtons decrementButtonClass="p-button-info" incrementButtonClass="p-button-info"
                 incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus" :allowEmpty="false" :min="0" id="flatScreensBoughtDuringProject"
-                @focus="onFocusValue=selectedPartner.flatScreensBoughtDuringProject" @keypress.enter="$event.target.blur()"
+                @focus="onFocusValue=selectedPartner.flatScreensBoughtDuringProject; $event.target.select()" @keypress.enter="$event.target.blur()"
                 @focusout="onCellEditCompletePartnerEquipment('flatScreensBoughtDuringProject', selectedPartner.flatScreensBoughtDuringProject)" />
               </div>
               <div class="field col-12 md:col-3">
@@ -168,7 +165,7 @@
                 <InputNumber v-model="selectedPartner.cppsBoughtDuringProject" mode="decimal"
                 showButtons decrementButtonClass="p-button-info" :allowEmpty="false" :min="0" id="cppsBoughtDuringProject"
                 incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
-                @focus="onFocusValue=selectedPartner.cppsBoughtDuringProject" @keypress.enter="$event.target.blur()"
+                @focus="onFocusValue=selectedPartner.cppsBoughtDuringProject; $event.target.select()" @keypress.enter="$event.target.blur()"
                 @focusout="onCellEditCompletePartnerEquipment('cppsBoughtDuringProject', selectedPartner.cppsBoughtDuringProject)" />
               </div>
               <div class="field col-12 md:col-3">
@@ -176,7 +173,7 @@
                 <InputNumber v-model="selectedPartner.printersBoughtDuringProject" mode="decimal"
                 showButtons decrementButtonClass="p-button-info" incrementButtonClass="p-button-info"
                 incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus" :allowEmpty="false" :min="0" id="printersBoughtDuringProject"
-                @focus="onFocusValue=selectedPartner.printersBoughtDuringProject" @keypress.enter="$event.target.blur()"
+                @focus="onFocusValue=selectedPartner.printersBoughtDuringProject; $event.target.select()" @keypress.enter="$event.target.blur()"
                 @focusout="onCellEditCompletePartnerEquipment('printersBoughtDuringProject', selectedPartner.printersBoughtDuringProject)" />
               </div>
               <div class="field col-12 md:col-3">
@@ -184,7 +181,7 @@
                 <InputNumber v-model="selectedPartner.copyMachinesBoughtDuringProject" mode="decimal"
                 showButtons decrementButtonClass="p-button-info" :allowEmpty="false" :min="0" id="copyMachinesBoughtDuringProject"
                 incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
-                @focus="onFocusValue=selectedPartner.copyMachinesBoughtDuringProject" @keypress.enter="$event.target.blur()"
+                @focus="onFocusValue=selectedPartner.copyMachinesBoughtDuringProject; $event.target.select()" @keypress.enter="$event.target.blur()"
                 @focusout="onCellEditCompletePartnerEquipment('copyMachinesBoughtDuringProject', selectedPartner.copyMachinesBoughtDuringProject)" />
               </div>
               <div class="field col-12 md:col-3">
@@ -192,7 +189,7 @@
                 <InputNumber v-model="selectedPartner.faxMachinesBoughtDuringProject" mode="decimal"
                 showButtons decrementButtonClass="p-button-info" :allowEmpty="false" :min="0" id="faxMachinesBoughtDuringProject"
                 incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
-                @focus="onFocusValue=selectedPartner.faxMachinesBoughtDuringProject" @keypress.enter="$event.target.blur()"
+                @focus="onFocusValue=selectedPartner.faxMachinesBoughtDuringProject; $event.target.select()" @keypress.enter="$event.target.blur()"
                 @focusout="onCellEditCompletePartnerEquipment('faxMachinesBoughtDuringProject', selectedPartner.faxMachinesBoughtDuringProject)" />
               </div>
             </div>
@@ -220,7 +217,7 @@
                   <InputNumber v-model="project.publicOnSiteEventsNumber" mode="decimal"
                   showButtons decrementButtonClass="p-button-info" @keypress.enter="$event.target.blur()"
                   incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
-                  :allowEmpty="false" :min="0" @focus="onFocusValue=project.publicOnSiteEventsNumber" 
+                  :allowEmpty="false" :min="0" @focus="onFocusValue=project.publicOnSiteEventsNumber; $event.target.select()" 
                   @focusout="onCellEditComplete('publicOnSiteEventsNumber', project.publicOnSiteEventsNumber)"
                   id ="publicOnSiteEventsNumber"/>
                 </div>
@@ -229,7 +226,7 @@
                   <InputNumber v-model="project.publicOnSiteEventsAveragePhysicalParticipants" mode="decimal"
                   showButtons decrementButtonClass="p-button-info" @keypress.enter="$event.target.blur()"
                   incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
-                  :allowEmpty="false" :min="0" @focus="onFocusValue=project.publicOnSiteEventsAveragePhysicalParticipants" 
+                  :allowEmpty="false" :min="0" @focus="onFocusValue=project.publicOnSiteEventsAveragePhysicalParticipants; $event.target.select()" 
                   @focusout="onCellEditComplete('publicOnSiteEventsAveragePhysicalParticipants', project.publicOnSiteEventsAveragePhysicalParticipants)"
                   id ="publicOnSiteEventsAveragePhysicalParticipants"/>
                 </div>
@@ -238,7 +235,7 @@
                   <InputNumber v-model="project.publicOnSiteEventsAverageNonLocalPhysicalParticipants" mode="decimal"
                   showButtons decrementButtonClass="p-button-info" @keypress.enter="$event.target.blur()"
                   incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
-                  :allowEmpty="false" :min="0" @focus="onFocusValue=project.publicOnSiteEventsAverageNonLocalPhysicalParticipants" 
+                  :allowEmpty="false" :min="0" @focus="onFocusValue=project.publicOnSiteEventsAverageNonLocalPhysicalParticipants; $event.target.select()" 
                   @focusout="onCellEditComplete('publicOnSiteEventsAverageNonLocalPhysicalParticipants', project.publicOnSiteEventsAverageNonLocalPhysicalParticipants)"
                   id ="publicOnSiteEventsAverageNonLocalPhysicalParticipants"/>
                 </div>
@@ -247,7 +244,7 @@
                   <InputNumber v-model="project.publicOnSiteEventsAverageDuration" mode="decimal" :maxFractionDigits="3"
                   showButtons decrementButtonClass="p-button-info" :step="0.25" @keypress.enter="$event.target.blur()"
                   incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
-                  :allowEmpty="false" :min="0" @focus="onFocusValue=project.publicOnSiteEventsAverageDuration" 
+                  :allowEmpty="false" :min="0" @focus="onFocusValue=project.publicOnSiteEventsAverageDuration; $event.target.select()" 
                   @focusout="onCellEditComplete('publicOnSiteEventsAverageDuration', project.publicOnSiteEventsAverageDuration)"
                   id ="publicOnSiteEventsAverageDuration"/>
                 </div>
@@ -262,7 +259,7 @@
                   <InputNumber v-model="project.publicHybridEventsNumber" mode="decimal"
                   showButtons decrementButtonClass="p-button-info" @keypress.enter="$event.target.blur()"
                   incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
-                  :allowEmpty="false" :min="0" @focus="onFocusValue=project.publicHybridEventsNumber" 
+                  :allowEmpty="false" :min="0" @focus="onFocusValue=project.publicHybridEventsNumber; $event.target.select()" 
                   @focusout="onCellEditComplete('publicHybridEventsNumber', project.publicHybridEventsNumber)"
                   id ="publicHybridEventsNumber"/>
                 </div>
@@ -271,7 +268,7 @@
                   <InputNumber v-model="project.publicHybridEventsAveragePhysicalParticipants" mode="decimal"
                   showButtons decrementButtonClass="p-button-info" @keypress.enter="$event.target.blur()"
                   incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
-                  :allowEmpty="false" :min="0" @focus="onFocusValue=project.publicHybridEventsAveragePhysicalParticipants" 
+                  :allowEmpty="false" :min="0" @focus="onFocusValue=project.publicHybridEventsAveragePhysicalParticipants; $event.target.select()" 
                   @focusout="onCellEditComplete('publicHybridEventsAveragePhysicalParticipants', project.publicHybridEventsAveragePhysicalParticipants)"
                   id ="publicHybridEventsAveragePhysicalParticipants"/>
                 </div>
@@ -280,7 +277,7 @@
                   <InputNumber v-model="project.publicHybridEventsAverageNonLocalPhysicalParticipants" mode="decimal"
                   showButtons decrementButtonClass="p-button-info" @keypress.enter="$event.target.blur()"
                   incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
-                  :allowEmpty="false" :min="0" @focus="onFocusValue=project.publicHybridEventsAverageNonLocalPhysicalParticipants" 
+                  :allowEmpty="false" :min="0" @focus="onFocusValue=project.publicHybridEventsAverageNonLocalPhysicalParticipants; $event.target.select()" 
                   @focusout="onCellEditComplete('publicHybridEventsAverageNonLocalPhysicalParticipants', project.publicHybridEventsAverageNonLocalPhysicalParticipants)"
                   id ="publicHybridEventsAverageNonLocalPhysicalParticipants"/>
                 </div>
@@ -289,7 +286,7 @@
                   <InputNumber v-model="project.publicHybridEventsAverageVirtualParticipants" mode="decimal"
                   showButtons decrementButtonClass="p-button-info" @keypress.enter="$event.target.blur()"
                   incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
-                  :allowEmpty="false" :min="0" @focus="onFocusValue=project.publicHybridEventsAverageVirtualParticipants" 
+                  :allowEmpty="false" :min="0" @focus="onFocusValue=project.publicHybridEventsAverageVirtualParticipants; $event.target.select()" 
                   @focusout="onCellEditComplete('publicHybridEventsAverageVirtualParticipants', project.publicHybridEventsAverageVirtualParticipants)"
                   id ="publicHybridEventsAverageVirtualParticipants"/>
                 </div>
@@ -298,7 +295,7 @@
                   <InputNumber v-model="project.publicHybridEventsAverageDuration " mode="decimal" :maxFractionDigits="3"
                   showButtons decrementButtonClass="p-button-info" :step="0.25" @keypress.enter="$event.target.blur()"
                   incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
-                  :allowEmpty="false" :min="0" @focus="onFocusValue=project.publicHybridEventsAverageDuration" 
+                  :allowEmpty="false" :min="0" @focus="onFocusValue=project.publicHybridEventsAverageDuration; $event.target.select()" 
                   @focusout="onCellEditComplete('publicHybridEventsAverageDuration', project.publicHybridEventsAverageDuration)"
                   id ="publicHybridEventsAverageDuration "/>
                 </div>
@@ -307,7 +304,7 @@
                   <InputNumber v-model="project.publicHybridEventsAverageHoursPerDays" mode="decimal" :maxFractionDigits="3"
                   showButtons decrementButtonClass="p-button-info" :step="0.25" @keypress.enter="$event.target.blur()"
                   incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
-                  :allowEmpty="false" :min="0" @focus="onFocusValue=project.publicHybridEventsAverageHoursPerDays" 
+                  :allowEmpty="false" :min="0" @focus="onFocusValue=project.publicHybridEventsAverageHoursPerDays; $event.target.select()" 
                   @focusout="onCellEditComplete('publicHybridEventsAverageHoursPerDays', project.publicHybridEventsAverageHoursPerDays)"
                   id ="publicHybridEventsAverageHoursPerDays"/>
                 </div>
@@ -322,7 +319,7 @@
                   <InputNumber v-model="project.publicVirtualEventsNumber" mode="decimal"
                   showButtons decrementButtonClass="p-button-info" @keypress.enter="$event.target.blur()"
                   incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
-                  :allowEmpty="false" :min="0" @focus="onFocusValue=project.publicVirtualEventsNumber" 
+                  :allowEmpty="false" :min="0" @focus="onFocusValue=project.publicVirtualEventsNumber; $event.target.select()" 
                   @focusout="onCellEditComplete('publicVirtualEventsNumber', project.publicVirtualEventsNumber)"
                   id ="publicVirtualEventsNumber"/>
                 </div>
@@ -331,7 +328,7 @@
                   <InputNumber v-model="project.publicVirtualEventsAverageVirtualParticipants" mode="decimal"
                   showButtons decrementButtonClass="p-button-info" @keypress.enter="$event.target.blur()"
                   incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
-                  :allowEmpty="false" :min="0" @focus="onFocusValue=project.publicVirtualEventsAverageVirtualParticipants" 
+                  :allowEmpty="false" :min="0" @focus="onFocusValue=project.publicVirtualEventsAverageVirtualParticipants; $event.target.select()" 
                   @focusout="onCellEditComplete('publicVirtualEventsAverageVirtualParticipants', project.publicVirtualEventsAverageVirtualParticipants)"
                   id ="publicVirtualEventsAverageVirtualParticipants"/>
                 </div>
@@ -340,7 +337,7 @@
                   <InputNumber v-model="project.publicVirtualEventsAverageDuration" mode="decimal" :maxFractionDigits="3"
                   showButtons decrementButtonClass="p-button-info" :step="0.25" @keypress.enter="$event.target.blur()"
                   incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
-                  :allowEmpty="false" :min="0" @focus="onFocusValue=project.publicVirtualEventsAverageDuration" 
+                  :allowEmpty="false" :min="0" @focus="onFocusValue=project.publicVirtualEventsAverageDuration; $event.target.select()" 
                   @focusout="onCellEditComplete('publicVirtualEventsAverageDuration', project.publicVirtualEventsAverageDuration)"
                   id ="publicVirtualEventsAverageDuration"/>
                 </div>
@@ -358,7 +355,7 @@
                   <InputNumber v-model="project.internalOnSiteEventsNumber" mode="decimal"
                   showButtons decrementButtonClass="p-button-info" @keypress.enter="$event.target.blur()"
                   incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
-                  :allowEmpty="false" :min="0" @focus="onFocusValue=project.internalOnSiteEventsNumber" 
+                  :allowEmpty="false" :min="0" @focus="onFocusValue=project.internalOnSiteEventsNumber; $event.target.select()" 
                   @focusout="onCellEditComplete('internalOnSiteEventsNumber', project.internalOnSiteEventsNumber)"
                   id ="internalOnSiteEventsNumber"/>
                 </div>
@@ -367,7 +364,7 @@
                   <InputNumber v-model="project.internalOnSiteEventsAveragePhysicalParticipants" mode="decimal"
                   showButtons decrementButtonClass="p-button-info" @keypress.enter="$event.target.blur()"
                   incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
-                  :allowEmpty="false" :min="0" @focus="onFocusValue=project.internalOnSiteEventsAveragePhysicalParticipants" 
+                  :allowEmpty="false" :min="0" @focus="onFocusValue=project.internalOnSiteEventsAveragePhysicalParticipants; $event.target.select()" 
                   @focusout="onCellEditComplete('internalOnSiteEventsAveragePhysicalParticipants', project.internalOnSiteEventsAveragePhysicalParticipants)"
                   id ="internalOnSiteEventsAveragePhysicalParticipants"/>
                 </div>
@@ -376,7 +373,7 @@
                   <InputNumber v-model="project.internalOnSiteEventsAverageNonLocalPhysicalParticipants" mode="decimal"
                   showButtons decrementButtonClass="p-button-info" @keypress.enter="$event.target.blur()"
                   incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
-                  :allowEmpty="false" :min="0" @focus="onFocusValue=project.internalOnSiteEventsAverageNonLocalPhysicalParticipants" 
+                  :allowEmpty="false" :min="0" @focus="onFocusValue=project.internalOnSiteEventsAverageNonLocalPhysicalParticipants; $event.target.select()" 
                   @focusout="onCellEditComplete('internalOnSiteEventsAverageNonLocalPhysicalParticipants', project.internalOnSiteEventsAverageNonLocalPhysicalParticipants)"
                   id ="internalOnSiteEventsAverageNonLocalPhysicalParticipants"/>
                 </div>
@@ -385,7 +382,7 @@
                   <InputNumber v-model="project.internalOnSiteEventsAverageDuration" mode="decimal" :maxFractionDigits="3"
                   showButtons decrementButtonClass="p-button-info" :step="0.25" @keypress.enter="$event.target.blur()"
                   incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
-                  :allowEmpty="false" :min="0" @focus="onFocusValue=project.internalOnSiteEventsAverageDuration" 
+                  :allowEmpty="false" :min="0" @focus="onFocusValue=project.internalOnSiteEventsAverageDuration; $event.target.select()" 
                   @focusout="onCellEditComplete('internalOnSiteEventsAverageDuration', project.internalOnSiteEventsAverageDuration)"
                   id ="internalOnSiteEventsAverageDuration"/>
                 </div>
@@ -400,7 +397,7 @@
                   <InputNumber v-model="project.internalHybridEventsNumber" mode="decimal"
                   showButtons decrementButtonClass="p-button-info" @keypress.enter="$event.target.blur()"
                   incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
-                  :allowEmpty="false" :min="0" @focus="onFocusValue=project.internalHybridEventsNumber" 
+                  :allowEmpty="false" :min="0" @focus="onFocusValue=project.internalHybridEventsNumber; $event.target.select()" 
                   @focusout="onCellEditComplete('internalHybridEventsNumber', project.internalHybridEventsNumber)"
                   id ="internalHybridEventsNumber"/>
                 </div>
@@ -409,7 +406,7 @@
                   <InputNumber v-model="project.internalHybridEventsAveragePhysicalParticipants" mode="decimal"
                   showButtons decrementButtonClass="p-button-info" @keypress.enter="$event.target.blur()"
                   incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
-                  :allowEmpty="false" :min="0" @focus="onFocusValue=project.internalHybridEventsAveragePhysicalParticipants" 
+                  :allowEmpty="false" :min="0" @focus="onFocusValue=project.internalHybridEventsAveragePhysicalParticipants; $event.target.select()" 
                   @focusout="onCellEditComplete('internalHybridEventsAveragePhysicalParticipants', project.internalHybridEventsAveragePhysicalParticipants)"
                   id ="internalHybridEventsAveragePhysicalParticipants"/>
                 </div>
@@ -418,7 +415,7 @@
                   <InputNumber v-model="project.internalHybridEventsAverageNonLocalPhysicalParticipants" mode="decimal"
                   showButtons decrementButtonClass="p-button-info" @keypress.enter="$event.target.blur()"
                   incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
-                  :allowEmpty="false" :min="0" @focus="onFocusValue=project.internalHybridEventsAverageNonLocalPhysicalParticipants" 
+                  :allowEmpty="false" :min="0" @focus="onFocusValue=project.internalHybridEventsAverageNonLocalPhysicalParticipants; $event.target.select()" 
                   @focusout="onCellEditComplete('internalHybridEventsAverageNonLocalPhysicalParticipants', project.internalHybridEventsAverageNonLocalPhysicalParticipants)"
                   id ="internalHybridEventsAverageNonLocalPhysicalParticipants"/>
                 </div>
@@ -427,7 +424,7 @@
                   <InputNumber v-model="project.internalHybridEventsAverageVirtualParticipants" mode="decimal"
                   showButtons decrementButtonClass="p-button-info" @keypress.enter="$event.target.blur()"
                   incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
-                  :allowEmpty="false" :min="0" @focus="onFocusValue=project.internalHybridEventsAverageVirtualParticipants" 
+                  :allowEmpty="false" :min="0" @focus="onFocusValue=project.internalHybridEventsAverageVirtualParticipants; $event.target.select()" 
                   @focusout="onCellEditComplete('internalHybridEventsAverageVirtualParticipants', project.internalHybridEventsAverageVirtualParticipants)"
                   id ="internalHybridEventsAverageVirtualParticipants"/>
                 </div>
@@ -436,7 +433,7 @@
                   <InputNumber v-model="project.internalHybridEventsAverageDuration " mode="decimal" :maxFractionDigits="3"
                   showButtons decrementButtonClass="p-button-info" :step="0.25" @keypress.enter="$event.target.blur()"
                   incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
-                  :allowEmpty="false" :min="0" @focus="onFocusValue=project.internalHybridEventsAverageDuration" 
+                  :allowEmpty="false" :min="0" @focus="onFocusValue=project.internalHybridEventsAverageDuration; $event.target.select()" 
                   @focusout="onCellEditComplete('internalHybridEventsAverageDuration', project.internalHybridEventsAverageDuration)"
                   id ="internalHybridEventsAverageDuration "/>
                 </div>
@@ -445,7 +442,7 @@
                   <InputNumber v-model="project.internalHybridEventsAverageHoursPerDays" mode="decimal" :maxFractionDigits="3"
                   showButtons decrementButtonClass="p-button-info" :step="0.25" @keypress.enter="$event.target.blur()"
                   incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
-                  :allowEmpty="false" :min="0" @focus="onFocusValue=project.internalHybridEventsAverageHoursPerDays" 
+                  :allowEmpty="false" :min="0" @focus="onFocusValue=project.internalHybridEventsAverageHoursPerDays; $event.target.select()" 
                   @focusout="onCellEditComplete('internalHybridEventsAverageHoursPerDays', project.internalHybridEventsAverageHoursPerDays)"
                   id ="internalHybridEventsAverageHoursPerDays"/>
                 </div>
@@ -460,7 +457,7 @@
                   <InputNumber v-model="project.internalVirtualEventsNumber" mode="decimal"
                   showButtons decrementButtonClass="p-button-info" @keypress.enter="$event.target.blur()"
                   incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
-                  :allowEmpty="false" :min="0" @focus="onFocusValue=project.internalVirtualEventsNumber" 
+                  :allowEmpty="false" :min="0" @focus="onFocusValue=project.internalVirtualEventsNumber; $event.target.select()" 
                   @focusout="onCellEditComplete('internalVirtualEventsNumber', project.internalVirtualEventsNumber)"
                   id ="internalVirtualEventsNumber"/>
                 </div>
@@ -469,7 +466,7 @@
                   <InputNumber v-model="project.internalVirtualEventsAverageVirtualParticipants" mode="decimal"
                   showButtons decrementButtonClass="p-button-info" @keypress.enter="$event.target.blur()"
                   incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
-                  :allowEmpty="false" :min="0" @focus="onFocusValue=project.internalVirtualEventsAverageVirtualParticipants" 
+                  :allowEmpty="false" :min="0" @focus="onFocusValue=project.internalVirtualEventsAverageVirtualParticipants; $event.target.select()" 
                   @focusout="onCellEditComplete('internalVirtualEventsAverageVirtualParticipants', project.internalVirtualEventsAverageVirtualParticipants)"
                   id ="internalVirtualEventsAverageVirtualParticipants"/>
                 </div>
@@ -478,7 +475,7 @@
                   <InputNumber v-model="project.internalVirtualEventsAverageDuration" mode="decimal" :maxFractionDigits="3"
                   showButtons decrementButtonClass="p-button-info" :step="0.25" @keypress.enter="$event.target.blur()"
                   incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
-                  :allowEmpty="false" :min="0" @focus="onFocusValue=project.internalVirtualEventsAverageDuration" 
+                  :allowEmpty="false" :min="0" @focus="onFocusValue=project.internalVirtualEventsAverageDuration; $event.target.select()" 
                   @focusout="onCellEditComplete('internalVirtualEventsAverageDuration', project.internalVirtualEventsAverageDuration)"
                   id ="internalVirtualEventsAverageDuration"/>
                 </div>
@@ -496,7 +493,7 @@
                   <InputNumber v-model="project.participatedOnSiteEventsNumber" mode="decimal"
                   showButtons decrementButtonClass="p-button-info" @keypress.enter="$event.target.blur()"
                   incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
-                  :allowEmpty="false" :min="0" @focus="onFocusValue=project.participatedOnSiteEventsNumber" 
+                  :allowEmpty="false" :min="0" @focus="onFocusValue=project.participatedOnSiteEventsNumber; $event.target.select()" 
                   @focusout="onCellEditComplete('participatedOnSiteEventsNumber', project.participatedOnSiteEventsNumber)"
                   id ="participatedOnSiteEventsNumber"/>
                 </div>
@@ -505,7 +502,7 @@
                   <InputNumber v-model="project.participatedOnSiteEventsAverageParticipants" mode="decimal" :maxFractionDigits="3"
                   showButtons decrementButtonClass="p-button-info" :step="0.25" @keypress.enter="$event.target.blur()"
                   incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
-                  :allowEmpty="false" :min="0" @focus="onFocusValue=project.participatedOnSiteEventsAverageParticipants" 
+                  :allowEmpty="false" :min="0" @focus="onFocusValue=project.participatedOnSiteEventsAverageParticipants; $event.target.select()" 
                   @focusout="onCellEditComplete('participatedOnSiteEventsAverageParticipants', project.participatedOnSiteEventsAverageParticipants)"
                   id ="participatedOnSiteEventsAverageParticipants"/>
                 </div>
@@ -514,7 +511,7 @@
                   <InputNumber v-model="project.participatedOnSiteEventsAverageDuration" mode="decimal" :maxFractionDigits="3"
                   showButtons decrementButtonClass="p-button-info" :step="0.25" @keypress.enter="$event.target.blur()"
                   incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
-                  :allowEmpty="false" :min="0" @focus="onFocusValue=project.participatedOnSiteEventsAverageDuration" 
+                  :allowEmpty="false" :min="0" @focus="onFocusValue=project.participatedOnSiteEventsAverageDuration; $event.target.select()" 
                   @focusout="onCellEditComplete('participatedOnSiteEventsAverageDuration', project.participatedOnSiteEventsAverageDuration)"
                   id ="participatedOnSiteEventsAverageDuration"/>
                 </div>
@@ -589,7 +586,7 @@
                 <InputNumber v-model="slotProps.data[slotProps.field]" mode="decimal"
                       showButtons decrementButtonClass="p-button-info"
                       incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
-                      :allowEmpty="false" :min="0" />
+                      :allowEmpty="false" :min="0" @focus="$event.target.select()" />
             </template>
           </Column>
 
