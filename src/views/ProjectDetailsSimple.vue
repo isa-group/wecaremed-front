@@ -627,8 +627,8 @@
       </div>
     </div>
 
-    <Dialog header="Error" v-model:visible="displayPartnersWithoutCountryDialog" class="col-4" :modal="true">
-        <div class="flex align-items-center  pb-5">
+    <Dialog header="Error" v-model:visible="displayPartnersError" class="col-4" :modal="true">
+        <div v-if="displayPartnersWithoutCountryDialog" class="flex align-items-center  pb-5">
             <i class="pi pi-exclamation-triangle mr-3" style="font-size: 2rem" />
             <div>
               <p>You need to select a country for each partner in order to calculate the CF of the project!</p>
@@ -793,7 +793,8 @@ export default {
       displayPartnersWithoutCountryDialog: false,
       displayPartnersWithDefaultValues: false,
       partnersWithoutCountry: [],
-      partnersWithDefaultValues: []
+      partnersWithDefaultValues: [],
+      displayPartnersError: false
     }
   },
   created() {
@@ -809,10 +810,17 @@ export default {
       console.log(this.partnersWithDefaultValues);
       this.displayPartnersWithoutCountryDialog = true
     },
+    displayPartnersWithDefaultValuesErrorDialog(){
+      this.displayPartnersWithDefaultValues = true;
+    },
+    displayPartnersErrorDialog() {
+      this.displayPartnersError = true;
+    },
     closePartnersWithoutCountryErrorDialog() {
+      this.displayPartnersError = false;
       this.displayPartnersWithoutCountryDialog = false
-      this.partnersWithoutCountry = []
       this.displayPartnersWithDefaultValues = false;
+      this.partnersWithoutCountry = []
       this.partnersWithDefaultValues = [];
     },
     calculateCF() {
@@ -827,18 +835,24 @@ export default {
 
       for(let partner of this.project.partners) {
         console.log(partner);
-        if(partner.employeesPersonMonths === null ||
-            partner.externalExpertsPersonMonths === null ||
-            partner.employeesWorkingWPP === null || 
+        if(partner.employeesWorkingWPP === null ||
             partner.seasonalEmployees === null ||
-            partner.externalExperts === null) {
+            partner.employeesPersonMonths === null || 
+            partner.externalExperts === null ||
+            partner.externalExpertsPersonMonths === null) {
               this.partnersWithDefaultValues.push(partner);
-              this.displayPartnersWithDefaultValues = true;
             }
       }
 
-      if (this.partnersWithoutCountry.length > 0 || this.partnersWithDefaultValues > 0) {
-        this.displayPartnersWithoutCountryErrorDialog()
+      if (this.partnersWithoutCountry.length > 0) {
+        this.displayPartnersWithoutCountryErrorDialog();
+      }
+
+      if (this.partnersWithDefaultValues.length > 0){
+        this.displayPartnersWithDefaultValuesErrorDialog();
+      }
+      if (this.displayPartnersWithoutCountryDialog || this.displayPartnersWithDefaultValues > 0) {
+        this.displayPartnersErrorDialog();
       } else if (!this.checkHoursNotGreaterThan24() && !this.checkNonLocalPhysicalGreaterThanPhysicalParticipants()) {
 
         axios.put(`/projects/${this.$route.params.id}`, this.project)
