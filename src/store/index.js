@@ -16,6 +16,13 @@ export default createStore({
       state.toggleValue = !state.toggleValue;
       state.appModeText = state.toggleValue ? "Advanced" : "Simple"
     },
+    toggleValue(state){
+      if (state.toggleValue) {
+        state.toggleValue = false;
+      } else {
+        state.toggleValue = true;
+      }
+    },
     updateSelectedPartner(state, selectedOption) {
       state.selectedPartnerForEquipmentSimple = selectedOption;
     },
@@ -36,6 +43,9 @@ export default createStore({
   actions: {
     toggleView(context) {
       context.commit("toggleView")
+    },
+    toggleValue({commit}){
+      commit("toggleValue");
     },
     updateSelectedPartner({commit}, selectedOption) {
       commit("updateSelectedPartner", selectedOption)

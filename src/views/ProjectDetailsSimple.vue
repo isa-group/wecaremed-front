@@ -12,7 +12,7 @@
       <DataTable :value="project.partners" editMode="cell" :paginator="true" class="p-datatable-gridlines" dataKey="_id"
       :rowHover="true" @cell-edit-complete="onCellEditCompletePartner" sortMode="multiple" :rows="5" v-model:filters="partnerFilters"
       filterDisplay="menu" :loading="loading" :filters="partnerFilters" responsiveLayout="scroll"
-      :globalFilterFields="['name','country','personMonthsPP','personMonthsWPP', 'externalExpertsPersonMonths', 'employeesWorkingWPP', 
+      :globalFilterFields="['name','country','employeesPersonMonths', 'externalExpertsPersonMonths', 'employeesWorkingWPP', 
                             'seasonalEmployees', 'externalExperts', 'coordinator']" @page="currentPagePartnersTable = $event.page">
         
         <template #header>
@@ -37,79 +37,74 @@
         <template #loading>
             Loading partners. Please wait.
         </template>
-
-        <Column field="name" header="Name" :sortable="true">
-          <template #editor="slotProps">
-              <InputText v-model="slotProps.data[slotProps.field]" />
-          </template>
-          <template #filter="{filterModel, field}">
-              <InputText type="text" v-model="filterModel.value" class="p-column-filter" :placeholder="'Filter by ' + field"/>
-          </template>
-        </Column>
-
-        <Column field="country" header="Country" :sortable="true">
-          <template #editor="slotProps">
-            <Dropdown :options="countriesForDropdown" v-model="slotProps.data[slotProps.field]" />
-          </template>
-        </Column>
-
-        <Column field="personMonthsPP" header="PersonMonths PP*" :sortable="true">
-          <template #editor="slotProps" class="p-field">
-            <InputNumber v-model="slotProps.data[slotProps.field]" mode="decimal" :maxFractionDigits="3"
-            showButtons :step="0.25" decrementButtonClass="p-button-info"
-            incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
-            :allowEmpty="false" :min="0" />
-          </template>
-        </Column>
-
-        <Column field="personMonthsWPP" header="PersonMonths WPP*" :sortable="true">
-          <template #editor="slotProps">
-            <InputNumber v-model="slotProps.data[slotProps.field]" mode="decimal" :maxFractionDigits="3"
-            showButtons :step="0.25" decrementButtonClass="p-button-info"
-            incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
-            :allowEmpty="false" :min="0" />
-          </template>
-        </Column>
-
-        <Column field="externalExpertsPersonMonths" header="External experts PersonMonths" :sortable="true">
-          <template #editor="slotProps">
-            <InputNumber v-model="slotProps.data[slotProps.field]" mode="decimal" :maxFractionDigits="3"
-            showButtons :step="0.25" decrementButtonClass="p-button-info"
-            incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
-            :allowEmpty="false" :min="0" />
-          </template>
-        </Column>
-
-        <Column field="employeesWorkingWPP" header="WPP* employees" :sortable="true">
-          <template #editor="slotProps">
-            <InputNumber v-model="slotProps.data[slotProps.field]" mode="decimal" showButtons decrementButtonClass="p-button-info"
-            incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
-            :allowEmpty="false" :min="0" />
-          </template>
-        </Column>
-
-        <Column field="seasonalEmployees" header="Part-time/temporary employees" :sortable="true">
-          <template #editor="slotProps">
-            <InputNumber v-model="slotProps.data[slotProps.field]" mode="decimal" showButtons decrementButtonClass="p-button-info"
-            incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
-            :allowEmpty="false" :min="0" />
-          </template>
-        </Column>
-
-        <Column field="externalExperts" header="External experts" :sortable="true">
-          <template #editor="slotProps">
-            <InputNumber v-model="slotProps.data[slotProps.field]" mode="decimal" showButtons decrementButtonClass="p-button-info"
-            incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
-            :allowEmpty="false" :min="0" />
-          </template>
-        </Column>
-
         <Column field="coordinator" header="Coordinator" :sortable="true">
           <template #body="slotProps">
             <RadioButton name="projectCoordinator" :value="slotProps.data._id" v-model="project.coordinator"
             @change="onCellEditCompletePartnerCoordinator(slotProps.data, $event)" />
           </template>
         </Column>
+
+        <Column field="name" header="Name" :sortable="true">
+          <template #body="slotProps">
+            <td :class="slotProps.data[slotProps.field] == 'New partner' ? 'defaultValue' : ''" style="display:block;">{{slotProps.data[slotProps.field]}}</td>
+          </template>
+          <template #editor="slotProps">
+              <InputText v-model="slotProps.data[slotProps.field]" />
+          </template>
+        </Column>
+
+        <Column field="country" header="Country" :sortable="true">
+          <template #body="slotProps">
+            <td :class="slotProps.data[slotProps.field] == 'Select a country' ? 'defaultValue' : ''" style="display:block;">{{slotProps.data[slotProps.field]}}</td>
+          </template>
+          <template #editor="slotProps">
+            <Dropdown :options="countriesForDropdown" v-model="slotProps.data[slotProps.field]" />
+          </template>
+        </Column>
+
+        <Column field="employeesWorkingWPP" header="Number full time employees" :sortable="true">
+          <template #editor="slotProps">
+            <InputNumber v-model="slotProps.data[slotProps.field]" mode="decimal" showButtons decrementButtonClass="p-button-info"
+            incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
+            :allowEmpty="false" :min="0" @focus="$event.target.select()" />
+          </template>
+        </Column>
+
+        <Column field="seasonalEmployees" header="Number part time employees" :sortable="true">
+          <template #editor="slotProps">
+            <InputNumber v-model="slotProps.data[slotProps.field]" mode="decimal" showButtons decrementButtonClass="p-button-info"
+            incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
+            :allowEmpty="false" :min="0" @focus="$event.target.select()" />
+          </template>
+        </Column>
+
+
+        <Column field="employeesPersonMonths" header="Sum person months (full time + part time)" :sortable="true">
+          <template #editor="slotProps" class="p-field">
+            <InputNumber v-model="slotProps.data[slotProps.field]" mode="decimal" :maxFractionDigits="3"
+            showButtons :step="0.25" decrementButtonClass="p-button-info"
+            incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
+            :allowEmpty="false" :min="0" @focus="$event.target.select()" />
+          </template>
+        </Column>
+
+        <Column field="externalExperts" header="Number of external experts" :sortable="true">
+          <template #editor="slotProps">
+            <InputNumber v-model="slotProps.data[slotProps.field]" mode="decimal" showButtons decrementButtonClass="p-button-info"
+            incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
+            :allowEmpty="false" :min="0" @focus="$event.target.select()" />
+          </template>
+        </Column>
+
+        <Column field="externalExpertsPersonMonths" header="Sum person months for the external experts" :sortable="true">
+          <template #editor="slotProps">
+            <InputNumber v-model="slotProps.data[slotProps.field]" mode="decimal" :maxFractionDigits="3"
+            showButtons :step="0.25" decrementButtonClass="p-button-info"
+            incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
+            :allowEmpty="false" :min="0" @focus="$event.target.select()" />
+          </template>
+        </Column>
+
 
         <Column field="actions" header="Actions">
           <template #body="slotProps">
@@ -143,64 +138,56 @@
                 <label for="pcsBoughtDuringProject">PCs</label>
                 <InputNumber v-model="selectedPartner.pcsBoughtDuringProject" decrementButtonClass="p-button-info"
                 incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus" mode="decimal"
-                showButtons :allowEmpty="false" :min="0" id="pcsBoughtDuringProject"
-                @focus="onFocusValue=selectedPartner.pcsBoughtDuringProject" @keypress.enter="$event.target.blur()"
+                showButtons :allowEmpty="false" :min="0" id="pcsBoughtDuringProject" :inputClass="selectedPartner.pcsBoughtDuringProject == 0 ? 'defaultValue' : ''"
+                @focus="onFocusValue=selectedPartner.pcsBoughtDuringProject; $event.target.select()" @keypress.enter="$event.target.blur()"
                 @focusout="onCellEditCompletePartnerEquipment('pcsBoughtDuringProject', selectedPartner.pcsBoughtDuringProject)" />
               </div>
               <div class="field col-12 md:col-3">
                 <label for="pcsFlatScreenBoughtDuringProject">PCs with flat screen</label>
                 <InputNumber v-model="selectedPartner.pcsFlatScreenBoughtDuringProject" mode="decimal" decrementButtonClass="p-button-info"
                 showButtons incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
-                :allowEmpty="false" :min="0" id="pcsFlatScreenBoughtDuringProject" 
-                @focus="onFocusValue=selectedPartner.pcsFlatScreenBoughtDuringProject" @keypress.enter="$event.target.blur()"
+                :allowEmpty="false" :min="0" id="pcsFlatScreenBoughtDuringProject" :inputClass="selectedPartner.pcsFlatScreenBoughtDuringProject == 0 ? 'defaultValue' : ''"
+                @focus="onFocusValue=selectedPartner.pcsFlatScreenBoughtDuringProject; $event.target.select()" @keypress.enter="$event.target.blur()"
                 @focusout="onCellEditCompletePartnerEquipment('pcsFlatScreenBoughtDuringProject', selectedPartner.pcsFlatScreenBoughtDuringProject)" />
               </div>
               <div class="field col-12 md:col-3">
                 <label for="laptopsBoughtDuringProject">Laptop computers</label>
                 <InputNumber v-model="selectedPartner.laptopsBoughtDuringProject" mode="decimal"
-                showButtons decrementButtonClass="p-button-info" incrementButtonClass="p-button-info"
+                showButtons decrementButtonClass="p-button-info" incrementButtonClass="p-button-info" :inputClass="selectedPartner.laptopsBoughtDuringProject == 0 ? 'defaultValue' : ''"
                 incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus" :allowEmpty="false" :min="0" id="laptopsBoughtDuringProject"
-                @focus="onFocusValue=selectedPartner.laptopsBoughtDuringProject" @keypress.enter="$event.target.blur()"
+                @focus="onFocusValue=selectedPartner.laptopsBoughtDuringProject; $event.target.select()" @keypress.enter="$event.target.blur()"
                 @focusout="onCellEditCompletePartnerEquipment('laptopsBoughtDuringProject', selectedPartner.laptopsBoughtDuringProject)" />
               </div>
               <div class="field col-12 md:col-3">
                 <label for="flatScreensBoughtDuringProject">Flat screens</label>
                 <InputNumber v-model="selectedPartner.flatScreensBoughtDuringProject" mode="decimal"
-                showButtons decrementButtonClass="p-button-info" incrementButtonClass="p-button-info"
+                showButtons decrementButtonClass="p-button-info" incrementButtonClass="p-button-info" :inputClass="selectedPartner.pcsBoughtDuringProject == 0 ? 'defaultValue' : ''"
                 incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus" :allowEmpty="false" :min="0" id="flatScreensBoughtDuringProject"
-                @focus="onFocusValue=selectedPartner.flatScreensBoughtDuringProject" @keypress.enter="$event.target.blur()"
+                @focus="onFocusValue=selectedPartner.flatScreensBoughtDuringProject; $event.target.select()" @keypress.enter="$event.target.blur()"
                 @focusout="onCellEditCompletePartnerEquipment('flatScreensBoughtDuringProject', selectedPartner.flatScreensBoughtDuringProject)" />
-              </div>
-              <div class="field col-12 md:col-3">
-                <label for="cppsBoughtDuringProject">Computer Central Processes</label>
-                <InputNumber v-model="selectedPartner.cppsBoughtDuringProject" mode="decimal"
-                showButtons decrementButtonClass="p-button-info" :allowEmpty="false" :min="0" id="cppsBoughtDuringProject"
-                incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
-                @focus="onFocusValue=selectedPartner.cppsBoughtDuringProject" @keypress.enter="$event.target.blur()"
-                @focusout="onCellEditCompletePartnerEquipment('cppsBoughtDuringProject', selectedPartner.cppsBoughtDuringProject)" />
               </div>
               <div class="field col-12 md:col-3">
                 <label for="printersBoughtDuringProject">Printers</label>
                 <InputNumber v-model="selectedPartner.printersBoughtDuringProject" mode="decimal"
-                showButtons decrementButtonClass="p-button-info" incrementButtonClass="p-button-info"
+                showButtons decrementButtonClass="p-button-info" incrementButtonClass="p-button-info" :inputClass="selectedPartner.pcsBoughtDuringProject == 0 ? 'defaultValue' : ''"
                 incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus" :allowEmpty="false" :min="0" id="printersBoughtDuringProject"
-                @focus="onFocusValue=selectedPartner.printersBoughtDuringProject" @keypress.enter="$event.target.blur()"
+                @focus="onFocusValue=selectedPartner.printersBoughtDuringProject; $event.target.select()" @keypress.enter="$event.target.blur()"
                 @focusout="onCellEditCompletePartnerEquipment('printersBoughtDuringProject', selectedPartner.printersBoughtDuringProject)" />
               </div>
               <div class="field col-12 md:col-3">
                 <label for="copyMachinesBoughtDuringProject">Copy machines</label>
-                <InputNumber v-model="selectedPartner.copyMachinesBoughtDuringProject" mode="decimal"
+                <InputNumber v-model="selectedPartner.copyMachinesBoughtDuringProject" mode="decimal" 
                 showButtons decrementButtonClass="p-button-info" :allowEmpty="false" :min="0" id="copyMachinesBoughtDuringProject"
-                incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
-                @focus="onFocusValue=selectedPartner.copyMachinesBoughtDuringProject" @keypress.enter="$event.target.blur()"
+                incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus" :inputClass="selectedPartner.pcsBoughtDuringProject == 0 ? 'defaultValue' : ''"
+                @focus="onFocusValue=selectedPartner.copyMachinesBoughtDuringProject; $event.target.select()" @keypress.enter="$event.target.blur()"
                 @focusout="onCellEditCompletePartnerEquipment('copyMachinesBoughtDuringProject', selectedPartner.copyMachinesBoughtDuringProject)" />
               </div>
               <div class="field col-12 md:col-3">
                 <label for="faxMachinesBoughtDuringProject">Fax machines</label>
                 <InputNumber v-model="selectedPartner.faxMachinesBoughtDuringProject" mode="decimal"
                 showButtons decrementButtonClass="p-button-info" :allowEmpty="false" :min="0" id="faxMachinesBoughtDuringProject"
-                incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
-                @focus="onFocusValue=selectedPartner.faxMachinesBoughtDuringProject" @keypress.enter="$event.target.blur()"
+                incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus" :inputClass="selectedPartner.pcsBoughtDuringProject == 0 ? 'defaultValue' : ''"
+                @focus="onFocusValue=selectedPartner.faxMachinesBoughtDuringProject; $event.target.select()" @keypress.enter="$event.target.blur()"
                 @focusout="onCellEditCompletePartnerEquipment('faxMachinesBoughtDuringProject', selectedPartner.faxMachinesBoughtDuringProject)" />
               </div>
             </div>
@@ -225,37 +212,37 @@
               <div class="p-fluid formgrid grid">
                 <div class="field col-12 md:col-6">
                   <label for="publicOnSiteEventsNumber">Number of in presence public events</label>
-                  <InputNumber v-model="project.publicOnSiteEventsNumber" mode="decimal"
-                  showButtons decrementButtonClass="p-button-info" @keypress.enter="$event.target.blur()"
+                  <InputNumber v-model="project.publicOnSiteEventsNumber" mode="decimal" :inputClass="project.publicOnSiteEventsNumber == 0 ? 'defaultValue' : ''"
+                  showButtons decrementButtonClass="p-button-info" @keypress.enter="$event.target.blur()" 
                   incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
-                  :allowEmpty="false" :min="0" @focus="onFocusValue=project.publicOnSiteEventsNumber" 
+                  :allowEmpty="false" :min="0" @focus="onFocusValue=project.publicOnSiteEventsNumber; $event.target.select()" 
                   @focusout="onCellEditComplete('publicOnSiteEventsNumber', project.publicOnSiteEventsNumber)"
                   id ="publicOnSiteEventsNumber"/>
                 </div>
                 <div class="field col-12 md:col-6">
                   <label for="publicOnSiteEventsAveragePhysicalParticipants">Average number of physical participants</label>
                   <InputNumber v-model="project.publicOnSiteEventsAveragePhysicalParticipants" mode="decimal"
-                  showButtons decrementButtonClass="p-button-info" @keypress.enter="$event.target.blur()"
+                  showButtons decrementButtonClass="p-button-info" @keypress.enter="$event.target.blur()" :inputClass="project.publicOnSiteEventsAveragePhysicalParticipants == 0 ? 'defaultValue' : ''"
                   incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
-                  :allowEmpty="false" :min="0" @focus="onFocusValue=project.publicOnSiteEventsAveragePhysicalParticipants" 
+                  :allowEmpty="false" :min="0" @focus="onFocusValue=project.publicOnSiteEventsAveragePhysicalParticipants; $event.target.select()" 
                   @focusout="onCellEditComplete('publicOnSiteEventsAveragePhysicalParticipants', project.publicOnSiteEventsAveragePhysicalParticipants)"
                   id ="publicOnSiteEventsAveragePhysicalParticipants"/>
                 </div>
                 <div class="field col-12 md:col-6">
-                  <label for="publicOnSiteEventsAverageNonLocalPhysicalParticipants">Average number of non-local physical participants</label>
+                  <label for="publicOnSiteEventsAverageNonLocalPhysicalParticipants">Average number of non-local physical participants**</label>
                   <InputNumber v-model="project.publicOnSiteEventsAverageNonLocalPhysicalParticipants" mode="decimal"
-                  showButtons decrementButtonClass="p-button-info" @keypress.enter="$event.target.blur()"
+                  showButtons decrementButtonClass="p-button-info" @keypress.enter="$event.target.blur()" :inputClass="project.publicOnSiteEventsAverageNonLocalPhysicalParticipants == 0 ? 'defaultValue' : ''"
                   incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
-                  :allowEmpty="false" :min="0" @focus="onFocusValue=project.publicOnSiteEventsAverageNonLocalPhysicalParticipants" 
+                  :allowEmpty="false" :min="0" @focus="onFocusValue=project.publicOnSiteEventsAverageNonLocalPhysicalParticipants; $event.target.select()" 
                   @focusout="onCellEditComplete('publicOnSiteEventsAverageNonLocalPhysicalParticipants', project.publicOnSiteEventsAverageNonLocalPhysicalParticipants)"
                   id ="publicOnSiteEventsAverageNonLocalPhysicalParticipants"/>
                 </div>
                 <div class="field col-12 md:col-6">
                   <label for="publicOnSiteEventsAverageDuration">Average duration (days)</label>
                   <InputNumber v-model="project.publicOnSiteEventsAverageDuration" mode="decimal" :maxFractionDigits="3"
-                  showButtons decrementButtonClass="p-button-info" :step="0.25" @keypress.enter="$event.target.blur()"
+                  showButtons decrementButtonClass="p-button-info" :step="0.25" @keypress.enter="$event.target.blur()" :inputClass="project.publicOnSiteEventsAverageDuration == 0 ? 'defaultValue' : ''"
                   incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
-                  :allowEmpty="false" :min="0" @focus="onFocusValue=project.publicOnSiteEventsAverageDuration" 
+                  :allowEmpty="false" :min="0" @focus="onFocusValue=project.publicOnSiteEventsAverageDuration; $event.target.select()" 
                   @focusout="onCellEditComplete('publicOnSiteEventsAverageDuration', project.publicOnSiteEventsAverageDuration)"
                   id ="publicOnSiteEventsAverageDuration"/>
                 </div>
@@ -267,55 +254,55 @@
               <div class="p-fluid formgrid grid">
                 <div class="field col-12 md:col-4">
                   <label for="publicHybridEventsNumber">Number of mixed public events</label>
-                  <InputNumber v-model="project.publicHybridEventsNumber" mode="decimal"
+                  <InputNumber v-model="project.publicHybridEventsNumber" mode="decimal" :inputClass="project.publicHybridEventsNumber == 0 ? 'defaultValue' : ''"
                   showButtons decrementButtonClass="p-button-info" @keypress.enter="$event.target.blur()"
                   incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
-                  :allowEmpty="false" :min="0" @focus="onFocusValue=project.publicHybridEventsNumber" 
+                  :allowEmpty="false" :min="0" @focus="onFocusValue=project.publicHybridEventsNumber; $event.target.select()" 
                   @focusout="onCellEditComplete('publicHybridEventsNumber', project.publicHybridEventsNumber)"
                   id ="publicHybridEventsNumber"/>
                 </div>
                 <div class="field col-12 md:col-4">
                   <label for="publicHybridEventsAveragePhysicalParticipants">Average number of physical participants</label>
                   <InputNumber v-model="project.publicHybridEventsAveragePhysicalParticipants" mode="decimal"
-                  showButtons decrementButtonClass="p-button-info" @keypress.enter="$event.target.blur()"
+                  showButtons decrementButtonClass="p-button-info" @keypress.enter="$event.target.blur()" :inputClass="project.publicHybridEventsAveragePhysicalParticipants == 0 ? 'defaultValue' : ''"
                   incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
-                  :allowEmpty="false" :min="0" @focus="onFocusValue=project.publicHybridEventsAveragePhysicalParticipants" 
+                  :allowEmpty="false" :min="0" @focus="onFocusValue=project.publicHybridEventsAveragePhysicalParticipants; $event.target.select()" 
                   @focusout="onCellEditComplete('publicHybridEventsAveragePhysicalParticipants', project.publicHybridEventsAveragePhysicalParticipants)"
                   id ="publicHybridEventsAveragePhysicalParticipants"/>
                 </div>
                 <div class="field col-12 md:col-4">
-                  <label for="publicHybridEventsAverageNonLocalPhysicalParticipants">Average number of non-local physical participants</label>
+                  <label for="publicHybridEventsAverageNonLocalPhysicalParticipants">Average number of non-local physical participants**</label>
                   <InputNumber v-model="project.publicHybridEventsAverageNonLocalPhysicalParticipants" mode="decimal"
-                  showButtons decrementButtonClass="p-button-info" @keypress.enter="$event.target.blur()"
+                  showButtons decrementButtonClass="p-button-info" @keypress.enter="$event.target.blur()" :inputClass="project.publicHybridEventsAverageNonLocalPhysicalParticipants == 0 ? 'defaultValue' : ''"
                   incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
-                  :allowEmpty="false" :min="0" @focus="onFocusValue=project.publicHybridEventsAverageNonLocalPhysicalParticipants" 
+                  :allowEmpty="false" :min="0" @focus="onFocusValue=project.publicHybridEventsAverageNonLocalPhysicalParticipants; $event.target.select()" 
                   @focusout="onCellEditComplete('publicHybridEventsAverageNonLocalPhysicalParticipants', project.publicHybridEventsAverageNonLocalPhysicalParticipants)"
                   id ="publicHybridEventsAverageNonLocalPhysicalParticipants"/>
                 </div>
                 <div class="field col-12 md:col-4">
                   <label for="publicHybridEventsAverageVirtualParticipants">Average number of on-line participants</label>
                   <InputNumber v-model="project.publicHybridEventsAverageVirtualParticipants" mode="decimal"
-                  showButtons decrementButtonClass="p-button-info" @keypress.enter="$event.target.blur()"
+                  showButtons decrementButtonClass="p-button-info" @keypress.enter="$event.target.blur()" :inputClass="project.publicHybridEventsAverageVirtualParticipants == 0 ? 'defaultValue' : ''"
                   incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
-                  :allowEmpty="false" :min="0" @focus="onFocusValue=project.publicHybridEventsAverageVirtualParticipants" 
+                  :allowEmpty="false" :min="0" @focus="onFocusValue=project.publicHybridEventsAverageVirtualParticipants; $event.target.select()" 
                   @focusout="onCellEditComplete('publicHybridEventsAverageVirtualParticipants', project.publicHybridEventsAverageVirtualParticipants)"
                   id ="publicHybridEventsAverageVirtualParticipants"/>
                 </div>
                 <div class="field col-12 md:col-4">
                   <label for="publicHybridEventsAverageDuration ">Average duration (days)</label>
                   <InputNumber v-model="project.publicHybridEventsAverageDuration " mode="decimal" :maxFractionDigits="3"
-                  showButtons decrementButtonClass="p-button-info" :step="0.25" @keypress.enter="$event.target.blur()"
+                  showButtons decrementButtonClass="p-button-info" :step="0.25" @keypress.enter="$event.target.blur()" :inputClass="project.publicHybridEventsAverageDuration == 0 ? 'defaultValue' : ''"
                   incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
-                  :allowEmpty="false" :min="0" @focus="onFocusValue=project.publicHybridEventsAverageDuration" 
+                  :allowEmpty="false" :min="0" @focus="onFocusValue=project.publicHybridEventsAverageDuration; $event.target.select()" 
                   @focusout="onCellEditComplete('publicHybridEventsAverageDuration', project.publicHybridEventsAverageDuration)"
                   id ="publicHybridEventsAverageDuration "/>
                 </div>
                 <div class="field col-12 md:col-4">
                   <label for="publicHybridEventsAverageHoursPerDays">Average duration (hours/day)</label>
                   <InputNumber v-model="project.publicHybridEventsAverageHoursPerDays" mode="decimal" :maxFractionDigits="3"
-                  showButtons decrementButtonClass="p-button-info" :step="0.25" @keypress.enter="$event.target.blur()"
+                  showButtons decrementButtonClass="p-button-info" :step="0.25" @keypress.enter="$event.target.blur()" :inputClass="project.publicHybridEventsAverageHoursPerDays == 0 ? 'defaultValue' : ''"
                   incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
-                  :allowEmpty="false" :min="0" @focus="onFocusValue=project.publicHybridEventsAverageHoursPerDays" 
+                  :allowEmpty="false" :min="0" @focus="onFocusValue=project.publicHybridEventsAverageHoursPerDays; $event.target.select()" 
                   @focusout="onCellEditComplete('publicHybridEventsAverageHoursPerDays', project.publicHybridEventsAverageHoursPerDays)"
                   id ="publicHybridEventsAverageHoursPerDays"/>
                 </div>
@@ -328,27 +315,27 @@
                 <div class="field col-12 md:col-4">
                   <label for="publicVirtualEventsNumber">Number of on-line public events</label>
                   <InputNumber v-model="project.publicVirtualEventsNumber" mode="decimal"
-                  showButtons decrementButtonClass="p-button-info" @keypress.enter="$event.target.blur()"
+                  showButtons decrementButtonClass="p-button-info" @keypress.enter="$event.target.blur()" :inputClass="project.publicVirtualEventsNumber == 0 ? 'defaultValue' : ''"
                   incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
-                  :allowEmpty="false" :min="0" @focus="onFocusValue=project.publicVirtualEventsNumber" 
+                  :allowEmpty="false" :min="0" @focus="onFocusValue=project.publicVirtualEventsNumber; $event.target.select()" 
                   @focusout="onCellEditComplete('publicVirtualEventsNumber', project.publicVirtualEventsNumber)"
                   id ="publicVirtualEventsNumber"/>
                 </div>
                 <div class="field col-12 md:col-4">
                   <label for="publicVirtualEventsAverageVirtualParticipants">Average number of on-line participants</label>
                   <InputNumber v-model="project.publicVirtualEventsAverageVirtualParticipants" mode="decimal"
-                  showButtons decrementButtonClass="p-button-info" @keypress.enter="$event.target.blur()"
+                  showButtons decrementButtonClass="p-button-info" @keypress.enter="$event.target.blur()" :inputClass="project.publicVirtualEventsAverageVirtualParticipants == 0 ? 'defaultValue' : ''"
                   incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
-                  :allowEmpty="false" :min="0" @focus="onFocusValue=project.publicVirtualEventsAverageVirtualParticipants" 
+                  :allowEmpty="false" :min="0" @focus="onFocusValue=project.publicVirtualEventsAverageVirtualParticipants; $event.target.select()" 
                   @focusout="onCellEditComplete('publicVirtualEventsAverageVirtualParticipants', project.publicVirtualEventsAverageVirtualParticipants)"
                   id ="publicVirtualEventsAverageVirtualParticipants"/>
                 </div>
                 <div class="field col-12 md:col-4">
                   <label for="publicVirtualEventsAverageDuration">Average duration (hours)</label>
                   <InputNumber v-model="project.publicVirtualEventsAverageDuration" mode="decimal" :maxFractionDigits="3"
-                  showButtons decrementButtonClass="p-button-info" :step="0.25" @keypress.enter="$event.target.blur()"
+                  showButtons decrementButtonClass="p-button-info" :step="0.25" @keypress.enter="$event.target.blur()" :inputClass="project.publicVirtualEventsAverageDuration == 0 ? 'defaultValue' : ''"
                   incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
-                  :allowEmpty="false" :min="0" @focus="onFocusValue=project.publicVirtualEventsAverageDuration" 
+                  :allowEmpty="false" :min="0" @focus="onFocusValue=project.publicVirtualEventsAverageDuration; $event.target.select()" 
                   @focusout="onCellEditComplete('publicVirtualEventsAverageDuration', project.publicVirtualEventsAverageDuration)"
                   id ="publicVirtualEventsAverageDuration"/>
                 </div>
@@ -363,37 +350,37 @@
               <div class="p-fluid formgrid grid">
                 <div class="field col-12 md:col-6">
                   <label for="internalOnSiteEventsNumber">Number of in presence internal events/meetings</label>
-                  <InputNumber v-model="project.internalOnSiteEventsNumber" mode="decimal"
+                  <InputNumber v-model="project.internalOnSiteEventsNumber" mode="decimal" :inputClass="project.internalOnSiteEventsNumber == 0 ? 'defaultValue' : ''"
                   showButtons decrementButtonClass="p-button-info" @keypress.enter="$event.target.blur()"
                   incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
-                  :allowEmpty="false" :min="0" @focus="onFocusValue=project.internalOnSiteEventsNumber" 
+                  :allowEmpty="false" :min="0" @focus="onFocusValue=project.internalOnSiteEventsNumber; $event.target.select()" 
                   @focusout="onCellEditComplete('internalOnSiteEventsNumber', project.internalOnSiteEventsNumber)"
                   id ="internalOnSiteEventsNumber"/>
                 </div>
                 <div class="field col-12 md:col-6">
                   <label for="internalOnSiteEventsAveragePhysicalParticipants">Average number of physical participants</label>
                   <InputNumber v-model="project.internalOnSiteEventsAveragePhysicalParticipants" mode="decimal"
-                  showButtons decrementButtonClass="p-button-info" @keypress.enter="$event.target.blur()"
+                  showButtons decrementButtonClass="p-button-info" @keypress.enter="$event.target.blur()" :inputClass="project.internalOnSiteEventsAveragePhysicalParticipants == 0 ? 'defaultValue' : ''"
                   incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
-                  :allowEmpty="false" :min="0" @focus="onFocusValue=project.internalOnSiteEventsAveragePhysicalParticipants" 
+                  :allowEmpty="false" :min="0" @focus="onFocusValue=project.internalOnSiteEventsAveragePhysicalParticipants; $event.target.select()" 
                   @focusout="onCellEditComplete('internalOnSiteEventsAveragePhysicalParticipants', project.internalOnSiteEventsAveragePhysicalParticipants)"
                   id ="internalOnSiteEventsAveragePhysicalParticipants"/>
                 </div>
                 <div class="field col-12 md:col-6">
-                  <label for="internalOnSiteEventsAverageNonLocalPhysicalParticipants">Average number of non-local physical participants</label>
+                  <label for="internalOnSiteEventsAverageNonLocalPhysicalParticipants">Average number of non-local physical participants**</label>
                   <InputNumber v-model="project.internalOnSiteEventsAverageNonLocalPhysicalParticipants" mode="decimal"
-                  showButtons decrementButtonClass="p-button-info" @keypress.enter="$event.target.blur()"
+                  showButtons decrementButtonClass="p-button-info" @keypress.enter="$event.target.blur()" :inputClass="project.internalOnSiteEventsAverageNonLocalPhysicalParticipants == 0 ? 'defaultValue' : ''"
                   incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
-                  :allowEmpty="false" :min="0" @focus="onFocusValue=project.internalOnSiteEventsAverageNonLocalPhysicalParticipants" 
+                  :allowEmpty="false" :min="0" @focus="onFocusValue=project.internalOnSiteEventsAverageNonLocalPhysicalParticipants; $event.target.select()" 
                   @focusout="onCellEditComplete('internalOnSiteEventsAverageNonLocalPhysicalParticipants', project.internalOnSiteEventsAverageNonLocalPhysicalParticipants)"
                   id ="internalOnSiteEventsAverageNonLocalPhysicalParticipants"/>
                 </div>
                 <div class="field col-12 md:col-6">
                   <label for="internalOnSiteEventsAverageDuration">Average duration (days)</label>
                   <InputNumber v-model="project.internalOnSiteEventsAverageDuration" mode="decimal" :maxFractionDigits="3"
-                  showButtons decrementButtonClass="p-button-info" :step="0.25" @keypress.enter="$event.target.blur()"
+                  showButtons decrementButtonClass="p-button-info" :step="0.25" @keypress.enter="$event.target.blur()" :inputClass="project.internalOnSiteEventsAverageDuration == 0 ? 'defaultValue' : ''"
                   incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
-                  :allowEmpty="false" :min="0" @focus="onFocusValue=project.internalOnSiteEventsAverageDuration" 
+                  :allowEmpty="false" :min="0" @focus="onFocusValue=project.internalOnSiteEventsAverageDuration; $event.target.select()" 
                   @focusout="onCellEditComplete('internalOnSiteEventsAverageDuration', project.internalOnSiteEventsAverageDuration)"
                   id ="internalOnSiteEventsAverageDuration"/>
                 </div>
@@ -405,55 +392,55 @@
               <div class="p-fluid formgrid grid">
                 <div class="field col-12 md:col-4">
                   <label for="internalHybridEventsNumber">Number of mixed internal events/meetings</label>
-                  <InputNumber v-model="project.internalHybridEventsNumber" mode="decimal"
+                  <InputNumber v-model="project.internalHybridEventsNumber" mode="decimal" :inputClass="project.internalHybridEventsNumber == 0 ? 'defaultValue' : ''"
                   showButtons decrementButtonClass="p-button-info" @keypress.enter="$event.target.blur()"
                   incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
-                  :allowEmpty="false" :min="0" @focus="onFocusValue=project.internalHybridEventsNumber" 
+                  :allowEmpty="false" :min="0" @focus="onFocusValue=project.internalHybridEventsNumber; $event.target.select()" 
                   @focusout="onCellEditComplete('internalHybridEventsNumber', project.internalHybridEventsNumber)"
                   id ="internalHybridEventsNumber"/>
                 </div>
                 <div class="field col-12 md:col-4">
                   <label for="internalHybridEventsAveragePhysicalParticipants">Average number of physical participants</label>
                   <InputNumber v-model="project.internalHybridEventsAveragePhysicalParticipants" mode="decimal"
-                  showButtons decrementButtonClass="p-button-info" @keypress.enter="$event.target.blur()"
+                  showButtons decrementButtonClass="p-button-info" @keypress.enter="$event.target.blur()" :inputClass="project.internalHybridEventsAveragePhysicalParticipants == 0 ? 'defaultValue' : ''"
                   incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
-                  :allowEmpty="false" :min="0" @focus="onFocusValue=project.internalHybridEventsAveragePhysicalParticipants" 
+                  :allowEmpty="false" :min="0" @focus="onFocusValue=project.internalHybridEventsAveragePhysicalParticipants; $event.target.select()" 
                   @focusout="onCellEditComplete('internalHybridEventsAveragePhysicalParticipants', project.internalHybridEventsAveragePhysicalParticipants)"
                   id ="internalHybridEventsAveragePhysicalParticipants"/>
                 </div>
                 <div class="field col-12 md:col-4">
-                  <label for="internalHybridEventsAverageNonLocalPhysicalParticipants">Average number of non-local physical participants</label>
+                  <label for="internalHybridEventsAverageNonLocalPhysicalParticipants">Average number of non-local physical participants**</label>
                   <InputNumber v-model="project.internalHybridEventsAverageNonLocalPhysicalParticipants" mode="decimal"
-                  showButtons decrementButtonClass="p-button-info" @keypress.enter="$event.target.blur()"
+                  showButtons decrementButtonClass="p-button-info" @keypress.enter="$event.target.blur()" :inputClass="project.internalHybridEventsAverageNonLocalPhysicalParticipants == 0 ? 'defaultValue' : ''"
                   incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
-                  :allowEmpty="false" :min="0" @focus="onFocusValue=project.internalHybridEventsAverageNonLocalPhysicalParticipants" 
+                  :allowEmpty="false" :min="0" @focus="onFocusValue=project.internalHybridEventsAverageNonLocalPhysicalParticipants; $event.target.select()" 
                   @focusout="onCellEditComplete('internalHybridEventsAverageNonLocalPhysicalParticipants', project.internalHybridEventsAverageNonLocalPhysicalParticipants)"
                   id ="internalHybridEventsAverageNonLocalPhysicalParticipants"/>
                 </div>
                 <div class="field col-12 md:col-4">
                   <label for="internalHybridEventsAverageVirtualParticipants">Average number of on-line participants</label>
                   <InputNumber v-model="project.internalHybridEventsAverageVirtualParticipants" mode="decimal"
-                  showButtons decrementButtonClass="p-button-info" @keypress.enter="$event.target.blur()"
+                  showButtons decrementButtonClass="p-button-info" @keypress.enter="$event.target.blur()" :inputClass="project.internalHybridEventsAverageVirtualParticipants == 0 ? 'defaultValue' : ''"
                   incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
-                  :allowEmpty="false" :min="0" @focus="onFocusValue=project.internalHybridEventsAverageVirtualParticipants" 
+                  :allowEmpty="false" :min="0" @focus="onFocusValue=project.internalHybridEventsAverageVirtualParticipants; $event.target.select()" 
                   @focusout="onCellEditComplete('internalHybridEventsAverageVirtualParticipants', project.internalHybridEventsAverageVirtualParticipants)"
                   id ="internalHybridEventsAverageVirtualParticipants"/>
                 </div>
                 <div class="field col-12 md:col-4">
                   <label for="internalHybridEventsAverageDuration ">Average duration (days)</label>
                   <InputNumber v-model="project.internalHybridEventsAverageDuration " mode="decimal" :maxFractionDigits="3"
-                  showButtons decrementButtonClass="p-button-info" :step="0.25" @keypress.enter="$event.target.blur()"
+                  showButtons decrementButtonClass="p-button-info" :step="0.25" @keypress.enter="$event.target.blur()" :inputClass="project.internalHybridEventsAverageDuration == 0 ? 'defaultValue' : ''"
                   incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
-                  :allowEmpty="false" :min="0" @focus="onFocusValue=project.internalHybridEventsAverageDuration" 
+                  :allowEmpty="false" :min="0" @focus="onFocusValue=project.internalHybridEventsAverageDuration; $event.target.select()" 
                   @focusout="onCellEditComplete('internalHybridEventsAverageDuration', project.internalHybridEventsAverageDuration)"
                   id ="internalHybridEventsAverageDuration "/>
                 </div>
                 <div class="field col-12 md:col-4">
                   <label for="internalHybridEventsAverageHoursPerDays">Average duration (hours/day)</label>
                   <InputNumber v-model="project.internalHybridEventsAverageHoursPerDays" mode="decimal" :maxFractionDigits="3"
-                  showButtons decrementButtonClass="p-button-info" :step="0.25" @keypress.enter="$event.target.blur()"
+                  showButtons decrementButtonClass="p-button-info" :step="0.25" @keypress.enter="$event.target.blur()" :inputClass="project.internalHybridEventsAverageHoursPerDays == 0 ? 'defaultValue' : ''"
                   incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
-                  :allowEmpty="false" :min="0" @focus="onFocusValue=project.internalHybridEventsAverageHoursPerDays" 
+                  :allowEmpty="false" :min="0" @focus="onFocusValue=project.internalHybridEventsAverageHoursPerDays; $event.target.select()" 
                   @focusout="onCellEditComplete('internalHybridEventsAverageHoursPerDays', project.internalHybridEventsAverageHoursPerDays)"
                   id ="internalHybridEventsAverageHoursPerDays"/>
                 </div>
@@ -465,28 +452,28 @@
               <div class="p-fluid formgrid grid">
                 <div class="field col-12 md:col-4">
                   <label for="internalVirtualEventsNumber">Number of on-line internal events/meetings</label>
-                  <InputNumber v-model="project.internalVirtualEventsNumber" mode="decimal"
+                  <InputNumber v-model="project.internalVirtualEventsNumber" mode="decimal" :inputClass="project.internalVirtualEventsNumber == 0 ? 'defaultValue' : ''"
                   showButtons decrementButtonClass="p-button-info" @keypress.enter="$event.target.blur()"
                   incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
-                  :allowEmpty="false" :min="0" @focus="onFocusValue=project.internalVirtualEventsNumber" 
+                  :allowEmpty="false" :min="0" @focus="onFocusValue=project.internalVirtualEventsNumber; $event.target.select()" 
                   @focusout="onCellEditComplete('internalVirtualEventsNumber', project.internalVirtualEventsNumber)"
                   id ="internalVirtualEventsNumber"/>
                 </div>
                 <div class="field col-12 md:col-4">
                   <label for="internalVirtualEventsAverageVirtualParticipants">Average number of on-line participants</label>
                   <InputNumber v-model="project.internalVirtualEventsAverageVirtualParticipants" mode="decimal"
-                  showButtons decrementButtonClass="p-button-info" @keypress.enter="$event.target.blur()"
+                  showButtons decrementButtonClass="p-button-info" @keypress.enter="$event.target.blur()" :inputClass="project.internalVirtualEventsAverageVirtualParticipants == 0 ? 'defaultValue' : ''"
                   incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
-                  :allowEmpty="false" :min="0" @focus="onFocusValue=project.internalVirtualEventsAverageVirtualParticipants" 
+                  :allowEmpty="false" :min="0" @focus="onFocusValue=project.internalVirtualEventsAverageVirtualParticipants; $event.target.select()" 
                   @focusout="onCellEditComplete('internalVirtualEventsAverageVirtualParticipants', project.internalVirtualEventsAverageVirtualParticipants)"
                   id ="internalVirtualEventsAverageVirtualParticipants"/>
                 </div>
                 <div class="field col-12 md:col-4">
                   <label for="internalVirtualEventsAverageDuration">Average duration (hours)</label>
                   <InputNumber v-model="project.internalVirtualEventsAverageDuration" mode="decimal" :maxFractionDigits="3"
-                  showButtons decrementButtonClass="p-button-info" :step="0.25" @keypress.enter="$event.target.blur()"
+                  showButtons decrementButtonClass="p-button-info" :step="0.25" @keypress.enter="$event.target.blur()" :inputClass="project.internalVirtualEventsAverageDuration == 0 ? 'defaultValue' : ''"
                   incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
-                  :allowEmpty="false" :min="0" @focus="onFocusValue=project.internalVirtualEventsAverageDuration" 
+                  :allowEmpty="false" :min="0" @focus="onFocusValue=project.internalVirtualEventsAverageDuration; $event.target.select()" 
                   @focusout="onCellEditComplete('internalVirtualEventsAverageDuration', project.internalVirtualEventsAverageDuration)"
                   id ="internalVirtualEventsAverageDuration"/>
                 </div>
@@ -501,28 +488,28 @@
               <div class="p-fluid formgrid grid">
                 <div class="field col-12 md:col-4">
                   <label for="participatedOnSiteEventsNumber">Number of in presence events participated by the project</label>
-                  <InputNumber v-model="project.participatedOnSiteEventsNumber" mode="decimal"
+                  <InputNumber v-model="project.participatedOnSiteEventsNumber" mode="decimal" :inputClass="project.participatedOnSiteEventsNumber == 0 ? 'defaultValue' : ''"
                   showButtons decrementButtonClass="p-button-info" @keypress.enter="$event.target.blur()"
                   incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
-                  :allowEmpty="false" :min="0" @focus="onFocusValue=project.participatedOnSiteEventsNumber" 
+                  :allowEmpty="false" :min="0" @focus="onFocusValue=project.participatedOnSiteEventsNumber; $event.target.select()" 
                   @focusout="onCellEditComplete('participatedOnSiteEventsNumber', project.participatedOnSiteEventsNumber)"
                   id ="participatedOnSiteEventsNumber"/>
                 </div>
                 <div class="field col-12 md:col-4">
                   <label for="participatedOnSiteEventsAverageParticipants">Average number of participants of the project</label>
                   <InputNumber v-model="project.participatedOnSiteEventsAverageParticipants" mode="decimal" :maxFractionDigits="3"
-                  showButtons decrementButtonClass="p-button-info" :step="0.25" @keypress.enter="$event.target.blur()"
+                  showButtons decrementButtonClass="p-button-info" :step="0.25" @keypress.enter="$event.target.blur()" :inputClass="project.participatedOnSiteEventsAverageParticipants == 0 ? 'defaultValue' : ''"
                   incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
-                  :allowEmpty="false" :min="0" @focus="onFocusValue=project.participatedOnSiteEventsAverageParticipants" 
+                  :allowEmpty="false" :min="0" @focus="onFocusValue=project.participatedOnSiteEventsAverageParticipants; $event.target.select()" 
                   @focusout="onCellEditComplete('participatedOnSiteEventsAverageParticipants', project.participatedOnSiteEventsAverageParticipants)"
                   id ="participatedOnSiteEventsAverageParticipants"/>
                 </div>
                 <div class="field col-12 md:col-4">
                   <label for="participatedOnSiteEventsAverageDuration">Average duration (days)</label>
                   <InputNumber v-model="project.participatedOnSiteEventsAverageDuration" mode="decimal" :maxFractionDigits="3"
-                  showButtons decrementButtonClass="p-button-info" :step="0.25" @keypress.enter="$event.target.blur()"
+                  showButtons decrementButtonClass="p-button-info" :step="0.25" @keypress.enter="$event.target.blur()" :inputClass="project.participatedOnSiteEventsAverageDuration == 0 ? 'defaultValue' : ''"
                   incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
-                  :allowEmpty="false" :min="0" @focus="onFocusValue=project.participatedOnSiteEventsAverageDuration" 
+                  :allowEmpty="false" :min="0" @focus="onFocusValue=project.participatedOnSiteEventsAverageDuration; $event.target.select()" 
                   @focusout="onCellEditComplete('participatedOnSiteEventsAverageDuration', project.participatedOnSiteEventsAverageDuration)"
                   id ="participatedOnSiteEventsAverageDuration"/>
                 </div>
@@ -532,6 +519,10 @@
 				</TabView>
         <div style="text-align: left; margin-top: 10px">
           * The values of this section are referred to the whole project partnership
+        </div>
+
+        <div style="text-align: left; margin-top: 10px">
+          ** Participants travelling to the hosting city (national/international travel) only for the participation to the event
         </div>
       </div>
     </div>
@@ -570,6 +561,9 @@
           </template>
 
           <Column field="deliverableType" header="Deliverable type" :sortable="true">
+            <template #body="slotProps">
+              <td :class="slotProps.data[slotProps.field] == 'Select a deliverable type' ? 'defaultValue' : ''" style="display:block;">{{slotProps.data[slotProps.field]}}</td>
+            </template>
             <template #editor="slotProps">
               <Dropdown :options="deliverableOptions" v-model="slotProps.data[slotProps.field]" optionLabel="value" optionValue="value"
                         placeholder="Select a deliverable type">
@@ -589,41 +583,18 @@
           </Column>
 
           <Column field="copies" header="Copies" :sortable="true">
+          <template #body="slotProps">
+              <td :class="slotProps.data[slotProps.field] == 1 ? 'defaultValue' : ''" style="display:block;">{{slotProps.data[slotProps.field]}}</td>
+          </template>
             <template #editor="slotProps">
                 <InputNumber v-model="slotProps.data[slotProps.field]" mode="decimal"
                       showButtons decrementButtonClass="p-button-info"
                       incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
-                      :allowEmpty="false" :min="0" />
+                      :allowEmpty="false" :min="0" @focus="$event.target.select()" :class="slotProps.data[slotProps.field] == 1 ? 'defaultValue' : ''" />
             </template>
           </Column>
 
-          <Column field="avgPagesPerCopy" header="Average pages per copy" :sortable="true">
-            <template #editor="slotProps">
-                <InputNumber v-model="slotProps.data[slotProps.field]" mode="decimal"
-                      showButtons decrementButtonClass="p-button-info"
-                      incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
-                      :allowEmpty="false" :min="0" />
-            </template>
-          </Column>
-
-          <Column field="size" header="Paper size" :sortable="true">
-            <template #editor="slotProps">
-              <Dropdown :options="paperSizes" v-model="slotProps.data[slotProps.field]" placeholder="Select a paper size">
-                <template #value="slotProps">
-                  <div v-if="slotProps.value">
-                    <span>{{slotProps.value}}</span>
-                  </div>
-                  <span v-else>
-                      {{slotProps.placeholder}}
-                  </span>
-                </template>
-                <template #option="slotProps">
-                    <span>{{slotProps.option}}</span>
-                </template>
-              </Dropdown>
-            </template>
-          </Column>
-
+          
           <Column field="actions" header="Actions">
             <template #body="slotProps">
               <i class="pi pi-trash" @click="deletePrintableDeliverable(slotProps.index + currentPagePrintableDeliverablesTable * 5)" />
@@ -634,6 +605,13 @@
         <div style="text-align: left; margin-top: 10px">
           * Report type includes the following deliverables: Report/Plan/Analysis/Study/Methodology/Manual/Guidance/Roadmap/Strategy/Proceedings
         </div>
+      </div>
+    </div>
+
+    <div class="col-12">
+
+      <div class="card p-fluid" style="display: flex; flex-direction: column; align-items: center; justify-content: space-around;">
+        <Button class="ml-2" label="Save current project" @click="saveCurrentProject" />
       </div>
     </div>
 
@@ -649,14 +627,22 @@
       </div>
     </div>
 
-    <Dialog header="Error" v-model:visible="displayPartnersWithoutCountryDialog" class="col-4" :modal="true">
-        <div class="flex align-items-center justify-content-center">
+    <Dialog header="Error" v-model:visible="displayPartnersError" class="col-4" :modal="true">
+        <div v-if="displayPartnersWithoutCountryDialog" class="flex align-items-center  pb-5">
             <i class="pi pi-exclamation-triangle mr-3" style="font-size: 2rem" />
             <div>
-            <p>You need to select a country for each partner in order to calculate the CF of the project!</p>
-            <p>Partners without country:</p>
-            <p v-for="partner in partnersWithoutCountry" :key="partner._id">{{partner.name}}</p>
+              <p>You need to select a country for each partner in order to calculate the CF of the project!</p>
+              <p>Partners without country:</p>
+              <p v-for="partner in partnersWithoutCountry" :key="partner._id">{{partner.name}}</p>
+            </div>
         </div>
+        <div v-if="displayPartnersWithDefaultValues" class="flex align-items-center border-top-1 surface-border pt-5">
+            <i class="pi pi-exclamation-triangle mr-3" style="font-size: 2rem" />
+            <div>
+              <p>There are partners with empty values!</p>
+              <p>Partners with empty values:</p>
+              <p v-for="partner in partnersWithDefaultValues" :key="partner._id">{{partner.name}}</p>
+            </div>
         </div>
         <template #footer>
             <Button label="Ok" @click="closePartnersWithoutCountryErrorDialog" class="p-button-text p-button-info" autofocus/>
@@ -773,7 +759,7 @@ export default {
         {value: "Report type*", avgPagesPerCopy: 50, size: "A4"},
         {value: "Articles/Newsletter/Booklet", avgPagesPerCopy: 10, size: "A4"},
         {value: "Brochure/Flyer", avgPagesPerCopy: 2, size: "A4"},
-        {value: "Poster", avgPagesPerCopy: 1, size: "A0"},
+        {value: "Poster/Rollup", avgPagesPerCopy: 1, size: "A0"},
       ],
       deliverableAdvancedOptions: [
         {value: "Application form", deliverableNames: ["Application form"]},
@@ -805,7 +791,10 @@ export default {
       currentPagePartnersTable: 0,
       currentPagePrintableDeliverablesTable: 0,
       displayPartnersWithoutCountryDialog: false,
+      displayPartnersWithDefaultValues: false,
       partnersWithoutCountry: [],
+      partnersWithDefaultValues: [],
+      displayPartnersError: false
     }
   },
   created() {
@@ -818,11 +807,21 @@ export default {
   },
   methods: {
     displayPartnersWithoutCountryErrorDialog() {
+      console.log(this.partnersWithDefaultValues);
       this.displayPartnersWithoutCountryDialog = true
     },
+    displayPartnersWithDefaultValuesErrorDialog(){
+      this.displayPartnersWithDefaultValues = true;
+    },
+    displayPartnersErrorDialog() {
+      this.displayPartnersError = true;
+    },
     closePartnersWithoutCountryErrorDialog() {
+      this.displayPartnersError = false;
       this.displayPartnersWithoutCountryDialog = false
+      this.displayPartnersWithDefaultValues = false;
       this.partnersWithoutCountry = []
+      this.partnersWithDefaultValues = [];
     },
     calculateCF() {
       
@@ -834,8 +833,26 @@ export default {
         }
       }
 
+      for(let partner of this.project.partners) {
+        console.log(partner);
+        if(partner.employeesWorkingWPP === null ||
+            partner.seasonalEmployees === null ||
+            partner.employeesPersonMonths === null || 
+            partner.externalExperts === null ||
+            partner.externalExpertsPersonMonths === null) {
+              this.partnersWithDefaultValues.push(partner);
+            }
+      }
+
       if (this.partnersWithoutCountry.length > 0) {
-        this.displayPartnersWithoutCountryErrorDialog()
+        this.displayPartnersWithoutCountryErrorDialog();
+      }
+
+      if (this.partnersWithDefaultValues.length > 0){
+        this.displayPartnersWithDefaultValuesErrorDialog();
+      }
+      if (this.displayPartnersWithoutCountryDialog || this.displayPartnersWithDefaultValues > 0) {
+        this.displayPartnersErrorDialog();
       } else if (!this.checkHoursNotGreaterThan24() && !this.checkNonLocalPhysicalGreaterThanPhysicalParticipants()) {
 
         axios.put(`/projects/${this.$route.params.id}`, this.project)
@@ -943,19 +960,17 @@ export default {
         _id: new Mongoose.Types.ObjectId(),
         name: "New partner",
         country: "Select a country",
-        personMonthsPP: 1,
-        personMonthsWPP: 1,
-        externalExpertsPersonMonths: 1,
-        employeesWorkingWPP: 1,
-        seasonalEmployees: 1,
-        externalExperts: 1,
+        employeesPersonMonths: "",
+        externalExpertsPersonMonths: "",
+        employeesWorkingWPP: "",
+        seasonalEmployees: "",
+        externalExperts: "",
         coordinator: false,
 
         pcsBoughtDuringProject: 0,
         pcsFlatScreenBoughtDuringProject: 0,
         laptopsBoughtDuringProject: 0,
         flatScreensBoughtDuringProject: 0,
-        cppsBoughtDuringProject: 0,
         printersBoughtDuringProject: 0,
         copyMachinesBoughtDuringProject: 0,
         faxMachinesBoughtDuringProject: 0,
@@ -1237,6 +1252,15 @@ export default {
         this.$toast.add({severity:'error', summary: 'Caution', detail: 'Average number of non-local physical participants cannot be greater than the value of Average number of physical participants', life: 8000});
       }
       return res;
+    },
+    saveCurrentProject(){
+        this.savePrintableDeliverables();
+        this.savePartners();
+        axios.put("/projects/" + this.project._id, this.project).then(() => {
+          this.$toast.add({severity:'success', summary: 'Successful', detail: 'Project saved', life: 3000});
+        }).catch(error =>{
+          console.log(error)
+       })
     }
   },
   computed: {
@@ -1255,6 +1279,10 @@ export default {
 </script>
 
 <style>
+
+.defaultValue {
+  background-color: #d0e1fd;
+}
 
 .projectDetailsSimpleGrid {
   display: flex;
