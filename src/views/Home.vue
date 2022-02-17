@@ -80,7 +80,7 @@
               <i class="pi pi-pencil mr-3" />
             </router-link>
             <router-link to="/">
-              <i class="pi pi-clone" @click="confirmCloneProject(slotProps.index + currentPageProjectsTable * 5)" />
+              <i class="pi pi-clone mr-3" @click="confirmCloneProject(slotProps.index + currentPageProjectsTable * 5)" />
             </router-link>
             <router-link to="/">
               <i class="pi pi-trash" @click="confirmDeleteProject(slotProps.index + currentPageProjectsTable * 5)" />
@@ -200,54 +200,50 @@ export default {
       this.projectToClone = this.projects[index]
       this.projectToClone.tableIndex = index;
       this.cloneProjectDialog = true;
-     
     },
     cloneProject() {
-      let oldName = this.projectToClone.name
-      this.cloneProjectDialog = false;
-      this.submitted = true
-      let projectToCloneId = this.projectToClone._id;
-      this.projectToClone._id = new mongoose.Types.ObjectId(); 
+      let duplicatedProject = false;
+      for (let project of this.projects){
+        if(project.name === (this.projectToClone.name + "_copy")) {
+          duplicatedProject = true;
+        }
+      }  
       
-      this.newUserId = this.$store.state.userId;
-      this.projects[this.projectToClone.tableIndex].name = this.projectToClone.name;
-      this.getProjects().then(() => {
-        console.log("Proyectos:", this.projects);
-        let duplicatedProject = this.projects.map(p => p.name === this.projectToClone.name);
+      if(duplicatedProject){
+        this.$toast.add({severity:'error', summary: 'Error', detail: 'There is an existing project with that name already', life: 3000});
+      } else {
+
+        let oldName = this.projectToClone.name
+        this.cloneProjectDialog = false;
+        this.submitted = true
+        let projectToCloneId = this.projectToClone._id;
+        this.projectToClone._id = new mongoose.Types.ObjectId(); 
         this.projectToClone.name = oldName + "_copy";
-      
-        if(duplicatedProject){
-          this.$toast.add({severity:'error', summary: 'Error', detail: 'There is an existing project with that name already', life: 3000});
-        } else {
-          axios.post('/projects', this.projectToClone,{
-            auth: {
-                username: this.$store.state.username,
-                password: this.$store.state.password
+        this.newUserId = this.$store.state.userId;
+        axios.post('/projects', this.projectToClone,{
+          auth: {
+              username: this.$store.state.username,
+              password: this.$store.state.password
+            }
+        })
+        .then((req) => {
+          axios.get(`/partners?projectId=`+projectToCloneId)
+            .then((response) => {
+              for (let partner of response.data){
+              partner._id = new mongoose.Types.ObjectId();
+              partner.project = req.data._id;
+              axios.post('/partners', partner)
+              .catch((error) =>{console.log(error)})
               }
-          })
-          .then((req) => {
-            console.log("Body de la respuesta del getProjects:", req)
-            axios.get(`/partners?projectId=`+projectToCloneId)
-              .then((response) => {
-                console.log("Respuesta del getPartners:",response.data);
-                for (let partner of response.data){
-                partner._id = new mongoose.Types.ObjectId();
-                console.log("ID del proyecto clonado:", req.data._id);
-                partner.project = req.data._id;
-                axios.post('/partners', partner)
-                .catch((error) =>{console.log(error)})
-                }
-              })
-              .catch((e)=>{
-                console.log('error', e);
-              })
+            })
+            .catch((e)=>{
+              console.log('error', e);
+            })
 
             this.axios.get(`/printableDeliverables?projectId=`+ projectToCloneId)
             .then((response) => {
-              console.log("Respuesta del getPrintableDeliverables:",response.data);
               for (let printableDeliverable of response.data){
                 printableDeliverable._id = new mongoose.Types.ObjectId();
-                console.log("ID del proyecto clonado:", req.data._id);
                 printableDeliverable.project = req.data._id;
                 axios.post('/printableDeliverables', printableDeliverable)
                 .catch((error) =>{console.log(error)})
@@ -265,8 +261,6 @@ export default {
             this.errors = error.response.data
           })
         }
-      });
-
       
     }
   }
@@ -275,7 +269,7 @@ export default {
 
 <style>
 
-.pi-trash, .pi-arrow-circle-right, .pi-pencil {
+.pi-trash, .pi-arrow-circle-right, .pi-pencil, .pi-clone {
   font-size: 2rem;
   cursor: pointer;
   color: #495057;
