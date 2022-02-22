@@ -248,7 +248,7 @@ export default {
               this.errors = error.response.data
             })
             this.projects[this.projectToClone.tableIndex].numCopies = nextNumCopies;
-            this.projects.splice(this.projectToClone.tableIndex + 1, 0, this.projectToClone);
+            this.projects.push(this.projectToClone);
             this.projectToClone = {}
           })
           .catch((error)=>{
