@@ -105,7 +105,7 @@
         <div class="flex align-items-center justify-content-center">
           <i class="pi pi-exclamation-triangle mr-3" style="font-size: 2rem" />
           <span v-if="projectToClone">Are you sure you want to clone <b>{{projectToClone.name}}</b>?
-              The name of the copy will be <b>{{projectToClone.name}}_copy</b></span>
+              The name of the copy will be <b>{{projectToClone.name}}_copy_{{projectToClone.numCopies+1}}</b></span>
         </div>
         <template #footer>
           <Button label="No" icon="pi pi-times" class="p-button-text" @click="cloneProjectDialog = false"/>
@@ -151,7 +151,7 @@ export default {
       loading: true,
       projects: [],
       currentPageProjectsTable: 0,
-      cloneProjectDialog: false
+      cloneProjectDialog: false,
     }
   },
   created() {
@@ -197,39 +197,29 @@ export default {
       })
     },
     confirmCloneProject(index) {
-      this.projectToClone = this.projects[index]
+      this.projectToClone = Object.assign({}, this.projects[index]);
       this.projectToClone.tableIndex = index;
       this.cloneProjectDialog = true;
     },
-    cloneProject() {
-      let duplicatedProject = false;
-      for (let project of this.projects){
-        if(project.name === (this.projectToClone.name + "_copy")) {
-          duplicatedProject = true;
-        }
-      }  
+    cloneProject() { 
+      let nextNumCopies = this.projects[this.projectToClone.tableIndex].numCopies + 1;
+      let projectToCloneId = this.projects[this.projectToClone.tableIndex]._id;
+      this.cloneProjectDialog = false;
+      this.submitted = true
       
-      if(duplicatedProject){
-        this.$toast.add({severity:'error', summary: 'Error', detail: 'There is an existing project with that name already', life: 3000});
-      } else {
-
-        let oldName = this.projectToClone.name
-        this.cloneProjectDialog = false;
-        this.submitted = true
-        let projectToCloneId = this.projectToClone._id;
-        this.projectToClone._id = new mongoose.Types.ObjectId(); 
-        this.projectToClone.name = oldName + "_copy";
-        this.newUserId = this.$store.state.userId;
-        axios.post('/projects', this.projectToClone,{
-          auth: {
-              username: this.$store.state.username,
-              password: this.$store.state.password
-            }
-        })
-        .then((req) => {
-          axios.get(`/partners?projectId=`+projectToCloneId)
-            .then((response) => {
-              for (let partner of response.data){
+      this.projectToClone._id = new mongoose.Types.ObjectId(); 
+      this.projectToClone.name = this.projects[this.projectToClone.tableIndex].name + "_copy_" + nextNumCopies;
+      this.newUserId = this.$store.state.userId;
+      axios.post('/projects', this.projectToClone,{
+        auth: {
+            username: this.$store.state.username,
+            password: this.$store.state.password
+          }
+      })
+      .then((req) => {
+        axios.get(`/partners?projectId=`+projectToCloneId)
+          .then((response) => {
+            for (let partner of response.data){
               partner._id = new mongoose.Types.ObjectId();
               partner.project = req.data._id;
               axios.post('/partners', partner)
@@ -248,20 +238,22 @@ export default {
                 axios.post('/printableDeliverables', printableDeliverable)
                 .catch((error) =>{console.log(error)})
               }
-            
             })
             .catch((e)=>{
               console.log('error', e);
             })
-            
+            this.projects[this.projectToClone.tableIndex].numCopies = nextNumCopies;
+            axios.put('/projects/' + projectToCloneId, this.projects[this.projectToClone.tableIndex])
+            .catch((error)=>{
+              this.errors = error.response.data
+            })
+            this.projects[this.projectToClone.tableIndex].numCopies = nextNumCopies;
+            this.projects.splice(this.projectToClone.tableIndex + 1, 0, this.projectToClone);
             this.projectToClone = {}
-            this.getProjects()
           })
           .catch((error)=>{
             this.errors = error.response.data
-          })
-        }
-      
+          }) 
     }
   }
 }
