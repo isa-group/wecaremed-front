@@ -807,7 +807,6 @@ export default {
   },
   methods: {
     displayPartnersWithoutCountryErrorDialog() {
-      console.log(this.partnersWithDefaultValues);
       this.displayPartnersWithoutCountryDialog = true
     },
     displayPartnersWithDefaultValuesErrorDialog(){
