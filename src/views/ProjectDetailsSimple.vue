@@ -834,7 +834,6 @@ export default {
       }
 
       for(let partner of this.project.partners) {
-        console.log(partner);
         if(partner.employeesWorkingWPP === null ||
             partner.seasonalEmployees === null ||
             partner.employeesPersonMonths === null || 
