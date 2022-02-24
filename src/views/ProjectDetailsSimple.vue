@@ -113,11 +113,6 @@
         </Column>
       
       </DataTable>
-
-      <div style="text-align: left; margin-top: 10px">
-          *PP: Preparation phase<br>
-          *WPP: Whole project period
-      </div>
     </div>
 
     <div class="col-12">    
