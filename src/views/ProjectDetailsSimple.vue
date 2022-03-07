@@ -239,6 +239,20 @@
         </tbody>
       </table>
 
+      <h2 style="margin-bottom: 40px">Tons of equivalent carbon dioxide emitted: {{project.initialCF}}</h2> 
+      
+      <h3 style="margin-bottom: 10px">CF Breakdown (Tons):</h3>
+      <ul>
+        <li style="margin-bottom: 10px; font-size: 20px">Fuels heat: {{project.fuelsHeatCF}}</li>
+        <li style="margin-bottom: 10px; font-size: 20px">Electricity: {{project.electricityCF}}</li>
+        <li style="margin-bottom: 10px; font-size: 20px">Water: {{project.waterCF}}</li>
+        <li style="margin-bottom: 10px; font-size: 20px">Transportation: {{project.transportationCF}}</li>
+        <li style="margin-bottom: 10px; font-size: 20px">Materials: {{project.materialsCF}}</li>
+        <li style="margin-bottom: 10px; font-size: 20px">Printable deliverables: {{project.printableDeliverablesCF}}</li>
+        <li style="margin-bottom: 10px; font-size: 20px">Equipment: {{project.equipmentCF}}</li>
+        <li style="font-size: 20px">Events: {{project.eventsCF}}</li>
+      </ul>
+
     </div>
 
     <div class="card col-12">
