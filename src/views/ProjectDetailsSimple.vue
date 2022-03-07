@@ -3,11 +3,246 @@
   <Topbar v-model:projectInfo="project" />
 
   <div class="projectDetailsSimpleGrid">
-    
+
     <Toast position="bottom-right" />
 
+    <div id="pdfPrintDiv" style="display: none">
+      <h1 style="margin-bottom: 20px">{{project.name}} ({{project.from}} - {{project.to}}) [{{project.initialCF}} / {{project.currentCF}}] t CO2e</h1>
+
+      <h3>Partners</h3>
+                
+      <table class="table table-bordered" style="margin-bottom: 35px">
+        <thead>
+          <tr>
+            <th>Coordinator</th>
+            <th>Name</th>
+            <th>Country</th>
+            <th>Number full time employees</th>
+            <th>Number part time employees</th>
+            <th>Sum person months (full time + part time)</th>
+            <th>Number of external experts</th>
+            <th>Sum person months for the external experts</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="partner in project.partners" :key="partner._id">
+            <td>{{partner.coordinator}}</td>
+            <td>{{partner.name}}</td>
+            <td>{{partner.country}}</td>
+            <td>{{partner.employeesWorkingWPP}}</td>
+            <td>{{partner.seasonalEmployees}}</td>
+            <td>{{partner.employeesPersonMonths}}</td>
+            <td>{{partner.externalExperts}}</td>
+            <td>{{partner.externalExpertsPersonMonths}}</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h3>Equipment</h3>
+
+      <p>Number of IT electrical equipment that will be purchased during the project</p>
+      <div v-for="partner in project.partners" :key="partner._id">
+        <h5>{{partner.name}}</h5>
+
+        <table class="table table-bordered" style="margin-bottom: 20px">
+          <thead>
+            <tr>
+              <th>PCs</th>
+              <th>PCs with flat screen</th>
+              <th>Laptop computers</th>
+              <th>Flat screens</th>
+              <th>Printers</th>
+              <th>Copy machines</th>
+              <th>Fax machines</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>{{partner.pcsBoughtDuringProject}}</td>
+              <td>{{partner.pcsFlatScreenBoughtDuringProject}}</td>
+              <td>{{partner.laptopsBoughtDuringProject}}</td>
+              <td>{{partner.flatScreensBoughtDuringProject}}</td>
+              <td>{{partner.printersBoughtDuringProject}}</td>
+              <td>{{partner.copyMachinesBoughtDuringProject}}</td>
+              <td>{{partner.faxMachinesBoughtDuringProject}}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+    <h3 style="margin-top: 20px">Events</h3>
+
+      <div>
+        <h5>Public events</h5>
+
+        <h6>In presence</h6>
+        <table class="table table-bordered" style="margin-bottom: 20px">
+          <thead>
+            <tr>
+              <th>Number of in presence public events</th>
+              <th>Average number of physical participants</th>
+              <th>Average number of non-local physical participants</th>
+              <th>Average duration (days)</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>{{project.publicOnSiteEventsNumber}}</td>
+              <td>{{project.publicOnSiteEventsAveragePhysicalParticipants}}</td>
+              <td>{{project.publicOnSiteEventsAverageNonLocalPhysicalParticipants}}</td>
+              <td>{{project.publicOnSiteEventsAverageDuration}}</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <h6>Mixed mode: both in presence and on-line</h6>
+        <table class="table table-bordered" style="margin-bottom: 20px">
+          <thead>
+            <tr>
+              <th>Number of mixed public events</th>
+              <th>Average number of physical participants</th>
+              <th>Average number of non-local physical participants</th>
+              <th>Average number of on-line participants</th>
+              <th>Average duration (days)</th>
+              <th>Average duration (hours/day)</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>{{project.publicHybridEventsNumber}}</td>
+              <td>{{project.publicHybridEventsAveragePhysicalParticipants}}</td>
+              <td>{{project.publicHybridEventsAverageNonLocalPhysicalParticipants}}</td>
+              <td>{{project.publicHybridEventsAverageVirtualParticipants}}</td>
+              <td>{{project.publicHybridEventsAverageDuration}}</td>
+              <td>{{project.publicHybridEventsAverageHoursPerDays}}</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <h6>On-line</h6>
+        <table class="table table-bordered" style="margin-bottom: 20px">
+          <thead>
+            <tr>
+              <th>Number of on-line public events</th>
+              <th>Average number of on-line participants</th>
+              <th>Average duration (hours)</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>{{project.publicVirtualEventsNumber}}</td>
+              <td>{{project.publicVirtualEventsAverageVirtualParticipants}}</td>
+              <td>{{project.publicVirtualEventsAverageDuration}}</td>
+            </tr>
+          </tbody>
+        </table>
+
+      <h5 style="margin-top: 20px">Internal events/meetings</h5>
+
+        <h6>In presence</h6>
+        <table class="table table-bordered" style="margin-bottom: 20px">
+          <thead>
+            <tr>
+              <th>Number of in presence internal events/meetings</th>
+              <th>Average number of physical participants</th>
+              <th>Average number of non-local physical participants</th>
+              <th>Average duration (days)</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>{{project.internalOnSiteEventsNumber}}</td>
+              <td>{{project.internalOnSiteEventsAveragePhysicalParticipants}}</td>
+              <td>{{project.internalOnSiteEventsAverageNonLocalPhysicalParticipants}}</td>
+              <td>{{project.internalOnSiteEventsAverageDuration}}</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <h6>Mixed mode: both in presence and on-line</h6>
+        <table class="table table-bordered" style="margin-bottom: 20px">
+          <thead>
+            <tr>
+              <th>Number of mixed internal events/meetings</th>
+              <th>Average number of physical participants</th>
+              <th>Average number of non-local physical participants</th>
+              <th>Average number of on-line participants</th>
+              <th>Average duration (days)</th>
+              <th>Average duration (hours/day)</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>{{project.internalHybridEventsNumber}}</td>
+              <td>{{project.internalHybridEventsAveragePhysicalParticipants}}</td>
+              <td>{{project.internalHybridEventsAverageNonLocalPhysicalParticipants}}</td>
+              <td>{{project.internalHybridEventsAverageVirtualParticipants}}</td>
+              <td>{{project.internalHybridEventsAverageDuration}}</td>
+              <td>{{project.internalHybridEventsAverageHoursPerDays}}</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <h6>On-line</h6>
+        <table class="table table-bordered" style="margin-bottom: 20px">
+          <thead>
+            <tr>
+              <th>Number of on-line internal events/meetings</th>
+              <th>Average number of on-line participants</th>
+              <th>Average duration (hours)</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>{{project.internalVirtualEventsNumber}}</td>
+              <td>{{project.internalVirtualEventsAverageVirtualParticipants}}</td>
+              <td>{{project.internalVirtualEventsAverageDuration}}</td>
+            </tr>
+          </tbody>
+        </table>
+
+      <h5 style="margin-top: 20px">Events participated by the project</h5>
+
+        <h6>In presence</h6>
+        <table class="table table-bordered" style="margin-bottom: 20px">
+          <thead>
+            <tr>
+              <th>Number of in presence events participated by the project</th>
+              <th>Average number of participants of the project</th>
+              <th>Average duration (days)</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>{{project.participatedOnSiteEventsNumber}}</td>
+              <td>{{project.participatedOnSiteEventsAverageParticipants}}</td>
+              <td>{{project.participatedOnSiteEventsAverageDuration}}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3 style="margin-top: 20px">Printable deliverables</h3>
+                
+      <table class="table table-bordered" style="margin-bottom: 35px">
+        <thead>
+          <tr>
+            <th>Deliverable type</th>
+            <th>Copies</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="pd in project.printableDeliverables" :key="pd._id">
+            <td>{{pd.deliverableType}}</td>
+            <td>{{pd.copies}}</td>
+          </tr>
+        </tbody>
+      </table>
+
+    </div>
+
     <div class="card col-12">
-      <h5>Partners</h5>
+      <h4>Partners</h4>
 
       <DataTable :value="project.partners" editMode="cell" :paginator="true" class="p-datatable-gridlines" dataKey="_id"
       :rowHover="true" @cell-edit-complete="onCellEditCompletePartner" sortMode="multiple" :rows="5" v-model:filters="partnerFilters"
@@ -619,6 +854,8 @@
         </div>
         <Button icon="pi pi-replay" class="p-button-rounded p-button-outlined p-button-plain mr-5" label="Recalculate"
                 style="width: 15rem; font-size: 1.1rem" @click="calculateCF" />
+        <Button icon="pi pi-file-pdf" class="p-button-rounded p-button-outlined p-button-plain mr-5 mt-3" label="Generate PDF"
+                style="width: 15rem; font-size: 1.1rem" @click="generatePDF"/>
       </div>
     </div>
 
@@ -701,6 +938,7 @@
         </div>
       </div>
     </div>
+
   </div>
 
 </template>
@@ -723,6 +961,9 @@ import Mongoose from "mongoose"
 import Toast from 'primevue/toast';
 import Badge from 'primevue/badge';
 import Dialog from 'primevue/dialog';
+import pdfMake from 'pdfmake';
+import pdfFonts from 'pdfmake/build/vfs_fonts';
+import htmlToPdfmake from 'html-to-pdfmake';
 
 import 'primeicons/primeicons.css';
 
@@ -741,7 +982,7 @@ export default {
     TabPanel,
     Topbar,
     Toast,
-    Badge
+    Badge,
   },
   data() {
     return {
@@ -801,6 +1042,16 @@ export default {
     this.loading = false;
   },
   methods: {
+    generatePDF() {
+    // var doc = new jsPDF()
+    // doc.html(projectHtml).then(() => doc.save('test.pdf'));
+    // doc.save('test.pdf');
+
+    var html = htmlToPdfmake(document.getElementById('pdfPrintDiv').innerHTML);
+    const documentDefinition = { content: html };
+    pdfMake.vfs = pdfFonts.pdfMake.vfs;
+    pdfMake.createPdf(documentDefinition).open();
+    },
     displayPartnersWithoutCountryErrorDialog() {
       this.displayPartnersWithoutCountryDialog = true
     },
