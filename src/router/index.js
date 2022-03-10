@@ -2,7 +2,7 @@ import { createRouter, createWebHistory } from 'vue-router'
 import Home from '../views/Home.vue'
 import ProjectDetailsSimple from '../views/ProjectDetailsSimple.vue'
 import Login from '../views/Login.vue'
-// import ProjectDetailsAdvanced from '../views/ProjectDetailsAdvanced.vue';
+import ProjectDetailsAdvanced from '../views/ProjectDetailsAdvanced.vue';
 import axios from 'axios'
 import store from '../store'
 
@@ -70,12 +70,12 @@ const routes = [
   //     }
   //   }
   },
-  // {
-  //   path: '/projects/:id/projectDetailsAdvanced',
-  //   name: 'Project Details Advanced',
-  //   meta: { requiresAuth: true },
-  //   component: ProjectDetailsAdvanced,
-  // },
+  {
+    path: '/projects/:id/projectDetailsAdvanced',
+    name: 'Project Details Advanced',
+    meta: { requiresAuth: true },
+    component: ProjectDetailsAdvanced,
+  },
   {
     path: '/login',
     name: 'login',

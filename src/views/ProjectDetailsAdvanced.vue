@@ -1,5 +1,5 @@
 <template>
-  
+  <Toast position="bottom-right" />
   <Topbar v-model:projectInfo="project" />
 
   <div class="projectDetailsElectrictyGrid">
@@ -22,82 +22,110 @@
 
                   <h5>Partners</h5>
 
-                <DataTable :value="project.partners" editMode="cell" :paginator="true" class="p-datatable-gridlines" dataKey="_id"
-                :rowHover="true" @cell-edit-complete="onCellEditCompletePartner" sortMode="multiple" :rows="5" v-model:filters="partnerFilters"
-                filterDisplay="menu" :loading="loading" :filters="partnerFilters" responsiveLayout="scroll"
-                :globalFilterFields="['name','country','personMonthsPP','personMonthsWPP', 'externalExpertsPersonMonths', 'employeesWorkingWPP', 
-                                      'seasonalEmployees', 'externalExperts', 'coordinator']" @page="currentPagePartnersTable = $event.page">
-                  
-                  <template #header>
-                      <div class="flex justify-content-between flex-column sm:flex-row">
-                        <div>
-                          <Button class="p-button-info mr-2" @click="addPartner"><i class="pi pi-plus mr-2" />New partner</Button>
-                          <span class="p-input-icon-left">
-                            <i class="pi pi-search" />
-                            <InputText v-model="partnerFilters['global'].value" placeholder="Keyword Search" style="width: 100%"/>
-                          </span>
-                          <Button class="ml-2" label="Save" icon="pi pi-check" @click="savePartners" />
+                  <DataTable :value="project.partners" editMode="cell" :paginator="true" class="p-datatable-gridlines" dataKey="_id"
+                  :rowHover="true" @cell-edit-complete="onCellEditCompletePartner" sortMode="multiple" :rows="5" v-model:filters="partnerFilters"
+                  filterDisplay="menu" :loading="loading" :filters="partnerFilters" responsiveLayout="scroll"
+                  :globalFilterFields="['name','country','employeesPersonMonths', 'externalExpertsPersonMonths', 'employeesWorkingWPP', 
+                                        'seasonalEmployees', 'externalExperts', 'coordinator']" @page="currentPagePartnersTable = $event.page">
+                    
+                    <template #header>
+                        <div class="flex justify-content-between flex-column sm:flex-row">
+                          <div>
+                            <Button class="p-button-info mr-2" @click="addPartner"><i class="pi pi-plus mr-2" />New partner</Button>
+                            <span class="p-input-icon-left">
+                              <i class="pi pi-search" />
+                              <InputText v-model="partnerFilters['global'].value" placeholder="Keyword Search" style="width: 100%"/>
+                            </span>
+                            <Button class="ml-2" label="Save" icon="pi pi-check" @click="savePartners" />
+                          </div>
+                          
+                          <Button type="button" icon="pi pi-filter-slash" label="Clear" class="p-button-warning" @click="clearPartnerFilter()"/>
                         </div>
-                        
-                        <Button type="button" icon="pi pi-filter-slash" label="Clear" class="p-button-warning" @click="clearPartnerFilter()"/>
-                      </div>
-                  </template>
-
-                  <template #empty>
-                      No partners found.
-                  </template>
-
-                  <template #loading>
-                      Loading partners. Please wait.
-                  </template>
-
-                  <Column field="name" header="Name" :sortable="true">
-                    <template #editor="slotProps">
-                        <InputText v-model="slotProps.data[slotProps.field]" />
                     </template>
-                    <template #filter="{filterModel, field}">
-                        <InputText type="text" v-model="filterModel.value" class="p-column-filter" :placeholder="'Filter by ' + field"/>
-                    </template>
-                  </Column>
 
-                  <Column field="country" header="Country" :sortable="true">
-                    <template #editor="slotProps">
-                      <Dropdown :options="countriesForDropdown" v-model="slotProps.data[slotProps.field]" />
+                    <template #empty>
+                        No partners found.
                     </template>
-                  </Column>
 
-                  <Column field="personMonthsPP" header="PersonMonths PP*" :sortable="true">
-                    <template #editor="slotProps" class="p-field">
-                      <InputNumber v-model="slotProps.data[slotProps.field]" mode="decimal" :maxFractionDigits="3"
-                      showButtons :step="0.25" decrementButtonClass="p-button-info"
-                      incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
-                      :allowEmpty="false" :min="0" />
+                    <template #loading>
+                        Loading partners. Please wait.
                     </template>
-                  </Column>
+                    <Column field="coordinator" header="Coordinator" :sortable="true">
+                      <template #body="slotProps">
+                        <RadioButton name="projectCoordinator" :value="slotProps.data._id" v-model="project.coordinator"
+                        @change="onCellEditCompletePartnerCoordinator(slotProps.data, $event)" />
+                      </template>
+                    </Column>
 
-                  <Column field="personMonthsWPP" header="PersonMonths WPP*" :sortable="true">
-                    <template #editor="slotProps">
-                      <InputNumber v-model="slotProps.data[slotProps.field]" mode="decimal" :maxFractionDigits="3"
-                      showButtons :step="0.25" decrementButtonClass="p-button-info"
-                      incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
-                      :allowEmpty="false" :min="0" />
-                    </template>
-                  </Column>
+                    <Column field="name" header="Name" :sortable="true">
+                      <template #body="slotProps">
+                        <td :class="slotProps.data[slotProps.field] == 'New partner' ? 'defaultValue' : ''" style="display:block;">{{slotProps.data[slotProps.field]}}</td>
+                      </template>
+                      <template #editor="slotProps">
+                          <InputText v-model="slotProps.data[slotProps.field]" />
+                      </template>
+                    </Column>
+
+                    <Column field="country" header="Country" :sortable="true">
+                      <template #body="slotProps">
+                        <td :class="slotProps.data[slotProps.field] == 'Select a country' ? 'defaultValue' : ''" style="display:block;">{{slotProps.data[slotProps.field]}}</td>
+                      </template>
+                      <template #editor="slotProps">
+                        <Dropdown :options="countriesForDropdown" v-model="slotProps.data[slotProps.field]" />
+                      </template>
+                    </Column>
+
+                    <Column field="employeesWorkingWPP" header="Number full time employees" :sortable="true">
+                      <template #editor="slotProps">
+                        <InputNumber v-model="slotProps.data[slotProps.field]" mode="decimal" showButtons decrementButtonClass="p-button-info"
+                        incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
+                        :allowEmpty="false" :min="0" @focus="$event.target.select()" />
+                      </template>
+                    </Column>
+
+                    <Column field="seasonalEmployees" header="Number part time employees" :sortable="true">
+                      <template #editor="slotProps">
+                        <InputNumber v-model="slotProps.data[slotProps.field]" mode="decimal" showButtons decrementButtonClass="p-button-info"
+                        incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
+                        :allowEmpty="false" :min="0" @focus="$event.target.select()" />
+                      </template>
+                    </Column>
+
+
+                    <Column field="employeesPersonMonths" header="Sum person months (full time + part time)" :sortable="true">
+                      <template #editor="slotProps" class="p-field">
+                        <InputNumber v-model="slotProps.data[slotProps.field]" mode="decimal" :maxFractionDigits="3"
+                        showButtons :step="0.25" decrementButtonClass="p-button-info"
+                        incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
+                        :allowEmpty="false" :min="0" @focus="$event.target.select()" />
+                      </template>
+                    </Column>
+
+                    <Column field="externalExperts" header="Number of external experts" :sortable="true">
+                      <template #editor="slotProps">
+                        <InputNumber v-model="slotProps.data[slotProps.field]" mode="decimal" showButtons decrementButtonClass="p-button-info"
+                        incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
+                        :allowEmpty="false" :min="0" @focus="$event.target.select()" />
+                      </template>
+                    </Column>
+
+                    <Column field="externalExpertsPersonMonths" header="Sum person months for the external experts" :sortable="true">
+                      <template #editor="slotProps">
+                        <InputNumber v-model="slotProps.data[slotProps.field]" mode="decimal" :maxFractionDigits="3"
+                        showButtons :step="0.25" decrementButtonClass="p-button-info"
+                        incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
+                        :allowEmpty="false" :min="0" @focus="$event.target.select()" />
+                      </template>
+                    </Column>
+
+
+                    <Column field="actions" header="Actions">
+                      <template #body="slotProps">
+                        <i class="pi pi-trash" @click="deletePartner(slotProps.index + currentPagePartnersTable * 5)" />
+                      </template>
+                    </Column>
                   
-                  <Column field="coordinator" header="Coordinator" :sortable="true">
-                    <template #body="slotProps">
-                      <RadioButton name="projectCoordinator" :value="slotProps.data._id" v-model="project.coordinator"
-                      @change="onCellEditCompletePartnerCoordinator(slotProps.data, $event)" />
-                    </template>
-                  </Column>
-
-                  <Column field="actions" header="Actions">
-                    <template #body="slotProps">
-                      <i class="pi pi-trash" @click="deletePartner(slotProps.index + currentPagePartnersTable * 5)" />
-                    </template>
-                  </Column>
-                
-                </DataTable>
+                  </DataTable>
                 </div>
 
               </TabPanel>
@@ -160,8 +188,64 @@
                 <!-- Custom Heat Emissions -->
 
                 <div class="card">
-                  <h5>Aditional custom defined transportation emission</h5>
+                    <!-- Tabla Custom Heat emissions -->
+
+                 <h5>Additional custom defined Heat emission</h5>
+
+                <DataTable :value="this.project.customHeat" editMode="cell" :paginator="true" class="p-datatable-gridlines" dataKey="_id"
+                :rowHover="true" @cell-edit-complete="onCellEditCompleteCustom($event, 'customHeat', 'heat')" sortMode="multiple" :rows="5" v-model:filters="partnerFilters"
+                filterDisplay="menu" :loading="loading" :filters="partnerFilters" responsiveLayout="scroll"
+                :globalFilterFields="['nameCustom','valueCustom']" @page="currentPageCustomHeatTable = $event.page">
                   
+                  <template #header>
+                      <div class="flex justify-content-between flex-column sm:flex-row">
+                        <div>
+                          <Button class="p-button-info mr-2" @click="addCustom(this.customTypes[0].value, 'customHeat', 'Heat')"><i class="pi pi-plus mr-2" />New additional custom Heat emission</Button>
+                          <span class="p-input-icon-left">
+                            <i class="pi pi-search" />
+                            <InputText v-model="partnerFilters['global'].value" placeholder="Keyword Search" style="width: 100%"/>
+                          </span>
+                          <Button class="ml-2" label="Save" icon="pi pi-check" @click="saveCustom('customHeat', 'heat')" />
+                        </div>
+                        
+                        <Button type="button" icon="pi pi-filter-slash" label="Clear" class="p-button-warning" @click="clearPartnerFilter()"/>
+                      </div>
+                  </template>
+
+                  <template #empty>
+                      No additional custom heat emission found.
+                  </template>
+
+                  <template #loading>
+                      Loading custom heat emission. Please wait.
+                  </template>
+
+                  <Column field="name" header="Item" :sortable="true">
+                    <template #editor="slotProps">
+                        <InputText v-model="slotProps.data[slotProps.field]" />
+                    </template>
+                    <template #filter="{filterModel, field}">
+                        <InputText type="text" v-model="filterModel.value" class="p-column-filter" :placeholder="'Filter by ' + field"/>
+                    </template>
+                  </Column>
+
+                  <Column field="value" header="Value" :sortable="true">
+                    <template #editor="slotProps" class="p-field">
+                      <InputNumber v-model="slotProps.data[slotProps.field]" mode="decimal" :maxFractionDigits="3"
+                      showButtons :step="0.25" decrementButtonClass="p-button-info"
+                      incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
+                      :allowEmpty="false" :min="0" />
+                    </template>
+                  </Column>
+
+                  
+                  <Column field="actions" header="Actions">
+                    <template #body="slotProps">
+                      <i class="pi pi-trash" @click="deleteCustom(slotProps.index + currentPageCustomHeatTable * 5, 'customHeat', 'heat')" />
+                    </template>
+                  </Column>
+                
+                </DataTable>
                 </div>
               </TabPanel>
 
@@ -172,14 +256,117 @@
                 <!-- Electricity table -->
 
                 <div class="card">
+
+                  <DataTable :value="project.electricityValuesTable" editMode="cell" class="p-datatable-gridlines" dataKey="_id"
+                  :rowHover="true" @cell-edit-complete="onCellEditCompleteElectricity">
+                    
+                    <template #header>
+                        <div class="flex justify-content-between flex-column sm:flex-row">
+                          <div>
+                            <Button class="ml-2" label="Save" icon="pi pi-check" @click="saveElectricityTable" />
+                          </div>
+                        </div>
+                    </template>
+
+                    <template #empty>
+                        No electricity default values found.
+                    </template>
+
+                    <template #loading>
+                        Loading electricity default values. Please wait.
+                    </template>
+                    <Column field="country" header="Country">
+                      <template #body="slotProps">
+                        <td :class="slotProps.data[slotProps.field] == 'Select a country' ? 'defaultValue' : ''" style="display:block;">{{slotProps.data[slotProps.field]}}</td>
+                      </template>
+                      <template #editor="slotProps">
+                        <Dropdown :options="countriesForDropdown" v-model="slotProps.data[slotProps.field]" />
+                      </template>
+                    </Column>
+
+                    <Column field="emissionFactors" header="Emission Factor">
+                      <template #editor="slotProps">
+                        <InputNumber v-model="slotProps.data[slotProps.field]" mode="decimal" showButtons decrementButtonClass="p-button-info"
+                        incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
+                        :allowEmpty="false" :min="0" @focus="$event.target.select()" />
+                      </template>
+                    </Column>
+
+                    <Column field="avgAnnualConsumption" header="Average consumption per employee (kWh)">
+                      <template #editor="slotProps">
+                        <InputNumber v-model="slotProps.data[slotProps.field]" mode="decimal" showButtons decrementButtonClass="p-button-info"
+                        incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
+                        :allowEmpty="false" :min="0" @focus="$event.target.select()" />
+                      </template>
+                    </Column>
+
+                    <Column field="actions" header="Actions">
+                      <template #body="slotProps">
+                        <i class="pi pi-trash" @click="deletePartner(slotProps.index + currentPagePartnersTable * 5)" />
+                      </template>
+                    </Column>
                   
+                  </DataTable>
                 </div>
 
                 <!-- Custom Electricity emission table -->
 
                 <div class="card">
                   <h5>Aditional custom defined electricity emission</h5>
+                  <DataTable :value="this.project.customElectricity" editMode="cell" :paginator="true" class="p-datatable-gridlines" dataKey="_id"
+                  :rowHover="true" @cell-edit-complete="onCellEditCompleteCustom($event, 'customElectricity', 'electricity')" sortMode="multiple" :rows="5" v-model:filters="partnerFilters"
+                  filterDisplay="menu" :loading="loading" :filters="partnerFilters" responsiveLayout="scroll"
+                  :globalFilterFields="['nameCustom','valueCustom']" @page="currentPageCustomElectricityTable = $event.page">
                   
+                  <template #header>
+                      <div class="flex justify-content-between flex-column sm:flex-row">
+                        <div>
+                          <Button class="p-button-info mr-2" @click="addCustom(this.customTypes[1].value, 'customElectricity', 'electricity')"><i class="pi pi-plus mr-2" />New additional custom Electricity</Button>
+                          <span class="p-input-icon-left">
+                            <i class="pi pi-search" />
+                            <InputText v-model="partnerFilters['global'].value" placeholder="Keyword Search" style="width: 100%"/>
+                          </span>
+                          <Button class="ml-2" label="Save" icon="pi pi-check" @click="saveCustom('customElectricity', 'electricity')" />
+                        </div>
+                        
+                        <Button type="button" icon="pi pi-filter-slash" label="Clear" class="p-button-warning" @click="clearPartnerFilter()"/>
+                      </div>
+                  </template>
+
+                  <template #empty>
+                      No additional custom electricity found.
+                  </template>
+
+                  <template #loading>
+                      Loading custom electricity. Please wait.
+                  </template>
+
+                  <Column field="name" header="Item" :sortable="true">
+                    <template #editor="slotProps">
+                        <InputText v-model="slotProps.data[slotProps.field]" />
+                    </template>
+                    <template #filter="{filterModel, field}">
+                        <InputText type="text" v-model="filterModel.value" class="p-column-filter" :placeholder="'Filter by ' + field"/>
+                    </template>
+                  </Column>
+
+                  <Column field="value" header="Value" :sortable="true">
+                    <template #editor="slotProps" class="p-field">
+                      <InputNumber v-model="slotProps.data[slotProps.field]" mode="decimal" :maxFractionDigits="3"
+                      showButtons :step="0.25" decrementButtonClass="p-button-info"
+                      incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
+                      :allowEmpty="false" :min="0" />
+                    </template>
+                  </Column>
+
+                  
+                  <Column field="actions" header="Actions">
+                    <template #body="slotProps">
+                      <i class="pi pi-trash" @click="deleteCustom(slotProps.index + currentPageCustomElectricityTable * 5, 'customElectricity', 'electricity')" />
+                    </template>
+                  </Column>
+                
+                </DataTable>
                 </div>
               </TabPanel>
 
@@ -197,7 +384,60 @@
 
                 <div class="card">
                   <h5>Aditional custom defined water emission</h5>
+                  <DataTable :value="this.project.customWater" editMode="cell" :paginator="true" class="p-datatable-gridlines" dataKey="_id"
+                  :rowHover="true" @cell-edit-complete="onCellEditCompleteCustom($event, 'customWater', 'water')" sortMode="multiple" :rows="5" v-model:filters="partnerFilters"
+                  filterDisplay="menu" :loading="loading" :filters="partnerFilters" responsiveLayout="scroll"
+                  :globalFilterFields="['nameCustom','valueCustom']" @page="currentPageCustomWaterTable = $event.page">
                   
+                  <template #header>
+                      <div class="flex justify-content-between flex-column sm:flex-row">
+                        <div>
+                          <Button class="p-button-info mr-2" @click="addCustom(this.customTypes[2].value,'customWater', 'water')"><i class="pi pi-plus mr-2" />New additional custom water emission</Button>
+                          <span class="p-input-icon-left">
+                            <i class="pi pi-search" />
+                            <InputText v-model="partnerFilters['global'].value" placeholder="Keyword Search" style="width: 100%"/>
+                          </span>
+                          <Button class="ml-2" label="Save" icon="pi pi-check" @click="saveCustom('customWater', 'water')" />
+                        </div>
+                        
+                        <Button type="button" icon="pi pi-filter-slash" label="Clear" class="p-button-warning" @click="clearPartnerFilter()"/>
+                      </div>
+                  </template>
+
+                  <template #empty>
+                      No additional custom water emission found.
+                  </template>
+
+                  <template #loading>
+                      Loading custom water emissions. Please wait.
+                  </template>
+
+                  <Column field="name" header="Item" :sortable="true">
+                    <template #editor="slotProps">
+                        <InputText v-model="slotProps.data[slotProps.field]" />
+                    </template>
+                    <template #filter="{filterModel, field}">
+                        <InputText type="text" v-model="filterModel.value" class="p-column-filter" :placeholder="'Filter by ' + field"/>
+                    </template>
+                  </Column>
+
+                  <Column field="value" header="Value" :sortable="true">
+                    <template #editor="slotProps" class="p-field">
+                      <InputNumber v-model="slotProps.data[slotProps.field]" mode="decimal" :maxFractionDigits="3"
+                      showButtons :step="0.25" decrementButtonClass="p-button-info"
+                      incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
+                      :allowEmpty="false" :min="0" />
+                    </template>
+                  </Column>
+
+                  
+                  <Column field="actions" header="Actions">
+                    <template #body="slotProps">
+                      <i class="pi pi-trash" @click="deleteCustom(slotProps.index + currentPageCustomWaterTable * 5, 'customWater', 'water')" />
+                    </template>
+                  </Column>
+                
+                </DataTable>
                 </div>
               </TabPanel>
 
@@ -214,7 +454,60 @@
 
                 <div class="card">
                   <h5>Aditional custom defined transportation emission</h5>
+                  <DataTable :value="this.project.customTransportation" editMode="cell" :paginator="true" class="p-datatable-gridlines" dataKey="_id"
+                  :rowHover="true" @cell-edit-complete="onCellEditCompleteCustom($event, 'customTransportation', 'transportation')" sortMode="multiple" :rows="5" v-model:filters="partnerFilters"
+                  filterDisplay="menu" :loading="loading" :filters="partnerFilters" responsiveLayout="scroll"
+                  :globalFilterFields="['nameCustom','valueCustom']" @page="currentPageCustomTransportationTable = $event.page">
                   
+                  <template #header>
+                      <div class="flex justify-content-between flex-column sm:flex-row">
+                        <div>
+                          <Button class="p-button-info mr-2" @click="addCustom(this.customTypes[3].value, 'customTransportation', 'transportation')"><i class="pi pi-plus mr-2" />New additional custom transportation emission</Button>
+                          <span class="p-input-icon-left">
+                            <i class="pi pi-search" />
+                            <InputText v-model="partnerFilters['global'].value" placeholder="Keyword Search" style="width: 100%"/>
+                          </span>
+                          <Button class="ml-2" label="Save" icon="pi pi-check" @click="saveCustom('customTransportation', 'transportation')" />
+                        </div>
+                        
+                        <Button type="button" icon="pi pi-filter-slash" label="Clear" class="p-button-warning" @click="clearPartnerFilter()"/>
+                      </div>
+                  </template>
+
+                  <template #empty>
+                      No additional custom transportation emission found.
+                  </template>
+
+                  <template #loading>
+                      Loading custom transportation emissions. Please wait.
+                  </template>
+
+                  <Column field="name" header="Item" :sortable="true">
+                    <template #editor="slotProps">
+                        <InputText v-model="slotProps.data[slotProps.field]" />
+                    </template>
+                    <template #filter="{filterModel, field}">
+                        <InputText type="text" v-model="filterModel.value" class="p-column-filter" :placeholder="'Filter by ' + field"/>
+                    </template>
+                  </Column>
+
+                  <Column field="value" header="Value" :sortable="true">
+                    <template #editor="slotProps" class="p-field">
+                      <InputNumber v-model="slotProps.data[slotProps.field]" mode="decimal" :maxFractionDigits="3"
+                      showButtons :step="0.25" decrementButtonClass="p-button-info"
+                      incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
+                      :allowEmpty="false" :min="0" />
+                    </template>
+                  </Column>
+
+                  
+                  <Column field="actions" header="Actions">
+                    <template #body="slotProps">
+                      <i class="pi pi-trash" @click="deleteCustom(slotProps.index + currentPageCustomTransportationTable * 5, 'customTransportation', 'transportation')" />
+                    </template>
+                  </Column>
+                
+                </DataTable>
                 </div>
               </TabPanel>
 
@@ -232,7 +525,60 @@
                <!-- Custom Materials table --> 
                 <div class="card">
                   <h5>Aditional custom defined material emission</h5>
+                  <DataTable :value="this.project.customMaterials" editMode="cell" :paginator="true" class="p-datatable-gridlines" dataKey="_id"
+                  :rowHover="true" @cell-edit-complete="onCellEditCompleteCustom($event, 'customMaterials', 'materials')" sortMode="multiple" :rows="5" v-model:filters="partnerFilters"
+                  filterDisplay="menu" :loading="loading" :filters="partnerFilters" responsiveLayout="scroll"
+                  :globalFilterFields="['nameCustom','valueCustom']" @page="currentPageCustomMaterialsTable = $event.page">
+                  
+                  <template #header>
+                      <div class="flex justify-content-between flex-column sm:flex-row">
+                        <div>
+                          <Button class="p-button-info mr-2" @click="addCustom(this.customTypes[4].value, 'customMaterials', 'materials')"><i class="pi pi-plus mr-2" />New additional custom material emission</Button>
+                          <span class="p-input-icon-left">
+                            <i class="pi pi-search" />
+                            <InputText v-model="partnerFilters['global'].value" placeholder="Keyword Search" style="width: 100%"/>
+                          </span>
+                          <Button class="ml-2" label="Save" icon="pi pi-check" @click="saveCustom('customMaterials', 'materials')" />
+                        </div>
+                        
+                        <Button type="button" icon="pi pi-filter-slash" label="Clear" class="p-button-warning" @click="clearPartnerFilter()"/>
+                      </div>
+                  </template>
 
+                  <template #empty>
+                      No additional custom materials emission found.
+                  </template>
+
+                  <template #loading>
+                      Loading custom materials emissions. Please wait.
+                  </template>
+
+                  <Column field="name" header="Item" :sortable="true">
+                    <template #editor="slotProps">
+                        <InputText v-model="slotProps.data[slotProps.field]" />
+                    </template>
+                    <template #filter="{filterModel, field}">
+                        <InputText type="text" v-model="filterModel.value" class="p-column-filter" :placeholder="'Filter by ' + field"/>
+                    </template>
+                  </Column>
+
+                  <Column field="value" header="Value" :sortable="true">
+                    <template #editor="slotProps" class="p-field">
+                      <InputNumber v-model="slotProps.data[slotProps.field]" mode="decimal" :maxFractionDigits="3"
+                      showButtons :step="0.25" decrementButtonClass="p-button-info"
+                      incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
+                      :allowEmpty="false" :min="0" />
+                    </template>
+                  </Column>
+
+                  
+                  <Column field="actions" header="Actions">
+                    <template #body="slotProps">
+                      <i class="pi pi-trash" @click="deleteCustom(slotProps.index + currentPageCustomMaterialsTable * 5, 'customMaterials', 'materials')" />
+                    </template>
+                  </Column>
+                
+                </DataTable>
                 </div>
 
               </TabPanel>
@@ -348,19 +694,19 @@
                 <h5>Additional custom defined printable deliverable emission</h5>
 
                 <DataTable :value="this.project.customPrintableDeliverables" editMode="cell" :paginator="true" class="p-datatable-gridlines" dataKey="_id"
-                :rowHover="true" @cell-edit-complete="onCellEditCompleteCustomPrintableDeliverable" sortMode="multiple" :rows="5" v-model:filters="partnerFilters"
+                :rowHover="true" @cell-edit-complete="onCellEditCompleteCustom($event, 'customPrintableDeliverables', 'Printable Deliverables')" sortMode="multiple" :rows="5" v-model:filters="partnerFilters"
                 filterDisplay="menu" :loading="loading" :filters="partnerFilters" responsiveLayout="scroll"
                 :globalFilterFields="['nameCustom','valueCustom']" @page="currentPageCustomPrintableDeliverablesTable = $event.page">
                   
                   <template #header>
                       <div class="flex justify-content-between flex-column sm:flex-row">
                         <div>
-                          <Button class="p-button-info mr-2" @click="addCustomPrintableDeliverable(this.customTypes[6].value)"><i class="pi pi-plus mr-2" />New additional custom printable deliverable</Button>
+                          <Button class="p-button-info mr-2" @click="addCustom(this.customTypes[6].value, 'customPrintableDeliverables', 'Printable Deliverables')"><i class="pi pi-plus mr-2" />New additional custom printable deliverable</Button>
                           <span class="p-input-icon-left">
                             <i class="pi pi-search" />
                             <InputText v-model="partnerFilters['global'].value" placeholder="Keyword Search" style="width: 100%"/>
                           </span>
-                          <Button class="ml-2" label="Save" icon="pi pi-check" @click="saveCustomPrintableDeliverables" />
+                          <Button class="ml-2" label="Save" icon="pi pi-check" @click="saveCustom('customPrintableDeliverables', 'Printable Deliverables')" />
                         </div>
                         
                         <Button type="button" icon="pi pi-filter-slash" label="Clear" class="p-button-warning" @click="clearPartnerFilter()"/>
@@ -396,7 +742,7 @@
                   
                   <Column field="actions" header="Actions">
                     <template #body="slotProps">
-                      <i class="pi pi-trash" @click="deleteCustomPrintableDeliverable(slotProps.index + currentPageCustomPrintableDeliverablesTable * 5)" />
+                      <i class="pi pi-trash" @click="deleteCustom(slotProps.index + currentPageCustomPrintableDeliverablesTable * 5, 'customPrintableDeliverables', 'Printable Deliverables')" />
                     </template>
                   </Column>
                 
@@ -540,9 +886,7 @@ import TabView from 'primevue/tabview';
 import TabPanel from 'primevue/tabpanel';
 import Topbar from '@/components/Topbar.vue';
 import Mongoose from "mongoose"
-// import Toast from 'primevue/toast';
-// import Badge from 'primevue/badge';
-// import Dialog from 'primevue/dialog';
+import Toast from 'primevue/toast';
 import Chart from 'primevue/chart'
 import 'primeicons/primeicons.css';
 
@@ -550,7 +894,6 @@ export default {
   name: 'ProjectDetailsAdvanced',
   components: {
     Dropdown,
-    // Dialog,
     Button,
     DataTable,
     Column,
@@ -560,8 +903,7 @@ export default {
     TabView,
     TabPanel,
     Topbar,
-    // Toast,
-    // Badge,
+    Toast,
     Chart
   },
   data() {
@@ -575,6 +917,7 @@ export default {
       customMaterials: [],
       customEvents: [],
       customPrintableDeliverables: [],
+      electricityValuesTable:[],
       object: {},
       countriesForDropdown: ["Albania", "Bosnia & Herzegovina", "Croatia", "Cyprus", "France", "Greece", "Italy", "Malta", "Montenegro", "Portugal", "Slovenia", "Spain", "Bulgaria", "North Macedonia"],
       paperSizes: ["A0", "A1", "A2", "A3", "A4", "A5", "A6"],
@@ -609,7 +952,7 @@ export default {
       ],
       customTypes : [
         {value: "Heat"},
-        {value: "Electrity"},
+        {value: "Electricity"},
         {value: "Water"},
         {value: "Transportation"},
         {value: "Materials"},
@@ -670,6 +1013,12 @@ export default {
       currentPagePartnersTable: 0,
       currentPagePrintableDeliverablesTable: 0,
       currentPageCustomPrintableDeliverablesTable: 0,
+      currentPageCustomHeatTable: 0,
+      currentPageCustomElectricityTable: 0,
+      currentPageCustomWaterTable: 0,
+      currentPageCustomTransportationTable: 0,
+      currentPageCustomMaterialsTable: 0,
+      currentPageCustomEventsTable: 0,
       displayPartnersWithoutCountryDialog: false,
       partnersWithoutCountry: [],
     }
@@ -803,22 +1152,27 @@ export default {
             } else if(response.data[i].type.endsWith("Deliverables")) {
               this.customPrintableDeliverables.push(response.data[i]);
             }
-            this.project.customHeat = this.customHeat;
+          }
+          this.project.customHeat = this.customHeat;
             this.project.customElectricity = this.customElectricity;
             this.project.customWater = this.customWater;
             this.project.customTransportation = this.customTransportation;
             this.project.customMaterials = this.customMaterials;
             this.project.customEvents = this.customEvents;
             this.project.customPrintableDeliverables = this.customPrintableDeliverables;
-            console.log("Custom PD:", this.project.customPrintableDeliverables);
-          }
         })
         .catch((e)=>{
           console.log('error' + e);
         })
 
-
-
+        this.axios.get('/dataTables/electricity?projectId=' + projectID, { params: {
+          projectId: projectID
+        }}).then((response) => {
+          console.log("Respuesta del servidor: ", response);
+          this.project.electricityValuesTable = response.data;
+          console.log("Tabla de Electricity default values: ", this.project.electricityValuesTable);
+        })
+        
       })
       .catch((e)=>{
         console.log('error' + e);
@@ -1123,7 +1477,7 @@ export default {
         }
       }
     },
-    addCustomPrintableDeliverable(customType){
+    addCustom(customType, custom, toastMessage){
       console.log("Custom type: ", customType);
       let newCustom = {
         _id: new Mongoose.Types.ObjectId(),
@@ -1134,19 +1488,20 @@ export default {
       }
         
       this.axios.post('/customs', newCustom)
-      .then((response) => {
-        this.project.customPrintableDeliverables.push(response.data)
+      .then(() => {
+        this.project[custom].push(newCustom);
         
-        this.$toast.add({severity:'success', summary: 'Successful', detail: 'Custom Printable Deliverables created', life: 3000});
+        this.$toast.add({severity:'success', summary: 'Successful', detail: 'Custom ' + toastMessage + ' created', life: 3000});
       })
       .catch((e)=>{
         console.log('error' + e);
       })
     },
-    onCellEditCompleteCustomPrintableDeliverable(event) {
+    onCellEditCompleteCustom(event, custom, toastMessage) {
       let { data, newValue, newData, field } = event;
 
-      console.log(event);
+      console.log("Valor de custom:", custom);
+      console.log("Valor de toastMessage:", toastMessage);
 
       if (newValue === data[field]) return;
 
@@ -1156,39 +1511,56 @@ export default {
       paramsData[field] = newValue;
       
       axios.put("/customs/" + data._id, paramsData).then(() => {
-        this.project.customPrintableDeliverables.splice(this.project.customPrintableDeliverables.indexOf(data), 1, newData)
-        this.$toast.add({severity:'success', summary: 'Successful', detail: 'Custom Printable deliverables updated', life: 3000});
+        this.project[custom].splice(this.project[custom].indexOf(data), 1, newData)
+        this.$toast.add({severity:'success', summary: 'Successful', detail: 'Custom ' + toastMessage + ' updated', life: 3000});
       }).catch(error =>{
         console.log(error)
       })
     },
     
-    saveCustomPrintableDeliverables() {
-      this.axios.put('/customs/updateAll', this.project.customPrintableDeliverables)
+    saveCustom(custom, toastMessage) {
+      this.axios.put('/customs/updateAll', this.project[custom])
       .then(() => {
-        this.$toast.add({severity:'success', summary: 'Successful', detail: 'All Customs updated', life: 3000});
+        this.$toast.add({severity:'success', summary: 'Successful', detail: 'All customs '+ toastMessage + ' updated', life: 3000});
       }).catch((error) =>{
         console.log(error)
       })
     },
-    deleteCustomPrintableDeliverable(index) {
-      let customPrintableDeliverables = this.project.customPrintableDeliverables[index]
+    deleteCustom(index, custom, toastMessage) {
+      let customData = this.project[custom][index]
 
-      this.axios.delete('/customs/' + customPrintableDeliverables._id)
+      this.axios.delete('/customs/' + customData._id)
       .then(() => {
-
+        this.project[custom].splice(index, 1);
         let projectID = this.$route.params.id;
         axios.get('/customs?projectId=' + projectID, { params: {
           projectId: projectID
         }})
         .then((response) => {
-          this.project.customPrintableDeliverables = response.data;
+          console.log("Response: ", response.data);
+          for(let i = 0; i < response.data.length; i++){
+            if (response.data[i].type.endsWith("Heat")) {
+              this.project.customHeat.push(response.data[i]);
+            } else if(response.data[i].type.endsWith("Electricity")){
+              this.project.customElectricity.push(response.data[i]);
+            } else if(response.data[i].type.endsWith("Water")) {
+              this.project.customWater.push(response.data[i]);
+            } else if(response.data[i].type.endsWith("Transportation")) {
+              this.project.customTransportation.push(response.data[i]);
+            } else if(response.data[i].type.endsWith("Materials")) {
+              this.project.customMaterials.push(response.data[i]);
+            } else if(response.data[i].type.endsWith("Events")) {
+              this.project.customEvents.push(response.data[i]);
+            } else if(response.data[i].type.endsWith("Deliverables")) {
+              this.project.customPrintableDeliverables.push(response.data[i]);
+            }
+          }
         })
         .catch((e)=>{
           console.log('error' + e);
         })
 
-        this.$toast.add({severity:'success', summary: 'Successful', detail: 'Custom Printable deliverable deleted', life: 3000});
+        this.$toast.add({severity:'success', summary: 'Successful', detail: 'Custom ' + toastMessage + ' deleted', life: 3000});
       })
       .catch((e)=>{
         console.log('error' + e);
