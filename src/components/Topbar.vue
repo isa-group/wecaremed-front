@@ -102,7 +102,7 @@ import Dialog from 'primevue/dialog';
 import Button from 'primevue/button';
 import InputSwitch from 'primevue/inputswitch';
 import axios from 'axios';
-import { mapState, mapActions } from 'vuex'
+import { mapState } from 'vuex'
 import Badge from 'primevue/badge'
 
 export default {
@@ -130,7 +130,6 @@ export default {
     methods: {
         toggleMenu(event) {
             this.$refs.menu.toggle(event);
-            this.$store.state.dispatch("toggleValue");
         },
         openConfirmation() {
             this.displayConfirmation = true;
@@ -138,19 +137,15 @@ export default {
         closeConfirmation() {
             this.displayConfirmation = false;
         },
-        ...mapActions([
-        "toggleView"
-        ]),
-        // calculateCF() {
-        //     this.axios.put(`/projects/calculateCF/${this.$route.params.id}`)
-        //     .then((response) => {
-        //         // this.project = response.data;
-        //         console.log(response.data)
-        //     })
-        //     .catch((e)=>{
-        //         console.log('error' + e);
-        //     })
-        // },
+        toggleView() {
+            this.$store.commit("toggleView")
+            if (this.$route.name === "Project Details Simple" && this.$store.state.toggleValue === true) {
+                window.location = ("/projects/" + this.$route.params.id + "/advanced")
+            }
+            if (this.$route.name === "Project Details Advanced" && this.$store.state.toggleValue === false) {
+                window.location = ("/projects/" + this.$route.params.id)
+            }
+        },
         getTextColorFromCFIndex(cfIndex) {
             if (cfIndex < 150)
                 return "success"
