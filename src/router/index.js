@@ -31,12 +31,32 @@ const routes = [
     name: 'Project Details Simple',
     meta: { requiresAuth: true },
     component: ProjectDetailsSimple,
+    beforeEnter: (to, from, next) => {
+      if (to.query.advancedMode === "true") {
+        next({
+          path: "/projects/"+to.params.id+"/advanced",
+          query: { advancedMode: to.query.advancedMode },
+        })
+      } else {
+        next()
+      }
+    }
   },
   {
     path: '/projects/:id/advanced',
     name: 'Project Details Advanced',
     meta: { requiresAuth: true },
     component: ProjectDetailsAdvanced,
+    beforeEnter: (to, from, next) => {
+      if (to.query.advancedMode === "true") {
+        next()
+      } else {
+        next({
+          path: "/projects/"+to.params.id,
+          query: { advancedMode: to.query.advancedMode },
+        })
+      }
+    }
   },
   {
     path: '/login',
