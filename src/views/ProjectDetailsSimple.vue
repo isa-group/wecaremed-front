@@ -1054,17 +1054,15 @@ export default {
   },
   mounted() {
     this.loading = false;
+    if (this.$store.state.toggleValue === true)
+      this.$store.dispatch("toggleView")
   },
   methods: {
     generatePDF() {
-    // var doc = new jsPDF()
-    // doc.html(projectHtml).then(() => doc.save('test.pdf'));
-    // doc.save('test.pdf');
-
-    var html = htmlToPdfmake(document.getElementById('pdfPrintDiv').innerHTML);
-    const documentDefinition = { content: html };
-    pdfMake.vfs = pdfFonts.pdfMake.vfs;
-    pdfMake.createPdf(documentDefinition).open();
+      var html = htmlToPdfmake(document.getElementById('pdfPrintDiv').innerHTML);
+      const documentDefinition = { content: html };
+      pdfMake.vfs = pdfFonts.pdfMake.vfs;
+      pdfMake.createPdf(documentDefinition).open();
     },
     displayPartnersWithoutCountryErrorDialog() {
       this.displayPartnersWithoutCountryDialog = true

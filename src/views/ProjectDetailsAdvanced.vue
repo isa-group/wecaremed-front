@@ -1571,6 +1571,8 @@ export default {
   },
   mounted() {
     this.loading = false;
+    if (this.$store.state.toggleValue === false)
+      this.$store.dispatch("toggleView")
   },
   methods: {
     generatePDF() {
