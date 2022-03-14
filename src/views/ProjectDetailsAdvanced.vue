@@ -1422,6 +1422,8 @@ import TabPanel from 'primevue/tabpanel';
 import Topbar from '@/components/Topbar.vue';
 import Mongoose from "mongoose"
 import Toast from 'primevue/toast';
+import Badge from 'primevue/badge';
+import Dialog from 'primevue/dialog';
 import Chart from 'primevue/chart'
 import 'primeicons/primeicons.css';
 import pdfMake from 'pdfmake';
@@ -1442,7 +1444,9 @@ export default {
     TabPanel,
     Topbar,
     Toast,
-    Chart
+    Chart,
+    Badge,
+    Dialog
   },
   data() {
     return {
