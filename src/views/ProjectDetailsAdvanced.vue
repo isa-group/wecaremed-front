@@ -1803,20 +1803,27 @@ export default {
       
           for(let i = 0; i < response.data.length; i++){
             if (response.data[i].type.endsWith("Heat")) {
-              this.project.customHeat.push(response.data[i]);
+              this.customHeat.push(response.data[i]);
             } else if(response.data[i].type.endsWith("Electricity")){
-              this.project.customElectricity.push(response.data[i]);
+              this.customElectricity.push(response.data[i]);
             } else if(response.data[i].type.endsWith("Water")) {
-              this.project.customWater.push(response.data[i]);
+              this.customWater.push(response.data[i]);
             } else if(response.data[i].type.endsWith("Transportation")) {
-              this.project.customTransportation.push(response.data[i]);
+              this.customTransportation.push(response.data[i]);
             } else if(response.data[i].type.endsWith("Materials")) {
-              this.project.customMaterials.push(response.data[i]);
+              this.customMaterials.push(response.data[i]);
             } else if(response.data[i].type.endsWith("Events")) {
-              this.project.customEvents.push(response.data[i]);
+              this.customEvents.push(response.data[i]);
             } else if(response.data[i].type.endsWith("Deliverables")) {
-              this.project.customPrintableDeliverables.push(response.data[i]);
+              this.customPrintableDeliverables.push(response.data[i]);
             }
+            this.project.customHeat = this.customHeat;
+            this.project.customElectricity = this.customElectricity;
+            this.project.customWater = this.customWater;
+            this.project.customTransportation = this.customTransportation;
+            this.project.customMaterials = this.customMaterials;
+            this.project.customEvents = this.customEvents;
+            this.project.customPrintableDeliverables = this.customPrintableDeliverables;
           }
         })
         .catch((e)=>{
