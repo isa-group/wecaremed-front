@@ -2081,6 +2081,7 @@ export default {
         
       this.axios.post('/customs', newCustom)
       .then(() => {
+        this.project[custom] = []
         this.project[custom].push(newCustom);
         
         this.$toast.add({severity:'success', summary: 'Successful', detail: 'Custom ' + toastMessage + ' created', life: 3000});
