@@ -1324,7 +1324,7 @@
                   </div>
           </TabPanel>
 
-          <TabPanel header="Analisys">
+          <TabPanel header="Analysis">
 												<TabView>
               <TabPanel header="General">
 
@@ -1608,13 +1608,11 @@ export default {
     calculateCF() {
       
       this.checkEventsNotFilled()
-
       for (let partner of this.project.partners) {
         if (partner.country === "Select a country") {
           this.partnersWithoutCountry.push(partner)
         }
       }
-
       for(let partner of this.project.partners) {
         if(partner.employeesWorkingWPP === null ||
             partner.seasonalEmployees === null ||
@@ -1624,26 +1622,21 @@ export default {
               this.partnersWithDefaultValues.push(partner);
             }
       }
-
       if (this.partnersWithoutCountry.length > 0) {
         this.displayPartnersWithoutCountryErrorDialog();
       }
-
       if (this.partnersWithDefaultValues.length > 0){
         this.displayPartnersWithDefaultValuesErrorDialog();
       }
       if (this.displayPartnersWithoutCountryDialog || this.displayPartnersWithDefaultValues > 0) {
         this.displayPartnersErrorDialog();
       } else if (!this.checkHoursNotGreaterThan24() && !this.checkNonLocalPhysicalGreaterThanPhysicalParticipants()) {
-
         axios.put(`/projects/${this.$route.params.id}`, this.project)
         .catch((error) => {
           console.log(error);
         })
-
         this.savePrintableDeliverables()
         this.savePartners()
-
         axios.put(`/projects/calculateCF/${this.$route.params.id}`)
         .then((response) => {
           let partners = this.project.partners
@@ -1654,7 +1647,6 @@ export default {
           this.project.partners = partners
           this.project.printableDeliverables = printableDeliverables
           this.project.coordinator = coordinator
-
           this.$toast.add({severity:'success', summary: 'Successful', detail: 'Project CF calculated', life: 3000});
         })
         .catch((e)=>{
@@ -2128,9 +2120,7 @@ export default {
 
       this.axios.delete('/customs/' + customData._id)
       .then(() => {
-        console.log("Customs Printable Deliverables antes de eliminar", this.project[custom]);
         this.project[custom].splice(index, 1);
-        console.log("Customs Printable Deliverables después de eliminar", this.project[custom]);
         let projectID = this.$route.params.id;
         axios.get('/customs?projectId=' + projectID, { params: {
           projectId: projectID
