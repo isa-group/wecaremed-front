@@ -1,6 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import Home from '../views/Home.vue'
 import Login from '../views/Login.vue'
+
 import axios from 'axios'
 import store from '../store'
 import ProjectDetailsSimple from '../views/ProjectDetailsSimple.vue'
