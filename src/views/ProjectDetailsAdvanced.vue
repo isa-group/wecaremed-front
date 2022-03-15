@@ -1159,6 +1159,67 @@
 
                       </TabPanel>
 
+                      <TabPanel header="Events">
+
+                        <h5>Aditional custom defined events emission</h5>
+                        <DataTable :value="this.project.customEvents" editMode="cell" :paginator="true" class="p-datatable-gridlines" dataKey="_id"
+                        :rowHover="true" @cell-edit-complete="onCellEditCompleteCustom($event, 'customEvents', 'event')" sortMode="multiple" :rows="5" v-model:filters="partnerFilters"
+                        filterDisplay="menu" :loading="loading" :filters="partnerFilters" responsiveLayout="scroll"
+                        :globalFilterFields="['nameCustom','valueCustom']" @page="currentPageCustomEventsTable = $event.page">
+                        
+                        <template #header>
+                            <div class="flex justify-content-between flex-column sm:flex-row">
+                              <div>
+                                <Button class="p-button-info mr-2" @click="addCustom(this.customTypes[5].value,'customEvents', 'event')"><i class="pi pi-plus mr-2" />New additional custom event emission</Button>
+                                <span class="p-input-icon-left">
+                                  <i class="pi pi-search" />
+                                  <InputText v-model="partnerFilters['global'].value" placeholder="Keyword Search" style="width: 100%"/>
+                                </span>
+                                <Button class="ml-2" label="Save" icon="pi pi-check" @click="saveCustom('customEvents', 'event')" />
+                              </div>
+                              
+                              <Button type="button" icon="pi pi-filter-slash" label="Clear" class="p-button-warning" @click="clearPartnerFilter()"/>
+                            </div>
+                        </template>
+
+                        <template #empty>
+                            No additional custom event emission found.
+                        </template>
+
+                        <template #loading>
+                            Loading custom events emissions. Please wait.
+                        </template>
+
+                        <Column field="name" header="Item" :sortable="true">
+                          <template #editor="slotProps">
+                              <InputText v-model="slotProps.data[slotProps.field]" />
+                          </template>
+                          <template #filter="{filterModel, field}">
+                              <InputText type="text" v-model="filterModel.value" class="p-column-filter" :placeholder="'Filter by ' + field"/>
+                          </template>
+                        </Column>
+
+                        <Column field="value" header="Value" :sortable="true">
+                          <template #editor="slotProps" class="p-field">
+                            <InputNumber v-model="slotProps.data[slotProps.field]" mode="decimal" :maxFractionDigits="3"
+                            showButtons :step="0.25" decrementButtonClass="p-button-info"
+                            incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
+                            :allowEmpty="false" :min="0" />
+                          </template>
+                        </Column>
+
+                        
+                        <Column field="actions" header="Actions">
+                          <template #body="slotProps">
+                            <i class="pi pi-trash" @click="deleteCustom(slotProps.index + currentPageCustomEventsTable * 5, 'customEvents', 'event')" />
+                          </template>
+                        </Column>
+                      
+                      </DataTable>
+
+                      </TabPanel>
+
+
                       <TabPanel header="Printable Deliverables">
 
                           <h5>Additional custom defined printable deliverable emission</h5>
@@ -1796,7 +1857,15 @@ export default {
           projectId: projectID
         }})
         .then((response) => {
-      
+          
+          this.project.customHeat = [];
+          this.project.customElectricity = [];
+          this.project.customWater = [];
+          this.project.customTransportation = [];
+          this.project.customMaterials = [];
+          this.project.customEvents = [];
+          this.project.customPrintableDeliverables = [];
+
           for(let i = 0; i < response.data.length; i++){
             if (response.data[i].type.endsWith("Heat")) {
               this.customHeat.push(response.data[i]);
@@ -2081,7 +2150,6 @@ export default {
         
       this.axios.post('/customs', newCustom)
       .then(() => {
-        this.project[custom] = []
         this.project[custom].push(newCustom);
         
         this.$toast.add({severity:'success', summary: 'Successful', detail: 'Custom ' + toastMessage + ' created', life: 3000});
