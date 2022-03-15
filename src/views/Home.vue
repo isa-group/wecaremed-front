@@ -73,7 +73,7 @@
 
         <Column field="actions" header="Actions">
           <template #body="slotProps">
-            <router-link :to="'/projects/' + (this.projects[slotProps.index + currentPageProjectsTable * 5]._id) + '?advancedMode=' + this.$store.state.toggleValue">
+            <router-link :to="'/projects/' + (this.projects[slotProps.index + currentPageProjectsTable * 5]._id)">
               <i class="pi pi-arrow-circle-right mr-3" />
             </router-link>
             <router-link :to="'/editProject/' + (this.projects[slotProps.index + currentPageProjectsTable * 5]._id)">
