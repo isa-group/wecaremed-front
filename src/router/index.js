@@ -32,11 +32,8 @@ const routes = [
     meta: { requiresAuth: true },
     component: ProjectDetailsSimple,
     beforeEnter: (to, from, next) => {
-      if (to.query.advancedMode === "true") {
-        next({
-          path: "/projects/"+to.params.id+"/advanced",
-          query: { advancedMode: to.query.advancedMode },
-        })
+      if (store.state.toggleValue === true) {
+        next("/projects/"+to.params.id+"/advanced")
       } else {
         next()
       }
@@ -48,13 +45,10 @@ const routes = [
     meta: { requiresAuth: true },
     component: ProjectDetailsAdvanced,
     beforeEnter: (to, from, next) => {
-      if (to.query.advancedMode === "true") {
+      if (store.state.toggleValue === true) {
         next()
       } else {
-        next({
-          path: "/projects/"+to.params.id,
-          query: { advancedMode: to.query.advancedMode },
-        })
+        next("/projects/"+to.params.id)
       }
     }
   },
