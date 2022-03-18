@@ -28,8 +28,6 @@
                     <th>Number full time employees</th>
                     <th>Number part time employees</th>
                     <th>Sum person months (full time + part time)</th>
-                    <th>Number of external experts</th>
-                    <th>Sum person months for the external experts</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -40,8 +38,6 @@
                     <td>{{partner.employeesWorkingWPP}}</td>
                     <td>{{partner.seasonalEmployees}}</td>
                     <td>{{partner.employeesPersonMonths}}</td>
-                    <td>{{partner.externalExperts}}</td>
-                    <td>{{partner.externalExpertsPersonMonths}}</td>
                   </tr>
                 </tbody>
               </table>
@@ -189,8 +185,8 @@
               <DataTable :value="project.partners" editMode="cell" :paginator="true" class="p-datatable-gridlines" dataKey="_id"
               :rowHover="true" @cell-edit-complete="onCellEditCompletePartner" sortMode="multiple" :rows="5" v-model:filters="partnerFilters"
               filterDisplay="menu" :loading="loading" :filters="partnerFilters" responsiveLayout="scroll"
-              :globalFilterFields="['name','country','employeesPersonMonths', 'externalExpertsPersonMonths', 'employeesWorkingWPP', 
-                                    'seasonalEmployees', 'externalExperts', 'coordinator']" @page="currentPagePartnersTable = $event.page">
+              :globalFilterFields="['name','country','employeesPersonMonths', 'employeesWorkingWPP', 
+                                    'seasonalEmployees', 'coordinator']" @page="currentPagePartnersTable = $event.page">
                 
                 <template #header>
                     <div class="flex justify-content-between flex-column sm:flex-row">
@@ -265,7 +261,66 @@
                   </template>
                 </Column>
 
-                <Column field="externalExperts" header="Number of external experts" :sortable="true">
+                <Column field="actions" header="Actions">
+                  <template #body="slotProps">
+                    <i class="pi pi-trash" @click="deletePartner(slotProps.index + currentPagePartnersTable * 5)" />
+                  </template>
+                </Column>
+              
+              </DataTable>
+            </div>
+
+            <div class="externalExperts card col-12">
+              <h4>External experts</h4>
+
+              <DataTable :value="project.externalExperts" editMode="cell" :paginator="true" class="p-datatable-gridlines" dataKey="_id"
+              :rowHover="true" @cell-edit-complete="onCellEditCompleteExternalExpert" sortMode="multiple" :rows="5" v-model:filters="externalExpertFilters"
+              filterDisplay="menu" :loading="loading" :filters="externalExpertFilters" responsiveLayout="scroll"
+              :globalFilterFields="['typeOfExpertise','country','personMonthsWPP', 'twoWayTravels']" 
+              @page="currentPageExternalExpertsTable = $event.page">
+                
+                <template #header>
+                    <div class="flex justify-content-between flex-column sm:flex-row">
+                      <div>
+                        <Button class="p-button-info mr-2" @click="addExternalExpert"><i class="pi pi-plus mr-2" />New external expert</Button>
+                        <span class="p-input-icon-left">
+                          <i class="pi pi-search" />
+                          <InputText v-model="externalExpertFilters['global'].value" placeholder="Keyword Search" style="width: 100%"/>
+                        </span>
+                        <Button class="ml-2" label="Save" icon="pi pi-check" @click="saveExternalExperts" />
+                      </div>
+                      
+                      <Button type="button" icon="pi pi-filter-slash" label="Clear" class="p-button-warning" @click="clearExternalExpertFilter()"/>
+                    </div>
+                </template>
+
+                <template #empty>
+                    No external experts found.
+                </template>
+
+                <template #loading>
+                    Loading external experts. Please wait.
+                </template>
+
+                <Column field="typeOfExpertise" header="Type of expertise" :sortable="true">
+                  <template #body="slotProps">
+                    <td :class="slotProps.data[slotProps.field] == 'New external expert' ? 'defaultValue' : ''" style="display:block;">{{slotProps.data[slotProps.field]}}</td>
+                  </template>
+                  <template #editor="slotProps">
+                      <InputText v-model="slotProps.data[slotProps.field]" />
+                  </template>
+                </Column>
+
+                <Column field="country" header="Country" :sortable="true">
+                  <template #body="slotProps">
+                    <td :class="slotProps.data[slotProps.field] == 'Select a country' ? 'defaultValue' : ''" style="display:block;">{{slotProps.data[slotProps.field]}}</td>
+                  </template>
+                  <template #editor="slotProps">
+                    <Dropdown :options="countriesForDropdown" v-model="slotProps.data[slotProps.field]" />
+                  </template>
+                </Column>
+
+                <Column field="personMonthsWPP" header="Person months" :sortable="true">
                   <template #editor="slotProps">
                     <InputNumber v-model="slotProps.data[slotProps.field]" mode="decimal" showButtons decrementButtonClass="p-button-info"
                     incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
@@ -273,19 +328,17 @@
                   </template>
                 </Column>
 
-                <Column field="externalExpertsPersonMonths" header="Sum person months for the external experts" :sortable="true">
+                <Column field="twoWayTravels" header="Number of two-way travels" :sortable="true">
                   <template #editor="slotProps">
-                    <InputNumber v-model="slotProps.data[slotProps.field]" mode="decimal" :maxFractionDigits="3"
-                    showButtons :step="0.25" decrementButtonClass="p-button-info"
+                    <InputNumber v-model="slotProps.data[slotProps.field]" mode="decimal" showButtons decrementButtonClass="p-button-info"
                     incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
                     :allowEmpty="false" :min="0" @focus="$event.target.select()" />
                   </template>
                 </Column>
 
-
                 <Column field="actions" header="Actions">
                   <template #body="slotProps">
-                    <i class="pi pi-trash" @click="deletePartner(slotProps.index + currentPagePartnersTable * 5)" />
+                    <i class="pi pi-trash" @click="deleteExternalExpert(slotProps.index + currentPageExternalExpertsTable * 5)" />
                   </template>
                 </Column>
               
@@ -1277,8 +1330,8 @@
                   <DataTable :value="project.partners" editMode="cell" :paginator="true" class="p-datatable-gridlines" dataKey="_id"
                     :rowHover="true" @cell-edit-complete="onCellEditCompletePartner" sortMode="multiple" :rows="5" v-model:filters="partnerFilters"
                     filterDisplay="menu" :loading="loading" :filters="partnerFilters" responsiveLayout="scroll"
-                    :globalFilterFields="['name','country','personMonthsPP','personMonthsWPP', 'externalExpertsPersonMonths', 'employeesWorkingWPP', 
-                                          'seasonalEmployees', 'externalExperts', 'coordinator']">
+                    :globalFilterFields="['name','country','personMonthsPP','personMonthsWPP', 'employeesWorkingWPP', 
+                                          'seasonalEmployees', 'coordinator']">
                       
                       <template #header>
                           <div class="flex justify-content-between flex-column sm:flex-row">
@@ -1492,12 +1545,14 @@ export default {
         }
 			},
       partnerFilters: null,
+      externalExpertFilters: null,
       organizationEventsFilters: null,
       participationEventsFilters: null,
       printableDeliverableFilters: null,
       loading: true,
       onFocusValue: null,
       currentPagePartnersTable: 0,
+      currentPageExternalExpertsTable: 0,
       currentPageEventsOrganizationTable: 0,
       currentPageEventsParticipationTable: 0,
       currentPagePrintableDeliverablesTable: 0,
@@ -1522,6 +1577,7 @@ export default {
 
     this.getProject();
     this.initPartnerFilters();
+    this.initExternalExpertFilters();
     this.initOrganizationEventsFilters();
     this.initParticipationEventsFilters();
     this.initPrintableDeliverableFilters();
@@ -1565,9 +1621,7 @@ export default {
       for(let partner of this.project.partners) {
         if(partner.employeesWorkingWPP === null ||
             partner.seasonalEmployees === null ||
-            partner.employeesPersonMonths === null || 
-            partner.externalExperts === null ||
-            partner.externalExpertsPersonMonths === null) {
+            partner.employeesPersonMonths === null ) {
               this.partnersWithDefaultValues.push(partner);
             }
       }
@@ -1584,8 +1638,13 @@ export default {
         .catch((error) => {
           console.log(error);
         })
+        
         this.savePrintableDeliverables()
         this.savePartners()
+        this.saveEvents()
+        this.saveCustom()
+        this.saveExternalExperts()
+
         axios.put(`/projects/calculateCF/${this.$route.params.id}`)
         .then((response) => {
           let partners = this.project.partners
@@ -1683,6 +1742,10 @@ export default {
     saveCurrentProject(){
         this.savePrintableDeliverables();
         this.savePartners();
+        this.saveEvents()
+        this.saveCustom()
+        this.saveExternalExperts()
+        
         axios.put("/projects/" + this.project._id, this.project).then(() => {
           this.$toast.add({severity:'success', summary: 'Successful', detail: 'Project saved', life: 3000});
         }).catch(error =>{
@@ -1704,6 +1767,14 @@ export default {
     },
     clearPartnerFilter() {
       this.initPartnerFilters();
+    },
+    initExternalExpertFilters() {
+      this.externalExpertFilters = {
+        'global': {value: null, matchMode: FilterMatchMode.CONTAINS},
+      }
+    },
+    clearExternalExpertFilter() {
+      this.initExternalExpertFilters();
     },
     initOrganizationEventsFilters() {
       this.organizationEventsFilters = {
@@ -1744,6 +1815,14 @@ export default {
             this.project.coordinator = response.data.find(p => p.coordinator)._id
             this.$store.dispatch("updateSelectedPartner", response.data[0].name);
           }
+        })
+        .catch((e)=>{
+          console.log('error' + e);
+        })
+
+        this.axios.get(`/externalExperts?projectId=${this.$route.params.id}`)
+        .then((response) => {
+          this.project.externalExperts = response.data;
         })
         .catch((e)=>{
           console.log('error' + e);
@@ -1842,10 +1921,10 @@ export default {
         name: "New partner",
         country: "Select a country",
         employeesPersonMonths: "",
-        externalExpertsPersonMonths: "",
         employeesWorkingWPP: "",
         seasonalEmployees: "",
         externalExperts: "",
+        externalExpertsPersonMonths: "",
         coordinator: false,
 
         pcsBoughtDuringProject: 0,
@@ -1914,6 +1993,46 @@ export default {
           })
         }
         this.$toast.add({severity:'success', summary: 'Successful', detail: 'Partner deleted', life: 3000});
+      })
+      .catch((e)=>{
+        console.log('error' + e);
+      })
+    },
+    addExternalExpert() {
+      let newExternalExpert = {
+        _id: new Mongoose.Types.ObjectId(),
+        typeOfExpertise: "New external expert",
+        country: "Select a country",
+        personMonthsWPP: 0,
+        twoWayTravels: 0,
+        
+        project: this.project._id
+      }
+
+      this.axios.post('/externalExperts', newExternalExpert)
+      .then((response) => {
+        this.project.externalExperts.push(response.data)
+        this.$toast.add({severity:'success', summary: 'Successful', detail: 'External experts created', life: 3000});
+      })
+      .catch((e)=>{
+        console.log('error' + e);
+      })
+    },
+    deleteExternalExperts(index) {
+      let externalExpert = this.project.externalExperts[index]
+      
+      this.axios.delete('/externalExperts/' + externalExpert._id)
+      .then(() => {
+
+        this.axios.get(`/externalExperts?projectId=${this.$route.params.id}`)
+        .then((response) => {
+          this.project.externalExperts = response.data
+        })
+        .catch((e)=>{
+          console.log('error' + e);
+        })
+
+        this.$toast.add({severity:'success', summary: 'Successful', detail: 'External expert deleted', life: 3000});
       })
       .catch((e)=>{
         console.log('error' + e);
@@ -1995,6 +2114,14 @@ export default {
       this.axios.put('/events/updateAll', this.project.events)
       .then(() => {
         this.$toast.add({severity:'success', summary: 'Successful', detail: 'All Events updated', life: 3000});
+      }).catch((error) =>{
+        console.log(error)
+      })
+    },
+    saveExternalExperts() {
+      this.axios.put('/externalExperts/updateAll', this.project.externalExperts)
+      .then(() => {
+        this.$toast.add({severity:'success', summary: 'Successful', detail: 'All External experts updated', life: 3000});
       }).catch((error) =>{
         console.log(error)
       })
@@ -2088,6 +2215,23 @@ export default {
       axios.put("/partners/" + partnerId, paramsData).then(() => {
         this.project[field] = newValue
         this.$toast.add({severity:'success', summary: 'Successful', detail: 'Partner equipment data updated', life: 3000});
+      }).catch(error =>{
+        console.log(error)
+      })
+    },
+    onCellEditCompleteExternalExpert(event) {
+      let { data, newValue, newData, field } = event;
+
+      if (newValue === data[field]) return;
+
+      const paramsData = {}
+
+      newData[field] = newValue;
+      paramsData[field] = newValue;
+
+      axios.put("/externalExperts/" + data._id, paramsData).then(() => {
+        this.project.externalExperts.splice(this.project.externalExperts.indexOf(data), 1, newData)
+        this.$toast.add({severity:'success', summary: 'Successful', detail: 'External experts updated', life: 3000});
       }).catch(error =>{
         console.log(error)
       })
