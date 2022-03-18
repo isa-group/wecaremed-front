@@ -10,7 +10,7 @@
       <h1 style="margin-bottom: 20px">{{project.name}} 
       ({{(new Date(project.from).getMonth() + 1).toString().padStart(2, "0") + '/' + new Date(project.from).getFullYear()}}
       - {{(new Date(project.to).getMonth() + 1).toString().padStart(2, "0") + '/' + new Date(project.to).getFullYear()}})
-      <br>[{{project.currentCF}} / {{project.initialCF}}] t CO2e</h1>
+      [{{project.currentCF}} / {{project.initialCF}}] t CO2e</h1>
                         
       <h3>Partners</h3>
                 
@@ -1063,7 +1063,7 @@ export default {
   methods: {
     generatePDF() {
       var html = htmlToPdfmake(document.getElementById('pdfPrintDiv').innerHTML);
-      const documentDefinition = { content: html };
+      const documentDefinition = { content: html, pageOrientation: 'landscape' };
       pdfMake.vfs = pdfFonts.pdfMake.vfs;
       pdfMake.createPdf(documentDefinition).open();
     },

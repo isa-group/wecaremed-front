@@ -15,7 +15,7 @@
               <h1 style="margin-bottom: 20px">{{project.name}} 
                     ({{(new Date(project.from).getMonth() + 1).toString().padStart(2, "0") + '/' + new Date(project.from).getFullYear()}}
                     - {{(new Date(project.to).getMonth() + 1).toString().padStart(2, "0") + '/' + new Date(project.to).getFullYear()}})
-                    <br>[{{project.currentCF}} / {{project.initialCF}}] t CO2e</h1>
+                    [{{project.currentCF}} / {{project.initialCF}}] t CO2e</h1>
                     
               <h3>Partners</h3>
                         
@@ -78,156 +78,76 @@
                 </table>
               </div>
 
-            <h3 style="margin-top: 20px">Events</h3>
+              <h3 style="margin-top: 20px">Events</h3>
+              
+              <h3 style="margin-top: 20px">Events organized by the project</h3>
+              <table class="table table-bordered">
+                <thead>
+                  <tr>
+                    <th>Name</th>
+                    <th>Type</th>
+                    <th>Physical participants</th>
+                    <th>Non-local physical participants</th>
+                    <th>Virtual participants</th>
+                    <th>Duration (in days)</th>
+                    <th>Duration (hours/day)</th>
+                    <th>Hosting country</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr v-for="event in project.events.organization" :key="event._id">
+                    <td>{{event.name}}</td>
+                    <td>{{event.type}}</td>
+                    <td>{{event.physicalParticipants}}</td>
+                    <td>{{event.nonLocalPhysicalParticipants}}</td>
+                    <td>{{event.virtualParticipants}}</td>
+                    <td>{{event.durationDays}}</td>
+                    <td>{{event.durationHoursPerDay}}</td>
+                    <td>{{event.hostingCountry}}</td>
+                  </tr>
+                </tbody>
+              </table>
 
               <div>
-                <h5>Public events</h5>
-
-                <h6>In presence</h6>
-                <table class="table table-bordered" style="margin-bottom: 20px">
-                  <thead>
-                    <tr>
-                      <th>Number of in presence public events</th>
-                      <th>Average number of physical participants</th>
-                      <th>Average number of non-local physical participants</th>
-                      <th>Average duration (days)</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr>
-                      <td>{{project.publicOnSiteEventsNumber}}</td>
-                      <td>{{project.publicOnSiteEventsAveragePhysicalParticipants}}</td>
-                      <td>{{project.publicOnSiteEventsAverageNonLocalPhysicalParticipants}}</td>
-                      <td>{{project.publicOnSiteEventsAverageDuration}}</td>
-                    </tr>
-                  </tbody>
-                </table>
-
-                <h6>Mixed mode: both in presence and on-line</h6>
-                <table class="table table-bordered" style="margin-bottom: 20px">
-                  <thead>
-                    <tr>
-                      <th>Number of mixed public events</th>
-                      <th>Average number of physical participants</th>
-                      <th>Average number of non-local physical participants</th>
-                      <th>Average number of on-line participants</th>
-                      <th>Average duration (days)</th>
-                      <th>Average duration (hours/day)</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr>
-                      <td>{{project.publicHybridEventsNumber}}</td>
-                      <td>{{project.publicHybridEventsAveragePhysicalParticipants}}</td>
-                      <td>{{project.publicHybridEventsAverageNonLocalPhysicalParticipants}}</td>
-                      <td>{{project.publicHybridEventsAverageVirtualParticipants}}</td>
-                      <td>{{project.publicHybridEventsAverageDuration}}</td>
-                      <td>{{project.publicHybridEventsAverageHoursPerDays}}</td>
-                    </tr>
-                  </tbody>
-                </table>
-
-                <h6>On-line</h6>
-                <table class="table table-bordered" style="margin-bottom: 20px">
-                  <thead>
-                    <tr>
-                      <th>Number of on-line public events</th>
-                      <th>Average number of on-line participants</th>
-                      <th>Average duration (hours)</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr>
-                      <td>{{project.publicVirtualEventsNumber}}</td>
-                      <td>{{project.publicVirtualEventsAverageVirtualParticipants}}</td>
-                      <td>{{project.publicVirtualEventsAverageDuration}}</td>
-                    </tr>
-                  </tbody>
-                </table>
-
-              <h5 style="margin-top: 20px">Internal events/meetings</h5>
-
-                <h6>In presence</h6>
-                <table class="table table-bordered" style="margin-bottom: 20px">
-                  <thead>
-                    <tr>
-                      <th>Number of in presence internal events/meetings</th>
-                      <th>Average number of physical participants</th>
-                      <th>Average number of non-local physical participants</th>
-                      <th>Average duration (days)</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr>
-                      <td>{{project.internalOnSiteEventsNumber}}</td>
-                      <td>{{project.internalOnSiteEventsAveragePhysicalParticipants}}</td>
-                      <td>{{project.internalOnSiteEventsAverageNonLocalPhysicalParticipants}}</td>
-                      <td>{{project.internalOnSiteEventsAverageDuration}}</td>
-                    </tr>
-                  </tbody>
-                </table>
-
-                <h6>Mixed mode: both in presence and on-line</h6>
-                <table class="table table-bordered" style="margin-bottom: 20px">
-                  <thead>
-                    <tr>
-                      <th>Number of mixed internal events/meetings</th>
-                      <th>Average number of physical participants</th>
-                      <th>Average number of non-local physical participants</th>
-                      <th>Average number of on-line participants</th>
-                      <th>Average duration (days)</th>
-                      <th>Average duration (hours/day)</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr>
-                      <td>{{project.internalHybridEventsNumber}}</td>
-                      <td>{{project.internalHybridEventsAveragePhysicalParticipants}}</td>
-                      <td>{{project.internalHybridEventsAverageNonLocalPhysicalParticipants}}</td>
-                      <td>{{project.internalHybridEventsAverageVirtualParticipants}}</td>
-                      <td>{{project.internalHybridEventsAverageDuration}}</td>
-                      <td>{{project.internalHybridEventsAverageHoursPerDays}}</td>
-                    </tr>
-                  </tbody>
-                </table>
-
-                <h6>On-line</h6>
-                <table class="table table-bordered" style="margin-bottom: 20px">
-                  <thead>
-                    <tr>
-                      <th>Number of on-line internal events/meetings</th>
-                      <th>Average number of on-line participants</th>
-                      <th>Average duration (hours)</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr>
-                      <td>{{project.internalVirtualEventsNumber}}</td>
-                      <td>{{project.internalVirtualEventsAverageVirtualParticipants}}</td>
-                      <td>{{project.internalVirtualEventsAverageDuration}}</td>
-                    </tr>
-                  </tbody>
-                </table>
-
-              <h5 style="margin-top: 20px">Events participated by the project</h5>
-
-                <h6>In presence</h6>
-                <table class="table table-bordered" style="margin-bottom: 20px">
-                  <thead>
-                    <tr>
-                      <th>Number of in presence events participated by the project</th>
-                      <th>Average number of participants of the project</th>
-                      <th>Average duration (days)</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr>
-                      <td>{{project.participatedOnSiteEventsNumber}}</td>
-                      <td>{{project.participatedOnSiteEventsAverageParticipants}}</td>
-                      <td>{{project.participatedOnSiteEventsAverageDuration}}</td>
-                    </tr>
-                  </tbody>
-                </table>
+              <h3 style="margin-top: 20px">Project participation in events</h3>
+  
+              <p>* Fuel type may only be chosen when "Car" is the selected Travel mode</p>
+              <table class="table table-bordered" style="margin-bottom: 35px">
+                <thead>
+                  <tr>
+                    <th rowspan="2">Name</th>
+                    <th rowspan="2">Type</th>
+                    <th rowspan="2">Non-local physical participants</th>
+                    <th rowspan="2">Duration (in days)</th>
+                    <th rowspan="2">Hosting country</th>
+                    <th colspan="3">Arrive at hosting city</th>
+                    <th colspan="3">Depart from hosting city</th>
+                  </tr>
+                  <tr>
+                    <th>Distance travelled (km)</th>
+                    <th>Travel mode</th>
+                    <th>Fuel type*</th>
+                    <th>Distance travelled (km)</th>
+                    <th>Travel mode</th>
+                    <th>Fuel type*</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr v-for="event in project.events.participation" :key="event._id">
+                    <td>{{event.name}}</td>
+                    <td>{{event.type}}</td>
+                    <td>{{event.nonLocalPhysicalParticipants}}</td>
+                    <td>{{event.durationDays}}</td>
+                    <td>{{event.hostingCountry}}</td>
+                    <td>{{event.distanceTravelledArrive}}</td>
+                    <td>{{event.travelModeArrive}}</td>
+                    <td>{{event.fuelTypeArrive}}</td>
+                    <td>{{event.distanceTravelledDepart}}</td>
+                    <td>{{event.travelModeDepart}}</td>
+                    <td>{{event.fuelTypeDepart}}</td>
+                  </tr>
+                </tbody>
+              </table>
               </div>
 
               <h3 style="margin-top: 20px">Printable deliverables</h3>
@@ -602,11 +522,11 @@
 
                       <ColumnGroup type="header">
                         <Row>
-                            <Column header="Name" :sortable="true" :rowspan="2" />
-                            <Column header="Type" :sortable="true" :rowspan="2" />
-                            <Column header="Non-local physical participants" :sortable="true" :rowspan="2" />
-                            <Column header="Duration (in days)" :sortable="true" :rowspan="2" />
-                            <Column header="Hosting country" :sortable="true" :rowspan="2" />
+                            <Column header="Name" :sortable="true" :rowspan="2" field="name" />
+                            <Column header="Type" :sortable="true" :rowspan="2" field="type" />
+                            <Column header="Non-local physical participants" :sortable="true" :rowspan="2" field="nonLocalPhysicalParticipants" />
+                            <Column header="Duration (in days)" :sortable="true" :rowspan="2" field="durationDays" />
+                            <Column header="Hosting country" :sortable="true" :rowspan="2" field="hostingCountry" />
                             <Column header="Arrive at hosting city" :colspan="3" />
                             <Column header="Depart from hosting city" :colspan="3" />
                             <Column header="Actions" :rowspan="2" />
@@ -1614,7 +1534,7 @@ export default {
   methods: {
     generatePDF() {
       var html = htmlToPdfmake(document.getElementById('pdfPrintDiv').innerHTML);
-      const documentDefinition = { content: html };
+      const documentDefinition = { content: html, pageOrientation: 'landscape' };
       pdfMake.vfs = pdfFonts.pdfMake.vfs;
       pdfMake.createPdf(documentDefinition).open();
     },
@@ -2182,18 +2102,6 @@ export default {
       newData[field] = newValue;
       paramsData[field] = newValue;
 
-      // if (field === "deliverableType") {
-      //   paramsData["deliverableName"] = "Select a deliverable name"
-      //   newData["deliverableName"] = "Select a deliverable name"
-
-      //   let newPrintableDeliverable = this.deliverableOptions.filter(d => d.value == newValue)[0]
-
-      //   paramsData["avgPagesPerCopy"] = newPrintableDeliverable.avgPagesPerCopy
-      //   newData["avgPagesPerCopy"] = newPrintableDeliverable.avgPagesPerCopy
-      //   paramsData["size"] = newPrintableDeliverable.size
-      //   newData["size"] = newPrintableDeliverable.size
-      // }
-      
       axios.put("/events/" + data._id, paramsData).then(() => {
         this.project.events[data.category].splice(this.project.events[data.category].indexOf(data), 1, newData)
         this.$toast.add({severity:'success', summary: 'Successful', detail: 'Events updated', life: 3000});
