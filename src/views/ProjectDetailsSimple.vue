@@ -7,8 +7,11 @@
     <Toast position="bottom-right" />
 
     <div id="pdfPrintDiv" style="display: none">
-      <h1 style="margin-bottom: 20px">{{project.name}} ({{project.from}} - {{project.to}}) [{{project.initialCF}} / {{project.currentCF}}] t CO2e</h1>
-
+      <h1 style="margin-bottom: 20px">{{project.name}} 
+      ({{(new Date(project.from).getMonth() + 1).toString().padStart(2, "0") + '/' + new Date(project.from).getFullYear()}}
+      - {{(new Date(project.to).getMonth() + 1).toString().padStart(2, "0") + '/' + new Date(project.to).getFullYear()}})
+      <br>[{{project.currentCF}} / {{project.initialCF}}] t CO2e</h1>
+                        
       <h3>Partners</h3>
                 
       <table class="table table-bordered" style="margin-bottom: 35px">
