@@ -609,12 +609,12 @@
                             <Column header="Actions" :rowspan="2" />
                         </Row>
                         <Row>
-                            <Column header="Distanced travelled" :sortable="true" field="distanceTravelledArrive"/>
+                            <Column header="Distance travelled (km)" :sortable="true" field="distanceTravelledArrive"/>
                             <Column header="Travel mode" :sortable="true" field="travelModeArrive"/>
-                            <Column header="Fuel type" :sortable="true" field="fuelTypeArrive"/>
-                            <Column header="Distanced travelled" :sortable="true" field="distanceTravelledDepart"/>
+                            <Column header="Fuel type*" :sortable="true" field="fuelTypeArrive"/>
+                            <Column header="Distance travelled (km)" :sortable="true" field="distanceTravelledDepart"/>
                             <Column header="Travel mode" :sortable="true" field="travelModeDepart"/>
-                            <Column header="Fuel type" :sortable="true" field="fuelTypeDepart"/>
+                            <Column header="Fuel type*" :sortable="true" field="fuelTypeDepart"/>
                         </Row>
                     </ColumnGroup>
 
@@ -680,11 +680,12 @@
 
                     <Column field="fuelTypeArrive">
                       <template #body="slotProps">
-                        <td :class="slotProps.data[slotProps.field] == 'Select a fuel type' ? 'defaultValue' : ''" style="display:block;">{{slotProps.data[slotProps.field]}}</td>
+                        <td :class="slotProps.data[slotProps.field] == 'Select a fuel type' && slotProps.data['travelModeArrive'] === 'Car'
+                        ? 'defaultValue' : ''" style="display:block;" @click="slotProps.data['travelModeArrive'] === 'Car' ? '' : slotProps.data['fuelTypeArrive'] = '-'"
+                        >{{slotProps.data['travelModeArrive'] === 'Car' ? slotProps.data[slotProps.field] : '-'}}</td>
                       </template>
                       <template #editor="slotProps">
-                        <Dropdown :options="fuelTypesForDropdown" v-model="slotProps.data[slotProps.field]" />
-                        <!-- :disabled="slotProps.data['travelModeDepart'] === 'car' ? false : true" -->
+                        <Dropdown :options="fuelTypesForDropdown" v-model="slotProps.data[slotProps.field]" :disabled="slotProps.data['travelModeArrive'] === 'Car' ? false : true"/>
                       </template>
                     </Column>
 
@@ -707,11 +708,12 @@
 
                     <Column field="fuelTypeDepart">
                       <template #body="slotProps">
-                        <td :class="slotProps.data[slotProps.field] == 'Select a fuel type' ? 'defaultValue' : ''" style="display:block;">{{slotProps.data[slotProps.field]}}</td>
+                        <td :class="slotProps.data[slotProps.field] == 'Select a fuel type' && slotProps.data['travelModeDepart'] === 'Car'
+                        ? 'defaultValue' : ''" style="display:block;" @click="slotProps.data['travelModeDepart'] === 'Car' ? '' : slotProps.data['fuelTypeDepart'] = '-'"
+                        >{{slotProps.data['travelModeDepart'] === 'Car' ? slotProps.data[slotProps.field] : '-'}}</td>
                       </template>
                       <template #editor="slotProps">
-                        <Dropdown :options="fuelTypesForDropdown" v-model="slotProps.data[slotProps.field]" /> 
-                        <!-- :disabled="slotProps.data['travelModeDepart'] === 'car' ? false : true" -->
+                        <Dropdown :options="fuelTypesForDropdown" v-model="slotProps.data[slotProps.field]" :disabled="slotProps.data['travelModeDepart'] === 'Car' ? false : true" />
                       </template>
                     </Column>
 
@@ -720,7 +722,7 @@
                         <i class="pi pi-trash" @click="deleteEvent(slotProps.index + currentPageEventsParticipationTable * 5, 'participation')" />
                       </template>
                     </Column>
-                    
+                    <p>* Fuel type may only be chosen when "Car" is the selected Travel mode</p>
                     </DataTable>
                   <!-- </TabPanel> -->
                 <!-- </TabView> -->
