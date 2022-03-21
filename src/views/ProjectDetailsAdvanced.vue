@@ -1096,55 +1096,55 @@
                   filterDisplay="menu" :loading="loading" :filters="partnerFilters" responsiveLayout="scroll"
                   :globalFilterFields="['nameCustom','valueCustom']" @page="currentPageCustomEventsTable = $event.page">
                   
-                  <template #header>
-                      <div class="flex justify-content-between flex-column sm:flex-row">
-                        <div>
-                          <Button class="p-button-info mr-2" @click="addCustom(this.customTypes[5].value,'customEvents', 'event')"><i class="pi pi-plus mr-2" />New additional custom event emission</Button>
-                          <span class="p-input-icon-left">
-                            <i class="pi pi-search" />
-                            <InputText v-model="partnerFilters['global'].value" placeholder="Keyword Search" style="width: 100%"/>
-                          </span>
-                          <Button class="ml-2" label="Save" icon="pi pi-check" @click="saveCustom('customEvents', 'event')" />
+                    <template #header>
+                        <div class="flex justify-content-between flex-column sm:flex-row">
+                          <div>
+                            <Button class="p-button-info mr-2" @click="addCustom(this.customTypes[5].value,'customEvents', 'event')"><i class="pi pi-plus mr-2" />New additional custom event emission</Button>
+                            <span class="p-input-icon-left">
+                              <i class="pi pi-search" />
+                              <InputText v-model="partnerFilters['global'].value" placeholder="Keyword Search" style="width: 100%"/>
+                            </span>
+                            <Button class="ml-2" label="Save" icon="pi pi-check" @click="saveCustom('customEvents', 'event')" />
+                          </div>
+                          
+                          <Button type="button" icon="pi pi-filter-slash" label="Clear" class="p-button-warning" @click="clearPartnerFilter()"/>
                         </div>
-                        
-                        <Button type="button" icon="pi pi-filter-slash" label="Clear" class="p-button-warning" @click="clearPartnerFilter()"/>
-                      </div>
-                  </template>
-
-                  <template #empty>
-                      No additional custom event emission found.
-                  </template>
-
-                  <template #loading>
-                      Loading custom events emissions. Please wait.
-                  </template>
-
-                  <Column field="name" header="Item" :sortable="true">
-                    <template #editor="slotProps">
-                        <InputText v-model="slotProps.data[slotProps.field]" />
                     </template>
-                    <template #filter="{filterModel, field}">
-                        <InputText type="text" v-model="filterModel.value" class="p-column-filter" :placeholder="'Filter by ' + field"/>
-                    </template>
-                  </Column>
 
-                  <Column field="value" header="Value" :sortable="true">
-                    <template #editor="slotProps" class="p-field">
-                      <InputNumber v-model="slotProps.data[slotProps.field]" mode="decimal" :maxFractionDigits="3"
-                      showButtons :step="0.25" decrementButtonClass="p-button-info"
-                      incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
-                      :allowEmpty="false" :min="0" />
+                    <template #empty>
+                        No additional custom event emission found.
                     </template>
-                  </Column>
 
-                  
-                  <Column field="actions" header="Actions">
-                    <template #body="slotProps">
-                      <i class="pi pi-trash" @click="deleteCustom(slotProps.index + currentPageCustomEventsTable * 5, 'customEvents', 'event')" />
+                    <template #loading>
+                        Loading custom events emissions. Please wait.
                     </template>
-                  </Column>
+
+                    <Column field="name" header="Item" :sortable="true">
+                      <template #editor="slotProps">
+                          <InputText v-model="slotProps.data[slotProps.field]" />
+                      </template>
+                      <template #filter="{filterModel, field}">
+                          <InputText type="text" v-model="filterModel.value" class="p-column-filter" :placeholder="'Filter by ' + field"/>
+                      </template>
+                    </Column>
+
+                    <Column field="value" header="Value" :sortable="true">
+                      <template #editor="slotProps" class="p-field">
+                        <InputNumber v-model="slotProps.data[slotProps.field]" mode="decimal" :maxFractionDigits="3"
+                        showButtons :step="0.25" decrementButtonClass="p-button-info"
+                        incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
+                        :allowEmpty="false" :min="0" />
+                      </template>
+                    </Column>
+
+                    
+                    <Column field="actions" header="Actions">
+                      <template #body="slotProps">
+                        <i class="pi pi-trash" @click="deleteCustom(slotProps.index + currentPageCustomEventsTable * 5, 'customEvents', 'event')" />
+                      </template>
+                    </Column>
                 
-                </DataTable>
+                  </DataTable>
 
                 </TabPanel>
 
