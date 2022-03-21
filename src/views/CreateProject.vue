@@ -82,6 +82,7 @@ export default {
         to: new Date().getFullYear() + 2,
         callId: "",
         proposalId: "",
+        isInitialProject: new Boolean(false),
         initialCF: 0,
         currentCF: 0,
         publicOnSiteEventsNumber: 0,
@@ -132,18 +133,37 @@ export default {
   },
   methods: {
     createProject() {
-      this.submitted = true
-      this.newProject._id = new mongoose.Types.ObjectId(); 
+      this.submitted = true;
+      this.newInitialProject = Object.assign({}, this.newProject);
+      this.newInitialProject.name += "_initial"; 
+      this.newInitialProject.isInitialProject = new Boolean(true);
+      this.newInitialProject._id = new mongoose.Types.ObjectId();
+      this.newProject._id = new mongoose.Types.ObjectId();
       this.newUserId = this.$store.state.userId;
-
-      axios.post('/projects', this.newProject,{
+      axios.post('/projects', this.newInitialProject,{
         auth: {
             username: this.$store.state.username,
             password: this.$store.state.password
           }
       })
-      .then(() => {
-        this.$router.push({ path: `/projects/${this.newProject._id}` })
+      .then((response) => {
+        let initialProjectID = response.data._id;
+        this.newProject.initialProject = initialProjectID;
+        axios.post('/projects', this.newProject, {
+          auth: {
+            username: this.$store.state.username,
+            password: this.$store.state.password
+          }
+        }).then( (res) => {
+          let newProjectID = res.data._id;
+          this.newInitialProject.initialProject = newProjectID;
+          axios.put('/projects/' + initialProjectID, this.newInitialProject)
+          .then( () => {
+            this.$router.push({ path: `/projects/${this.newProject._id}` })
+          })
+          
+        })
+        
       })
       .catch((error)=>{
         this.errors = error.response.data
@@ -153,7 +173,16 @@ export default {
       this.submitted = true
       axios.put('/projects/' + this.newProject._id, this.newProject)
       .then(() => {
-        this.$router.push({ path: `/projects/${this.newProject._id}` })
+        let updateInitialProject = Object.assign({}, this.newProject);
+        updateInitialProject._id = this.newProject.initialProject;
+        updateInitialProject.name += '_initial';
+        updateInitialProject.isInitialProject = new Boolean(true);
+        axios.put('/projects/' + this.newProject.initialProject, updateInitialProject).then( () => {
+          this.$router.push({ path: `/projects/${this.newProject._id}` });
+        }).catch( (e) => {
+          console.log('error ', e);
+        })
+        
       })
       .catch((error)=>{
         this.errors = error.response.data

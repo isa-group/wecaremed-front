@@ -852,13 +852,18 @@
       </div>
     </div>
 
-    <div class="col-12">
-
-      <div class="card p-fluid" style="display: flex; flex-direction: column; align-items: center; justify-content: space-around;">
-        <Button class="ml-2" label="Save current project" @click="saveCurrentProject" />
-      </div>
+    <div class="card col-12" style="display:flex; justify-content:space-around">
+      <template v-if="!this.project.isInitialProject" >
+        <Button  label="Save current project" @click="saveCurrentProject" />
+        <Button  label="Update the initial values of the project" @click="updateInitialValues" />
+        <Button  label="Go to set initial values" class="p-button-info" @click="goToLinkedProject()"/>      
+      </template>
+      <template v-else-if="this.project.isInitialProject">
+        <Button label="Update initial values" @click="saveCurrentProject" />
+        <Button type="button" label="Go to current project" class="p-button-info" @click="goToLinkedProject()"/>
+      </template>
     </div>
-
+    
     <div class="col-12">
       <div class="card p-fluid" style="display: flex; flex-direction: column; align-items: center; justify-content: space-around;">
         <div>
@@ -1002,6 +1007,7 @@ export default {
     return {
       placeholder: "Select a partner",
       project: {},
+      initialProject: {},
       object: {},
       countriesForDropdown: ["Albania", "Bosnia & Herzegovina", "Croatia", "Cyprus", "France", "Greece", "Italy", "Malta", "Montenegro", "Portugal", "Slovenia", "Spain", "Bulgaria", "North Macedonia"],
       paperSizes: ["A0", "A1", "A2", "A3", "A4", "A5", "A6"],
@@ -1044,7 +1050,8 @@ export default {
       displayPartnersWithDefaultValues: false,
       partnersWithoutCountry: [],
       partnersWithDefaultValues: [],
-      displayPartnersError: false
+      displayPartnersError: false,
+      isInitialProject: false
     }
   },
   created() {
@@ -1168,6 +1175,7 @@ export default {
       this.axios.get(`/projects/${this.$route.params.id}`)
       .then((response) => {
         this.project = response.data;
+        this.isInitialProject = this.project.isInitialProject;
         this.axios.get(`/partners?projectId=${this.$route.params.id}`)
         .then((response) => {
           this.project.partners = response.data;
@@ -1191,6 +1199,7 @@ export default {
       .catch((e)=>{
         console.log('error' + e);
       })
+      console.log("Valor de isInitialValue:" , this.isInitialProject);
     },
     addPrintableDeliverable() {
       let newPrintableDeliverable = {
@@ -1517,6 +1526,85 @@ export default {
         }).catch(error =>{
           console.log(error)
        })
+    },
+    updateInitialValues(){
+      if(this.project.isInitialProject){
+        this.saveCurrentProject();
+      } else {
+        axios.delete('/projects/' + this.project.initialProject)
+        .then(() => {
+          let newInitialProject = Object.assign({}, this.project);
+          newInitialProject.name += "_initial"; 
+          newInitialProject.isInitialProject = new Boolean(true);
+          newInitialProject._id = this.project.initialProject;
+          newInitialProject.initialProject = this.project._id;
+
+          for(let partner of newInitialProject.partners){
+            partner.project = this.project.initialProject;
+          }
+
+          for(let pd of newInitialProject.printableDeliverables) {
+            pd.project = this.project.initialProject;
+          }
+
+          axios.post('/projects', newInitialProject,{
+          auth: {
+              username: this.$store.state.username,
+              password: this.$store.state.password
+            }
+          })
+          .then( () => {
+            for (let pd of newInitialProject.printableDeliverables){
+              pd._id = new Mongoose.Types.ObjectId();
+              this.axios.post('/printableDeliverables', pd)
+              .catch((e)=>{
+                console.log('error' + e);
+              })
+            }
+
+            for(let partner of newInitialProject.partners) {
+              partner._id = new Mongoose.Types.ObjectId();
+              this.axios.post('/partners', partner)
+              .catch((e)=>{
+                console.log('error' + e);
+              })
+            }
+            this.$toast.add({severity:'success', summary: 'Successful', detail: 'All Printable deliverables saved', life: 3000});
+            this.$toast.add({severity:'success', summary: 'Successful', detail: 'All Partners saved', life: 3000});
+            
+          })
+          .catch( (error) => {
+            console.log('error', error);
+          })
+          axios.get('/customs?projectId=' + this.project._id, { params: {
+              projectId: this.project._id
+            }
+          })
+          .then( (response) => {
+            this.project.customs = response.data;
+            for(let custom of this.project.customs) {
+              custom._id = new Mongoose.Types.ObjectId();
+              custom.project = this.project.initialProject;
+
+              this.axios.post('/customs', custom)
+              .catch((e)=>{
+                console.log('error' + e);
+              })
+            }
+            this.$toast.add({severity:'success', summary: 'Successful', detail: 'All Customs saved', life: 3000});
+          })
+          .catch((e)=>{
+            console.log('error' + e);
+          })
+
+        })
+        .catch((e)=>{
+          console.log('error' + e);
+        })
+      }
+    },
+    goToLinkedProject() {
+      location.href = '/projects/' + this.project.initialProject;
     }
   },
   computed: {

@@ -151,7 +151,7 @@ export default {
       loading: true,
       projects: [],
       currentPageProjectsTable: 0,
-      cloneProjectDialog: false,
+      cloneProjectDialog: false
     }
   },
   created() {
@@ -186,11 +186,16 @@ export default {
     },
     deleteProject() {
       axios.delete('/projects/' + this.projectToDelete._id)
-      .then((response) => {
-        console.log(response.data)
-        this.projects.splice(this.projects.indexOf(this.projectToDelete), 1)
-        this.deleteProjectDialog = false
-        this.$toast.add({severity:'success', summary: 'Successful', detail: 'Project deleted', life: 3000});
+      .then(() => {
+        axios.delete('/projects/' + this.projectToDelete.initialProject)
+        .then( () => {
+          this.projects.splice(this.projects.indexOf(this.projectToDelete), 1)
+          this.deleteProjectDialog = false
+          this.$toast.add({severity:'success', summary: 'Successful', detail: 'Project deleted', life: 3000});
+
+        }).catch( (err) => {
+          console.log('error' + err);
+        })
       })
       .catch((e)=>{
         console.log('error' + e);
@@ -198,18 +203,31 @@ export default {
     },
     confirmCloneProject(index) {
       this.projectToClone = Object.assign({}, this.projects[index]);
+      this.projectClonedInitial = Object.assign({}, this.projects[index]);
       this.projectToClone.tableIndex = index;
       this.cloneProjectDialog = true;
     },
     cloneProject() { 
       let nextNumCopies = this.projects[this.projectToClone.tableIndex].numCopies + 1;
-      let projectToCloneId = this.projects[this.projectToClone.tableIndex]._id;
+      let index = this.projectToClone.tableIndex;
       this.cloneProjectDialog = false;
       this.submitted = true
       
+      let projectOriginalID = this.projects[this.projectToClone.tableIndex]._id;
+
+      // We create the clone of the project, the ID of the clone, the new name and the isInitialProject to false
       this.projectToClone._id = new mongoose.Types.ObjectId(); 
       this.projectToClone.name = this.projects[this.projectToClone.tableIndex].name + "_copy_" + nextNumCopies;
-      this.newUserId = this.$store.state.userId;
+      this.projectToClone.numCopies = 0;
+      this.projectToClone.isInitialProject = new Boolean(false);
+
+      // We create a copy of the clone for create a initial project to the clone
+      this.projectClonedInitial._id = new mongoose.Types.ObjectId();
+      this.projectClonedInitial.name = this.projects[this.projectToClone.tableIndex].name + "_copy_" + nextNumCopies + '_initial';
+      this.projectClonedInitial.numCopies = 0;
+      this.projectClonedInitial.isInitialProject = new Boolean(true);
+
+      // Send to DB the clone of the project
       axios.post('/projects', this.projectToClone,{
         auth: {
             username: this.$store.state.username,
@@ -217,43 +235,113 @@ export default {
           }
       })
       .then((req) => {
-        axios.get(`/partners?projectId=`+projectToCloneId)
-          .then((response) => {
-            for (let partner of response.data){
+        // Copy the clone ID for the initialProject value of the initial project
+        this.projectClonedID = req.data._id;
+        this.projectClonedInitial.initialProject = req.data._id;
+        
+        // Send to DB the initial project
+        axios.post('/projects', this.projectClonedInitial,{
+          auth: {
+              username: this.$store.state.username,
+              password: this.$store.state.password
+            }
+        })
+        .then( (response) => {
+          // Copy the initial project ID for the clone project
+          this.projectInitialID = response.data._id;
+          this.projectToClone.initialProject = this.projectInitialID;
+
+          // Send to DB the update of the clone project with the initialProject value updated
+          axios.put('/projects/' + this.projectClonedID, this.projectToClone)
+          .catch((e) => {
+            console.log('error ', e);
+          })
+
+          axios.get(`/partners?projectId=`+projectOriginalID)
+          .then((responsePartners) => {
+            for (var partner of responsePartners.data){
               partner._id = new mongoose.Types.ObjectId();
-              partner.project = req.data._id;
+              partner.project = this.projectClonedID;
               axios.post('/partners', partner)
-              .catch((error) =>{console.log(error)})
-              }
-            })
-            .catch((e)=>{
-              console.log('error', e);
+              .then( () => {
+                  // we create a copy of each partner to assign it to the initial project
+                partner._id = new mongoose.Types.ObjectId();
+                partner.project = this.projectInitialID;
+                axios.post('/partners', partner)
+                .catch( (error) => {console.log(error)})
+              })
+              .catch((error) =>{
+                console.log(error);
+              })
+              
+            }
+            this.projects[this.projectToClone.tableIndex].numCopies = nextNumCopies;
+            axios.put('/projects/' + projectOriginalID, this.projects[this.projectToClone.tableIndex])
+            .catch((e) => {
+              console.log('error ', e);
             })
 
-            this.axios.get(`/printableDeliverables?projectId=`+ projectToCloneId)
-            .then((response) => {
-              for (let printableDeliverable of response.data){
-                printableDeliverable._id = new mongoose.Types.ObjectId();
-                printableDeliverable.project = req.data._id;
-                axios.post('/printableDeliverables', printableDeliverable)
-                .catch((error) =>{console.log(error)})
-              }
-            })
-            .catch((e)=>{
-              console.log('error', e);
-            })
-            this.projects[this.projectToClone.tableIndex].numCopies = nextNumCopies;
-            axios.put('/projects/' + projectToCloneId, this.projects[this.projectToClone.tableIndex])
-            .catch((error)=>{
-              this.errors = error.response.data
-            })
-            this.projects[this.projectToClone.tableIndex].numCopies = nextNumCopies;
             this.projects.push(this.projectToClone);
-            this.projectToClone = {}
+            this.projectToClone = {};
+            this.projectClonedInitial = {};
           })
           .catch((error)=>{
-            this.errors = error.response.data
-          }) 
+              this.errors = error.response.data
+          })
+
+          // Send to DB a copy for the clone project of each printable deliverablews of the original project
+          this.axios.get(`/printableDeliverables?projectId=`+ projectOriginalID)
+          .then((responsePD) => {
+            for (let printableDeliverable of responsePD.data){
+              printableDeliverable._id = new mongoose.Types.ObjectId();
+              printableDeliverable.project = this.projectClonedID;
+              axios.post('/printableDeliverables', printableDeliverable)
+              .then( () => {
+                // we create a copy of each printable deliverables to assign it to the initial project
+                printableDeliverable._id = new mongoose.Types.ObjectId();
+                printableDeliverable.project = this.projectInitialID;
+                axios.post('/printableDeliverables', printableDeliverable)
+                .catch( (error) => {console.log(error)})
+              })
+              .catch((error) =>{console.log(error)})
+
+              
+            }
+          })
+          .catch((e)=>{
+            console.log('error', e);
+          })
+          
+          axios.get('/customs?projectId=' + projectOriginalID, { params: {
+              projectId: projectOriginalID
+            }
+          })
+          .then( (responseCustom) => {
+            this.projects[index].customs = responseCustom.data;
+            for(let custom of this.projects[index].customs) {
+              custom._id = new mongoose.Types.ObjectId();
+              custom.project = this.projectClonedID;
+
+              axios.post('/customs', custom)
+              .then( () => {
+                custom._id = new mongoose.Types.ObjectId();
+                custom.project = this.projectInitialID;
+
+                axios.post('/customs', custom)
+                .catch((e)=>{
+                  console.log('error' + e);
+                })
+              })
+              .catch((e)=>{
+                console.log('error' + e);
+              })
+            }
+          })
+          .catch((e)=>{
+            console.log('error' + e);
+          })
+        })
+      })
     }
   }
 }
