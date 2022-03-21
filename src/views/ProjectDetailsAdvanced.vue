@@ -1210,12 +1210,18 @@
 
                 </TabPanel>
               </TabView>
-          </div>
-
-            <div class="col-12">
-              <div class="card p-fluid" style="display: flex; flex-direction: column; align-items: center; justify-content: space-around;">
-                <Button class="ml-2" label="Save current project" @click="saveCurrentProject" />
-              </div>
+            </div>
+                  
+            <div class="card" style="display:flex; justify-content:space-around">
+              <template v-if="!this.project.isInitialProject">
+                <Button  label="Save current project" @click="saveCurrentProject" />
+                <Button  label="Update the initial values of the project" @click="updateInitialValues" />
+                <Button  label="Go to set initial values" class="p-button-info" @click="goToLinkedProject()"/>      
+              </template>
+              <template v-else-if="this.project.isInitialProject">
+                <Button label="Update initial values" @click="saveCurrentProject" />
+                <Button type="button" label="Go to current project" class="p-button-info" @click="goToLinkedProject()"/>
+              </template>
             </div>
 
             <div class="cfResults col-12">
@@ -1232,28 +1238,42 @@
               </div>
             </div>
 
-                  <div class="card" style="display:flex; justify-content:space-around">
-                    <template v-if="!this.project.isInitialProject">
-                      <Button  label="Save current project" @click="saveCurrentProject" />
-                      <Button  label="Update the initial values of the project" @click="updateInitialValues" />
-                      <Button  label="Go to set initial values" class="p-button-info" @click="goToLinkedProject()"/>      
-                    </template>
-                    <template v-else-if="this.project.isInitialProject">
-                      <Button label="Update initial values" @click="saveCurrentProject" />
-                      <Button type="button" label="Go to current project" class="p-button-info" @click="goToLinkedProject()"/>
-                    </template>
+            <Dialog class="errorDialog col-4" header="Error" v-model:visible="displayPartnersError" :modal="true">
+                <div v-if="displayPartnersWithoutCountryDialog" class="flex align-items-center  pb-5">
+                    <i class="pi pi-exclamation-triangle mr-3" style="font-size: 2rem" />
+                    <div>
+                      <p>You need to select a country for each partner in order to calculate the CF of the project!</p>
+                      <p>Partners without country:</p>
+                      <p v-for="partner in partnersWithoutCountry" :key="partner._id">{{partner.name}}</p>
+                    </div>
+                </div>
+                <div v-if="displayPartnersWithDefaultValues" class="flex align-items-center border-top-1 surface-border pt-5">
+                    <i class="pi pi-exclamation-triangle mr-3" style="font-size: 2rem" />
+                    <div>
+                      <p>There are partners with empty values!</p>
+                      <p>Partners with empty values:</p>
+                      <p v-for="partner in partnersWithDefaultValues" :key="partner._id">{{partner.name}}</p>
+                    </div>
+                </div>
+                <template #footer>
+                    <Button label="Ok" @click="closePartnersWithoutCountryErrorDialog" class="p-button-text p-button-info" autofocus/>
+                </template>
+            </Dialog>
+
+            <div class="cfBreakdown col-12">
+              <div class="card p-fluid" style="display: flex; flex-direction: column; align-items: center; justify-content: space-around;">
+                <h2>CF Breakdown (Tons)</h2>
+                <div class="col-12" style="display: flex; justify-content: space-evenly;">
+                  <div class="card p-fluid col-2" style="display: flex; flex-direction: column; align-items: center; justify-content: space-around;">
+                    <h2 class="font-medium text-3xl">Fuels Heat</h2>
+                    <div class="flex align-items-center py-3 px-2 border-top-1 surface-border">
+                      <Badge :value="project.fuelsHeatCF" size="xlarge" severity="info" />
+                    </div>
                   </div>
-                  <div class="col-12">
-                    <div class="card p-fluid" style="display: flex; flex-direction: column; align-items: center; justify-content: space-around;">
-                      <div>
-                        <h2>Tons of equivalent carbon dioxide emitted:
-                          <Badge :value="project.initialCF" class="ml-3" size="xlarge" :severity="getTextColorFromCFIndex(project.initialCF)" />
-                        </h2>
-                      </div>
-                      <Button icon="pi pi-replay" class="p-button-rounded p-button-outlined p-button-plain mr-5" label="Recalculate"
-                              style="width: 15rem; font-size: 1.1rem" @click="calculateCF" />
-                      <Button icon="pi pi-file-pdf" class="p-button-rounded p-button-outlined p-button-plain mr-5 mt-3" label="Generate PDF"
-                              style="width: 15rem; font-size: 1.1rem" @click="generatePDF"/>
+                  <div class="card p-fluid col-2" style="display: flex; flex-direction: column; align-items: center; justify-content: space-around;">
+                    <h2 class="font-medium text-3xl">Electricity</h2>
+                    <div class="flex align-items-center py-3 px-2 border-top-1 surface-border">
+                      <Badge :value="project.electricityCF" size="xlarge" severity="info" />
                     </div>
                   </div>
                   <div class="card p-fluid col-2" style="display: flex; flex-direction: column; align-items: center; justify-content: space-around;">
@@ -1298,9 +1318,9 @@
               </div>
             </div>
           </TabPanel>
-
+          
           <TabPanel v-if="!this.project.isInitialProject" header="Analysis">
-												<TabView>
+						<TabView>
               <TabPanel header="General">
 
               </TabPanel>
