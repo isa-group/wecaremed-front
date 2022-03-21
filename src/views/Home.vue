@@ -39,13 +39,13 @@
 
         <Column field="from" header="From" :sortable="true">
           <template #body="slotProps">
-            {{slotProps.data.from}}
+            {{(new Date(slotProps.data.from).getMonth() + 1).toString().padStart(2, "0") + '/' + new Date(slotProps.data.from).getFullYear()}}
           </template>
         </Column>
 
         <Column field="to" header="To" :sortable="true">
         <template #body="slotProps">
-            {{slotProps.data.to}}
+            {{(new Date(slotProps.data.to).getMonth() + 1).toString().padStart(2, "0") + '/' + new Date(slotProps.data.to).getFullYear()}}
           </template>
         </Column>
 

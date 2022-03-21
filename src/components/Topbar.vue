@@ -10,8 +10,8 @@
                     <div style="display: flex;align-items: center;width: 100%;place-content: center;">
                         
                         <h2>{{projectInfo.name}}&nbsp;</h2>
-                        <h2>({{projectInfo.from}} -&nbsp;</h2>
-                        <h2>{{projectInfo.to}})&nbsp;</h2> 
+                        <h2>({{ (new Date(projectInfo.from).getMonth() + 1).toString().padStart(2, "0") + '/' + new Date(projectInfo.from).getFullYear()}} -&nbsp;</h2>
+                        <h2>{{(new Date(projectInfo.to).getMonth() + 1).toString().padStart(2, "0") + '/' + new Date(projectInfo.to).getFullYear()}})&nbsp;</h2> 
                         
                         <span v-if="$store.state.toggleValue">
                             <Badge :value="currentCF + ' t CO2e'" size="large" :severity="getTextColorFromCFIndex(currentCF)" />
