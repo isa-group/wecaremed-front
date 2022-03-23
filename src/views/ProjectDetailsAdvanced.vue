@@ -1210,7 +1210,7 @@
 
                 </TabPanel>
               </TabView>
-          </div>
+            </div>
 
             <div class="col-12">
               <div class="card p-fluid" style="display: flex; flex-direction: column; align-items: center; justify-content: space-around;">
