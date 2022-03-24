@@ -1310,7 +1310,7 @@
 
                 </TabPanel>
               </TabView>
-          </div>
+            </div>
 
             <div class="card" style="display:flex; justify-content:space-around">
               <template v-if="!project.isInitialProject">

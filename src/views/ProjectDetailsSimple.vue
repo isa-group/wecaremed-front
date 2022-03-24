@@ -875,9 +875,9 @@
           </h2>
         </div>
         <Button icon="pi pi-replay" class="p-button-rounded p-button-outlined p-button-plain mr-5" label="Recalculate"
-                style="width: 15rem; font-size: 1.1rem" @click="calculateCF" />
+                style="width: 15rem; font-size: 1.1rem" @click="calculateCF()" />
         <Button icon="pi pi-file-pdf" class="p-button-rounded p-button-outlined p-button-plain mr-5 mt-3" label="Generate PDF"
-                style="width: 15rem; font-size: 1.1rem" @click="generatePDF"/>
+                style="width: 15rem; font-size: 1.1rem" @click="generatePDF()"/>
       </div>
     </div>
 
@@ -1230,7 +1230,6 @@ export default {
       .catch((e)=>{
         console.log('error' + e);
       })
-      console.log("Valor de isInitialValue:" , this.isInitialProject);
     },
     addPrintableDeliverable() {
       let newPrintableDeliverable = {
