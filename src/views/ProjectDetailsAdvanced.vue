@@ -908,7 +908,7 @@
                               <i class="pi pi-search" />
                               <InputText v-model="customFilters['global'].value" placeholder="Keyword Search" style="width: 100%"/>
                             </span>
-                            <Button class="ml-2" label="Save" icon="pi pi-check" @click="saveCustom('customHeat', 'heat')" />
+                            <Button class="ml-2" label="Save" icon="pi pi-check" @click="saveCustoms" />
                           </div>
                           
                           <Button type="button" icon="pi pi-filter-slash" label="Clear" class="p-button-warning" @click="clearCustomFilter()"/>
@@ -966,7 +966,7 @@
                             <i class="pi pi-search" />
                             <InputText v-model="customFilters['global'].value" placeholder="Keyword Search" style="width: 100%"/>
                           </span>
-                          <Button class="ml-2" label="Save" icon="pi pi-check" @click="saveCustom('customElectricity', 'electricity')" />
+                          <Button class="ml-2" label="Save" icon="pi pi-check" @click="saveCustoms" />
                         </div>
                         
                         <Button type="button" icon="pi pi-filter-slash" label="Clear" class="p-button-warning" @click="clearPartnerFilter()"/>
@@ -1025,7 +1025,7 @@
                             <i class="pi pi-search" />
                             <InputText v-model="customFilters['global'].value" placeholder="Keyword Search" style="width: 100%"/>
                           </span>
-                          <Button class="ml-2" label="Save" icon="pi pi-check" @click="saveCustom('customWater', 'water')" />
+                          <Button class="ml-2" label="Save" icon="pi pi-check" @click="saveCustoms" />
                         </div>
                         
                         <Button type="button" icon="pi pi-filter-slash" label="Clear" class="p-button-warning" @click="clearCustomFilter()"/>
@@ -1085,7 +1085,7 @@
                               <i class="pi pi-search" />
                               <InputText v-model="customFilters['global'].value" placeholder="Keyword Search" style="width: 100%"/>
                             </span>
-                            <Button class="ml-2" label="Save" icon="pi pi-check" @click="saveCustom('customTransportation', 'transportation')" />
+                            <Button class="ml-2" label="Save" icon="pi pi-check" @click="saveCustoms" />
                           </div>
                           
                           <Button type="button" icon="pi pi-filter-slash" label="Clear" class="p-button-warning" @click="clearCustomFilter()"/>
@@ -1145,7 +1145,7 @@
                               <i class="pi pi-search" />
                               <InputText v-model="customFilters['global'].value" placeholder="Keyword Search" style="width: 100%"/>
                             </span>
-                            <Button class="ml-2" label="Save" icon="pi pi-check" @click="saveCustom('customMaterials', 'materials')" />
+                            <Button class="ml-2" label="Save" icon="pi pi-check" @click="saveCustoms" />
                           </div>
                           
                           <Button type="button" icon="pi pi-filter-slash" label="Clear" class="p-button-warning" @click="clearCustomFilter()"/>
@@ -1205,7 +1205,7 @@
                             <i class="pi pi-search" />
                             <InputText v-model="customFilters['global'].value" placeholder="Keyword Search" style="width: 100%"/>
                           </span>
-                          <Button class="ml-2" label="Save" icon="pi pi-check" @click="saveCustom('customEvents', 'event')" />
+                          <Button class="ml-2" label="Save" icon="pi pi-check" @click="saveCustoms" />
                         </div>
                         
                         <Button type="button" icon="pi pi-filter-slash" label="Clear" class="p-button-warning" @click="clearCustomFilter()"/>
@@ -1267,7 +1267,7 @@
                                 <i class="pi pi-search" />
                                 <InputText v-model="customFilters['global'].value" placeholder="Keyword Search" style="width: 100%"/>
                               </span>
-                              <Button class="ml-2" label="Save" icon="pi pi-check" @click="saveCustom('customPrintableDeliverables', 'Printable Deliverables')" />
+                              <Button class="ml-2" label="Save" icon="pi pi-check" @click="saveCustoms" />
                             </div>
                             
                             <Button type="button" icon="pi pi-filter-slash" label="Clear" class="p-button-warning" @click="clearCustomFilter()"/>
@@ -1315,11 +1315,11 @@
             <div class="card" style="display:flex; justify-content:space-around">
               <template v-if="!project.isInitialProject">
                 <Button  label="Save current project" @click="saveCurrentProject" />
-                <Button  label="Update the initial values of the project" @click="updateInitialValues" />
+                <Button  label="Update current values as initial values" @click="displayUpdateInitialValuesDialog" />
                 <Button  label="Go to set initial values" class="p-button-info" @click="goToLinkedProject()"/>      
               </template>
               <template v-else-if="project.isInitialProject">
-                <Button label="Update initial values" @click="saveCurrentProject" />
+                <Button label="Update initial values" @click="displayUpdateInitialValuesDialog" />
                 <Button type="button" label="Go to current project" class="p-button-info" @click="goToLinkedProject()"/>
               </template>
             </div>
@@ -1495,6 +1495,19 @@
 				</TabView>
       </div>
     </div>
+
+    <Dialog header="Warning" v-model:visible="displayUpdateInitialValues" class="col-4" :modal="true">
+      <div class="flex align-items-center  pb-5">
+          <i class="pi pi-exclamation-triangle mr-3" style="font-size: 2rem" />
+          <div>
+            <p>The values of the project will be updated in it's initial phase, are you sure?</p>
+          </div>
+      </div>
+      <template #footer>
+          <Button label="Cancel" @click="declineUpdateInitialValuesDialog" class="p-button-text p-button-info" />
+          <Button label="Ok" @click="confirmUpdateInitialValuesDialog" class="p-button-text p-button-info" /> 
+      </template>
+    </Dialog>
   </div>
     
 
@@ -1674,6 +1687,7 @@ export default {
       partnersWithDefaultValues: [],
       displayPartnersError: false,
       eventsLoaded: false,
+      displayUpdateInitialValues: false
     }
   },
   created() {
@@ -1710,12 +1724,26 @@ export default {
     displayPartnersErrorDialog() {
       this.displayPartnersError = true;
     },
+    displayUpdateInitialValuesDialog() {
+      this.displayUpdateInitialValues = true;
+    },
     closePartnersWithoutCountryErrorDialog() {
       this.displayPartnersError = false;
       this.displayPartnersWithoutCountryDialog = false
       this.displayPartnersWithDefaultValues = false;
       this.partnersWithoutCountry = []
       this.partnersWithDefaultValues = [];
+    },
+    confirmUpdateInitialValuesDialog() {
+      this.displayUpdateInitialValues = false;
+      if(this.project.isInitialProject) {
+        this.saveCurrentProject();
+      } else {
+        this.updateInitialValues();
+      }
+    },
+    declineUpdateInitialValuesDialog() {
+      this.displayUpdateInitialValues = false;
     },
     calculateCF() {
       
@@ -1749,7 +1777,7 @@ export default {
         this.savePrintableDeliverables()
         this.savePartners()
         this.saveEvents()
-        this.saveCustom()
+        this.saveCustoms()
         this.saveExternalExperts()
 
         axios.put(`/projects/calculateCF/${this.$route.params.id}`)
@@ -1850,7 +1878,7 @@ export default {
         this.savePrintableDeliverables();
         this.savePartners();
         this.saveEvents()
-        this.saveCustom()
+        this.saveCustoms()
         this.saveExternalExperts()
         
         axios.put("/projects/" + this.project._id, this.project).then(() => {
@@ -2227,7 +2255,16 @@ export default {
       })
     },
     saveEvents() {
-      this.axios.put('/events/updateAll', this.project.events)
+      let allEvents = [];
+      for(let event of this.project.events.organization) {
+        allEvents.push(event);
+      }
+
+      for(let event of this.project.events.participation) {
+        allEvents.push(event);
+      }
+
+      this.axios.put('/events/updateAll', allEvents)
       .then(() => {
         this.$toast.add({severity:'success', summary: 'Successful', detail: 'All Events updated', life: 3000});
       }).catch((error) =>{
@@ -2435,10 +2472,22 @@ export default {
       })
     },
     
-    saveCustom(custom, toastMessage) {
-      this.axios.put('/customs/updateAll', this.project[custom])
+    saveCustoms() {
+      let allCustoms = [];
+
+      allCustoms.push(this.project.customHeat);
+      allCustoms.push(this.project.customElectricity);
+      allCustoms.push(this.project.customWater);
+      allCustoms.push(this.project.customTransportation);
+      allCustoms.push(this.project.customMaterials);
+      allCustoms.push(this.project.customEvents);
+      allCustoms.push(this.project.customPrintableDeliverables);
+
+      
+      this.axios.put('/customs/updateAll', allCustoms)
       .then(() => {
-        this.$toast.add({severity:'success', summary: 'Successful', detail: 'All customs '+ toastMessage + ' updated', life: 3000});
+        this.$toast.add({severity:'success', summary: 'Successful', detail: 'All customs updated', life: 3000});
+        this.allCustoms = [];
       }).catch((error) =>{
         console.log(error)
       })
@@ -2533,6 +2582,40 @@ export default {
             console.log('error' + e);
           })
 
+          this.axios.get(`/externalExperts?projectId=` + this.project._id)
+          .then((response) => {
+            this.project.externalExperts = response.data;
+            for(let externalExpert of response.data) {
+              externalExpert._id = new Mongoose.Types.ObjectId();
+              externalExpert.project = this.project.initialProject;
+              axios.post('/externalExperts', externalExpert)
+              .catch((e)=>{
+                console.log('error' + e);
+              })
+            }
+            this.$toast.add({severity:'success', summary: 'Successful', detail: 'All external experts saved', life: 3000});
+          })
+          .catch((e)=>{
+            console.log('error' + e);
+          })
+
+          this.axios.get(`/events?projectId=` + this.project._id)
+          .then((response) => {
+            
+          for(let event of response.data) {
+              event._id = new Mongoose.Types.ObjectId();
+              event.project = this.project.initialProject;
+
+              axios.post('/events', event)
+              .catch((e)=>{
+                console.log('error' + e);
+              })
+            }
+          this.$toast.add({severity:'success', summary: 'Successful', detail: 'All events saved', life: 3000});
+          })
+          .catch((e)=>{
+            console.log('error' + e);
+          })
         })
         .catch((e)=>{
           console.log('error' + e);
