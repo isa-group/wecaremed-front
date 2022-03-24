@@ -335,7 +335,61 @@ export default {
               .catch((e)=>{
                 console.log('error' + e);
               })
+                          }
+          })
+          .catch((e)=>{
+            console.log('error' + e);
+          })
+
+          this.axios.get(`/externalExperts?projectId=` + projectOriginalID)
+          .then((response) => {
+            console.log("ID del initial: ", this.projectInitialID);
+            for(let externalExpert of response.data) {
+              externalExpert._id = new mongoose.Types.ObjectId();
+              externalExpert.project = this.projectClonedID;
+
+              axios.post('/externalExperts', externalExpert)
+              .then( () => {
+                externalExpert._id = new mongoose.Types.ObjectId();
+                externalExpert.project = this.projectInitialID;
+
+                axios.post('/externalExperts', externalExpert)
+                .catch((e)=>{
+                  console.log('error' + e);
+                })
+              })
+              .catch((e)=>{
+                console.log('error' + e);
+              })
             }
+          })
+          .catch((e)=>{
+            console.log('error' + e);
+          })
+
+
+          this.axios.get(`/events?projectId=` + projectOriginalID)
+          .then((response) => {
+          console.log("ID del initial: ", this.projectInitialID);
+          for(let event of response.data) {
+              event._id = new mongoose.Types.ObjectId();
+              event.project = this.projectClonedID;
+
+              axios.post('/events', event)
+              .then( () => {
+                event._id = new mongoose.Types.ObjectId();
+                event.project = this.projectInitialID;
+
+                axios.post('/events', event)
+                .catch((e)=>{
+                  console.log('error' + e);
+                })
+              })
+              .catch((e)=>{
+                console.log('error' + e);
+              })
+            }
+
           })
           .catch((e)=>{
             console.log('error' + e);

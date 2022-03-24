@@ -858,11 +858,11 @@
     <div class="card col-12" style="display:flex; justify-content:space-around">
       <template v-if="!this.project.isInitialProject" >
         <Button  label="Save current project" @click="saveCurrentProject" />
-        <Button  label="Update the initial values of the project" @click="updateInitialValues" />
+        <Button  label="Update current values as initial values" @click="displayUpdateInitialValuesDialog" />
         <Button  label="Go to set initial values" class="p-button-info" @click="goToLinkedProject()"/>      
       </template>
       <template v-else-if="this.project.isInitialProject">
-        <Button label="Update initial values" @click="saveCurrentProject" />
+        <Button label="Update initial values" @click="displayUpdateInitialValuesDialog" />
         <Button type="button" label="Go to current project" class="p-button-info" @click="goToLinkedProject()"/>
       </template>
     </div>
@@ -961,6 +961,19 @@
       </div>
     </div>
 
+    <Dialog header="Warning" v-model:visible="displayUpdateInitialValues" class="col-4" :modal="true">
+        <div class="flex align-items-center  pb-5">
+            <i class="pi pi-exclamation-triangle mr-3" style="font-size: 2rem" />
+            <div>
+              <p>The values of the project will be updated in it's initial phase, are you sure?</p>
+            </div>
+        </div>
+        <template #footer>
+            <Button label="Cancel" @click="declineUpdateInitialValuesDialog" class="p-button-text p-button-info" />
+            <Button label="Ok" @click="confirmUpdateInitialValuesDialog" class="p-button-text p-button-info" /> 
+        </template>
+    </Dialog>
+
   </div>
 
 </template>
@@ -1054,7 +1067,8 @@ export default {
       partnersWithoutCountry: [],
       partnersWithDefaultValues: [],
       displayPartnersError: false,
-      isInitialProject: false
+      isInitialProject: false,
+      displayUpdateInitialValues: false
     }
   },
   created() {
@@ -1083,12 +1097,26 @@ export default {
     displayPartnersErrorDialog() {
       this.displayPartnersError = true;
     },
+    displayUpdateInitialValuesDialog() {
+      this.displayUpdateInitialValues = true;
+    },
     closePartnersWithoutCountryErrorDialog() {
       this.displayPartnersError = false;
       this.displayPartnersWithoutCountryDialog = false
       this.displayPartnersWithDefaultValues = false;
       this.partnersWithoutCountry = []
       this.partnersWithDefaultValues = [];
+    },
+    confirmUpdateInitialValuesDialog() {
+      this.displayUpdateInitialValues = false;
+      if(this.project.isInitialProject) {
+        this.saveCurrentProject();
+      } else {
+        this.updateInitialValues();
+      }
+    },
+    declineUpdateInitialValuesDialog() {
+      this.displayUpdateInitialValues = false;
     },
     calculateCF() {
       
@@ -1600,6 +1628,40 @@ export default {
             console.log('error' + e);
           })
 
+          this.axios.get(`/externalExperts?projectId=` + this.project._id)
+          .then((response) => {
+            this.project.externalExperts = response.data;
+            for(let externalExpert of response.data) {
+              externalExpert._id = new Mongoose.Types.ObjectId();
+              externalExpert.project = this.project.initialProject;
+              axios.post('/externalExperts', externalExpert)
+              .catch((e)=>{
+                console.log('error' + e);
+              })
+            }
+            this.$toast.add({severity:'success', summary: 'Successful', detail: 'All external experts saved', life: 3000});
+          })
+          .catch((e)=>{
+            console.log('error' + e);
+          })
+
+          this.axios.get(`/events?projectId=` + this.project._id)
+          .then((response) => {
+            
+          for(let event of response.data) {
+              event._id = new Mongoose.Types.ObjectId();
+              event.project = this.project.initialProject;
+
+              axios.post('/events', event)
+              .catch((e)=>{
+                console.log('error' + e);
+              })
+            }
+          this.$toast.add({severity:'success', summary: 'Successful', detail: 'All events saved', life: 3000});
+          })
+          .catch((e)=>{
+            console.log('error' + e);
+          })
         })
         .catch((e)=>{
           console.log('error' + e);
