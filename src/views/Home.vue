@@ -343,7 +343,6 @@ export default {
 
           this.axios.get(`/externalExperts?projectId=` + projectOriginalID)
           .then((response) => {
-            console.log("ID del initial: ", this.projectInitialID);
             for(let externalExpert of response.data) {
               externalExpert._id = new mongoose.Types.ObjectId();
               externalExpert.project = this.projectClonedID;
@@ -370,7 +369,6 @@ export default {
 
           this.axios.get(`/events?projectId=` + projectOriginalID)
           .then((response) => {
-          console.log("ID del initial: ", this.projectInitialID);
           for(let event of response.data) {
               event._id = new mongoose.Types.ObjectId();
               event.project = this.projectClonedID;
