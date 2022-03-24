@@ -316,22 +316,13 @@
                   </template>
                 </Column>
 
-                <Column field="employeesWorkingWPP" header="Number full time employees" :sortable="true">
+                <Column field="twoWayTravels" header="Number two-way travels" :sortable="true">
                   <template #editor="slotProps">
                     <InputNumber v-model="slotProps.data[slotProps.field]" mode="decimal" showButtons decrementButtonClass="p-button-info"
                     incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
                     :allowEmpty="false" :min="0" @focus="$event.target.select()" />
                   </template>
                 </Column>
-
-                <Column field="seasonalEmployees" header="Number part time employees" :sortable="true">
-                  <template #editor="slotProps">
-                    <InputNumber v-model="slotProps.data[slotProps.field]" mode="decimal" showButtons decrementButtonClass="p-button-info"
-                    incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
-                    :allowEmpty="false" :min="0" @focus="$event.target.select()" />
-                  </template>
-                </Column>
-
 
                 <Column field="employeesPersonMonths" header="Sum person months (full time + part time)" :sortable="true">
                   <template #editor="slotProps" class="p-field">
@@ -341,24 +332,6 @@
                     :allowEmpty="false" :min="0" @focus="$event.target.select()" />
                   </template>
                 </Column>
-
-                <Column field="externalExperts" header="Number of external experts" :sortable="true">
-                  <template #editor="slotProps">
-                    <InputNumber v-model="slotProps.data[slotProps.field]" mode="decimal" showButtons decrementButtonClass="p-button-info"
-                    incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
-                    :allowEmpty="false" :min="0" @focus="$event.target.select()" />
-                  </template>
-                </Column>
-
-                <Column field="externalExpertsPersonMonths" header="Sum person months for the external experts" :sortable="true">
-                  <template #editor="slotProps">
-                    <InputNumber v-model="slotProps.data[slotProps.field]" mode="decimal" :maxFractionDigits="3"
-                    showButtons :step="0.25" decrementButtonClass="p-button-info"
-                    incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
-                    :allowEmpty="false" :min="0" @focus="$event.target.select()" />
-                  </template>
-                </Column>
-
 
                 <Column field="actions" header="Actions">
                   <template #body="slotProps">
