@@ -553,44 +553,69 @@
                       </Column>
 
                       <Column field="physicalParticipants" header="Physical participants" :sortable="true">
+                        <template #body="slotProps">
+                          <td :class="slotProps.data[slotProps.field] == 0 && slotProps.data['type'] !== 'On-line' ? 'defaultValue' : ''"
+                          style="display:block;" @click="slotProps.data['type'] !== 'On-line' ? '' : slotProps.data[slotProps.field] = 0"
+                          >{{slotProps.data['type'] !== 'On-line' ? slotProps.data[slotProps.field] : 0}}</td>
+                        </template>
                         <template #editor="slotProps">
                           <InputNumber v-model="slotProps.data[slotProps.field]" mode="decimal" showButtons decrementButtonClass="p-button-info"
                           incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
-                          :allowEmpty="false" :min="0" @focus="$event.target.select()" />
+                          :allowEmpty="false" :min="0" @focus="$event.target.select()" :disabled="slotProps.data['type'] !== 'On-line' ? false : true" />
                         </template>
                       </Column>
 
                       <Column field="nonLocalPhysicalParticipants" header="Non-local physical participants" :sortable="true">
+                        <template #body="slotProps">
+                          <td :class="slotProps.data[slotProps.field] == 0 && slotProps.data['type'] !== 'On-line' ? 'defaultValue' : ''"
+                          style="display:block;" @click="slotProps.data['type'] !== 'On-line' ? '' : slotProps.data[slotProps.field] = 0"
+                          >{{slotProps.data['type'] !== 'On-line' ? slotProps.data[slotProps.field] : 0}}</td>
+                        </template>
                         <template #editor="slotProps">
-                          <InputNumber v-model="slotProps.data[slotProps.field]" mode="decimal" showButtons decrementButtonClass="p-button-info"
+                          <InputNumber v-model="slotProps.data[slotProps.field]"  mode="decimal" showButtons decrementButtonClass="p-button-info"
                           incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
-                          :allowEmpty="false" :min="0" @focus="$event.target.select()" />
+                          :allowEmpty="false" :min="0" @focus="$event.target.select()" :disabled="slotProps.data['type'] !== 'On-line' ? false : true"  />
                         </template>
                       </Column>
 
 
                       <Column field="virtualParticipants" header="Virtual participants" :sortable="true">
+                        <template #body="slotProps">
+                          <td :class="slotProps.data[slotProps.field] == 0 && slotProps.data['type'] !== 'In presence' ? 'defaultValue' : ''"
+                          style="display:block;" @click="slotProps.data['type'] !== 'In presence' ? '' : slotProps.data[slotProps.field] = 0"
+                          >{{slotProps.data['type'] !== 'In presence' ? slotProps.data[slotProps.field] : 0}}</td>
+                        </template>
                         <template #editor="slotProps" class="p-field">
                           <InputNumber v-model="slotProps.data[slotProps.field]" mode="decimal" showButtons decrementButtonClass="p-button-info"
                           incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
-                          :allowEmpty="false" :min="0" @focus="$event.target.select()" />
+                          :allowEmpty="false" :min="0" @focus="$event.target.select()" :disabled="slotProps.data['type'] !== 'In presence' ? false : true"/>
                         </template>
                       </Column>
 
                       <Column field="durationDays" header="Duration (in days)" :sortable="true">
+                        <template #body="slotProps">
+                          <td :class="slotProps.data[slotProps.field] == 0 && slotProps.data['type'] !== 'On-line' ? 'defaultValue' : ''"
+                          style="display:block;" @click="slotProps.data['type'] !== 'On-line' ? '' : slotProps.data[slotProps.field] = 0"
+                          >{{slotProps.data['type'] !== 'On-line' ? slotProps.data[slotProps.field] : 0}}</td>
+                        </template>
                         <template #editor="slotProps">
                           <InputNumber v-model="slotProps.data[slotProps.field]" mode="decimal" showButtons decrementButtonClass="p-button-info"
                           incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
-                          :allowEmpty="false" :min="0" @focus="$event.target.select()" />
+                          :allowEmpty="false" :min="0" @focus="$event.target.select()" :disabled="slotProps.data['type'] !== 'On-line' ? false : true"/>
                         </template>
                       </Column>
 
                       <Column field="durationHoursPerDay" header="Duration (hours/day)" :sortable="true">
+                        <template #body="slotProps">
+                          <td :class="slotProps.data[slotProps.field] == 0 && slotProps.data['type'] !== 'In presence' ? 'defaultValue' : ''"
+                          style="display:block;" @click="slotProps.data['type'] !== 'In presence' ? '' : slotProps.data[slotProps.field] = 0"
+                          >{{slotProps.data['type'] !== 'In presence' ? slotProps.data[slotProps.field] : 0}}</td>
+                        </template>
                         <template #editor="slotProps">
                           <InputNumber v-model="slotProps.data[slotProps.field]" mode="decimal" :maxFractionDigits="3"
                           showButtons :step="0.25" decrementButtonClass="p-button-info"
                           incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
-                          :allowEmpty="false" :min="0" @focus="$event.target.select()" />
+                          :allowEmpty="false" :min="0" @focus="$event.target.select()" :disabled="slotProps.data['type'] !== 'In presence' ? false : true" />
                         </template>
                       </Column>
 
