@@ -244,18 +244,18 @@
                 </tbody>
               </table>
 
-              <h2 style="margin-bottom: 40px">Tons of equivalent carbon dioxide emitted: {{project.initialCF}}</h2> 
+              <h2 style="margin-bottom: 40px">Tons of equivalent carbon dioxide emitted: {{project.currentCF}}</h2> 
               
               <h3 style="margin-bottom: 10px">CF Breakdown (Tons):</h3>
               <ul>
-                <li style="margin-bottom: 10px; font-size: 20px">Fuels heat: {{project.fuelsHeatCF}}</li>
-                <li style="margin-bottom: 10px; font-size: 20px">Electricity: {{project.electricityCF}}</li>
-                <li style="margin-bottom: 10px; font-size: 20px">Water: {{project.waterCF}}</li>
-                <li style="margin-bottom: 10px; font-size: 20px">Transportation: {{project.transportationCF}}</li>
-                <li style="margin-bottom: 10px; font-size: 20px">Materials: {{project.materialsCF}}</li>
-                <li style="margin-bottom: 10px; font-size: 20px">Printable deliverables: {{project.printableDeliverablesCF}}</li>
-                <li style="margin-bottom: 10px; font-size: 20px">Equipment: {{project.equipmentCF}}</li>
-                <li style="font-size: 20px">Events: {{project.eventsCF}}</li>
+                <li style="margin-bottom: 10px; font-size: 20px">Fuels heat: {{project.fuelsHeatAdvancedCF}}</li>
+                <li style="margin-bottom: 10px; font-size: 20px">Electricity: {{project.electricityAdvancedCF}}</li>
+                <li style="margin-bottom: 10px; font-size: 20px">Water: {{project.waterAdvancedCF}}</li>
+                <li style="margin-bottom: 10px; font-size: 20px">Transportation: {{project.transportationAdvancedCF}}</li>
+                <li style="margin-bottom: 10px; font-size: 20px">Materials: {{project.materialsAdvancedCF}}</li>
+                <li style="margin-bottom: 10px; font-size: 20px">Printable deliverables: {{project.printableDeliverablesAdvancedCF}}</li>
+                <li style="margin-bottom: 10px; font-size: 20px">Equipment: {{project.equipmentAdvancedCF}}</li>
+                <li style="font-size: 20px">Events: {{project.eventsAdvancedCF}}</li>
               </ul>
 
             </div>
@@ -410,7 +410,7 @@
 
                 <Column field="actions" header="Actions">
                   <template #body="slotProps">
-                    <i class="pi pi-trash" @click="deleteExternalExpert(slotProps.index + currentPageExternalExpertsTable * 5)" />
+                    <i class="pi pi-trash" @click="deleteExternalExperts(slotProps.index + currentPageExternalExpertsTable * 5)" />
                   </template>
                 </Column>
               
@@ -757,7 +757,7 @@
                           >{{slotProps.data['travelModeArrive'] === 'Car' ? slotProps.data[slotProps.field] : '-'}}</td>
                         </template>
                         <template #editor="slotProps">
-                          <Dropdown :options="fuelTypesForDropdown" v-model="slotProps.data[slotProps.field]" :disabled="slotProps.data['travelModeArrive'] === 'Car' ? false : true"/>
+                          <Dropdown :options="fuelTypesForDropdown" v-model="slotProps.data[slotProps.field]" :disabled="slotProps.data['travelModeArrive'] === 'Car' ? false : true" />
                         </template>
                       </Column>
 
@@ -1325,7 +1325,7 @@
               <div class="card p-fluid" style="display: flex; flex-direction: column; align-items: center; justify-content: space-around;">
                 <div>
                   <h2>Tons of equivalent carbon dioxide emitted:
-                    <Badge :value="project.initialCF" class="ml-3" size="xlarge" :severity="getTextColorFromCFIndex(project.initialCF)" />
+                    <Badge :value="project.currentCF" class="ml-3" size="xlarge" :severity="getTextColorFromCFIndex(project.currentCF)" />
                   </h2>
                 </div>
                 <Button icon="pi pi-replay" class="p-button-rounded p-button-outlined p-button-plain mr-5" label="Recalculate"
@@ -1364,25 +1364,25 @@
                   <div class="card p-fluid col-2" style="display: flex; flex-direction: column; align-items: center; justify-content: space-around;">
                     <h2 class="font-medium text-3xl">Fuels Heat</h2>
                     <div class="flex align-items-center py-3 px-2 border-top-1 surface-border">
-                      <Badge :value="project.fuelsHeatCF" size="xlarge" severity="info" />
+                      <Badge :value="project.fuelsHeatAdvancedCF" size="xlarge" severity="info" />
                     </div>
                   </div>
                   <div class="card p-fluid col-2" style="display: flex; flex-direction: column; align-items: center; justify-content: space-around;">
                     <h2 class="font-medium text-3xl">Electricity</h2>
                     <div class="flex align-items-center py-3 px-2 border-top-1 surface-border">
-                      <Badge :value="project.electricityCF" size="xlarge" severity="info" />
+                      <Badge :value="project.electricityAdvancedCF" size="xlarge" severity="info" />
                     </div>
                   </div>
                   <div class="card p-fluid col-2" style="display: flex; flex-direction: column; align-items: center; justify-content: space-around;">
                     <h2 class="font-medium text-3xl">Water</h2>
                     <div class="flex align-items-center py-3 px-2 border-top-1 surface-border">
-                      <Badge :value="project.waterCF" size="xlarge" severity="info" />
+                      <Badge :value="project.waterAdvancedCF" size="xlarge" severity="info" />
                     </div>
                   </div>
                   <div class="card p-fluid col-2" style="display: flex; flex-direction: column; align-items: center; justify-content: space-around;">
                     <h2 class="font-medium text-3xl">Transportation</h2>
                     <div class="flex align-items-center py-3 px-2 border-top-1 surface-border">
-                      <Badge :value="project.transportationCF" size="xlarge" severity="info" />
+                      <Badge :value="project.transportationAdvancedCF" size="xlarge" severity="info" />
                     </div>
                   </div>
                 </div>
@@ -1390,25 +1390,25 @@
                   <div class="card p-fluid col-2" style="display: flex; flex-direction: column; align-items: center; justify-content: space-around;">
                     <h2 class="font-medium text-3xl">Materials</h2>
                     <div class="flex align-items-center py-3 px-2 border-top-1 surface-border">
-                      <Badge :value="project.materialsCF" size="xlarge" severity="info" />
+                      <Badge :value="project.materialsAdvancedCF" size="xlarge" severity="info" />
                     </div>
                   </div>
                   <div class="card p-fluid col-2" style="display: flex; flex-direction: column; align-items: center; justify-content: space-around;">
                     <h2 class="font-medium text-3xl">Printable<br>Deliverables</h2>
                     <div class="flex align-items-center py-3 px-2 border-top-1 surface-border">
-                      <Badge :value="project.printableDeliverablesCF" size="xlarge" severity="info" />
+                      <Badge :value="project.printableDeliverablesAdvancedCF" size="xlarge" severity="info" />
                     </div>
                   </div>
                   <div class="card p-fluid col-2" style="display: flex; flex-direction: column; align-items: center; justify-content: space-around;">
                     <h2 class="font-medium text-3xl">Equipment</h2>
                     <div class="flex align-items-center py-3 px-2 border-top-1 surface-border">
-                      <Badge :value="project.equipmentCF" size="xlarge" severity="info" />
+                      <Badge :value="project.equipmentAdvancedCF" size="xlarge" severity="info" />
                     </div>
                   </div>
                   <div class="card p-fluid col-2" style="display: flex; flex-direction: column; align-items: center; justify-content: space-around;">
                     <h2 class="font-medium text-3xl">Events</h2>
                     <div class="flex align-items-center py-3 px-2 border-top-1 surface-border">
-                      <Badge :value="project.eventsCF" size="xlarge" severity="info" />
+                      <Badge :value="project.eventsAdvancedCF" size="xlarge" severity="info" />
                     </div>
                   </div>
                 </div>
@@ -1571,8 +1571,8 @@ export default {
       object: {},
       countriesForDropdown: ["Albania", "Bosnia & Herzegovina", "Croatia", "Cyprus", "France", "Greece", "Italy", "Malta", "Montenegro", "Portugal", "Slovenia", "Spain", "Bulgaria", "North Macedonia"],
       eventTypesForDropdown: ["In presence", "Mixed", "On-line"],
-      travelModesForDropdown: ["Car", "Motorbikes", "Bus", "Taxi", "Rail", "Light rail and tram/Underground", "Ferries"],
-      fuelTypesForDropdown: ["Diesel", "Petrol", "Hybrid", "Battery electric vehicle", "Plug-in hybrid electric vehicle", "CNG", "LPG", "Other"],
+      travelModesForDropdown: ["Airplane", "Bus", "Car", "Ferries", "Light rail and tram/Underground", "Motorbikes", "Rail", "Taxi"],
+      fuelTypesForDropdown: ["Battery electric vehicle", "CNG", "Diesel", "Hybrid", "LPG", "Other", "Petrol", "Plug-in hybrid electric vehicle"],
       paperSizes: ["A0", "A1", "A2", "A3", "A4", "A5", "A6"],
       deliverableOptions: [
         {value: "Report type*", avgPagesPerCopy: 50, size: "A4"},
@@ -1778,7 +1778,7 @@ export default {
         this.saveCustoms()
         this.saveExternalExperts()
 
-        axios.put(`/projects/calculateCF/${this.$route.params.id}`)
+        axios.put(`/projects/calculateAdvancedCF/${this.$route.params.id}`)
         .then((response) => {
           let partners = this.project.partners
           let printableDeliverables = this.project.printableDeliverables
