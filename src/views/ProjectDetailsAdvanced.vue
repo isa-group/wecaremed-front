@@ -12,7 +12,12 @@
 				<TabView>
 					<TabPanel header="Data">
             <div id="pdfPrintDiv" style="display: none">
-              <h1 style="margin-bottom: 20px">{{project.name}} ({{project.from}} - {{project.to}}) [{{project.initialCF}} / {{project.currentCF}}] t CO2e</h1>
+              
+              <h1>{{project.name}}&nbsp;
+                ({{ (new Date(project.from).getMonth() + 1).toString().padStart(2, "0") + '/' + new Date(project.from).getFullYear()}} -&nbsp;
+                {{(new Date(project.to).getMonth() + 1).toString().padStart(2, "0") + '/' + new Date(project.to).getFullYear()}})
+                [{{project.initialCF}} / {{project.currentCF}}] t CO2e&nbsp;
+              </h1>   
 
               <h3>Partners</h3>
                         
@@ -498,12 +503,12 @@
               </div>
             </div>
 
-            <div class="col-12" v-if="eventsLoaded">
+            <div class="col-12" v-if="project.events">
               <div class="card">
                 <h4>Events*</h4>
 
                 <TabView>
-                  <TabPanel header="Events organized by the project">
+                  <TabPanel header="Events organized by the project" v-if="project.events && project.events.organization.length > 0">
 
                     <DataTable :value="project.events.organization" editMode="cell" :paginator="true" class="p-datatable-gridlines" dataKey="_id"
                     :rowHover="true" @cell-edit-complete="onCellEditCompleteEvents" sortMode="multiple" :rows="5" v-model:filters="organizationEventsFilters"
@@ -617,7 +622,7 @@
                     </DataTable>
                   </TabPanel>
 
-                  <TabPanel header="Project participation in events">
+                  <TabPanel header="Project participation in events" v-if="project.events && project.events.participation.length > 0">
 
                     <DataTable :value="project.events.participation" editMode="cell" :paginator="true" class="p-datatable-gridlines" dataKey="_id"
                     :rowHover="true" @cell-edit-complete="onCellEditCompleteEvents" sortMode="multiple" :rows="5" v-model:filters="participationEventsFilters"
@@ -1760,14 +1765,24 @@ export default {
 
         axios.put(`/projects/calculateAdvancedCF/${this.$route.params.id}`)
         .then((response) => {
-          let partners = this.project.partners
-          let printableDeliverables = this.project.printableDeliverables
-          let coordinator = this.project.coordinator
+          // let partners = this.project.partners
+          // let printableDeliverables = this.project.printableDeliverables
+          // let coordinator = this.project.coordinator
           
-          this.project = response.data;
-          this.project.partners = partners
-          this.project.printableDeliverables = printableDeliverables
-          this.project.coordinator = coordinator
+          // this.project = response.data;
+          // this.project.partners = partners
+          // this.project.printableDeliverables = printableDeliverables
+          // this.project.coordinator = coordinator
+
+          this.project.fuelsHeatAdvancedCF = response.data.fuelsHeatAdvancedCF
+          this.project.electricityAdvancedCF = response.data.electricityAdvancedCF
+          this.project.waterAdvancedCF = response.data.waterAdvancedCF
+          this.project.transportationAdvancedCF = response.data.transportationAdvancedCF
+          this.project.materialsAdvancedCF = response.data.materialsAdvancedCF
+          this.project.eventsAdvancedCF = response.data.eventsAdvancedCF
+          this.project.printableDeliverablesAdvancedCF = response.data.printableDeliverablesAdvancedCF
+          // this.project.equipmentAdvancedCF = response.data.equipmentAdvancedCF
+
           this.$toast.add({severity:'success', summary: 'Successful', detail: 'Project CF calculated', life: 3000});
         })
         .catch((e)=>{
@@ -2234,20 +2249,23 @@ export default {
     },
     saveEvents() {
       let allEvents = [];
-      for(let event of this.project.events.organization) {
-        allEvents.push(event);
-      }
 
-      for(let event of this.project.events.participation) {
-        allEvents.push(event);
-      }
+      if (this.project.events) {
+        for(let event of this.project.events.organization) {
+          allEvents.push(event);
+        }
 
-      this.axios.put('/events/updateAll', allEvents)
-      .then(() => {
-        this.$toast.add({severity:'success', summary: 'Successful', detail: 'All Events updated', life: 3000});
-      }).catch((error) =>{
-        console.log(error)
-      })
+        for(let event of this.project.events.participation) {
+          allEvents.push(event);
+        }
+
+        this.axios.put('/events/updateAll', allEvents)
+        .then(() => {
+          this.$toast.add({severity:'success', summary: 'Successful', detail: 'All Events updated', life: 3000});
+        }).catch((error) =>{
+          console.log(error)
+        })
+      }
     },
     saveExternalExperts() {
       this.axios.put('/externalExperts/updateAll', this.project.externalExperts)
