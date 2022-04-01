@@ -571,36 +571,56 @@
                       </Column>
 
                       <Column field="nonLocalPhysicalParticipants" header="Non-local physical participants" :sortable="true">
+                        <template #body="slotProps">
+                          <td :class="slotProps.data[slotProps.field] == 0 && slotProps.data['type'] !== 'On-line' ? 'defaultValue' : ''"
+                          style="display:block;" @click="slotProps.data['type'] !== 'On-line' ? '' : slotProps.data[slotProps.field] = 0"
+                          >{{slotProps.data['type'] !== 'On-line' ? slotProps.data[slotProps.field] : 0}}</td>
+                        </template>
                         <template #editor="slotProps">
-                          <InputNumber v-model="slotProps.data[slotProps.field]" mode="decimal" showButtons decrementButtonClass="p-button-info"
+                          <InputNumber v-model="slotProps.data[slotProps.field]"  mode="decimal" showButtons decrementButtonClass="p-button-info"
                           incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
-                          :allowEmpty="false" :min="0" @focus="$event.target.select()" />
+                          :allowEmpty="false" :min="0" @focus="$event.target.select()" :disabled="slotProps.data['type'] !== 'On-line' ? false : true"  />
                         </template>
                       </Column>
 
 
                       <Column field="virtualParticipants" header="Virtual participants" :sortable="true">
+                        <template #body="slotProps">
+                          <td :class="slotProps.data[slotProps.field] == 0 && slotProps.data['type'] !== 'In presence' ? 'defaultValue' : ''"
+                          style="display:block;" @click="slotProps.data['type'] !== 'In presence' ? '' : slotProps.data[slotProps.field] = 0"
+                          >{{slotProps.data['type'] !== 'In presence' ? slotProps.data[slotProps.field] : 0}}</td>
+                        </template>
                         <template #editor="slotProps" class="p-field">
                           <InputNumber v-model="slotProps.data[slotProps.field]" mode="decimal" showButtons decrementButtonClass="p-button-info"
                           incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
-                          :allowEmpty="false" :min="0" @focus="$event.target.select()" />
+                          :allowEmpty="false" :min="0" @focus="$event.target.select()" :disabled="slotProps.data['type'] !== 'In presence' ? false : true"/>
                         </template>
                       </Column>
 
                       <Column field="durationDays" header="Duration (in days)" :sortable="true">
+                        <template #body="slotProps">
+                          <td :class="slotProps.data[slotProps.field] == 0 && slotProps.data['type'] !== 'On-line' ? 'defaultValue' : ''"
+                          style="display:block;" @click="slotProps.data['type'] !== 'On-line' ? '' : slotProps.data[slotProps.field] = 0"
+                          >{{slotProps.data['type'] !== 'On-line' ? slotProps.data[slotProps.field] : 0}}</td>
+                        </template>
                         <template #editor="slotProps">
                           <InputNumber v-model="slotProps.data[slotProps.field]" mode="decimal" showButtons decrementButtonClass="p-button-info"
                           incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
-                          :allowEmpty="false" :min="0" @focus="$event.target.select()" />
+                          :allowEmpty="false" :min="0" @focus="$event.target.select()" :disabled="slotProps.data['type'] !== 'On-line' ? false : true"/>
                         </template>
                       </Column>
 
                       <Column field="durationHoursPerDay" header="Duration (hours/day)" :sortable="true">
+                        <template #body="slotProps">
+                          <td :class="slotProps.data[slotProps.field] == 0 && slotProps.data['type'] !== 'In presence' ? 'defaultValue' : ''"
+                          style="display:block;" @click="slotProps.data['type'] !== 'In presence' ? '' : slotProps.data[slotProps.field] = 0"
+                          >{{slotProps.data['type'] !== 'In presence' ? slotProps.data[slotProps.field] : 0}}</td>
+                        </template>
                         <template #editor="slotProps">
                           <InputNumber v-model="slotProps.data[slotProps.field]" mode="decimal" :maxFractionDigits="3"
                           showButtons :step="0.25" decrementButtonClass="p-button-info"
                           incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
-                          :allowEmpty="false" :min="0" @focus="$event.target.select()" />
+                          :allowEmpty="false" :min="0" @focus="$event.target.select()" :disabled="slotProps.data['type'] !== 'In presence' ? false : true" />
                         </template>
                       </Column>
 
@@ -1326,6 +1346,67 @@
                     </DataTable>
 
                 </TabPanel>
+
+                <TabPanel header="Equipment">
+
+                    <h5>Additional custom defined equipment emission</h5>
+
+                    <DataTable :value="project.customEquipment" editMode="cell" :paginator="true" class="p-datatable-gridlines" dataKey="_id"
+                    :rowHover="true" @cell-edit-complete="onCellEditCompleteCustom($event, 'customEquipment', 'Equipment')" sortMode="multiple" :rows="5" v-model:filters="partnerFilters"
+                    filterDisplay="menu" :loading="loading" :filters="customFilters" responsiveLayout="scroll"
+                    :globalFilterFields="['nameCustom','valueCustom']" @page="currentPageCustomEquimentTable = $event.page">
+                      
+                      <template #header>
+                          <div class="flex justify-content-between flex-column sm:flex-row">
+                            <div>
+                              <Button class="p-button-info mr-2" @click="addCustom(this.customTypes[7].value, 'customEquipment', 'Equipment')"><i class="pi pi-plus mr-2" />New additional custom equipment</Button>
+                              <span class="p-input-icon-left">
+                                <i class="pi pi-search" />
+                                <InputText v-model="customFilters['global'].value" placeholder="Keyword Search" style="width: 100%"/>
+                              </span>
+                              <Button class="ml-2" label="Save" icon="pi pi-check" @click="saveCustoms" />
+                            </div>
+                            
+                            <Button type="button" icon="pi pi-filter-slash" label="Clear" class="p-button-warning" @click="clearCustomFilter()"/>
+                          </div>
+                      </template>
+
+                      <template #empty>
+                          No additional custom equipment found.
+                      </template>
+
+                      <template #loading>
+                          Loading custom equipment. Please wait.
+                      </template>
+
+                      <Column field="name" header="Item" :sortable="true">
+                        <template #editor="slotProps">
+                            <InputText v-model="slotProps.data[slotProps.field]" />
+                        </template>
+                        <template #filter="{filterModel, field}">
+                            <InputText type="text" v-model="filterModel.value" class="p-column-filter" :placeholder="'Filter by ' + field"/>
+                        </template>
+                      </Column>
+
+                      <Column field="value" header="Value" :sortable="true">
+                        <template #editor="slotProps" class="p-field">
+                          <InputNumber v-model="slotProps.data[slotProps.field]" mode="decimal" :maxFractionDigits="3"
+                          showButtons :step="0.25" decrementButtonClass="p-button-info"
+                          incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
+                          :allowEmpty="false" :min="0" />
+                        </template>
+                      </Column>
+
+                      <Column field="actions" header="Actions">
+                        <template #body="slotProps">
+                          <i class="pi pi-trash" @click="deleteCustom(slotProps.index + currentPageCustomEquimentTable * 5, 'customEquipment', 'Equipment')" />
+                        </template>
+                      </Column>
+                    
+                    </DataTable>
+
+                </TabPanel>
+
               </TabView>
             </div>
 
@@ -1586,6 +1667,7 @@ export default {
       customMaterials: [],
       customEvents: [],
       customPrintableDeliverables: [],
+      customEquipment: [],
       electricityValuesTable:[],
       object: {},
       countriesForDropdown: ["Albania", "Bosnia & Herzegovina", "Croatia", "Cyprus", "Europe", "France", "Greece", "Italy", "Malta", "Montenegro", "Portugal", "Slovenia", "Spain", "Bulgaria", "North Macedonia"],
@@ -1629,7 +1711,8 @@ export default {
         {value: "Transportation"},
         {value: "Materials"},
         {value: "Events"},
-        {value: "Printable Deliverables"}
+        {value: "Printable Deliverables"},
+        {value: "Equipment"},
       ],
       chartData: {
 				labels: ['Electricity', 'Water', 'Printable deliverables', 'Events', 'Materials', 'Transportation', 'Heat'],
@@ -1698,6 +1781,7 @@ export default {
       currentPageCustomTransportationTable: 0,
       currentPageCustomMaterialsTable: 0,
       currentPageCustomEventsTable: 0,
+      currentPageCustomEquimentTable: 0,
       displayPartnersWithoutCountryDialog: false,
       displayPartnersWithDefaultValues: false,
       partnersWithoutCountry: [],
@@ -2034,7 +2118,8 @@ export default {
           this.project.customMaterials = [];
           this.project.customEvents = [];
           this.project.customPrintableDeliverables = [];
-
+          this.project.customEquipment = [];
+          
           for(let i = 0; i < response.data.length; i++){
             if (response.data[i].type.endsWith("Heat")) {
               this.customHeat.push(response.data[i]);
@@ -2050,6 +2135,8 @@ export default {
               this.customEvents.push(response.data[i]);
             } else if(response.data[i].type.endsWith("Deliverables")) {
               this.customPrintableDeliverables.push(response.data[i]);
+            } else if(response.data[i].type.endsWith("Equipment")) {
+              this.customEquipment.push(response.data[i]);
             }
             this.project.customHeat = this.customHeat;
             this.project.customElectricity = this.customElectricity;
@@ -2058,6 +2145,7 @@ export default {
             this.project.customMaterials = this.customMaterials;
             this.project.customEvents = this.customEvents;
             this.project.customPrintableDeliverables = this.customPrintableDeliverables;
+            this.project.customEquipment = this.customEquipment;
           }
         })
         .catch((e)=>{
@@ -2513,6 +2601,7 @@ export default {
       allCustoms.push(this.project.customMaterials);
       allCustoms.push(this.project.customEvents);
       allCustoms.push(this.project.customPrintableDeliverables);
+      allCustoms.push(this.project.customEquipment);
 
       
       this.axios.put('/customs/updateAll', allCustoms)
