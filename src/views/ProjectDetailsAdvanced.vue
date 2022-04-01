@@ -850,12 +850,46 @@
                   </template>
                     <template #editor="slotProps">
                         <InputNumber v-model="slotProps.data[slotProps.field]" mode="decimal"
-                              showButtons decrementButtonClass="p-button-info"
-                              incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
-                              :allowEmpty="false" :min="0" @focus="$event.target.select()" :class="slotProps.data[slotProps.field] == 1 ? 'defaultValue' : ''" />
+                        showButtons decrementButtonClass="p-button-info"
+                        incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
+                        :allowEmpty="false" :min="0" @focus="$event.target.select()" :class="slotProps.data[slotProps.field] == 1 ? 'defaultValue' : ''" />
                     </template>
                   </Column>
 
+                  <Column field="avgPagesPerCopy" header="Average pages per copy" :sortable="true">
+                    <template #body="slotProps">
+                      <td style="display:block;"
+                      :class="deliverableOptions.find(d => {return d.value == slotProps.data.deliverableType}) && slotProps.data[slotProps.field] == deliverableOptions.find(d => {return d.value == slotProps.data.deliverableType}).avgPagesPerCopy ? 'defaultValue' : ''"
+                      >{{slotProps.data[slotProps.field]}}</td>
+                    </template>
+                    <template #editor="slotProps">
+                      <InputNumber v-model="slotProps.data[slotProps.field]" mode="decimal"
+                      showButtons decrementButtonClass="p-button-info"
+                      incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
+                      :allowEmpty="false" :min="0" @focus="$event.target.select()" />
+                    </template>
+                  </Column>
+
+                  <Column field="size" header="Paper size" :sortable="true">
+                    <template #body="slotProps">
+                      <td :class="slotProps.data[slotProps.field] == 'Select a paper size' ? 'defaultValue' : ''" style="display:block;">{{slotProps.data[slotProps.field]}}</td>
+                    </template>
+                    <template #editor="slotProps">
+                      <Dropdown :options="paperSizes" v-model="slotProps.data[slotProps.field]" placeholder="Select a paper size">
+                        <template #value="slotProps">
+                          <div v-if="slotProps.value">
+                            <span>{{slotProps.value}}</span>
+                          </div>
+                          <span v-else>
+                              {{slotProps.placeholder}}
+                          </span>
+                        </template>
+                        <template #option="slotProps">
+                            <span>{{slotProps.option}}</span>
+                        </template>
+                      </Dropdown>
+                    </template>
+                  </Column>
                   
                   <Column field="actions" header="Actions">
                     <template #body="slotProps">
@@ -915,7 +949,7 @@
                       </template>
                     </Column>
 
-                    <Column field="value" header="Value" :sortable="true">
+                    <Column field="value" header="Value (t CO2e)" :sortable="true">
                       <template #editor="slotProps" class="p-field">
                         <InputNumber v-model="slotProps.data[slotProps.field]" mode="decimal" :maxFractionDigits="3"
                         showButtons :step="0.25" decrementButtonClass="p-button-info"
@@ -973,7 +1007,7 @@
                     </template>
                   </Column>
 
-                  <Column field="value" header="Value" :sortable="true">
+                  <Column field="value" header="Value (t CO2e)" :sortable="true">
                     <template #editor="slotProps" class="p-field">
                       <InputNumber v-model="slotProps.data[slotProps.field]" mode="decimal" :maxFractionDigits="3"
                       showButtons :step="0.25" decrementButtonClass="p-button-info"
@@ -1032,7 +1066,7 @@
                     </template>
                   </Column>
 
-                  <Column field="value" header="Value" :sortable="true">
+                  <Column field="value" header="Value (t CO2e)" :sortable="true">
                     <template #editor="slotProps" class="p-field">
                       <InputNumber v-model="slotProps.data[slotProps.field]" mode="decimal" :maxFractionDigits="3"
                       showButtons :step="0.25" decrementButtonClass="p-button-info"
@@ -1092,7 +1126,7 @@
                       </template>
                     </Column>
 
-                    <Column field="value" header="Value" :sortable="true">
+                    <Column field="value" header="Value (t CO2e)" :sortable="true">
                       <template #editor="slotProps" class="p-field">
                         <InputNumber v-model="slotProps.data[slotProps.field]" mode="decimal" :maxFractionDigits="3"
                         showButtons :step="0.25" decrementButtonClass="p-button-info"
@@ -1152,7 +1186,7 @@
                       </template>
                     </Column>
 
-                    <Column field="value" header="Value" :sortable="true">
+                    <Column field="value" header="Value (t CO2e)" :sortable="true">
                       <template #editor="slotProps" class="p-field">
                         <InputNumber v-model="slotProps.data[slotProps.field]" mode="decimal" :maxFractionDigits="3"
                         showButtons :step="0.25" decrementButtonClass="p-button-info"
@@ -1212,7 +1246,7 @@
                     </template>
                   </Column>
 
-                  <Column field="value" header="Value" :sortable="true">
+                  <Column field="value" header="Value (t CO2e)" :sortable="true">
                     <template #editor="slotProps" class="p-field">
                       <InputNumber v-model="slotProps.data[slotProps.field]" mode="decimal" :maxFractionDigits="3"
                       showButtons :step="0.25" decrementButtonClass="p-button-info"
@@ -1274,7 +1308,7 @@
                         </template>
                       </Column>
 
-                      <Column field="value" header="Value" :sortable="true">
+                      <Column field="value" header="Value (t CO2e)" :sortable="true">
                         <template #editor="slotProps" class="p-field">
                           <InputNumber v-model="slotProps.data[slotProps.field]" mode="decimal" :maxFractionDigits="3"
                           showButtons :step="0.25" decrementButtonClass="p-button-info"
@@ -1554,9 +1588,9 @@ export default {
       customPrintableDeliverables: [],
       electricityValuesTable:[],
       object: {},
-      countriesForDropdown: ["Albania", "Bosnia & Herzegovina", "Croatia", "Cyprus", "France", "Greece", "Italy", "Malta", "Montenegro", "Portugal", "Slovenia", "Spain", "Bulgaria", "North Macedonia"],
+      countriesForDropdown: ["Albania", "Bosnia & Herzegovina", "Croatia", "Cyprus", "Europe", "France", "Greece", "Italy", "Malta", "Montenegro", "Portugal", "Slovenia", "Spain", "Bulgaria", "North Macedonia"],
       eventTypesForDropdown: ["In presence", "Mixed", "On-line"],
-      travelModesForDropdown: ["Airplane", "Bus", "Car", "Ferries", "Light rail and tram/Underground", "Motorbikes", "Rail", "Taxi"],
+      travelModesForDropdown: ["Airplane", "Bus", "Car", "Ferries", "International Rail", "Light rail and tram/Underground", "Motorbikes", "National Rail", "Taxi"],
       fuelTypesForDropdown: ["Battery electric vehicle", "CNG", "Diesel", "Hybrid", "LPG", "Other", "Petrol", "Plug-in hybrid electric vehicle"],
       paperSizes: ["A0", "A1", "A2", "A3", "A4", "A5", "A6"],
       deliverableOptions: [
@@ -1781,7 +1815,8 @@ export default {
           this.project.materialsAdvancedCF = response.data.materialsAdvancedCF
           this.project.eventsAdvancedCF = response.data.eventsAdvancedCF
           this.project.printableDeliverablesAdvancedCF = response.data.printableDeliverablesAdvancedCF
-          // this.project.equipmentAdvancedCF = response.data.equipmentAdvancedCF
+          this.project.currentCF = response.data.currentCF
+          this.project.equipmentAdvancedCF = response.data.equipmentAdvancedCF
 
           this.$toast.add({severity:'success', summary: 'Successful', detail: 'Project CF calculated', life: 3000});
         })
