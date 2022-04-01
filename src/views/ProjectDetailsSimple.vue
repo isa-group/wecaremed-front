@@ -265,7 +265,7 @@
       :rowHover="true" @cell-edit-complete="onCellEditCompletePartner" sortMode="multiple" :rows="5" v-model:filters="partnerFilters"
       filterDisplay="menu" :loading="loading" :filters="partnerFilters" responsiveLayout="scroll"
       :globalFilterFields="['name','country','employeesPersonMonths', 'externalExpertsPersonMonths', 'employeesWorkingWPP', 
-                            'seasonalEmployees', 'externalExperts', 'coordinator']" @page="currentPagePartnersTable = $event.page">
+                            'seasonalEmployees', 'externalExperts', 'coordinator']">
         
         <template #header>
             <div class="flex justify-content-between flex-column sm:flex-row">
@@ -360,7 +360,7 @@
 
         <Column field="actions" header="Actions">
           <template #body="slotProps">
-            <i class="pi pi-trash" @click="deletePartner(slotProps.index + currentPagePartnersTable * 5)" />
+            <i class="pi pi-trash" @click="deletePartner(project.partners.indexOf(slotProps.data))" />
           </template>
         </Column>
       
@@ -781,8 +781,7 @@
         <DataTable :value="project.printableDeliverables" editMode="cell" @cell-edit-complete="onCellEditCompletePrintableDeliverable" 
           sortMode="multiple" :paginator="true" :rows="5" v-model:filters="printableDeliverableFilters" filterDisplay="menu"
           :loading="loading" :filters="printableDeliverableFilters" responsiveLayout="scroll" :rowHover="true" class="p-datatable-gridlines"
-          :globalFilterFields="['deliverableType', 'deliverableName', 'copies', 'avgPagesPerCopy']"
-          @page="currentPagePrintableDeliverablesTable = $event.page">
+          :globalFilterFields="['deliverableType', 'deliverableName', 'copies', 'avgPagesPerCopy']">
 
           <template #header>
               <div class="flex justify-content-between flex-column sm:flex-row">
@@ -844,7 +843,7 @@
           
           <Column field="actions" header="Actions">
             <template #body="slotProps">
-              <i class="pi pi-trash" @click="deletePrintableDeliverable(slotProps.index + currentPagePrintableDeliverablesTable * 5)" />
+              <i class="pi pi-trash" @click="deletePrintableDeliverable(project.printableDeliverables.indexOf(slotProps.data))" />
             </template>
           </Column>
 
@@ -1060,8 +1059,6 @@ export default {
       printableDeliverableFilters: null,
       loading: true,
       onFocusValue: null,
-      currentPagePartnersTable: 0,
-      currentPagePrintableDeliverablesTable: 0,
       displayPartnersWithoutCountryDialog: false,
       displayPartnersWithDefaultValues: false,
       partnersWithoutCountry: [],
