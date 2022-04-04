@@ -507,7 +507,7 @@
                 <h4>Events*</h4>
 
                 <TabView>
-                  <TabPanel header="Events organized by the project" v-if="project.events && project.events.organization.length > 0">
+                  <TabPanel header="Events organized by the project" v-if="project.events && project.events.organization">
 
                     <DataTable :value="project.events.organization" editMode="cell" :paginator="true" class="p-datatable-gridlines" dataKey="_id"
                     :rowHover="true" @cell-edit-complete="onCellEditCompleteEvents" sortMode="multiple" :rows="5" v-model:filters="organizationEventsFilters"
@@ -582,7 +582,6 @@
                         </template>
                       </Column>
 
-
                       <Column field="virtualParticipants" header="Virtual participants" :sortable="true">
                         <template #body="slotProps">
                           <td :class="slotProps.data[slotProps.field] == 0 && slotProps.data['type'] !== 'In presence' ? 'defaultValue' : ''"
@@ -641,7 +640,7 @@
                     </DataTable>
                   </TabPanel>
 
-                  <TabPanel header="Project participation in events" v-if="project.events && project.events.participation.length > 0">
+                  <TabPanel header="Project participation in events" v-if="project.events && project.events.participation">
 
                     <DataTable :value="project.events.participation" editMode="cell" :paginator="true" class="p-datatable-gridlines" dataKey="_id"
                     :rowHover="true" @cell-edit-complete="onCellEditCompleteEvents" sortMode="multiple" :rows="5" v-model:filters="participationEventsFilters"
