@@ -1449,10 +1449,31 @@
                       <p v-for="partner in partnersWithDefaultValues" :key="partner._id">{{partner.name}}</p>
                     </div>
                 </div>
+
                 <template #footer>
                     <Button label="Ok" @click="closePartnersWithoutCountryErrorDialog" class="p-button-text p-button-info" autofocus/>
                 </template>
             </Dialog>
+
+            <Dialog header="Error" v-model:visible="displayEventsWithDefaultValues" class="col-4" :modal="true">
+                
+                <div class="flex align-items-center border-top-1 surface-border pt-5">
+                    <i class="pi pi-exclamation-triangle mr-3" style="font-size: 2rem" />
+                    <div>
+                      <p>There are events with empty values!</p>
+                      <p>Events with empty values:</p>
+                      <p v-for="eventOrganization in eventsOrganizedByTheprojectNotDefined" :key="eventOrganization._id">{{eventOrganization.name}}</p>
+                      <p v-for="eventParticipation in eventsParticipationNotDefined" :key="eventParticipation._id">{{eventParticipation.name}}</p>
+                    </div>
+                </div>
+
+                <template #footer>
+                    <Button label="Ok" @click="closeEventsErrorDialog" class="p-button-text p-button-info" autofocus/>
+                </template>
+            </Dialog>
+
+
+
 
             <div class="col-12">
               <div class="card p-fluid" style="display: flex; flex-direction: column; align-items: center; justify-content: space-around;">
@@ -1768,8 +1789,11 @@ export default {
       onFocusValue: null,
       displayPartnersWithoutCountryDialog: false,
       displayPartnersWithDefaultValues: false,
+      displayEventsWithDefaultValues : false,
       partnersWithoutCountry: [],
       partnersWithDefaultValues: [],
+      eventsOrganizedByTheprojectNotDefined: [],
+      eventsParticipationNotDefined: [],
       displayPartnersError: false,
       eventsLoaded: false,
       displayUpdateInitialValues: false
@@ -1812,12 +1836,20 @@ export default {
     displayUpdateInitialValuesDialog() {
       this.displayUpdateInitialValues = true;
     },
+    displayEventsErrorDialog() {
+      this.displayEventsWithDefaultValues = true;
+    },
     closePartnersWithoutCountryErrorDialog() {
       this.displayPartnersError = false;
-      this.displayPartnersWithoutCountryDialog = false
+      this.displayPartnersWithoutCountryDialog = false;
       this.displayPartnersWithDefaultValues = false;
-      this.partnersWithoutCountry = []
+      this.partnersWithoutCountry = [];
       this.partnersWithDefaultValues = [];
+    },
+    closeEventsErrorDialog() {
+      this.displayEventsWithDefaultValues = false;
+      this.eventsOrganizedByTheprojectNotDefined = [];
+      this.eventsParticipationNotDefined = [];
     },
     confirmUpdateInitialValuesDialog() {
       this.displayUpdateInitialValues = false;
@@ -1831,7 +1863,7 @@ export default {
       this.displayUpdateInitialValues = false;
     },
     calculateCF() {
-      
+
       this.checkEventsNotFilled()
       for (let partner of this.project.partners) {
         if (partner.country === "Select a country") {
@@ -1851,6 +1883,12 @@ export default {
       if (this.partnersWithDefaultValues.length > 0){
         this.displayPartnersWithDefaultValuesErrorDialog();
       }
+
+      if(this.checkEventsOrganization() == true || this.checkEventsParticipation() == true) {
+        this.displayEventsErrorDialog();
+      }
+
+
       if (this.displayPartnersWithoutCountryDialog || this.displayPartnersWithDefaultValues > 0) {
         this.displayPartnersErrorDialog();
       } else if (!this.checkHoursNotGreaterThan24() && !this.checkNonLocalPhysicalGreaterThanPhysicalParticipants()) {
@@ -2725,10 +2763,54 @@ export default {
           console.log('error' + e);
         })
       }
+      
     },
         goToLinkedProject() {
       location.href = '/projects/' + this.project.initialProject;
+    },
+
+    checkEventsOrganization() {
+      let res = false;
+
+      // Case organized
+    
+      for( let event of this.project.events.organization) {
+        if(event.type.endsWith('type') || event.hostingCountry.endsWith('country')) {
+          res = true;
+          this.eventsOrganizedByTheprojectNotDefined.push(Object.assign({}, event));
+        }
+      }
+      return res;
+    },
+
+    checkEventsParticipation() {
+      let res = false;
+
+      for (let event of this.project.events.participation) {
+        if(event.type.endsWith('type') || event.hostingCountry.endsWith('country')) {
+          res = true;
+          this.eventsParticipationNotDefined.push(Object.assign({}, event));
+          break;
+        }
+        if(event.travelModeArrive == 'Car') {
+          if(event.fuelTypeArrive.endsWith('type')) {
+            res = true;
+            this.eventsParticipationNotDefined.push(Object.assign({}, event));
+            break;
+          }
+        }
+        if(event.travelModeDepart.endsWith('Car')) {
+          if(event.fuelTypeDepart.endsWith('type')) {
+            res = true;
+            this.eventsParticipationNotDefined.push(Object.assign({}, event));
+            break;
+          }
+        }
+      }
+
+      return res;
     }
+
   },
   computed: {
     ...mapState([
