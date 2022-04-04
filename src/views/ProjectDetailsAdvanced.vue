@@ -272,7 +272,7 @@
               :rowHover="true" @cell-edit-complete="onCellEditCompletePartner" sortMode="multiple" :rows="5" v-model:filters="partnerFilters"
               filterDisplay="menu" :loading="loading" :filters="partnerFilters" responsiveLayout="scroll"
               :globalFilterFields="['name','country','employeesPersonMonths', 'externalExpertsPersonMonths', 'employeesWorkingWPP', 
-                                    'seasonalEmployees', 'externalExperts', 'coordinator']">
+                                    'seasonalEmployees', 'externalExperts', 'coordinator'] " removableSort>
                 
                 <template #header>
                     <div class="flex justify-content-between flex-column sm:flex-row">
@@ -353,7 +353,7 @@
               <DataTable :value="this.project.externalExperts" editMode="cell" :paginator="true" class="p-datatable-gridlines" dataKey="_id"
               :rowHover="true" @cell-edit-complete="onCellEditCompleteExternalExpert" sortMode="multiple" :rows="5" v-model:filters="externalExpertFilters"
               filterDisplay="menu" :loading="loading" :filters="externalExpertFilters" responsiveLayout="scroll"
-              :globalFilterFields="['typeOfExpertise','country','personMonthsWPP', 'twoWayTravels']">
+              :globalFilterFields="['typeOfExpertise','country','personMonthsWPP', 'twoWayTravels']" removableSort>
                 
                 <template #header>
                     <div class="flex justify-content-between flex-column sm:flex-row">
@@ -814,7 +814,7 @@
                 <DataTable :value="project.printableDeliverables" editMode="cell" @cell-edit-complete="onCellEditCompletePrintableDeliverable" 
                   sortMode="multiple" :paginator="true" :rows="5" v-model:filters="printableDeliverableFilters" filterDisplay="menu"
                   :loading="loading" :filters="printableDeliverableFilters" responsiveLayout="scroll" :rowHover="true" class="p-datatable-gridlines"
-                  :globalFilterFields="['deliverableType', 'deliverableName', 'copies', 'avgPagesPerCopy']">
+                  :globalFilterFields="['deliverableType', 'deliverableName', 'copies', 'avgPagesPerCopy']" removableSort>
 
                   <template #header>
                       <div class="flex justify-content-between flex-column sm:flex-row">
@@ -932,7 +932,7 @@
                   <DataTable :value="project.customHeat" editMode="cell" :paginator="true" class="p-datatable-gridlines" dataKey="_id"
                   :rowHover="true" @cell-edit-complete="onCellEditCompleteCustom($event, 'customHeat', 'heat')" sortMode="multiple" :rows="5" v-model:filters="partnerFilters"
                   filterDisplay="menu" :loading="loading" :filters="customFilters" responsiveLayout="scroll"
-                  :globalFilterFields="['nameCustom','valueCustom']">
+                  :globalFilterFields="['nameCustom','valueCustom']" removableSort>
                     
                     <template #header>
                         <div class="flex justify-content-between flex-column sm:flex-row">
@@ -990,7 +990,7 @@
                   <DataTable :value="project.customElectricity" editMode="cell" :paginator="true" class="p-datatable-gridlines" dataKey="_id"
                   :rowHover="true" @cell-edit-complete="onCellEditCompleteCustom($event, 'customElectricity', 'electricity')" sortMode="multiple" :rows="5" v-model:filters="partnerFilters"
                   filterDisplay="menu" :loading="loading" :filters="customFilters" responsiveLayout="scroll"
-                  :globalFilterFields="['nameCustom','valueCustom']">
+                  :globalFilterFields="['nameCustom','valueCustom']" removableSort>
                   
                   <template #header>
                       <div class="flex justify-content-between flex-column sm:flex-row">
@@ -1049,7 +1049,7 @@
                   <DataTable :value="project.customWater" editMode="cell" :paginator="true" class="p-datatable-gridlines" dataKey="_id"
                   :rowHover="true" @cell-edit-complete="onCellEditCompleteCustom($event, 'customWater', 'water')" sortMode="multiple" :rows="5" v-model:filters="partnerFilters"
                   filterDisplay="menu" :loading="loading" :filters="customFilters" responsiveLayout="scroll"
-                  :globalFilterFields="['nameCustom','valueCustom']">
+                  :globalFilterFields="['nameCustom','valueCustom']" removableSort>
                   
                   <template #header>
                       <div class="flex justify-content-between flex-column sm:flex-row">
@@ -1109,7 +1109,7 @@
                     <DataTable :value="project.customTransportation" editMode="cell" :paginator="true" class="p-datatable-gridlines" dataKey="_id"
                     :rowHover="true" @cell-edit-complete="onCellEditCompleteCustom($event, 'customTransportation', 'transportation')" sortMode="multiple" :rows="5" v-model:filters="partnerFilters"
                     filterDisplay="menu" :loading="loading" :filters="customFilters" responsiveLayout="scroll"
-                    :globalFilterFields="['nameCustom','valueCustom']">
+                    :globalFilterFields="['nameCustom','valueCustom']" removableSort>
                     
                     <template #header>
                         <div class="flex justify-content-between flex-column sm:flex-row">
@@ -1169,7 +1169,7 @@
                     <DataTable :value="project.customMaterials" editMode="cell" :paginator="true" class="p-datatable-gridlines" dataKey="_id"
                     :rowHover="true" @cell-edit-complete="onCellEditCompleteCustom($event, 'customMaterials', 'materials')" sortMode="multiple" :rows="5" v-model:filters="partnerFilters"
                     filterDisplay="menu" :loading="loading" :filters="customFilters" responsiveLayout="scroll"
-                    :globalFilterFields="['nameCustom','valueCustom']">
+                    :globalFilterFields="['nameCustom','valueCustom']" removableSort>
                     
                     <template #header>
                         <div class="flex justify-content-between flex-column sm:flex-row">
@@ -1229,7 +1229,7 @@
                   <DataTable :value="project.customEvents" editMode="cell" :paginator="true" class="p-datatable-gridlines" dataKey="_id"
                   :rowHover="true" @cell-edit-complete="onCellEditCompleteCustom($event, 'customEvents', 'event')" sortMode="multiple" :rows="5" v-model:filters="partnerFilters"
                   filterDisplay="menu" :loading="loading" :filters="customFilters" responsiveLayout="scroll"
-                  :globalFilterFields="['nameCustom','valueCustom']">
+                  :globalFilterFields="['nameCustom','valueCustom']" removableSort>
                   
                   <template #header>
                       <div class="flex justify-content-between flex-column sm:flex-row">
@@ -1291,7 +1291,7 @@
                     <DataTable :value="project.customPrintableDeliverables" editMode="cell" :paginator="true" class="p-datatable-gridlines" dataKey="_id"
                     :rowHover="true" @cell-edit-complete="onCellEditCompleteCustom($event, 'customPrintableDeliverables', 'Printable Deliverables')" sortMode="multiple" :rows="5" v-model:filters="partnerFilters"
                     filterDisplay="menu" :loading="loading" :filters="customFilters" responsiveLayout="scroll"
-                    :globalFilterFields="['nameCustom','valueCustom']">
+                    :globalFilterFields="['nameCustom','valueCustom']" removableSort>
                       
                       <template #header>
                           <div class="flex justify-content-between flex-column sm:flex-row">
@@ -1351,7 +1351,7 @@
                     <DataTable :value="project.customEquipment" editMode="cell" :paginator="true" class="p-datatable-gridlines" dataKey="_id"
                     :rowHover="true" @cell-edit-complete="onCellEditCompleteCustom($event, 'customEquipment', 'Equipment')" sortMode="multiple" :rows="5" v-model:filters="partnerFilters"
                     filterDisplay="menu" :loading="loading" :filters="customFilters" responsiveLayout="scroll"
-                    :globalFilterFields="['nameCustom','valueCustom']">
+                    :globalFilterFields="['nameCustom','valueCustom']" removableSort>
                       
                       <template #header>
                           <div class="flex justify-content-between flex-column sm:flex-row">
@@ -1531,7 +1531,7 @@
                     :rowHover="true" @cell-edit-complete="onCellEditCompletePartner" sortMode="multiple" :rows="5" v-model:filters="partnerFilters"
                     filterDisplay="menu" :loading="loading" :filters="partnerFilters" responsiveLayout="scroll"
                     :globalFilterFields="['name','country','personMonthsPP','personMonthsWPP', 'externalExpertsPersonMonths', 'employeesWorkingWPP', 
-                                          'seasonalEmployees', 'externalExperts', 'coordinator']">
+                                          'seasonalEmployees', 'externalExperts', 'coordinator']" removableSort>
                       
                       <template #header>
                           <div class="flex justify-content-between flex-column sm:flex-row">
