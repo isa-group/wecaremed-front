@@ -962,7 +962,7 @@
                           <InputText v-model="slotProps.data[slotProps.field]" />
                       </template>
                       <template #filter="{filterModel, field}">
-                          <InputText type="text" v-model="filterModel.value" class="p-column-filter" :placeholder="'Filter by ' + field"/>
+                          <InputText type="text" v-model="filterModel.value" class="p-column-filter" :placeholder="'Filter by ' + field" />
                       </template>
                     </Column>
 
@@ -971,7 +971,7 @@
                         <InputNumber v-model="slotProps.data[slotProps.field]" mode="decimal" :maxFractionDigits="3"
                         showButtons :step="0.25" decrementButtonClass="p-button-info"
                         incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
-                        :allowEmpty="false" :min="0" />
+                        :allowEmpty="false" :min="0" @focus="$event.target.select()" />
                       </template>
                     </Column>
 
@@ -1029,7 +1029,7 @@
                       <InputNumber v-model="slotProps.data[slotProps.field]" mode="decimal" :maxFractionDigits="3"
                       showButtons :step="0.25" decrementButtonClass="p-button-info"
                       incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
-                      :allowEmpty="false" :min="0" />
+                      :allowEmpty="false" :min="0" @focus="$event.target.select()"/>
                     </template>
                   </Column>
 
@@ -1088,7 +1088,7 @@
                       <InputNumber v-model="slotProps.data[slotProps.field]" mode="decimal" :maxFractionDigits="3"
                       showButtons :step="0.25" decrementButtonClass="p-button-info"
                       incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
-                      :allowEmpty="false" :min="0" />
+                      :allowEmpty="false" :min="0" @focus="$event.target.select()"/>
                     </template>
                   </Column>
 
@@ -1148,7 +1148,7 @@
                         <InputNumber v-model="slotProps.data[slotProps.field]" mode="decimal" :maxFractionDigits="3"
                         showButtons :step="0.25" decrementButtonClass="p-button-info"
                         incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
-                        :allowEmpty="false" :min="0" />
+                        :allowEmpty="false" :min="0" @focus="$event.target.select()"/>
                       </template>
                     </Column>
 
@@ -1208,7 +1208,7 @@
                         <InputNumber v-model="slotProps.data[slotProps.field]" mode="decimal" :maxFractionDigits="3"
                         showButtons :step="0.25" decrementButtonClass="p-button-info"
                         incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
-                        :allowEmpty="false" :min="0" />
+                        :allowEmpty="false" :min="0" @focus="$event.target.select()"/>
                       </template>
                     </Column>
 
@@ -1268,7 +1268,7 @@
                       <InputNumber v-model="slotProps.data[slotProps.field]" mode="decimal" :maxFractionDigits="3"
                       showButtons :step="0.25" decrementButtonClass="p-button-info"
                       incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
-                      :allowEmpty="false" :min="0" />
+                      :allowEmpty="false" :min="0" @focus="$event.target.select()"/>
                     </template>
                   </Column>
 
@@ -1330,7 +1330,7 @@
                           <InputNumber v-model="slotProps.data[slotProps.field]" mode="decimal" :maxFractionDigits="3"
                           showButtons :step="0.25" decrementButtonClass="p-button-info"
                           incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
-                          :allowEmpty="false" :min="0" />
+                          :allowEmpty="false" :min="0" @focus="$event.target.select()"/>
                         </template>
                       </Column>
 
@@ -1390,7 +1390,7 @@
                           <InputNumber v-model="slotProps.data[slotProps.field]" mode="decimal" :maxFractionDigits="3"
                           showButtons :step="0.25" decrementButtonClass="p-button-info"
                           incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
-                          :allowEmpty="false" :min="0" />
+                          :allowEmpty="false" :min="0" @focus="$event.target.select()"/>
                         </template>
                       </Column>
 
