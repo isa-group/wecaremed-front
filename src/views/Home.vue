@@ -10,8 +10,7 @@
       <h1>My projects</h1>
 
       <DataTable :value="projects" :paginator="true" class="p-datatable-gridlines" dataKey="id"
-      :rowHover="true" sortMode="multiple" :rows="5" :loading="loading" responsiveLayout="scroll"
-      @page="currentPageProjectsTable = $event.page">
+      :rowHover="true" sortMode="multiple" :rows="5" :loading="loading" responsiveLayout="scroll">
         
         <template #header>
             <div class="flex justify-content-between flex-column sm:flex-row">
@@ -73,17 +72,17 @@
 
         <Column field="actions" header="Actions">
           <template #body="slotProps">
-            <router-link :to="'/projects/' + (this.projects[slotProps.index + currentPageProjectsTable * 5]._id)">
+            <router-link :to="'/projects/' + (slotProps.data._id)">
               <i class="pi pi-arrow-circle-right mr-3" />
             </router-link>
-            <router-link :to="'/editProject/' + (this.projects[slotProps.index + currentPageProjectsTable * 5]._id)">
+            <router-link :to="'/editProject/' + (slotProps.data._id)">
               <i class="pi pi-pencil mr-3" />
             </router-link>
             <router-link to="/">
-              <i class="pi pi-clone mr-3" @click="confirmCloneProject(slotProps.index + currentPageProjectsTable * 5)" />
+              <i class="pi pi-clone mr-3" @click="confirmCloneProject(projects.indexOf(slotProps.data))" />
             </router-link>
             <router-link to="/">
-              <i class="pi pi-trash" @click="confirmDeleteProject(slotProps.index + currentPageProjectsTable * 5)" />
+              <i class="pi pi-trash" @click="confirmDeleteProject(projects.indexOf(slotProps.data))" />
             </router-link>
           </template>
         </Column>
@@ -150,7 +149,6 @@ export default {
       deleteProjectDialog: false,
       loading: true,
       projects: [],
-      currentPageProjectsTable: 0,
       cloneProjectDialog: false
     }
   },

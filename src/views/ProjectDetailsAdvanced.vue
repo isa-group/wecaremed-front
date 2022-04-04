@@ -12,7 +12,12 @@
 				<TabView>
 					<TabPanel header="Data">
             <div id="pdfPrintDiv" style="display: none">
-              <h1 style="margin-bottom: 20px">{{project.name}} ({{project.from}} - {{project.to}}) [{{project.initialCF}} / {{project.currentCF}}] t CO2e</h1>
+              
+              <h1>{{project.name}}&nbsp;
+                ({{ (new Date(project.from).getMonth() + 1).toString().padStart(2, "0") + '/' + new Date(project.from).getFullYear()}} -&nbsp;
+                {{(new Date(project.to).getMonth() + 1).toString().padStart(2, "0") + '/' + new Date(project.to).getFullYear()}})
+                [{{project.initialCF}} / {{project.currentCF}}] t CO2e&nbsp;
+              </h1>   
 
               <h3>Partners</h3>
                         
@@ -267,7 +272,7 @@
               :rowHover="true" @cell-edit-complete="onCellEditCompletePartner" sortMode="multiple" :rows="5" v-model:filters="partnerFilters"
               filterDisplay="menu" :loading="loading" :filters="partnerFilters" responsiveLayout="scroll"
               :globalFilterFields="['name','country','employeesPersonMonths', 'externalExpertsPersonMonths', 'employeesWorkingWPP', 
-                                    'seasonalEmployees', 'externalExperts', 'coordinator']" @page="currentPagePartnersTable = $event.page">
+                                    'seasonalEmployees', 'externalExperts', 'coordinator']">
                 
                 <template #header>
                     <div class="flex justify-content-between flex-column sm:flex-row">
@@ -335,7 +340,7 @@
 
                 <Column field="actions" header="Actions">
                   <template #body="slotProps">
-                    <i class="pi pi-trash" @click="deletePartner(slotProps.index + currentPagePartnersTable * 5)" />
+                    <i class="pi pi-trash" @click="deletePartner(project.partners.indexOf(slotProps.data))" />
                   </template>
                 </Column>
               
@@ -348,8 +353,7 @@
               <DataTable :value="this.project.externalExperts" editMode="cell" :paginator="true" class="p-datatable-gridlines" dataKey="_id"
               :rowHover="true" @cell-edit-complete="onCellEditCompleteExternalExpert" sortMode="multiple" :rows="5" v-model:filters="externalExpertFilters"
               filterDisplay="menu" :loading="loading" :filters="externalExpertFilters" responsiveLayout="scroll"
-              :globalFilterFields="['typeOfExpertise','country','personMonthsWPP', 'twoWayTravels']" 
-              @page="currentPageExternalExpertsTable = $event.page">
+              :globalFilterFields="['typeOfExpertise','country','personMonthsWPP', 'twoWayTravels']">
                 
                 <template #header>
                     <div class="flex justify-content-between flex-column sm:flex-row">
@@ -410,7 +414,7 @@
 
                 <Column field="actions" header="Actions">
                   <template #body="slotProps">
-                    <i class="pi pi-trash" @click="deleteExternalExperts(slotProps.index + currentPageExternalExpertsTable * 5)" />
+                    <i class="pi pi-trash" @click="deleteExternalExperts(project.externalExperts.indexOf(slotProps.data))" />
                   </template>
                 </Column>
               
@@ -498,18 +502,18 @@
               </div>
             </div>
 
-            <div class="col-12" v-if="eventsLoaded">
+            <div class="col-12" v-if="project.events">
               <div class="card">
                 <h4>Events*</h4>
 
                 <TabView>
-                  <TabPanel header="Events organized by the project">
+                  <TabPanel header="Events organized by the project" v-if="project.events && project.events.organization">
 
                     <DataTable :value="project.events.organization" editMode="cell" :paginator="true" class="p-datatable-gridlines" dataKey="_id"
                     :rowHover="true" @cell-edit-complete="onCellEditCompleteEvents" sortMode="multiple" :rows="5" v-model:filters="organizationEventsFilters"
                     filterDisplay="menu" :loading="loading" :filters="organizationEventsFilters" responsiveLayout="scroll" :globalFilterFields="['name',
                     'type','physicalParticipants', 'nonLocalPhysicalParticipants', 'virtualParticipants', 'durationDays',
-                    'durationHoursPerDay', 'hostingCountry']" @page="currentPageEventsOrganizationTable = $event.page" removableSort>
+                    'durationHoursPerDay', 'hostingCountry']" removableSort>
                       
                       <template #header>
                           <div class="flex justify-content-between flex-column sm:flex-row">
@@ -578,7 +582,6 @@
                         </template>
                       </Column>
 
-
                       <Column field="virtualParticipants" header="Virtual participants" :sortable="true">
                         <template #body="slotProps">
                           <td :class="slotProps.data[slotProps.field] == 0 && slotProps.data['type'] !== 'In presence' ? 'defaultValue' : ''"
@@ -630,21 +633,21 @@
 
                       <Column field="actions" header="Actions">
                         <template #body="slotProps">
-                          <i class="pi pi-trash" @click="deleteEvent(slotProps.index + currentPageEventsOrganizationTable * 5, 'organization')" />
+                          <i class="pi pi-trash" @click="deleteEvent(project.events.organization.indexOf(slotProps.data), 'organization')" />
                         </template>
                       </Column>
                     
                     </DataTable>
                   </TabPanel>
 
-                  <TabPanel header="Project participation in events">
+                  <TabPanel header="Project participation in events" v-if="project.events && project.events.participation">
 
                     <DataTable :value="project.events.participation" editMode="cell" :paginator="true" class="p-datatable-gridlines" dataKey="_id"
                     :rowHover="true" @cell-edit-complete="onCellEditCompleteEvents" sortMode="multiple" :rows="5" v-model:filters="participationEventsFilters"
                     filterDisplay="menu" :loading="loading" :filters="participationEventsFilters" responsiveLayout="scroll"
                     :globalFilterFields="['name','type', 'nonLocalPhysicalParticipants','durationDays', 'hostingCountry',
                     'distanceTravelledArrive', 'travelModeArrive', 'fuelTypeArrive', 'distanceTravelledDepart', 'travelModeDepart',
-                    'fuelTypeDepart']" @page="currentPageEventsParticipationTable = $event.page" removableSort>
+                    'fuelTypeDepart']" removableSort>
                       
                       <template #header>
                           <div class="flex justify-content-between flex-column sm:flex-row">
@@ -791,7 +794,7 @@
 
                       <Column field="actions">
                         <template #body="slotProps">
-                          <i class="pi pi-trash" @click="deleteEvent(slotProps.index + currentPageEventsParticipationTable * 5, 'participation')" />
+                          <i class="pi pi-trash" @click="deleteEvent(project.events.participation.indexOf(slotProps.data), 'participation')" />
                         </template>
                       </Column>
                       
@@ -811,8 +814,7 @@
                 <DataTable :value="project.printableDeliverables" editMode="cell" @cell-edit-complete="onCellEditCompletePrintableDeliverable" 
                   sortMode="multiple" :paginator="true" :rows="5" v-model:filters="printableDeliverableFilters" filterDisplay="menu"
                   :loading="loading" :filters="printableDeliverableFilters" responsiveLayout="scroll" :rowHover="true" class="p-datatable-gridlines"
-                  :globalFilterFields="['deliverableType', 'deliverableName', 'copies', 'avgPagesPerCopy']"
-                  @page="currentPagePrintableDeliverablesTable = $event.page">
+                  :globalFilterFields="['deliverableType', 'deliverableName', 'copies', 'avgPagesPerCopy']">
 
                   <template #header>
                       <div class="flex justify-content-between flex-column sm:flex-row">
@@ -865,16 +867,50 @@
                   </template>
                     <template #editor="slotProps">
                         <InputNumber v-model="slotProps.data[slotProps.field]" mode="decimal"
-                              showButtons decrementButtonClass="p-button-info"
-                              incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
-                              :allowEmpty="false" :min="0" @focus="$event.target.select()" :class="slotProps.data[slotProps.field] == 1 ? 'defaultValue' : ''" />
+                        showButtons decrementButtonClass="p-button-info"
+                        incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
+                        :allowEmpty="false" :min="0" @focus="$event.target.select()" :class="slotProps.data[slotProps.field] == 1 ? 'defaultValue' : ''" />
                     </template>
                   </Column>
 
+                  <Column field="avgPagesPerCopy" header="Average pages per copy" :sortable="true">
+                    <template #body="slotProps">
+                      <td style="display:block;"
+                      :class="deliverableOptions.find(d => {return d.value == slotProps.data.deliverableType}) && slotProps.data[slotProps.field] == deliverableOptions.find(d => {return d.value == slotProps.data.deliverableType}).avgPagesPerCopy ? 'defaultValue' : ''"
+                      >{{slotProps.data[slotProps.field]}}</td>
+                    </template>
+                    <template #editor="slotProps">
+                      <InputNumber v-model="slotProps.data[slotProps.field]" mode="decimal"
+                      showButtons decrementButtonClass="p-button-info"
+                      incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
+                      :allowEmpty="false" :min="0" @focus="$event.target.select()" />
+                    </template>
+                  </Column>
+
+                  <Column field="size" header="Paper size" :sortable="true">
+                    <template #body="slotProps">
+                      <td :class="slotProps.data[slotProps.field] == 'Select a paper size' ? 'defaultValue' : ''" style="display:block;">{{slotProps.data[slotProps.field]}}</td>
+                    </template>
+                    <template #editor="slotProps">
+                      <Dropdown :options="paperSizes" v-model="slotProps.data[slotProps.field]" placeholder="Select a paper size">
+                        <template #value="slotProps">
+                          <div v-if="slotProps.value">
+                            <span>{{slotProps.value}}</span>
+                          </div>
+                          <span v-else>
+                              {{slotProps.placeholder}}
+                          </span>
+                        </template>
+                        <template #option="slotProps">
+                            <span>{{slotProps.option}}</span>
+                        </template>
+                      </Dropdown>
+                    </template>
+                  </Column>
                   
                   <Column field="actions" header="Actions">
                     <template #body="slotProps">
-                      <i class="pi pi-trash" @click="deletePrintableDeliverable(slotProps.index + currentPagePrintableDeliverablesTable * 5)" />
+                      <i class="pi pi-trash" @click="deletePrintableDeliverable(project.printableDeliverables.indexOf(slotProps.data))" />
                     </template>
                   </Column>
 
@@ -896,7 +932,7 @@
                   <DataTable :value="project.customHeat" editMode="cell" :paginator="true" class="p-datatable-gridlines" dataKey="_id"
                   :rowHover="true" @cell-edit-complete="onCellEditCompleteCustom($event, 'customHeat', 'heat')" sortMode="multiple" :rows="5" v-model:filters="partnerFilters"
                   filterDisplay="menu" :loading="loading" :filters="customFilters" responsiveLayout="scroll"
-                  :globalFilterFields="['nameCustom','valueCustom']" @page="currentPageCustomHeatTable = $event.page">
+                  :globalFilterFields="['nameCustom','valueCustom']">
                     
                     <template #header>
                         <div class="flex justify-content-between flex-column sm:flex-row">
@@ -930,7 +966,7 @@
                       </template>
                     </Column>
 
-                    <Column field="value" header="Value" :sortable="true">
+                    <Column field="value" header="Value (t CO2e)" :sortable="true">
                       <template #editor="slotProps" class="p-field">
                         <InputNumber v-model="slotProps.data[slotProps.field]" mode="decimal" :maxFractionDigits="3"
                         showButtons :step="0.25" decrementButtonClass="p-button-info"
@@ -942,7 +978,7 @@
                     
                     <Column field="actions" header="Actions">
                       <template #body="slotProps">
-                        <i class="pi pi-trash" @click="deleteCustom(slotProps.index + currentPageCustomHeatTable * 5, 'customHeat', 'heat')" />
+                        <i class="pi pi-trash" @click="deleteCustom(project.customHeat.indexOf(slotProps.data), 'customHeat', 'heat')" />
                       </template>
                     </Column>
                   
@@ -954,7 +990,7 @@
                   <DataTable :value="project.customElectricity" editMode="cell" :paginator="true" class="p-datatable-gridlines" dataKey="_id"
                   :rowHover="true" @cell-edit-complete="onCellEditCompleteCustom($event, 'customElectricity', 'electricity')" sortMode="multiple" :rows="5" v-model:filters="partnerFilters"
                   filterDisplay="menu" :loading="loading" :filters="customFilters" responsiveLayout="scroll"
-                  :globalFilterFields="['nameCustom','valueCustom']" @page="currentPageCustomElectricityTable = $event.page">
+                  :globalFilterFields="['nameCustom','valueCustom']">
                   
                   <template #header>
                       <div class="flex justify-content-between flex-column sm:flex-row">
@@ -988,7 +1024,7 @@
                     </template>
                   </Column>
 
-                  <Column field="value" header="Value" :sortable="true">
+                  <Column field="value" header="Value (t CO2e)" :sortable="true">
                     <template #editor="slotProps" class="p-field">
                       <InputNumber v-model="slotProps.data[slotProps.field]" mode="decimal" :maxFractionDigits="3"
                       showButtons :step="0.25" decrementButtonClass="p-button-info"
@@ -1000,7 +1036,7 @@
                   
                   <Column field="actions" header="Actions">
                     <template #body="slotProps">
-                      <i class="pi pi-trash" @click="deleteCustom(slotProps.index + currentPageCustomElectricityTable * 5, 'customElectricity', 'electricity')" />
+                      <i class="pi pi-trash" @click="deleteCustom(project.customElectricity.indexOf(slotProps.data), 'customElectricity', 'electricity')" />
                     </template>
                   </Column>
                 
@@ -1013,7 +1049,7 @@
                   <DataTable :value="project.customWater" editMode="cell" :paginator="true" class="p-datatable-gridlines" dataKey="_id"
                   :rowHover="true" @cell-edit-complete="onCellEditCompleteCustom($event, 'customWater', 'water')" sortMode="multiple" :rows="5" v-model:filters="partnerFilters"
                   filterDisplay="menu" :loading="loading" :filters="customFilters" responsiveLayout="scroll"
-                  :globalFilterFields="['nameCustom','valueCustom']" @page="currentPageCustomWaterTable = $event.page">
+                  :globalFilterFields="['nameCustom','valueCustom']">
                   
                   <template #header>
                       <div class="flex justify-content-between flex-column sm:flex-row">
@@ -1047,7 +1083,7 @@
                     </template>
                   </Column>
 
-                  <Column field="value" header="Value" :sortable="true">
+                  <Column field="value" header="Value (t CO2e)" :sortable="true">
                     <template #editor="slotProps" class="p-field">
                       <InputNumber v-model="slotProps.data[slotProps.field]" mode="decimal" :maxFractionDigits="3"
                       showButtons :step="0.25" decrementButtonClass="p-button-info"
@@ -1059,7 +1095,7 @@
                   
                   <Column field="actions" header="Actions">
                     <template #body="slotProps">
-                      <i class="pi pi-trash" @click="deleteCustom(slotProps.index + currentPageCustomWaterTable * 5, 'customWater', 'water')" />
+                      <i class="pi pi-trash" @click="deleteCustom(project.customWater.indexOf(slotProps.data), 'customWater', 'water')" />
                     </template>
                   </Column>
                 
@@ -1073,7 +1109,7 @@
                     <DataTable :value="project.customTransportation" editMode="cell" :paginator="true" class="p-datatable-gridlines" dataKey="_id"
                     :rowHover="true" @cell-edit-complete="onCellEditCompleteCustom($event, 'customTransportation', 'transportation')" sortMode="multiple" :rows="5" v-model:filters="partnerFilters"
                     filterDisplay="menu" :loading="loading" :filters="customFilters" responsiveLayout="scroll"
-                    :globalFilterFields="['nameCustom','valueCustom']" @page="currentPageCustomTransportationTable = $event.page">
+                    :globalFilterFields="['nameCustom','valueCustom']">
                     
                     <template #header>
                         <div class="flex justify-content-between flex-column sm:flex-row">
@@ -1107,7 +1143,7 @@
                       </template>
                     </Column>
 
-                    <Column field="value" header="Value" :sortable="true">
+                    <Column field="value" header="Value (t CO2e)" :sortable="true">
                       <template #editor="slotProps" class="p-field">
                         <InputNumber v-model="slotProps.data[slotProps.field]" mode="decimal" :maxFractionDigits="3"
                         showButtons :step="0.25" decrementButtonClass="p-button-info"
@@ -1119,7 +1155,7 @@
                     
                     <Column field="actions" header="Actions">
                       <template #body="slotProps">
-                        <i class="pi pi-trash" @click="deleteCustom(slotProps.index + currentPageCustomTransportationTable * 5, 'customTransportation', 'transportation')" />
+                        <i class="pi pi-trash" @click="deleteCustom(project.customTransportation.indexOf(slotProps.data), 'customTransportation', 'transportation')" />
                       </template>
                     </Column>
                   
@@ -1133,7 +1169,7 @@
                     <DataTable :value="project.customMaterials" editMode="cell" :paginator="true" class="p-datatable-gridlines" dataKey="_id"
                     :rowHover="true" @cell-edit-complete="onCellEditCompleteCustom($event, 'customMaterials', 'materials')" sortMode="multiple" :rows="5" v-model:filters="partnerFilters"
                     filterDisplay="menu" :loading="loading" :filters="customFilters" responsiveLayout="scroll"
-                    :globalFilterFields="['nameCustom','valueCustom']" @page="currentPageCustomMaterialsTable = $event.page">
+                    :globalFilterFields="['nameCustom','valueCustom']">
                     
                     <template #header>
                         <div class="flex justify-content-between flex-column sm:flex-row">
@@ -1167,7 +1203,7 @@
                       </template>
                     </Column>
 
-                    <Column field="value" header="Value" :sortable="true">
+                    <Column field="value" header="Value (t CO2e)" :sortable="true">
                       <template #editor="slotProps" class="p-field">
                         <InputNumber v-model="slotProps.data[slotProps.field]" mode="decimal" :maxFractionDigits="3"
                         showButtons :step="0.25" decrementButtonClass="p-button-info"
@@ -1179,7 +1215,7 @@
                     
                     <Column field="actions" header="Actions">
                       <template #body="slotProps">
-                        <i class="pi pi-trash" @click="deleteCustom(slotProps.index + currentPageCustomMaterialsTable * 5, 'customMaterials', 'materials')" />
+                        <i class="pi pi-trash" @click="deleteCustom(project.customMaterials.indexOf(slotProps.data), 'customMaterials', 'materials')" />
                       </template>
                     </Column>
                   
@@ -1193,7 +1229,7 @@
                   <DataTable :value="project.customEvents" editMode="cell" :paginator="true" class="p-datatable-gridlines" dataKey="_id"
                   :rowHover="true" @cell-edit-complete="onCellEditCompleteCustom($event, 'customEvents', 'event')" sortMode="multiple" :rows="5" v-model:filters="partnerFilters"
                   filterDisplay="menu" :loading="loading" :filters="customFilters" responsiveLayout="scroll"
-                  :globalFilterFields="['nameCustom','valueCustom']" @page="currentPageCustomEventsTable = $event.page">
+                  :globalFilterFields="['nameCustom','valueCustom']">
                   
                   <template #header>
                       <div class="flex justify-content-between flex-column sm:flex-row">
@@ -1227,7 +1263,7 @@
                     </template>
                   </Column>
 
-                  <Column field="value" header="Value" :sortable="true">
+                  <Column field="value" header="Value (t CO2e)" :sortable="true">
                     <template #editor="slotProps" class="p-field">
                       <InputNumber v-model="slotProps.data[slotProps.field]" mode="decimal" :maxFractionDigits="3"
                       showButtons :step="0.25" decrementButtonClass="p-button-info"
@@ -1239,7 +1275,7 @@
                   
                   <Column field="actions" header="Actions">
                     <template #body="slotProps">
-                      <i class="pi pi-trash" @click="deleteCustom(slotProps.index + currentPageCustomEventsTable * 5, 'customEvents', 'event')" />
+                      <i class="pi pi-trash" @click="deleteCustom(project.customEvents.indexOf(slotProps.data) * 5, 'customEvents', 'event')" />
                     </template>
                   </Column>
                 
@@ -1255,7 +1291,7 @@
                     <DataTable :value="project.customPrintableDeliverables" editMode="cell" :paginator="true" class="p-datatable-gridlines" dataKey="_id"
                     :rowHover="true" @cell-edit-complete="onCellEditCompleteCustom($event, 'customPrintableDeliverables', 'Printable Deliverables')" sortMode="multiple" :rows="5" v-model:filters="partnerFilters"
                     filterDisplay="menu" :loading="loading" :filters="customFilters" responsiveLayout="scroll"
-                    :globalFilterFields="['nameCustom','valueCustom']" @page="currentPageCustomPrintableDeliverablesTable = $event.page">
+                    :globalFilterFields="['nameCustom','valueCustom']">
                       
                       <template #header>
                           <div class="flex justify-content-between flex-column sm:flex-row">
@@ -1289,7 +1325,7 @@
                         </template>
                       </Column>
 
-                      <Column field="value" header="Value" :sortable="true">
+                      <Column field="value" header="Value (t CO2e)" :sortable="true">
                         <template #editor="slotProps" class="p-field">
                           <InputNumber v-model="slotProps.data[slotProps.field]" mode="decimal" :maxFractionDigits="3"
                           showButtons :step="0.25" decrementButtonClass="p-button-info"
@@ -1300,7 +1336,7 @@
 
                       <Column field="actions" header="Actions">
                         <template #body="slotProps">
-                          <i class="pi pi-trash" @click="deleteCustom(slotProps.index + currentPageCustomPrintableDeliverablesTable * 5, 'customPrintableDeliverables', 'Printable Deliverables')" />
+                          <i class="pi pi-trash" @click="deleteCustom(project.customPrintableDeliverables.indexOf(slotProps.data), 'customPrintableDeliverables', 'Printable Deliverables')" />
                         </template>
                       </Column>
                     
@@ -1315,7 +1351,7 @@
                     <DataTable :value="project.customEquipment" editMode="cell" :paginator="true" class="p-datatable-gridlines" dataKey="_id"
                     :rowHover="true" @cell-edit-complete="onCellEditCompleteCustom($event, 'customEquipment', 'Equipment')" sortMode="multiple" :rows="5" v-model:filters="partnerFilters"
                     filterDisplay="menu" :loading="loading" :filters="customFilters" responsiveLayout="scroll"
-                    :globalFilterFields="['nameCustom','valueCustom']" @page="currentPageCustomEquimentTable = $event.page">
+                    :globalFilterFields="['nameCustom','valueCustom']">
                       
                       <template #header>
                           <div class="flex justify-content-between flex-column sm:flex-row">
@@ -1360,7 +1396,7 @@
 
                       <Column field="actions" header="Actions">
                         <template #body="slotProps">
-                          <i class="pi pi-trash" @click="deleteCustom(slotProps.index + currentPageCustomEquimentTable * 5, 'customEquipment', 'Equipment')" />
+                          <i class="pi pi-trash" @click="deleteCustom(project.customEquipment.indexOf(slotProps.data), 'customEquipment', 'Equipment')" />
                         </template>
                       </Column>
                     
@@ -1631,9 +1667,9 @@ export default {
       customEquipment: [],
       electricityValuesTable:[],
       object: {},
-      countriesForDropdown: ["Albania", "Bosnia & Herzegovina", "Croatia", "Cyprus", "France", "Greece", "Italy", "Malta", "Montenegro", "Portugal", "Slovenia", "Spain", "Bulgaria", "North Macedonia"],
+      countriesForDropdown: ["Albania", "Bosnia & Herzegovina", "Croatia", "Cyprus", "Europe", "France", "Greece", "Italy", "Malta", "Montenegro", "Portugal", "Slovenia", "Spain", "Bulgaria", "North Macedonia"],
       eventTypesForDropdown: ["In presence", "Mixed", "On-line"],
-      travelModesForDropdown: ["Airplane", "Bus", "Car", "Ferries", "Light rail and tram/Underground", "Motorbikes", "Rail", "Taxi"],
+      travelModesForDropdown: ["Airplane", "Bus", "Car", "Ferries", "International Rail", "Light rail and tram/Underground", "Motorbikes", "National Rail", "Taxi"],
       fuelTypesForDropdown: ["Battery electric vehicle", "CNG", "Diesel", "Hybrid", "LPG", "Other", "Petrol", "Plug-in hybrid electric vehicle"],
       paperSizes: ["A0", "A1", "A2", "A3", "A4", "A5", "A6"],
       deliverableOptions: [
@@ -1730,19 +1766,6 @@ export default {
       customFilters: null,
       loading: true,
       onFocusValue: null,
-      currentPagePartnersTable: 0,
-      currentPageExternalExpertsTable: 0,
-      currentPageEventsOrganizationTable: 0,
-      currentPageEventsParticipationTable: 0,
-      currentPagePrintableDeliverablesTable: 0,
-      currentPageCustomPrintableDeliverablesTable: 0,
-      currentPageCustomHeatTable: 0,
-      currentPageCustomElectricityTable: 0,
-      currentPageCustomWaterTable: 0,
-      currentPageCustomTransportationTable: 0,
-      currentPageCustomMaterialsTable: 0,
-      currentPageCustomEventsTable: 0,
-      currentPageCustomEquimentTable: 0,
       displayPartnersWithoutCountryDialog: false,
       displayPartnersWithDefaultValues: false,
       partnersWithoutCountry: [],
@@ -1844,14 +1867,25 @@ export default {
 
         axios.put(`/projects/calculateAdvancedCF/${this.$route.params.id}`)
         .then((response) => {
-          let partners = this.project.partners
-          let printableDeliverables = this.project.printableDeliverables
-          let coordinator = this.project.coordinator
+          // let partners = this.project.partners
+          // let printableDeliverables = this.project.printableDeliverables
+          // let coordinator = this.project.coordinator
           
-          this.project = response.data;
-          this.project.partners = partners
-          this.project.printableDeliverables = printableDeliverables
-          this.project.coordinator = coordinator
+          // this.project = response.data;
+          // this.project.partners = partners
+          // this.project.printableDeliverables = printableDeliverables
+          // this.project.coordinator = coordinator
+
+          this.project.fuelsHeatAdvancedCF = response.data.fuelsHeatAdvancedCF
+          this.project.electricityAdvancedCF = response.data.electricityAdvancedCF
+          this.project.waterAdvancedCF = response.data.waterAdvancedCF
+          this.project.transportationAdvancedCF = response.data.transportationAdvancedCF
+          this.project.materialsAdvancedCF = response.data.materialsAdvancedCF
+          this.project.eventsAdvancedCF = response.data.eventsAdvancedCF
+          this.project.printableDeliverablesAdvancedCF = response.data.printableDeliverablesAdvancedCF
+          this.project.currentCF = response.data.currentCF
+          this.project.equipmentAdvancedCF = response.data.equipmentAdvancedCF
+
           this.$toast.add({severity:'success', summary: 'Successful', detail: 'Project CF calculated', life: 3000});
         })
         .catch((e)=>{
@@ -2322,20 +2356,23 @@ export default {
     },
     saveEvents() {
       let allEvents = [];
-      for(let event of this.project.events.organization) {
-        allEvents.push(event);
-      }
 
-      for(let event of this.project.events.participation) {
-        allEvents.push(event);
-      }
+      if (this.project.events) {
+        for(let event of this.project.events.organization) {
+          allEvents.push(event);
+        }
 
-      this.axios.put('/events/updateAll', allEvents)
-      .then(() => {
-        this.$toast.add({severity:'success', summary: 'Successful', detail: 'All Events updated', life: 3000});
-      }).catch((error) =>{
-        console.log(error)
-      })
+        for(let event of this.project.events.participation) {
+          allEvents.push(event);
+        }
+
+        this.axios.put('/events/updateAll', allEvents)
+        .then(() => {
+          this.$toast.add({severity:'success', summary: 'Successful', detail: 'All Events updated', life: 3000});
+        }).catch((error) =>{
+          console.log(error)
+        })
+      }
     },
     saveExternalExperts() {
       this.axios.put('/externalExperts/updateAll', this.project.externalExperts)

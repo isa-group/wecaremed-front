@@ -149,7 +149,7 @@ describe('Calculate CF for the project: ', () => {
     .end(function(err,res) {
       console.log(res.body)
       expect(res).to.have.status(200);
-      expect(res.body.initialCF).to.equal(58.77)
+      expect(res.body.initialCF).to.equal(99.25)
       done();
     });
   });
