@@ -308,7 +308,7 @@
                     <td :class="slotProps.data[slotProps.field] == 'New partner' ? 'defaultValue' : ''" style="display:block;">{{slotProps.data[slotProps.field]}}</td>
                   </template>
                   <template #editor="slotProps">
-                      <InputText v-model="slotProps.data[slotProps.field]" />
+                      <InputText v-model="slotProps.data[slotProps.field]" @focus="$event.target.select()"/>
                   </template>
                 </Column>
 
@@ -383,7 +383,7 @@
                     <td :class="slotProps.data[slotProps.field] == 'New external expert' ? 'defaultValue' : ''" style="display:block;">{{slotProps.data[slotProps.field]}}</td>
                   </template>
                   <template #editor="slotProps">
-                      <InputText v-model="slotProps.data[slotProps.field]" />
+                      <InputText v-model="slotProps.data[slotProps.field]" @focus="$event.target.select()"/>
                   </template>
                 </Column>
 
@@ -543,7 +543,7 @@
                           <td :class="slotProps.data[slotProps.field] == 'New event' ? 'defaultValue' : ''" style="display:block;">{{slotProps.data[slotProps.field]}}</td>
                         </template>
                         <template #editor="slotProps">
-                            <InputText v-model="slotProps.data[slotProps.field]" />
+                            <InputText v-model="slotProps.data[slotProps.field]" @focus="$event.target.select()"/>
                         </template>
                       </Column>
 
@@ -698,7 +698,7 @@
                             <td :class="slotProps.data[slotProps.field] == 'New event' ? 'defaultValue' : ''" style="display:block;">{{slotProps.data[slotProps.field]}}</td>
                           </template>
                           <template #editor="slotProps">
-                              <InputText v-model="slotProps.data[slotProps.field]" />
+                              <InputText v-model="slotProps.data[slotProps.field]" @focus="$event.target.select()"/>
                           </template>
                         </Column>
 
@@ -959,7 +959,7 @@
 
                     <Column field="name" header="Item" :sortable="true">
                       <template #editor="slotProps">
-                          <InputText v-model="slotProps.data[slotProps.field]" />
+                          <InputText v-model="slotProps.data[slotProps.field]" @focus="$event.target.select()"/>
                       </template>
                       <template #filter="{filterModel, field}">
                           <InputText type="text" v-model="filterModel.value" class="p-column-filter" :placeholder="'Filter by ' + field" />
@@ -1017,7 +1017,7 @@
 
                   <Column field="name" header="Item" :sortable="true">
                     <template #editor="slotProps">
-                        <InputText v-model="slotProps.data[slotProps.field]" />
+                        <InputText v-model="slotProps.data[slotProps.field]" @focus="$event.target.select()"/>
                     </template>
                     <template #filter="{filterModel, field}">
                         <InputText type="text" v-model="filterModel.value" class="p-column-filter" :placeholder="'Filter by ' + field"/>
@@ -1076,7 +1076,7 @@
 
                   <Column field="name" header="Item" :sortable="true">
                     <template #editor="slotProps">
-                        <InputText v-model="slotProps.data[slotProps.field]" />
+                        <InputText v-model="slotProps.data[slotProps.field]" @focus="$event.target.select()"/>
                     </template>
                     <template #filter="{filterModel, field}">
                         <InputText type="text" v-model="filterModel.value" class="p-column-filter" :placeholder="'Filter by ' + field"/>
@@ -1136,7 +1136,7 @@
 
                     <Column field="name" header="Item" :sortable="true">
                       <template #editor="slotProps">
-                          <InputText v-model="slotProps.data[slotProps.field]" />
+                          <InputText v-model="slotProps.data[slotProps.field]" @focus="$event.target.select()"/>
                       </template>
                       <template #filter="{filterModel, field}">
                           <InputText type="text" v-model="filterModel.value" class="p-column-filter" :placeholder="'Filter by ' + field"/>
@@ -1196,7 +1196,7 @@
 
                     <Column field="name" header="Item" :sortable="true">
                       <template #editor="slotProps">
-                          <InputText v-model="slotProps.data[slotProps.field]" />
+                          <InputText v-model="slotProps.data[slotProps.field]" @focus="$event.target.select()"/>
                       </template>
                       <template #filter="{filterModel, field}">
                           <InputText type="text" v-model="filterModel.value" class="p-column-filter" :placeholder="'Filter by ' + field"/>
@@ -1256,7 +1256,7 @@
 
                   <Column field="name" header="Item" :sortable="true">
                     <template #editor="slotProps">
-                        <InputText v-model="slotProps.data[slotProps.field]" />
+                        <InputText v-model="slotProps.data[slotProps.field]" @focus="$event.target.select()"/>
                     </template>
                     <template #filter="{filterModel, field}">
                         <InputText type="text" v-model="filterModel.value" class="p-column-filter" :placeholder="'Filter by ' + field"/>
@@ -1318,7 +1318,7 @@
 
                       <Column field="name" header="Item" :sortable="true">
                         <template #editor="slotProps">
-                            <InputText v-model="slotProps.data[slotProps.field]" />
+                            <InputText v-model="slotProps.data[slotProps.field]" @focus="$event.target.select()"/>
                         </template>
                         <template #filter="{filterModel, field}">
                             <InputText type="text" v-model="filterModel.value" class="p-column-filter" :placeholder="'Filter by ' + field"/>
@@ -1378,7 +1378,7 @@
 
                       <Column field="name" header="Item" :sortable="true">
                         <template #editor="slotProps">
-                            <InputText v-model="slotProps.data[slotProps.field]" />
+                            <InputText v-model="slotProps.data[slotProps.field]" @focus="$event.target.select()"/>
                         </template>
                         <template #filter="{filterModel, field}">
                             <InputText type="text" v-model="filterModel.value" class="p-column-filter" :placeholder="'Filter by ' + field"/>
@@ -1471,7 +1471,6 @@
                     <Button label="Ok" @click="closeEventsErrorDialog" class="p-button-text p-button-info" autofocus/>
                 </template>
             </Dialog>
-
 
 
 
@@ -1871,8 +1870,7 @@ export default {
         }
       }
       for(let partner of this.project.partners) {
-        if(partner.employeesWorkingWPP === null ||
-            partner.seasonalEmployees === null ||
+        if(partner.twoWayTravels === null ||
             partner.employeesPersonMonths === null ) {
               this.partnersWithDefaultValues.push(partner);
             }

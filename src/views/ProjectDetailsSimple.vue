@@ -301,7 +301,7 @@
             <td :class="slotProps.data[slotProps.field] == 'New partner' ? 'defaultValue' : ''" style="display:block;">{{slotProps.data[slotProps.field]}}</td>
           </template>
           <template #editor="slotProps">
-              <InputText v-model="slotProps.data[slotProps.field]" />
+              <InputText v-model="slotProps.data[slotProps.field]" @focus="$event.target.select()"/>
           </template>
         </Column>
 
