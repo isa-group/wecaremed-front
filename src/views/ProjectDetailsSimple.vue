@@ -242,7 +242,8 @@
         </tbody>
       </table>
 
-      <h2 style="margin-bottom: 40px">Tons of equivalent carbon dioxide emitted: {{project.initialCF}}</h2> 
+      <h2>Tons of equivalent carbon dioxide emitted: {{project.initialCF}}</h2> 
+      <h2 style="margin-bottom: 40px">CO2 permits cost: {{project.initialCF * co2PermitsPrice + ' €'}}</h2>
       
       <h3 style="margin-bottom: 10px">CF Breakdown (Tons):</h3>
       <ul>
@@ -869,14 +870,21 @@
     <div class="col-12">
       <div class="card p-fluid" style="display: flex; flex-direction: column; align-items: center; justify-content: space-around;">
         <div>
-          <h2>Tons of equivalent carbon dioxide emitted:
-            <Badge :value="project.initialCF" class="ml-3" size="xlarge" :severity="getTextColorFromCFIndex(project.initialCF)" />
+          <h2 class="mb-2">Equivalent carbon dioxide emitted:
+            <Badge :value="project.initialCF  + ' t CO2e'" class="ml-2" size="xlarge" :severity="getTextColorFromCFIndex(project.initialCF)" />
           </h2>
         </div>
-        <Button icon="pi pi-replay" class="p-button-rounded p-button-outlined p-button-plain mr-5" label="Recalculate"
-                style="width: 15rem; font-size: 1.1rem" @click="calculateCF()" />
-        <Button icon="pi pi-file-pdf" class="p-button-rounded p-button-outlined p-button-plain mr-5 mt-3" label="Generate PDF"
-                style="width: 15rem; font-size: 1.1rem" @click="generatePDF()"/>
+        <div>
+          <h2 class="mt-2">CO2 permits cost:
+            <Badge :value="project.initialCF * co2PermitsPrice + ' €'" class="ml-2" size="xlarge" />
+          </h2>
+        </div>
+        <div>
+          <Button icon="pi pi-replay" class="p-button-rounded p-button-outlined p-button-plain mr-5" label="Recalculate"
+                  style="width: 15rem; font-size: 1.1rem" @click="calculateCF()" />
+          <Button icon="pi pi-file-pdf" class="p-button-rounded p-button-outlined p-button-plain mr-5 mt-3" label="Generate PDF"
+                  style="width: 15rem; font-size: 1.1rem" @click="generatePDF()"/>
+        </div>
       </div>
     </div>
 
@@ -1020,6 +1028,7 @@ export default {
   },
   data() {
     return {
+      co2PermitsPrice: process.env.VUE_APP_CO2_PERMITS_PRICE,
       placeholder: "Select a partner",
       project: {},
       initialProject: {},
@@ -1173,12 +1182,14 @@ export default {
       }
     },
     getTextColorFromCFIndex(cfIndex) {
-        if (cfIndex < 150)
-            return "success"
-        else if (cfIndex > 150 & cfIndex < 250)
-            return "warning"
-        else
-            return "danger"
+      cfIndex
+        // if (cfIndex < 150)
+        //     return "success"
+        // else if (cfIndex > 150 & cfIndex < 250)
+        //     return "warning"
+        // else
+        //     return "danger"
+      return ""
     },
     initPartnerFilters() {
       this.partnerFilters = {

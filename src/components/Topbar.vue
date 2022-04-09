@@ -147,12 +147,14 @@ export default {
             }
         },
         getTextColorFromCFIndex(cfIndex) {
-            if (cfIndex < 150)
-                return "success"
-            else if (cfIndex > 150 & cfIndex < 250)
-                return "warning"
-            else
-                return "danger"
+            cfIndex
+            // if (cfIndex < 150)
+            //     return "success"
+            // else if (cfIndex > 150 & cfIndex < 250)
+            //     return "warning"
+            // else
+            //     return "danger"
+            return ""
         },
         logout() {
             this.$store.dispatch("saveUsername", '');

@@ -113,12 +113,12 @@
       </Dialog>
     </div>
     
-    <div class="card col-2" style="height: fit-content;">
+    <!-- <div class="card col-2" style="height: fit-content;">
       <h5>{{this.$store.state.toggleValue ? "CF Index colors" : "CF Estimation colors"}}</h5>
         <div class="wrapper"><div class="coloredSquare greenSquare mb-2 mr-2"/> <p class="legendText">0-150: Ideal</p></div>
         <div class="wrapper"><div class="coloredSquare orangeSquare mb-2 mr-2"/><p class="legendText">150-250: Improvable</p></div>
         <div class="wrapper"><div class="coloredSquare redSquare mr-2"/>   <p class="legendText">>250: Needs attention</p></div>
-    </div>
+    </div> -->
   
   </div>
 
@@ -171,12 +171,14 @@ export default {
       })
     },
     getTextColorFromCFIndex(cfIndex) {
-      if (cfIndex < 150)
-        return "greenText"
-      else if (cfIndex > 150 & cfIndex < 250)
-        return "orangeText"
-      else
-        return "redText"
+      cfIndex
+      // if (cfIndex < 150)
+      //   return "greenText"
+      // else if (cfIndex > 150 & cfIndex < 250)
+      //   return "orangeText"
+      // else
+      //   return "redText"
+      return ""
     },
     confirmDeleteProject(index) {
       this.projectToDelete = this.projects[index]
