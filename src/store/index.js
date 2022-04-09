@@ -9,7 +9,8 @@ export default createStore({
     selectedPartnerForEquipmentSimple: "",
     username: '',
     password: '',
-    userId: ''
+    userId: '',
+    toggleProject: false,
   },
   mutations: {
     toggleView(state) {
@@ -38,6 +39,16 @@ export default createStore({
     },
     saveUserId(state, userId){
       state.userId = userId;
+    },
+    toggleViewProject(state) {
+      state.toggleProject = !state.toggleProject;
+    },
+    toggleProject(state){
+      if (state.toggleProject) {
+        state.toggleProject = false;
+      } else {
+        state.toggleProject = true;
+      }
     }
   },
   actions: {
@@ -61,6 +72,12 @@ export default createStore({
     },
     saveUserId({commit}, userId) {
       commit("saveUserId", userId);
+    },
+    toggleViewProject(context) {
+      context.commit("toggleViewProject")
+    },
+    toggleProject({commit}){
+      commit("toggleProject");
     }
   },
   modules: {

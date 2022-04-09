@@ -260,6 +260,22 @@
     </div>
 
     <div class="card col-12">
+
+      <div v-if="project.isInitialProject" >
+        <div class="layout-imputSwitch-project">
+          <label id="app-mode-label" >Project in initial phase</label>
+          <InputSwitch id="appMode" v-model="toggleProject" @click="toggleViewProject" />    
+        </div>
+      </div>
+
+      <div v-else-if="!project.isInitialProject" >
+        <div class="layout-imputSwitch-project">
+          <label id="app-mode-label" >Project in current phase</label>
+          <InputSwitch id="appMode" v-model="toggleProject" @click="toggleViewProject" />
+        </div>
+      </div>
+
+
       <h4>Partners</h4>
 
       <DataTable :value="project.partners" editMode="cell" :paginator="true" class="p-datatable-gridlines" dataKey="_id"
@@ -858,12 +874,10 @@
     <div class="card col-12" style="display:flex; justify-content:space-around">
       <template v-if="!this.project.isInitialProject" >
         <Button  label="Save current project" @click="saveCurrentProject" />
-        <!-- <Button  label="Update current values as initial values" @click="displayUpdateInitialValuesDialog" /> -->
-        <Button  label="Go to set initial values" class="p-button-info" @click="goToLinkedProject()"/>      
+        <!-- <Button  label="Update current values as initial values" @click="displayUpdateInitialValuesDialog" /> -->      
       </template>
       <template v-else-if="this.project.isInitialProject">
         <Button label="Update initial values" @click="displayUpdateInitialValuesDialog" />
-        <Button type="button" label="Go to current project" class="p-button-info" @click="goToLinkedProject()"/>
       </template>
     </div>
     
@@ -1006,6 +1020,7 @@ import Dialog from 'primevue/dialog';
 import pdfMake from 'pdfmake';
 import pdfFonts from 'pdfmake/build/vfs_fonts';
 import htmlToPdfmake from 'html-to-pdfmake';
+import InputSwitch from 'primevue/inputswitch';
 
 import 'primeicons/primeicons.css';
 
@@ -1025,6 +1040,7 @@ export default {
     Topbar,
     Toast,
     Badge,
+    InputSwitch
   },
   data() {
     return {
@@ -1675,13 +1691,20 @@ export default {
         })
       }
     },
-    goToLinkedProject() {
-      location.href = '/projects/' + this.project.initialProject;
+
+    toggleProject(event) {
+      this.$refs.menu.toggle(event);
+    },
+
+    toggleViewProject() {
+      this.$store.commit("toggleViewProject");
+      location.href = '/projects/' + this.project.initialProject
     }
+
   },
   computed: {
     ...mapState([
-      'selectedPartnerForEquipmentSimple'
+      'toggleProject', 'selectedPartnerForEquipmentSimple'
     ]),
     selectedPartner() {
       if (!this.project.partners) return {}
@@ -1710,5 +1733,22 @@ export default {
   align-items: center;
   flex-direction: column;
 }
+
+#app-mode-label {
+    position: relative;
+    bottom: 7px;
+    margin-right: 0.75rem;
+}
+
+.layout-topbar-menu {
+    align-items: center;
+    width: max-content;
+    margin-right: 0.75rem;
+}
+
+.layout-imputSwitch-project {
+  margin-left: 64rem;
+}
+
 
 </style>

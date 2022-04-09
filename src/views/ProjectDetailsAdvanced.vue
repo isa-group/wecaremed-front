@@ -7,6 +7,21 @@
     <div class="colCustom">
       <div class="card">
 
+        <div v-if="project.isInitialProject" >
+          <div class="layout-imputSwitch-project">
+              <label id="app-mode-label" >Project in initial phase</label>
+              <InputSwitch id="appMode" v-model="toggleProject" @click="toggleViewProject" />    
+          </div>
+        </div>
+
+        <div v-else-if="!project.isInitialProject" >
+          <div class="layout-imputSwitch-project">
+            <label id="app-mode-label" >Project in current phase</label>
+            <InputSwitch id="appMode" v-model="toggleProject" @click="toggleViewProject" />
+          </div>
+        </div>
+        
+        
         <!-- Data -->
 
 				<TabView>
@@ -1411,11 +1426,9 @@
               <template v-if="!project.isInitialProject">
                 <Button  label="Save current project" @click="saveCurrentProject" />
                <!-- <Button  label="Update current values as initial values" @click="displayUpdateInitialValuesDialog" /> -->
-                <Button  label="Go to set initial values" class="p-button-info" @click="goToLinkedProject()"/>      
               </template>
               <template v-else-if="project.isInitialProject">
                 <Button label="Update initial values" @click="displayUpdateInitialValuesDialog" />
-                <Button type="button" label="Go to current project" class="p-button-info" @click="goToLinkedProject()"/>
               </template>
             </div>
             <div class="col-12">
@@ -1659,6 +1672,7 @@ import 'primeicons/primeicons.css';
 import pdfMake from 'pdfmake';
 import pdfFonts from 'pdfmake/build/vfs_fonts';
 import htmlToPdfmake from 'html-to-pdfmake';
+import InputSwitch from 'primevue/inputswitch';
 
 export default {
   name: 'ProjectDetailsAdvanced',
@@ -1678,7 +1692,8 @@ export default {
     Badge,
     Dialog,
     ColumnGroup,
-    Row
+    Row,
+    InputSwitch
   },
   data() {
     return {
@@ -2773,7 +2788,7 @@ export default {
       }
       
     },
-        goToLinkedProject() {
+    goToLinkedProject() {
       location.href = '/projects/' + this.project.initialProject;
     },
 
@@ -2817,12 +2832,21 @@ export default {
       }
 
       return res;
+    },
+
+    toggleProject(event) {
+      this.$refs.menu.toggle(event);
+    },
+
+    toggleViewProject() {
+      this.$store.commit("toggleViewProject");
+      location.href = '/projects/' + this.project.initialProject
     }
 
   },
   computed: {
     ...mapState([
-      'selectedPartnerForEquipmentSimple'
+       'toggleProject', 'selectedPartnerForEquipmentSimple'
     ]),
     selectedPartner() {
       if (!this.project.partners) return {}
@@ -2852,6 +2876,23 @@ export default {
     flex: 0 0 auto;
     padding: 0.5rem;
     width: 100%;
+}
+
+
+#app-mode-label {
+    position: relative;
+    bottom: 7px;
+    margin-right: 0.75rem;
+}
+
+.layout-topbar-menu {
+    align-items: center;
+    width: max-content;
+    margin-right: 0.75rem;
+}
+
+.layout-imputSwitch-project {
+  margin-left: 64rem;
 }
 
 </style>
