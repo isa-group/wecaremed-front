@@ -1424,11 +1424,11 @@
 
             <div class="card" style="display:flex; justify-content:space-around">
               <template v-if="!project.isInitialProject">
-                <Button  label="Save current project" @click="saveCurrentProject" />
+                <Button  label="Save all" @click="saveCurrentProject" />
                <!-- <Button  label="Update current values as initial values" @click="displayUpdateInitialValuesDialog" /> -->
               </template>
               <template v-else-if="project.isInitialProject">
-                <Button label="Update initial values" @click="displayUpdateInitialValuesDialog" />
+                <Button label="Save all" @click="displayUpdateInitialValuesDialog" />
               </template>
             </div>
             <div class="col-12">
