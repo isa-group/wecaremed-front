@@ -1410,7 +1410,7 @@
             <div class="card" style="display:flex; justify-content:space-around">
               <template v-if="!project.isInitialProject">
                 <Button  label="Save current project" @click="saveCurrentProject" />
-                <Button  label="Update current values as initial values" @click="displayUpdateInitialValuesDialog" />
+               <!-- <Button  label="Update current values as initial values" @click="displayUpdateInitialValuesDialog" /> -->
                 <Button  label="Go to set initial values" class="p-button-info" @click="goToLinkedProject()"/>      
               </template>
               <template v-else-if="project.isInitialProject">
