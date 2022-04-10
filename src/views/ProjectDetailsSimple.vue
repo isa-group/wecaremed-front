@@ -270,11 +270,13 @@
 
       <div v-else-if="!project.isInitialProject" >
         <div class="layout-imputSwitch-project">
-          <label id="app-mode-label" >Project in current phase</label>
+          <label id="app-mode-label" >Project in execution phase</label>
           <InputSwitch id="appMode" v-model="toggleProject" @click="toggleViewProject" />
         </div>
       </div>
 
+      <h2 v-if="project.isInitialProject">Project in initial phase</h2>
+      <h2 v-else-if="!project.isInitialProject">Project in execution phase</h2>
 
       <h4>Partners</h4>
 
@@ -1747,7 +1749,7 @@ export default {
 }
 
 .layout-imputSwitch-project {
-  margin-left: 64rem;
+  margin-left: 60rem;
 }
 
 

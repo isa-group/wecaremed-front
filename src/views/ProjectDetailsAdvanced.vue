@@ -7,6 +7,9 @@
     <div class="colCustom">
       <div class="card">
 
+        <h2 v-if="project.isInitialProject">Project in initial phase</h2>
+        <h2 v-else-if="!project.isInitialProject">Project in execution phase</h2>
+
         <div v-if="project.isInitialProject" >
           <div class="layout-imputSwitch-project">
               <label id="app-mode-label" >Project in initial phase</label>
@@ -16,7 +19,7 @@
 
         <div v-else-if="!project.isInitialProject" >
           <div class="layout-imputSwitch-project">
-            <label id="app-mode-label" >Project in current phase</label>
+            <label id="app-mode-label" >Project in execution phase</label>
             <InputSwitch id="appMode" v-model="toggleProject" @click="toggleViewProject" />
           </div>
         </div>
@@ -282,6 +285,7 @@
             </div>
 
             <div class="card col-12">
+
               <h4>Partners</h4>
 
               <DataTable :value="project.partners" editMode="cell" :paginator="true" class="p-datatable-gridlines" dataKey="_id"
@@ -1554,76 +1558,32 @@
           </TabPanel>
 
           <TabPanel v-if="!this.project.isInitialProject" header="Analysis">
-												<TabView>
-              <TabPanel header="General">
-
-              </TabPanel>
-              <TabPanel header="Heat">
-
-              </TabPanel>
-              <TabPanel header="Electricity">
+						<TabView>
+              <TabPanel>
                 <div class="card">
-                  <Chart type="radar" :data="chartData" :options="chartOptions" style='width:50'/>
+
+                  <h3>Analysis of the project on initial and current phase</h3>
+                  <div class="grid">
+                    <div class="col-5 flex align-items-center justify-content-center">
+                      <div class="p-fluid">
+                        <div class="field">
+                          <h4>Project in initial phase</h4>
+                          <Chart type="radar" :data="chartData" :options="chartOptions" />
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-2">
+                        <Divider layout="vertical">
+                        </Divider>
+                    </div>
+                    <div class="col-5 flex align-items-center justify-content-center">
+                      <div class="field">
+                        <h4>Project in current phase</h4>
+                        <Chart type="radar" :data="chartData" :options="chartOptions" />
+                      </div>
+                    </div>
+                  </div>
                 </div>
-                <div class="card">
-                  <h5>Aditional custom defined electricity emission</h5>
-                  <DataTable :value="project.partners" editMode="cell" :paginator="true" class="p-datatable-gridlines" dataKey="_id"
-                    :rowHover="true" @cell-edit-complete="onCellEditCompletePartner" sortMode="multiple" :rows="5" v-model:filters="partnerFilters"
-                    filterDisplay="menu" :loading="loading" :filters="partnerFilters" responsiveLayout="scroll"
-                    :globalFilterFields="['name','country','personMonthsPP','personMonthsWPP', 'externalExpertsPersonMonths', 'employeesWorkingWPP', 
-                                          'seasonalEmployees', 'externalExperts', 'coordinator']" removableSort>
-                      
-                      <template #header>
-                          <div class="flex justify-content-between flex-column sm:flex-row">
-                            <div>
-                              <Button class="p-button-info mr-2" @click="addPartner"><i class="pi pi-plus mr-2" />Add Electricity Emission</Button>
-                            </div>
-                            <div>
-                              <Button type="button" label="Clear" class="p-button-warning" @click="clearPartnerFilter()"/>
-                            </div>
-                          </div>
-                      </template>
-
-                      <template #empty>
-                          No Electricity Emissions found.
-                      </template>
-
-                      <template #loading>
-                          Loading Electricity Emissions. Please wait.
-                      </template>
-
-                      <Column field="item" header="Item" :sortable="true">
-                        <template #editor="slotProps">
-                             <InputText v-model="slotProps.data[slotProps.field]" />
-                        </template>
-                      </Column>
-
-                      <Column field="dailyConsumptionPerEmployee" header="Estimated emission (CO2 gr)" :sortable="true">
-                        <template #editor="slotProps">
-                          <InputNumber v-model="slotProps.data[slotProps.field]" mode="decimal" :maxFractionDigits="3"
-                          showButtons :step="0.25" decrementButtonClass="p-button-info"
-                          incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
-                          :allowEmpty="false" :min="0" />
-                        </template>
-                      </Column>
-                    </DataTable>
-                </div>
-              </TabPanel>
-              <TabPanel header="Water">
-
-              </TabPanel>
-              <TabPanel header="Transportation">
-
-              </TabPanel>
-              <TabPanel header="Materials">
-
-              </TabPanel>
-              <TabPanel header="Events">
-
-              </TabPanel>
-              
-              <TabPanel header="Printable deliverables">
-
               </TabPanel>
             </TabView>
           </TabPanel>
@@ -1673,6 +1633,7 @@ import pdfMake from 'pdfmake';
 import pdfFonts from 'pdfmake/build/vfs_fonts';
 import htmlToPdfmake from 'html-to-pdfmake';
 import InputSwitch from 'primevue/inputswitch';
+import Divider from 'primevue/divider';
 
 export default {
   name: 'ProjectDetailsAdvanced',
@@ -1693,7 +1654,8 @@ export default {
     Dialog,
     ColumnGroup,
     Row,
-    InputSwitch
+    InputSwitch,
+    Divider
   },
   data() {
     return {
@@ -2892,7 +2854,8 @@ export default {
 }
 
 .layout-imputSwitch-project {
-  margin-left: 64rem;
+  margin-left: 60rem;
 }
+
 
 </style>
