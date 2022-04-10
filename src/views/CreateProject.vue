@@ -145,7 +145,7 @@ export default {
     }
   },
   methods: {
-    createProject() {
+    async createProject() {
       this.newProject.from = new Date(this.newProject.from.getFullYear(), this.newProject.from.getMonth(), 2)
       this.newProject.to = new Date(this.newProject.to.getFullYear(), this.newProject.to.getMonth() + 1, 0)
       this.submitted = true;
@@ -155,32 +155,16 @@ export default {
       this.newInitialProject._id = new mongoose.Types.ObjectId();
       this.newProject._id = new mongoose.Types.ObjectId();
       this.newUserId = this.$store.state.userId;
-      axios.post('/projects', this.newInitialProject,{
-        auth: {
-            username: this.$store.state.username,
-            password: this.$store.state.password
-          }
-      })
-      .then((response) => {
-        let initialProjectID = response.data._id;
-        this.newProject.initialProject = initialProjectID;
-        axios.post('/projects', this.newProject, {
-          auth: {
-            username: this.$store.state.username,
-            password: this.$store.state.password
-          }
-        }).then( (res) => {
-          let newProjectID = res.data._id;
-          this.newInitialProject.initialProject = newProjectID;
-          axios.put('/projects/' + initialProjectID, this.newInitialProject)
-          .then( () => {
-            this.$router.push({ path: `/projects/${this.newProject._id}` })
-          })
-          
-        })
-        
-      })
-      .catch((error)=>{
+      this.newProject.initialProject = this.newInitialProject._id
+      this.newInitialProject.initialProject = this.newProject._id
+
+      Promise.all([
+        axios.post('/projects', this.newInitialProject),
+        axios.post('/projects', this.newProject)
+      ]).then(async () => {
+        await axios.put('/projects/' + this.newInitialProject._id, this.newInitialProject)
+        this.$router.push({ path: `/projects/${this.newProject._id}` })
+      }).catch(error => {
         this.errors = error.response.data
       })
     },
