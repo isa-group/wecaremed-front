@@ -261,22 +261,20 @@
 
     <div class="card col-12">
 
-      <div v-if="project.isInitialProject" >
-        <div class="layout-imputSwitch-project">
-          <label id="app-mode-label" >Project in initial phase</label>
-          <InputSwitch id="appMode" v-model="toggleProject" @click="toggleViewProject" />    
-        </div>
-      </div>
+      <div style="display: flex; align-items: center; justify-content: space-between;">
+        <h2 v-if="project.isInitialProject">Project in initial phase</h2>
+        <h2 v-else-if="!project.isInitialProject">Project in execution phase</h2>
 
-      <div v-else-if="!project.isInitialProject" >
-        <div class="layout-imputSwitch-project">
-          <label id="app-mode-label" >Project in execution phase</label>
+        <div v-if="project.isInitialProject" style="margin: 1.5rem 0 1rem 0;">
+            <label id="app-mode-label">Project in initial phase</label>
+            <InputSwitch id="appMode" v-model="toggleProject" @click="toggleViewProject" />    
+        </div>
+
+        <div v-else-if="!project.isInitialProject" style="margin: 1.5rem 0 1rem 0;">
+          <label id="app-mode-label">Project in execution phase</label>
           <InputSwitch id="appMode" v-model="toggleProject" @click="toggleViewProject" />
         </div>
       </div>
-
-      <h2 v-if="project.isInitialProject">Project in initial phase</h2>
-      <h2 v-else-if="!project.isInitialProject">Project in execution phase</h2>
 
       <h4>Partners</h4>
 
@@ -1747,10 +1745,4 @@ export default {
     width: max-content;
     margin-right: 0.75rem;
 }
-
-.layout-imputSwitch-project {
-  margin-left: 60rem;
-}
-
-
 </style>

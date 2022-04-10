@@ -7,24 +7,21 @@
     <div class="colCustom">
       <div class="card">
 
-        <h2 v-if="project.isInitialProject">Project in initial phase</h2>
-        <h2 v-else-if="!project.isInitialProject">Project in execution phase</h2>
+        <div style="display: flex; align-items: center; justify-content: space-between;">
+          <h2 v-if="project.isInitialProject">Project in initial phase</h2>
+          <h2 v-else-if="!project.isInitialProject">Project in execution phase</h2>
 
-        <div v-if="project.isInitialProject" >
-          <div class="layout-imputSwitch-project">
-              <label id="app-mode-label" >Project in initial phase</label>
+          <div v-if="project.isInitialProject" style="margin: 1.5rem 0 1rem 0;">
+              <label id="app-mode-label">Project in initial phase</label>
               <InputSwitch id="appMode" v-model="toggleProject" @click="toggleViewProject" />    
           </div>
-        </div>
 
-        <div v-else-if="!project.isInitialProject" >
-          <div class="layout-imputSwitch-project">
-            <label id="app-mode-label" >Project in execution phase</label>
+          <div v-else-if="!project.isInitialProject" style="margin: 1.5rem 0 1rem 0;">
+            <label id="app-mode-label">Project in execution phase</label>
             <InputSwitch id="appMode" v-model="toggleProject" @click="toggleViewProject" />
           </div>
         </div>
-        
-        
+
         <!-- Data -->
 
 				<TabView>
@@ -1558,34 +1555,91 @@
           </TabPanel>
 
           <TabPanel v-if="!this.project.isInitialProject" header="Analysis">
-						<TabView>
-              <TabPanel>
-                <div class="card">
+            <div class="card">
 
-                  <h3>Analysis of the project on initial and current phase</h3>
-                  <div class="grid">
-                    <div class="col-5 flex align-items-center justify-content-center">
-                      <div class="p-fluid">
-                        <div class="field">
-                          <h4>Project in initial phase</h4>
-                          <Chart type="radar" :data="chartData" :options="chartOptions" />
-                        </div>
-                      </div>
-                    </div>
-                    <div class="col-2">
-                        <Divider layout="vertical">
-                        </Divider>
-                    </div>
-                    <div class="col-5 flex align-items-center justify-content-center">
-                      <div class="field">
-                        <h4>Project in current phase</h4>
-                        <Chart type="radar" :data="chartData" :options="chartOptions" />
-                      </div>
-                    </div>
-                  </div>
+              <h3>Analysis of the project on initial and current phase</h3>
+
+              <div class="flex justify-content-around text-center">
+                <div class="col-6">
+                  <h4>Project in initial phase</h4>
+                  <Chart type="radar" :data="chartData" :options="chartOptions" />
+                  <InputNumber mode="decimal" :maxFractionDigits="3"
+                    showButtons :step="0.25" decrementButtonClass="p-button-info"
+                    incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
+                    :allowEmpty="false" :min="0" @focus="$event.target.select()" />
+                  <InputNumber mode="decimal" :maxFractionDigits="3"
+                    showButtons :step="0.25" decrementButtonClass="p-button-info"
+                    incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
+                    :allowEmpty="false" :min="0" @focus="$event.target.select()" />
+                  <InputNumber mode="decimal" :maxFractionDigits="3"
+                    showButtons :step="0.25" decrementButtonClass="p-button-info"
+                    incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
+                    :allowEmpty="false" :min="0" @focus="$event.target.select()" />
+                  <InputNumber mode="decimal" :maxFractionDigits="3"
+                    showButtons :step="0.25" decrementButtonClass="p-button-info"
+                    incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
+                    :allowEmpty="false" :min="0" @focus="$event.target.select()" />
+                  <InputNumber mode="decimal" :maxFractionDigits="3"
+                    showButtons :step="0.25" decrementButtonClass="p-button-info"
+                    incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
+                    :allowEmpty="false" :min="0" @focus="$event.target.select()" />
+                  <InputNumber mode="decimal" :maxFractionDigits="3"
+                    showButtons :step="0.25" decrementButtonClass="p-button-info"
+                    incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
+                    :allowEmpty="false" :min="0" @focus="$event.target.select()" />
+                  <InputNumber mode="decimal" :maxFractionDigits="3"
+                    showButtons :step="0.25" decrementButtonClass="p-button-info"
+                    incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
+                    :allowEmpty="false" :min="0" @focus="$event.target.select()" />
+                  <InputNumber mode="decimal" :maxFractionDigits="3"
+                    showButtons :step="0.25" decrementButtonClass="p-button-info"
+                    incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
+                    :allowEmpty="false" :min="0" @focus="$event.target.select()" />
                 </div>
-              </TabPanel>
-            </TabView>
+
+                <div>
+                    <Divider layout="vertical">
+                    </Divider>
+                </div>
+
+                <div class="col-6">
+                  <h4>Project in execution phase</h4>
+                  <Chart type="radar" :data="chartData" :options="chartOptions" />
+                  <InputNumber mode="decimal" :maxFractionDigits="3"
+                    showButtons :step="0.25" decrementButtonClass="p-button-info"
+                    incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
+                    :allowEmpty="false" :min="0" @focus="$event.target.select()" />
+                  <InputNumber mode="decimal" :maxFractionDigits="3"
+                    showButtons :step="0.25" decrementButtonClass="p-button-info"
+                    incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
+                    :allowEmpty="false" :min="0" @focus="$event.target.select()" />
+                  <InputNumber mode="decimal" :maxFractionDigits="3"
+                    showButtons :step="0.25" decrementButtonClass="p-button-info"
+                    incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
+                    :allowEmpty="false" :min="0" @focus="$event.target.select()" />
+                  <InputNumber mode="decimal" :maxFractionDigits="3"
+                    showButtons :step="0.25" decrementButtonClass="p-button-info"
+                    incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
+                    :allowEmpty="false" :min="0" @focus="$event.target.select()" />
+                  <InputNumber mode="decimal" :maxFractionDigits="3"
+                    showButtons :step="0.25" decrementButtonClass="p-button-info"
+                    incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
+                    :allowEmpty="false" :min="0" @focus="$event.target.select()" />
+                  <InputNumber mode="decimal" :maxFractionDigits="3"
+                    showButtons :step="0.25" decrementButtonClass="p-button-info"
+                    incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
+                    :allowEmpty="false" :min="0" @focus="$event.target.select()" />
+                  <InputNumber mode="decimal" :maxFractionDigits="3"
+                    showButtons :step="0.25" decrementButtonClass="p-button-info"
+                    incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
+                    :allowEmpty="false" :min="0" @focus="$event.target.select()" />
+                  <InputNumber mode="decimal" :maxFractionDigits="3"
+                    showButtons :step="0.25" decrementButtonClass="p-button-info"
+                    incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
+                    :allowEmpty="false" :min="0" @focus="$event.target.select()" />
+                </div>
+              </div>
+            </div>
           </TabPanel>
 				</TabView>
       </div>
@@ -1717,7 +1771,7 @@ export default {
         {value: "Equipment"},
       ],
       chartData: {
-				labels: ['Electricity', 'Water', 'Printable deliverables', 'Events', 'Materials', 'Transportation', 'Heat'],
+				labels: ['Printable deliverables', 'Equipment', 'Electricity', 'Water', 'Transportation', 'Events', 'Materials', 'Heat'],
 				datasets: [
 					{
 						label: 'My First dataset',
@@ -1727,7 +1781,7 @@ export default {
 						pointBorderColor: '#fff',
 						pointHoverBackgroundColor: '#fff',
 						pointHoverBorderColor: 'rgba(179,181,198,1)',
-						data: [65, 59, 90, 81, 56, 55, 40]
+						data: [65, 59, 90, 81, 56, 55, 40, 65]
 					},
 					{
 						label: 'My Second dataset',
@@ -1737,7 +1791,7 @@ export default {
 						pointBorderColor: '#fff',
 						pointHoverBackgroundColor: '#fff',
 						pointHoverBorderColor: 'rgba(255,99,132,1)',
-						data: [28, 48, 40, 19, 96, 27, 100]
+						data: [28, 48, 40, 19, 96, 27, 100, 42]
 					}
 				]
 			},
@@ -1753,9 +1807,13 @@ export default {
           r: {
             pointLabels: {
               color: '#495057',
+              font: {
+                size: 18
+              }
             },
             grid: {
               color: '#ebedef',
+
             },
             angleLines: {
               color: '#ebedef'
@@ -2852,10 +2910,4 @@ export default {
     width: max-content;
     margin-right: 0.75rem;
 }
-
-.layout-imputSwitch-project {
-  margin-left: 60rem;
-}
-
-
 </style>
