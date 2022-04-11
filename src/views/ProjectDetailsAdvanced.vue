@@ -1562,39 +1562,86 @@
               <div class="flex justify-content-around text-center">
                 <div class="col-6">
                   <h4>Project in initial phase</h4>
-                  <Chart type="radar" :data="chartData" :options="chartOptions" />
-                  <InputNumber mode="decimal" :maxFractionDigits="3"
-                    showButtons :step="0.25" decrementButtonClass="p-button-info"
-                    incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
-                    :allowEmpty="false" :min="0" @focus="$event.target.select()" />
-                  <InputNumber mode="decimal" :maxFractionDigits="3"
-                    showButtons :step="0.25" decrementButtonClass="p-button-info"
-                    incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
-                    :allowEmpty="false" :min="0" @focus="$event.target.select()" />
-                  <InputNumber mode="decimal" :maxFractionDigits="3"
-                    showButtons :step="0.25" decrementButtonClass="p-button-info"
-                    incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
-                    :allowEmpty="false" :min="0" @focus="$event.target.select()" />
-                  <InputNumber mode="decimal" :maxFractionDigits="3"
-                    showButtons :step="0.25" decrementButtonClass="p-button-info"
-                    incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
-                    :allowEmpty="false" :min="0" @focus="$event.target.select()" />
-                  <InputNumber mode="decimal" :maxFractionDigits="3"
-                    showButtons :step="0.25" decrementButtonClass="p-button-info"
-                    incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
-                    :allowEmpty="false" :min="0" @focus="$event.target.select()" />
-                  <InputNumber mode="decimal" :maxFractionDigits="3"
-                    showButtons :step="0.25" decrementButtonClass="p-button-info"
-                    incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
-                    :allowEmpty="false" :min="0" @focus="$event.target.select()" />
-                  <InputNumber mode="decimal" :maxFractionDigits="3"
-                    showButtons :step="0.25" decrementButtonClass="p-button-info"
-                    incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
-                    :allowEmpty="false" :min="0" @focus="$event.target.select()" />
-                  <InputNumber mode="decimal" :maxFractionDigits="3"
-                    showButtons :step="0.25" decrementButtonClass="p-button-info"
-                    incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
-                    :allowEmpty="false" :min="0" @focus="$event.target.select()" />
+                  <Chart type="radar" :data="chartDataInitial" :options="chartOptions" />
+
+                  <div class="p-fluid grid">
+                    <div class="col-12 md:col-6">
+                      <label for="heatInputInitial">Heat</label>
+                      <InputNumber id="heatInputInitial" v-model="analysisInitial.heatInputInitial" mode="decimal" :maxFractionDigits="3"
+                        showButtons :step="0.25" decrementButtonClass="p-button-info"
+                        incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
+                        :allowEmpty="false" :min="0.001"
+                        @focus="onFocusValue=analysisInitial.heatInputInitial; $event.target.select()"
+                        @keypress.enter="$event.target.blur()"
+                        @focusout="onCellEditCompleteAnalysis('heatInputInitial', analysisInitial.heatInputInitial, true)" />
+
+                      <label for="electricityInputInitial">Electricity</label>  
+                      <InputNumber id="electricityInputInitial" v-model="analysisInitial.electricityInputInitial" mode="decimal" :maxFractionDigits="3"
+                        showButtons :step="0.25" decrementButtonClass="p-button-info"
+                        incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
+                        :allowEmpty="false" :min="0.001"
+                        @focus="onFocusValue=analysisInitial.electricityInputInitial; $event.target.select()"
+                        @keypress.enter="$event.target.blur()"
+                        @focusout="onCellEditCompleteAnalysis('electricityInputInitial', analysisInitial.electricityInputInitial, true)" />
+
+                      <label for="waterInputInitial">Water</label>  
+                      <InputNumber id="waterInputInitial" v-model="analysisInitial.waterInputInitial" mode="decimal" :maxFractionDigits="3"
+                        showButtons :step="0.25" decrementButtonClass="p-button-info"
+                        incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
+                        :allowEmpty="false" :min="0.001"
+                        @focus="onFocusValue=analysisInitial.waterInputInitial; $event.target.select()"
+                        @keypress.enter="$event.target.blur()"
+                        @focusout="onCellEditCompleteAnalysis('waterInputInitial', analysisInitial.waterInputInitial, true)" />
+
+                      <label for="transportationInputInitial">Transportation</label>
+                      <InputNumber id="transportationInputInitial" v-model="analysisInitial.transportationInputInitial" mode="decimal" :maxFractionDigits="3"
+                        showButtons :step="0.25" decrementButtonClass="p-button-info"
+                        incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
+                        :allowEmpty="false" :min="0.001"
+                        @focus="onFocusValue=analysisInitial.transportationInputInitial; $event.target.select()"
+                        @keypress.enter="$event.target.blur()"
+                        @focusout="onCellEditCompleteAnalysis('transportationInputInitial', analysisInitial.transportationInputInitial, true)" />
+
+                    </div>
+
+                    <div class="col-12 md:col-6">
+                      <label for="materialsInputInitial">Materials</label>  
+                      <InputNumber id="materialsInputInitial" v-model="analysisInitial.materialsInputInitial" mode="decimal" :maxFractionDigits="3"
+                        showButtons :step="0.25" decrementButtonClass="p-button-info"
+                        incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
+                        :allowEmpty="false" :min="0.001"
+                        @focus="onFocusValue=analysisInitial.materialsInputInitial; $event.target.select()"
+                        @keypress.enter="$event.target.blur()"
+                        @focusout="onCellEditCompleteAnalysis('materialsInputInitial', analysisInitial.materialsInputInitial, true)"/>
+
+                      <label for="eventsInputInitial">Events</label>  
+                      <InputNumber id="eventsInputInitial" v-model="analysisInitial.eventsInputInitial" mode="decimal" :maxFractionDigits="3"
+                        showButtons :step="0.25" decrementButtonClass="p-button-info"
+                        incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
+                        :allowEmpty="false" :min="0.001"
+                        @focus="onFocusValue=analysisInitial.eventsInputInitial; $event.target.select()"
+                        @keypress.enter="$event.target.blur()"
+                        @focusout="onCellEditCompleteAnalysis('eventsInputInitial', analysisInitial.eventsInputInitial, true)"/>
+
+                      <label for="printableDeliverablesInputInitial">Printable Deliverables</label>
+                      <InputNumber id="printableDeliverablesInputInitial" v-model="analysisInitial.printableDeliverablesInputInitial" mode="decimal" :maxFractionDigits="3"
+                        showButtons :step="0.25" decrementButtonClass="p-button-info"
+                        incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
+                        :allowEmpty="false" :min="0.001"
+                        @focus="onFocusValue=analysisInitial.printableDeliverablesInputInitial; $event.target.select()"
+                        @keypress.enter="$event.target.blur()"
+                        @focusout="onCellEditCompleteAnalysis('printableDeliverablesInputInitial', analysisInitial.printableDeliverablesInputInitial, true)"/>
+
+                      <label for="equipmentInputInitial">Equipment</label>
+                      <InputNumber id="equimentInputInitial" v-model="analysisInitial.equipmentInputInitial" mode="decimal" :maxFractionDigits="3"
+                        showButtons :step="0.25" decrementButtonClass="p-button-info"
+                        incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
+                        :allowEmpty="false" :min="0.001"
+                        @focus="onFocusValue=analysisInitial.equimentInputInitial; $event.target.select()"
+                        @keypress.enter="$event.target.blur()"
+                        @focusout="onCellEditCompleteAnalysis('equipmentInputInitial', analysisInitial.equipmentInputInitial, true)"/>
+                    </div>  
+                  </div>
                 </div>
 
                 <div>
@@ -1604,39 +1651,87 @@
 
                 <div class="col-6">
                   <h4>Project in execution phase</h4>
-                  <Chart type="radar" :data="chartData" :options="chartOptions" />
-                  <InputNumber mode="decimal" :maxFractionDigits="3"
-                    showButtons :step="0.25" decrementButtonClass="p-button-info"
-                    incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
-                    :allowEmpty="false" :min="0" @focus="$event.target.select()" />
-                  <InputNumber mode="decimal" :maxFractionDigits="3"
-                    showButtons :step="0.25" decrementButtonClass="p-button-info"
-                    incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
-                    :allowEmpty="false" :min="0" @focus="$event.target.select()" />
-                  <InputNumber mode="decimal" :maxFractionDigits="3"
-                    showButtons :step="0.25" decrementButtonClass="p-button-info"
-                    incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
-                    :allowEmpty="false" :min="0" @focus="$event.target.select()" />
-                  <InputNumber mode="decimal" :maxFractionDigits="3"
-                    showButtons :step="0.25" decrementButtonClass="p-button-info"
-                    incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
-                    :allowEmpty="false" :min="0" @focus="$event.target.select()" />
-                  <InputNumber mode="decimal" :maxFractionDigits="3"
-                    showButtons :step="0.25" decrementButtonClass="p-button-info"
-                    incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
-                    :allowEmpty="false" :min="0" @focus="$event.target.select()" />
-                  <InputNumber mode="decimal" :maxFractionDigits="3"
-                    showButtons :step="0.25" decrementButtonClass="p-button-info"
-                    incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
-                    :allowEmpty="false" :min="0" @focus="$event.target.select()" />
-                  <InputNumber mode="decimal" :maxFractionDigits="3"
-                    showButtons :step="0.25" decrementButtonClass="p-button-info"
-                    incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
-                    :allowEmpty="false" :min="0" @focus="$event.target.select()" />
-                  <InputNumber mode="decimal" :maxFractionDigits="3"
-                    showButtons :step="0.25" decrementButtonClass="p-button-info"
-                    incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
-                    :allowEmpty="false" :min="0" @focus="$event.target.select()" />
+                  <Chart type="radar" :data="chartDataExecution" :options="chartOptions" />
+                  
+                  <div class="p-fluid grid">
+                    <div class="col-12 md:col-6">
+                      <label for="heatInputExecution">Heat</label>
+                      <InputNumber id="heatInputExecution" v-model="analysisExecution.heatInputExecution" mode="decimal" :maxFractionDigits="3"
+                        showButtons :step="0.25" decrementButtonClass="p-button-info"
+                        incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
+                        :allowEmpty="false" :min="0.001"
+                        @focus="onFocusValue=analysisExecution.heatInputExecution; $event.target.select()"
+                        @keypress.enter="$event.target.blur()"
+                        @focusout="onCellEditCompleteAnalysis('heatInputExecution', analysisExecution.heatInputExecution, false)"/>
+
+                      <label for="electricityInputExecution">Electricity</label>  
+                      <InputNumber id="electricityInputExecution" v-model="analysisExecution.electricityInputExecution" mode="decimal" :maxFractionDigits="3"
+                        showButtons :step="0.25" decrementButtonClass="p-button-info"
+                        incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
+                        :allowEmpty="false" :min="0.001"
+                        @focus="onFocusValue=analysisExecution.electricityInputExecution; $event.target.select()"
+                        @keypress.enter="$event.target.blur()"
+                        @focusout="onCellEditCompleteAnalysis('electricityInputExecution', analysisExecution.electricityInputExecution, false)"/>
+
+                      <label for="waterInputExecution">Water</label>  
+                      <InputNumber id="waterInputExecution" v-model="analysisExecution.waterInputExecution" mode="decimal" :maxFractionDigits="3"
+                        showButtons :step="0.25" decrementButtonClass="p-button-info"
+                        incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
+                        :allowEmpty="false" :min="0.001"
+                        @focus="onFocusValue=analysisExecution.waterInputExecution; $event.target.select()"
+                        @keypress.enter="$event.target.blur()"
+                        @focusout="onCellEditCompleteAnalysis('waterInputExecution', analysisExecution.waterInputExecution, false)"/>
+
+                      <label for="transportationInputExecution">Transportation</label>
+                      <InputNumber id="transportationInputExecution" v-model="analysisExecution.transportationInputExecution" mode="decimal" :maxFractionDigits="3"
+                        showButtons :step="0.25" decrementButtonClass="p-button-info"
+                        incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
+                        :allowEmpty="false" :min="0.001"
+                        @focus="onFocusValue=analysisExecution.transportationInputExecution; $event.target.select()"
+                        @keypress.enter="$event.target.blur()"
+                        @focusout="onCellEditCompleteAnalysis('transportationInputExecution', analysisExecution.transportationInputExecution, false)"/>
+
+                    </div>
+
+                    <div class="col-12 md:col-6">
+                      <label for="materialsInputExecution">Materials</label>  
+                      <InputNumber id="materialsInputExecution" v-model="analysisExecution.materialsInputExecution" mode="decimal" :maxFractionDigits="3"
+                        showButtons :step="0.25" decrementButtonClass="p-button-info"
+                        incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
+                        :allowEmpty="false" :min="0.001"
+                        @focus="onFocusValue=analysisExecution.materialsInputExecution; $event.target.select()"
+                        @keypress.enter="$event.target.blur()"
+                        @focusout="onCellEditCompleteAnalysis('materialsInputExecution', analysisExecution.materialsInputExecution, false)"/>
+
+                      <label for="eventsInputExecution">Events</label>  
+                      <InputNumber id="eventsInputExecution" v-model="analysisExecution.eventsInputExecution" mode="decimal" :maxFractionDigits="3"
+                        showButtons :step="0.25" decrementButtonClass="p-button-info"
+                        incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
+                        :allowEmpty="false" :min="0.001"
+                        @focus="onFocusValue=analysisExecution.eventsInputExecution; $event.target.select()"
+                        @keypress.enter="$event.target.blur()"
+                        @focusout="onCellEditCompleteAnalysis('eventsInputExecution', analysisExecution.eventsInputExecution, false)"/>
+
+                      <label for="printableDeliverablesInputExecution">Printable Deliverables</label>
+                      <InputNumber id="printableDeliverablesInputExecution" v-model="analysisExecution.printableDeliverablesInputExecution" mode="decimal" :maxFractionDigits="3"
+                        showButtons :step="0.25" decrementButtonClass="p-button-info"
+                        incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
+                        :allowEmpty="false" :min="0.001"
+                        @focus="onFocusValue=analysisExecution.printableDeliverablesInputExecution; $event.target.select()"
+                        @keypress.enter="$event.target.blur()"
+                        @focusout="onCellEditCompleteAnalysis('printableDeliverablesInputExecution', analysisExecution.printableDeliverablesInputExecution, false)"/>
+
+                      <label for="equipmentInputExecution">Equipment</label>
+                      <InputNumber id="equimentInputExecution" v-model="analysisExecution.equipmentInputExecution" mode="decimal" :maxFractionDigits="3"
+                        showButtons :step="0.25" decrementButtonClass="p-button-info"
+                        incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
+                        :allowEmpty="false" :min="0.001"
+                        @focus="onFocusValue=analysisExecution.equipmentInputExecution; $event.target.select()"
+                        @keypress.enter="$event.target.blur()"
+                        @focusout="onCellEditCompleteAnalysis('equimentInputExecution', analysisExecution.equimentInputExecution, false)"/>
+                    </div>  
+                  </div>
+
                 </div>
               </div>
             </div>
@@ -1716,6 +1811,7 @@ export default {
       co2PermitsPrice: process.env.VUE_APP_CO2_PERMITS_PRICE,
       placeholder: "Select a partner",
       project: {},
+      projectInitial: {},
       customHeat: [],
       customElectricity: [],
       customWater: [],
@@ -1726,6 +1822,14 @@ export default {
       customEquipment: [],
       electricityValuesTable:[],
       object: {},
+      analysisInitial: this.$store.state.analysisParamsInitial,
+      analysisExecution: this.$store.state.analysisParamsExecution,
+      KPI1ParamsInitial: {},
+      KPI1ParamsExecution: {},
+      KPI2ParamsInitial: {},
+      KPI2ParamsExecution: {},
+      KPI3ParamsInitial: {},
+      KPI3ParamsExecution: {},
       countriesForDropdown: ["Albania", "Bosnia & Herzegovina", "Croatia", "Cyprus", "Europe", "France", "Greece", "Italy", "Malta", "Montenegro", "Portugal", "Slovenia", "Spain", "Bulgaria", "North Macedonia"],
       eventTypesForDropdown: ["In presence", "Mixed", "On-line"],
       travelModesForDropdown: ["Airplane", "Bus", "Car", "Ferries", "International Rail", "Light rail and tram/Underground", "Motorbikes", "National Rail", "Taxi"],
@@ -1770,28 +1874,73 @@ export default {
         {value: "Printable Deliverables"},
         {value: "Equipment"},
       ],
-      chartData: {
+      chartDataInitial: {
 				labels: ['Printable deliverables', 'Equipment', 'Electricity', 'Water', 'Transportation', 'Events', 'Materials', 'Heat'],
 				datasets: [
 					{
-						label: 'My First dataset',
+						label: 'KPI-1',
 						backgroundColor: 'rgba(179,181,198,0.2)',
 						borderColor: 'rgba(179,181,198,1)',
 						pointBackgroundColor: 'rgba(179,181,198,1)',
 						pointBorderColor: '#fff',
 						pointHoverBackgroundColor: '#fff',
 						pointHoverBorderColor: 'rgba(179,181,198,1)',
-						data: [65, 59, 90, 81, 56, 55, 40, 65]
+						data: [0, 0, 0, 0, 0, 0, 0, 0]
 					},
 					{
-						label: 'My Second dataset',
+						label: 'KPI-2',
 						backgroundColor: 'rgba(255,99,132,0.2)',
 						borderColor: 'rgba(255,99,132,1)',
 						pointBackgroundColor: 'rgba(255,99,132,1)',
 						pointBorderColor: '#fff',
 						pointHoverBackgroundColor: '#fff',
 						pointHoverBorderColor: 'rgba(255,99,132,1)',
-						data: [28, 48, 40, 19, 96, 27, 100, 42]
+						data: [0, 0, 0, 0, 0, 0, 0, 0]
+					},
+          {
+						label: 'KPI-3',
+						backgroundColor: '#32a852',
+						borderColor: 'rgba(255,99,132,1)',
+						pointBackgroundColor: '#32a852',
+						pointBorderColor: '#32a852',
+						pointHoverBackgroundColor: '#32a852',
+						pointHoverBorderColor: '#32a852',
+						data: [0, 0, 0, 0, 0, 0, 0, 0]
+					}
+				]
+			},
+      chartDataExecution: {
+				labels: ['Printable deliverables', 'Equipment', 'Electricity', 'Water', 'Transportation', 'Events', 'Materials', 'Heat'],
+				datasets: [
+					{
+						label: 'KPI-1',
+						backgroundColor: 'rgba(179,181,198,0.2)',
+						borderColor: 'rgba(179,181,198,1)',
+						pointBackgroundColor: 'rgba(179,181,198,1)',
+						pointBorderColor: '#fff',
+						pointHoverBackgroundColor: '#fff',
+						pointHoverBorderColor: 'rgba(179,181,198,1)',
+						data: [0, 0, 0, 0, 0, 0, 0, 0]
+					},
+					{
+						label: 'KPI-2',
+						backgroundColor: 'rgba(255,99,132,0.2)',
+						borderColor: 'rgba(255,99,132,1)',
+						pointBackgroundColor: 'rgba(255,99,132,1)',
+						pointBorderColor: '#fff',
+						pointHoverBackgroundColor: '#fff',
+						pointHoverBorderColor: 'rgba(255,99,132,1)',
+						data: [0, 0, 0, 0, 0, 0, 0, 0]
+					},
+          {
+						label: 'KPI-3',
+						backgroundColor: 'rgba(255,99,132,0.2)',
+						borderColor: 'rgba(255,99,132,1)',
+						pointBackgroundColor: 'rgba(255,99,132,1)',
+						pointBorderColor: '#32a852',
+						pointHoverBackgroundColor: '#32a852',
+						pointHoverBorderColor: 'rgba(255,99,132,1)',
+						data: [0, 0, 0, 0, 0, 0, 0, 0]
 					}
 				]
 			},
@@ -2124,9 +2273,40 @@ export default {
       this.$store.dispatch("updateSelectedPartner", event.value);
     },
     getProject(){
+      console.log("Valor de la store de initial", this.analysisInitial);
       this.axios.get(`/projects/${this.$route.params.id}`)
       .then((response) => {
         this.project = response.data;
+
+        this.chartDataExecution.datasets[0].data[0] = this.project.printableDeliverablesAdvancedCF,
+        this.chartDataExecution.datasets[0].data[1] = this.project.equipmentAdvancedCF,
+        this.chartDataExecution.datasets[0].data[2] = this.project.electricityAdvancedCF,
+        this.chartDataExecution.datasets[0].data[3] = this.project.waterAdvancedCF,
+        this.chartDataExecution.datasets[0].data[4] = this.project.transportationAdvancedCF,
+        this.chartDataExecution.datasets[0].data[5] = this.project.eventsAdvancedCF,
+        this.chartDataExecution.datasets[0].data[6] = this.project.materialsAdvancedC,
+        this.chartDataExecution.datasets[0].data[7] = this.project.fuelsHeatAdvancedCF
+
+        this.axios.get(`/projects/` + this.project.initialProject)
+        .then( (res) => {
+          this.projectInitial = res.data;
+
+          this.chartDataInitial.datasets[0].data[0] = this.projectInitial.printableDeliverablesAdvancedCF,
+          this.chartDataInitial.datasets[0].data[1] = this.projectInitial.equipmentAdvancedCF,
+          this.chartDataInitial.datasets[0].data[2] = this.projectInitial.electricityAdvancedCF,
+          this.chartDataInitial.datasets[0].data[3] = this.projectInitial.waterAdvancedCF,
+          this.chartDataInitial.datasets[0].data[4] = this.projectInitial.transportationAdvancedCF,
+          this.chartDataInitial.datasets[0].data[5] = this.projectInitial.eventsAdvancedCF,
+          this.chartDataInitial.datasets[0].data[6] = this.projectInitial.materialsAdvancedC,
+          this.chartDataInitial.datasets[0].data[7] = this.projectInitial.fuelsHeatAdvancedCF
+
+          this.calculateKPI2();
+          this.calculateKPI3();
+
+        })
+        .catch((error) => {
+          console.log('error' + error);
+        })
 
         this.axios.get(`/partners?projectId=${this.$route.params.id}`)
         .then((response) => {
@@ -2861,6 +3041,130 @@ export default {
     toggleViewProject() {
       this.$store.commit("toggleViewProject");
       location.href = '/projects/' + this.project.initialProject
+    },
+    onCellEditCompleteAnalysis(analysisField, newValue, isInitial) {
+      // La variable isInitial la vamos a usar para saber si el valor del campo
+      // es para el proyecto en la fase inicial o si es de la fase de ejecución
+      if(newValue == this.onFocusValue) return;
+
+      if (isInitial == true) {
+        this.analysisInitial[analysisField] = newValue;
+        this.$store.commit("analysisParamsInitial", this.analysisInitial);
+      } else {
+        this.analysisExecution[analysisField] = newValue;
+        this.$store.commit("analysisParamsExecution", this.analysisExecution);
+      }
+      this.calculateKPI3();
+    },
+    calculateKPI2(){
+      
+      // Dataset para el proyecto en fase inicial para los KPI2
+      let advancedCFInitial = this.projectInitial.currentCF;
+
+      let printableDeliverablesInitialKPI2 = this.projectInitial.printableDeliverablesAdvancedCF / advancedCFInitial;
+      let equipmentInitialKPI2 = this.projectInitial.equipmentAdvancedCF / advancedCFInitial;
+      let electricityInitialKPI2 = this.projectInitial.electricityAdvancedCF / advancedCFInitial;
+      let waterInitialKPI2 = this.projectInitial.waterAdvancedCF / advancedCFInitial;
+      let transportationInitialKPI2 = this.projectInitial.transportationAdvancedCF / advancedCFInitial;
+      let eventsInitialKPI2 = this.projectInitial.eventsAdvancedCF / advancedCFInitial;
+      let materialsInitialKPI2 = this.projectInitial.materialsAdvancedCF / advancedCFInitial;
+      let heatInitialKPI2 = this.projectInitial.fuelsHeatAdvancedCF / advancedCFInitial;
+
+      // Dataset para el proyecto en fase execution para los KPI2
+      let advancedCFExecution = this.project.currentCF;
+
+      let printableDeliverablesExecutionKPI2 = this.project.printableDeliverablesAdvancedCF / advancedCFExecution;
+      let equipmentExecutionKPI2 = this.project.equipmentAdvancedCF / advancedCFExecution;
+      let electricityExecutionKPI2 = this.project.electricityAdvancedCF / advancedCFExecution;
+      let waterExecutionKPI2 = this.project.waterAdvancedCF / advancedCFExecution;
+      let transportationExecutionKPI2 = this.project.transportationAdvancedCF / advancedCFExecution;
+      let eventsExecutionKPI2 = this.project.eventsAdvancedCF / advancedCFExecution;
+      let materialsExecutionKPI2 = this.project.materialsAdvancedCF / advancedCFExecution;
+      let heatExecutionKPI2 = this.project.fuelsHeatAdvancedCF / advancedCFExecution;
+
+      // Asignamos los valores al dataset de los KPI2
+
+      this.chartDataInitial.datasets[1].data[0] = printableDeliverablesInitialKPI2;
+      this.chartDataInitial.datasets[1].data[1] = equipmentInitialKPI2;
+      this.chartDataInitial.datasets[1].data[2] = electricityInitialKPI2;
+      this.chartDataInitial.datasets[1].data[3] = waterInitialKPI2;
+      this.chartDataInitial.datasets[1].data[4] = transportationInitialKPI2;
+      this.chartDataInitial.datasets[1].data[5] = eventsInitialKPI2;
+      this.chartDataInitial.datasets[1].data[6] = materialsInitialKPI2;
+      this.chartDataInitial.datasets[1].data[7] = heatInitialKPI2;
+
+      this.chartDataExecution.datasets[1].data[0] = printableDeliverablesExecutionKPI2;
+      this.chartDataExecution.datasets[1].data[1] = equipmentExecutionKPI2;
+      this.chartDataExecution.datasets[1].data[2] = electricityExecutionKPI2;
+      this.chartDataExecution.datasets[1].data[3] = waterExecutionKPI2;
+      this.chartDataExecution.datasets[1].data[4] = transportationExecutionKPI2;
+      this.chartDataExecution.datasets[1].data[5] = eventsExecutionKPI2;
+      this.chartDataExecution.datasets[1].data[6] = materialsExecutionKPI2;
+      this.chartDataExecution.datasets[1].data[7] = heatExecutionKPI2;
+
+
+    },
+    calculateKPI3(){
+      
+      // Dataset para el proyecto en fase inicial para los KPI3
+      let initialParams = this.$store.state.analysisParamsInitial;
+      let printableDeliverablesReferenceValueInitial = initialParams.printableDeliverablesInputInitial;
+      let equipmentReferenceValueInitial = initialParams.equipmentInputInitial;
+      let electricityReferenceValueInitial = initialParams.electricityInputInitial;
+      let waterReferenceValueInitial = initialParams.waterInputInitial;
+      let transportationReferenceValueInitial = initialParams.transportationInputInitial;
+      let eventsReferenceValueInitial = initialParams.eventsInputInitial;
+      let materialsReferenceValueInitial = initialParams.materialsInputInitial;
+      let heatReferenceValueInitial = initialParams.heatInputInitial;
+
+      let printableDeliverablesInitialKPI3 = this.projectInitial.printableDeliverablesAdvancedCF / printableDeliverablesReferenceValueInitial;
+      let equipmentInitialKPI3 = this.projectInitial.equipmentAdvancedCF / equipmentReferenceValueInitial;
+      let electricityInitialKPI3 = this.projectInitial.electricityAdvancedCF / electricityReferenceValueInitial;
+      let waterInitialKPI3 = this.projectInitial.waterAdvancedCF / waterReferenceValueInitial;
+      let transportationInitialKPI3 = this.projectInitial.transportationAdvancedCF / transportationReferenceValueInitial;
+      let eventsInitialKPI3 = this.projectInitial.eventsAdvancedCF / eventsReferenceValueInitial;
+      let materialsInitialKPI3 = this.projectInitial.materialsAdvancedCF / materialsReferenceValueInitial;
+      let heatInitialKPI3 = this.projectInitial.fuelsHeatAdvancedCF / heatReferenceValueInitial;
+
+      // Dataset para el proyecto en fase execution para los KPI3
+      let executionParams = this.$store.state.analysisParamsExecution;
+      let printableDeliverablesReferenceValueExecution = executionParams.printableDeliverablesInputExecution;
+      let equipmentReferenceValueExecution = executionParams.equipmentInputExecution;
+      let electricityReferenceValueExecution = executionParams.electricityInputExecution;
+      let waterReferenceValueExecution = executionParams.waterInputExecution;
+      let transportationReferenceValueExecution = executionParams.transportationInputExecution;
+      let eventsReferenceValueExecution = executionParams.eventsInputExecution;
+      let materialsReferenceValueExecution = executionParams.materialsInputExecution;
+      let heatReferenceValueExecution = executionParams.heatInputExecution;
+
+      let printableDeliverablesExecutionKPI3 = this.project.printableDeliverablesAdvancedCF / printableDeliverablesReferenceValueExecution;
+      let equipmentExecutionKPI3 = this.project.equipmentAdvancedCF / equipmentReferenceValueExecution;
+      let electricityExecutionKPI3 = this.project.electricityAdvancedCF / electricityReferenceValueExecution;
+      let waterExecutionKPI3 = this.project.waterAdvancedCF / waterReferenceValueExecution;
+      let transportationExecutionKPI3 = this.project.transportationAdvancedCF / transportationReferenceValueExecution;
+      let eventsExecutionKPI3 = this.project.eventsAdvancedCF / eventsReferenceValueExecution;
+      let materialsExecutionKPI3 = this.project.materialsAdvancedCF / materialsReferenceValueExecution;
+      let heatExecutionKPI3 = this.project.fuelsHeatAdvancedCF / heatReferenceValueExecution;
+
+      // Asignamos los valores al dataset de los KPI3
+
+      this.chartDataInitial.datasets[2].data[0] = printableDeliverablesInitialKPI3;
+      this.chartDataInitial.datasets[2].data[1] = equipmentInitialKPI3;
+      this.chartDataInitial.datasets[2].data[2] = electricityInitialKPI3;
+      this.chartDataInitial.datasets[2].data[3] = waterInitialKPI3;
+      this.chartDataInitial.datasets[2].data[4] = transportationInitialKPI3;
+      this.chartDataInitial.datasets[2].data[5] = eventsInitialKPI3;
+      this.chartDataInitial.datasets[2].data[6] = materialsInitialKPI3;
+      this.chartDataInitial.datasets[2].data[7] = heatInitialKPI3;
+
+      this.chartDataExecution.datasets[2].data[0] = printableDeliverablesExecutionKPI3;
+      this.chartDataExecution.datasets[2].data[1] = equipmentExecutionKPI3;
+      this.chartDataExecution.datasets[2].data[2] = electricityExecutionKPI3;
+      this.chartDataExecution.datasets[2].data[3] = waterExecutionKPI3;
+      this.chartDataExecution.datasets[2].data[4] = transportationExecutionKPI3;
+      this.chartDataExecution.datasets[2].data[5] = eventsExecutionKPI3;
+      this.chartDataExecution.datasets[2].data[6] = materialsExecutionKPI3;
+      this.chartDataExecution.datasets[2].data[7] = heatExecutionKPI3;
     }
 
   },
