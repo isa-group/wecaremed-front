@@ -3061,26 +3061,26 @@ export default {
       // Dataset para el proyecto en fase inicial para los KPI2
       let advancedCFInitial = this.projectInitial.currentCF;
 
-      let printableDeliverablesInitialKPI2 = this.projectInitial.printableDeliverablesAdvancedCF / advancedCFInitial;
-      let equipmentInitialKPI2 = this.projectInitial.equipmentAdvancedCF / advancedCFInitial;
-      let electricityInitialKPI2 = this.projectInitial.electricityAdvancedCF / advancedCFInitial;
-      let waterInitialKPI2 = this.projectInitial.waterAdvancedCF / advancedCFInitial;
-      let transportationInitialKPI2 = this.projectInitial.transportationAdvancedCF / advancedCFInitial;
-      let eventsInitialKPI2 = this.projectInitial.eventsAdvancedCF / advancedCFInitial;
-      let materialsInitialKPI2 = this.projectInitial.materialsAdvancedCF / advancedCFInitial;
-      let heatInitialKPI2 = this.projectInitial.fuelsHeatAdvancedCF / advancedCFInitial;
+      let printableDeliverablesInitialKPI2 = (this.projectInitial.printableDeliverablesAdvancedCF / advancedCFInitial) * 100;
+      let equipmentInitialKPI2 = (this.projectInitial.equipmentAdvancedCF / advancedCFInitial) * 100;
+      let electricityInitialKPI2 = (this.projectInitial.electricityAdvancedCF / advancedCFInitial) * 100;
+      let waterInitialKPI2 = (this.projectInitial.waterAdvancedCF / advancedCFInitial) * 100;
+      let transportationInitialKPI2 = (this.projectInitial.transportationAdvancedCF / advancedCFInitial) * 100;
+      let eventsInitialKPI2 = (this.projectInitial.eventsAdvancedCF / advancedCFInitial) * 100;
+      let materialsInitialKPI2 = (this.projectInitial.materialsAdvancedCF / advancedCFInitial) * 100;
+      let heatInitialKPI2 = (this.projectInitial.fuelsHeatAdvancedCF / advancedCFInitial) * 100;
 
       // Dataset para el proyecto en fase execution para los KPI2
       let advancedCFExecution = this.project.currentCF;
 
-      let printableDeliverablesExecutionKPI2 = this.project.printableDeliverablesAdvancedCF / advancedCFExecution;
-      let equipmentExecutionKPI2 = this.project.equipmentAdvancedCF / advancedCFExecution;
-      let electricityExecutionKPI2 = this.project.electricityAdvancedCF / advancedCFExecution;
-      let waterExecutionKPI2 = this.project.waterAdvancedCF / advancedCFExecution;
-      let transportationExecutionKPI2 = this.project.transportationAdvancedCF / advancedCFExecution;
-      let eventsExecutionKPI2 = this.project.eventsAdvancedCF / advancedCFExecution;
-      let materialsExecutionKPI2 = this.project.materialsAdvancedCF / advancedCFExecution;
-      let heatExecutionKPI2 = this.project.fuelsHeatAdvancedCF / advancedCFExecution;
+      let printableDeliverablesExecutionKPI2 = (this.project.printableDeliverablesAdvancedCF / advancedCFExecution) * 100;
+      let equipmentExecutionKPI2 = (this.project.equipmentAdvancedCF / advancedCFExecution) * 100;
+      let electricityExecutionKPI2 = (this.project.electricityAdvancedCF / advancedCFExecution) * 100;
+      let waterExecutionKPI2 = (this.project.waterAdvancedCF / advancedCFExecution) * 100;
+      let transportationExecutionKPI2 = (this.project.transportationAdvancedCF / advancedCFExecution) * 100;
+      let eventsExecutionKPI2 = (this.project.eventsAdvancedCF / advancedCFExecution) * 100;
+      let materialsExecutionKPI2 = (this.project.materialsAdvancedCF / advancedCFExecution) * 100;
+      let heatExecutionKPI2 = (this.project.fuelsHeatAdvancedCF / advancedCFExecution) * 100;
 
       // Asignamos los valores al dataset de los KPI2
 
@@ -3117,14 +3117,14 @@ export default {
       let materialsReferenceValueInitial = initialParams.materialsInputInitial;
       let heatReferenceValueInitial = initialParams.heatInputInitial;
 
-      let printableDeliverablesInitialKPI3 = this.projectInitial.printableDeliverablesAdvancedCF / printableDeliverablesReferenceValueInitial;
-      let equipmentInitialKPI3 = this.projectInitial.equipmentAdvancedCF / equipmentReferenceValueInitial;
-      let electricityInitialKPI3 = this.projectInitial.electricityAdvancedCF / electricityReferenceValueInitial;
-      let waterInitialKPI3 = this.projectInitial.waterAdvancedCF / waterReferenceValueInitial;
-      let transportationInitialKPI3 = this.projectInitial.transportationAdvancedCF / transportationReferenceValueInitial;
-      let eventsInitialKPI3 = this.projectInitial.eventsAdvancedCF / eventsReferenceValueInitial;
-      let materialsInitialKPI3 = this.projectInitial.materialsAdvancedCF / materialsReferenceValueInitial;
-      let heatInitialKPI3 = this.projectInitial.fuelsHeatAdvancedCF / heatReferenceValueInitial;
+      let printableDeliverablesInitialKPI3 = (this.projectInitial.printableDeliverablesAdvancedCF / printableDeliverablesReferenceValueInitial) * 100;
+      let equipmentInitialKPI3 = (this.projectInitial.equipmentAdvancedCF / equipmentReferenceValueInitial) * 100;
+      let electricityInitialKPI3 = (this.projectInitial.electricityAdvancedCF / electricityReferenceValueInitial) * 100;
+      let waterInitialKPI3 = (this.projectInitial.waterAdvancedCF / waterReferenceValueInitial) * 100;
+      let transportationInitialKPI3 = (this.projectInitial.transportationAdvancedCF / transportationReferenceValueInitial) * 100;
+      let eventsInitialKPI3 = (this.projectInitial.eventsAdvancedCF / eventsReferenceValueInitial) * 100;
+      let materialsInitialKPI3 = (this.projectInitial.materialsAdvancedCF / materialsReferenceValueInitial) * 100;
+      let heatInitialKPI3 = (this.projectInitial.fuelsHeatAdvancedCF / heatReferenceValueInitial) * 100;
 
       // Dataset para el proyecto en fase execution para los KPI3
       let executionParams = this.$store.state.analysisParamsExecution;
@@ -3137,14 +3137,14 @@ export default {
       let materialsReferenceValueExecution = executionParams.materialsInputExecution;
       let heatReferenceValueExecution = executionParams.heatInputExecution;
 
-      let printableDeliverablesExecutionKPI3 = this.project.printableDeliverablesAdvancedCF / printableDeliverablesReferenceValueExecution;
-      let equipmentExecutionKPI3 = this.project.equipmentAdvancedCF / equipmentReferenceValueExecution;
-      let electricityExecutionKPI3 = this.project.electricityAdvancedCF / electricityReferenceValueExecution;
-      let waterExecutionKPI3 = this.project.waterAdvancedCF / waterReferenceValueExecution;
-      let transportationExecutionKPI3 = this.project.transportationAdvancedCF / transportationReferenceValueExecution;
-      let eventsExecutionKPI3 = this.project.eventsAdvancedCF / eventsReferenceValueExecution;
-      let materialsExecutionKPI3 = this.project.materialsAdvancedCF / materialsReferenceValueExecution;
-      let heatExecutionKPI3 = this.project.fuelsHeatAdvancedCF / heatReferenceValueExecution;
+      let printableDeliverablesExecutionKPI3 = (this.project.printableDeliverablesAdvancedCF / printableDeliverablesReferenceValueExecution) * 100;
+      let equipmentExecutionKPI3 = (this.project.equipmentAdvancedCF / equipmentReferenceValueExecution) * 100;
+      let electricityExecutionKPI3 = (this.project.electricityAdvancedCF / electricityReferenceValueExecution) * 100;
+      let waterExecutionKPI3 = (this.project.waterAdvancedCF / waterReferenceValueExecution) * 100;
+      let transportationExecutionKPI3 = (this.project.transportationAdvancedCF / transportationReferenceValueExecution) * 100;
+      let eventsExecutionKPI3 = (this.project.eventsAdvancedCF / eventsReferenceValueExecution) * 100;
+      let materialsExecutionKPI3 = (this.project.materialsAdvancedCF / materialsReferenceValueExecution) * 100;
+      let heatExecutionKPI3 = (this.project.fuelsHeatAdvancedCF / heatReferenceValueExecution) * 100;
 
       // Asignamos los valores al dataset de los KPI3
 
