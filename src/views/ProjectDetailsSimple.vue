@@ -243,7 +243,7 @@
       </table>
 
       <h2>Tons of equivalent carbon dioxide emitted: {{project.initialCF}}</h2> 
-      <h2 style="margin-bottom: 40px">CO2 permits cost: {{project.initialCF * co2PermitsPrice + ' €'}}</h2>
+      <h2 style="margin-bottom: 40px">CO2 permits cost: {{round(project.initialCF * co2PermitsPrice) + ' €'}}</h2>
       
       <h3 style="margin-bottom: 10px">CF Breakdown (Tons):</h3>
       <ul>
@@ -260,6 +260,22 @@
     </div>
 
     <div class="card col-12">
+
+      <div style="display: flex; align-items: center; justify-content: space-between;">
+        <h2 v-if="project.isInitialProject">Project in initial phase</h2>
+        <h2 v-else-if="!project.isInitialProject">Project in execution phase</h2>
+
+        <div v-if="project.isInitialProject" style="margin: 1.5rem 0 1rem 0;">
+            <label id="app-mode-label">Project in initial phase</label>
+            <InputSwitch id="appMode" v-model="toggleProject" @click="toggleViewProject" />    
+        </div>
+
+        <div v-else-if="!project.isInitialProject" style="margin: 1.5rem 0 1rem 0;">
+          <label id="app-mode-label">Project in execution phase</label>
+          <InputSwitch id="appMode" v-model="toggleProject" @click="toggleViewProject" />
+        </div>
+      </div>
+
       <h4>Partners</h4>
 
       <DataTable :value="project.partners" editMode="cell" :paginator="true" class="p-datatable-gridlines" dataKey="_id"
@@ -857,13 +873,11 @@
 
     <div class="card col-12" style="display:flex; justify-content:space-around">
       <template v-if="!this.project.isInitialProject" >
-        <Button  label="Save current project" @click="saveCurrentProject" />
-        <Button  label="Update current values as initial values" @click="displayUpdateInitialValuesDialog" />
-        <Button  label="Go to set initial values" class="p-button-info" @click="goToLinkedProject()"/>      
+        <Button  label="Save all" @click="saveCurrentProject" />
+        <!-- <Button  label="Update current values as initial values" @click="displayUpdateInitialValuesDialog" /> -->      
       </template>
       <template v-else-if="this.project.isInitialProject">
-        <Button label="Update initial values" @click="displayUpdateInitialValuesDialog" />
-        <Button type="button" label="Go to current project" class="p-button-info" @click="goToLinkedProject()"/>
+        <Button label="Save all" @click="displayUpdateInitialValuesDialog" />
       </template>
     </div>
     
@@ -876,7 +890,7 @@
         </div>
         <div>
           <h2 class="mt-2">CO2 permits cost:
-            <Badge :value="project.initialCF * co2PermitsPrice + ' €'" class="ml-2" size="xlarge" />
+            <Badge :value="round(project.initialCF * co2PermitsPrice) + ' €'" class="ml-2" size="xlarge" />
           </h2>
         </div>
         <div>
@@ -1006,6 +1020,7 @@ import Dialog from 'primevue/dialog';
 import pdfMake from 'pdfmake';
 import pdfFonts from 'pdfmake/build/vfs_fonts';
 import htmlToPdfmake from 'html-to-pdfmake';
+import InputSwitch from 'primevue/inputswitch';
 
 import 'primeicons/primeicons.css';
 
@@ -1025,6 +1040,7 @@ export default {
     Topbar,
     Toast,
     Badge,
+    InputSwitch
   },
   data() {
     return {
@@ -1675,13 +1691,20 @@ export default {
         })
       }
     },
-    goToLinkedProject() {
-      location.href = '/projects/' + this.project.initialProject;
+
+    toggleProject(event) {
+      this.$refs.menu.toggle(event);
+    },
+
+    toggleViewProject() {
+      this.$store.commit("toggleViewProject");
+      location.href = '/projects/' + this.project.initialProject
     }
+
   },
   computed: {
     ...mapState([
-      'selectedPartnerForEquipmentSimple'
+      'toggleProject', 'selectedPartnerForEquipmentSimple'
     ]),
     selectedPartner() {
       if (!this.project.partners) return {}
@@ -1711,4 +1734,15 @@ export default {
   flex-direction: column;
 }
 
+#app-mode-label {
+    position: relative;
+    bottom: 7px;
+    margin-right: 0.75rem;
+}
+
+.layout-topbar-menu {
+    align-items: center;
+    width: max-content;
+    margin-right: 0.75rem;
+}
 </style>

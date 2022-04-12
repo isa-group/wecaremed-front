@@ -9,7 +9,28 @@ export default createStore({
     selectedPartnerForEquipmentSimple: "",
     username: '',
     password: '',
-    userId: ''
+    userId: '',
+    toggleProject: false,
+    analysisParamsInitial :{
+      heatInputInitial: 1.0,
+      electricityInputInitial: 1.0,
+      waterInputInitial: 1.0,
+      transportationInputInitial: 1.0,
+      materialsInputInitial: 1.0,
+      eventsInputInitial: 1.0,
+      printableDeliverablesInputInitial: 1.0,
+      equipmentInputInitial: 1.0
+    },
+    analysisParamsExecution :{
+      heatInputExecution: 1.0,
+      electricityInputExecution: 1.0,
+      waterInputExecution: 1.0,
+      transportationInputExecution: 1.0,
+      materialsInputExecution: 1.0,
+      eventsInputExecution: 1.0,
+      printableDeliverablesInputExecution: 1.0,
+      equipmentInputExecution: 1.0
+    }
   },
   mutations: {
     toggleView(state) {
@@ -38,7 +59,24 @@ export default createStore({
     },
     saveUserId(state, userId){
       state.userId = userId;
+    },
+    toggleViewProject(state) {
+      state.toggleProject = !state.toggleProject;
+    },
+    toggleProject(state){
+      if (state.toggleProject) {
+        state.toggleProject = false;
+      } else {
+        state.toggleProject = true;
+      }
+    },
+    analysisParamsInitial(state, newValues) {
+      state.analysisParamsInitial = newValues;
+    },
+    analysisParamsExecution(state, newValues) {
+      state.analysisParamsExecution= newValues;
     }
+    
   },
   actions: {
     toggleView(context) {
@@ -61,6 +99,18 @@ export default createStore({
     },
     saveUserId({commit}, userId) {
       commit("saveUserId", userId);
+    },
+    toggleViewProject(context) {
+      context.commit("toggleViewProject")
+    },
+    toggleProject({commit}){
+      commit("toggleProject");
+    },
+    analysisParamsInitial({commit}, newValues) {
+      commit("analysisParamsInitial", newValues);
+    },
+    analysisParamsExecution({commit}, newValues) {
+      commit("analysisParamsExecution", newValues);
     }
   },
   modules: {
