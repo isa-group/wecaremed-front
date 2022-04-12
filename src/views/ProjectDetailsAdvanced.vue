@@ -265,7 +265,7 @@
               </table>
 
               <h2>Tons of equivalent carbon dioxide emitted: {{project.currentCF}}</h2> 
-              <h2 style="margin-bottom: 40px">CO2 permits cost: {{project.currentCF * co2PermitsPrice + ' €'}}</h2>
+              <h2 style="margin-bottom: 40px">CO2 permits cost: {{round(project.currentCF * co2PermitsPrice) + ' €'}}</h2>
               
               <h3 style="margin-bottom: 10px">CF Breakdown (Tons):</h3>
               <ul>
@@ -1441,7 +1441,7 @@
                 </div>
                 <div>
                   <h2 class="mt-2">CO2 permits cost:
-                    <Badge :value="project.currentCF * co2PermitsPrice + ' €'" class="ml-2" size="xlarge" />
+                    <Badge :value="round(project.currentCF * co2PermitsPrice) + ' €'" class="ml-2" size="xlarge" />
                   </h2>
                 </div>
                 <div>
@@ -1557,20 +1557,21 @@
           <TabPanel v-if="!this.project.isInitialProject" header="Analysis">
             <div class="card">
 
-              <h3>Analysis of the project on initial and current phase</h3>
+              <h3>Analysis of the project in preparation and execution phase</h3>
 
               <div class="flex justify-content-around text-center">
                 <div class="col-6">
-                  <h4>Project in initial phase</h4>
+                  <h4>Project in preparation phase</h4>
                   <Chart type="radar" :data="chartDataInitial" :options="chartOptions" />
 
-                  <div class="p-fluid grid">
-                    <div class="col-12 md:col-6">
+                  <h4>Reference values for KPI-3</h4>
+                  <div class="p-fluid formgrid grid">
+                    <div class="field col-12 md:col-6">
                       <label for="heatInputInitial">Heat</label>
                       <InputNumber id="heatInputInitial" v-model="analysisInitial.heatInputInitial" mode="decimal" :maxFractionDigits="3"
                         showButtons :step="0.25" decrementButtonClass="p-button-info"
                         incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
-                        :allowEmpty="false" :min="0.001"
+                        :allowEmpty="false" :min="0.001" class="mb-3"
                         @focus="onFocusValue=analysisInitial.heatInputInitial; $event.target.select()"
                         @keypress.enter="$event.target.blur()"
                         @focusout="onCellEditCompleteAnalysis('heatInputInitial', analysisInitial.heatInputInitial, true)" />
@@ -1579,7 +1580,7 @@
                       <InputNumber id="electricityInputInitial" v-model="analysisInitial.electricityInputInitial" mode="decimal" :maxFractionDigits="3"
                         showButtons :step="0.25" decrementButtonClass="p-button-info"
                         incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
-                        :allowEmpty="false" :min="0.001"
+                        :allowEmpty="false" :min="0.001" class="mb-3"
                         @focus="onFocusValue=analysisInitial.electricityInputInitial; $event.target.select()"
                         @keypress.enter="$event.target.blur()"
                         @focusout="onCellEditCompleteAnalysis('electricityInputInitial', analysisInitial.electricityInputInitial, true)" />
@@ -1588,7 +1589,7 @@
                       <InputNumber id="waterInputInitial" v-model="analysisInitial.waterInputInitial" mode="decimal" :maxFractionDigits="3"
                         showButtons :step="0.25" decrementButtonClass="p-button-info"
                         incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
-                        :allowEmpty="false" :min="0.001"
+                        :allowEmpty="false" :min="0.001" class="mb-3"
                         @focus="onFocusValue=analysisInitial.waterInputInitial; $event.target.select()"
                         @keypress.enter="$event.target.blur()"
                         @focusout="onCellEditCompleteAnalysis('waterInputInitial', analysisInitial.waterInputInitial, true)" />
@@ -1604,12 +1605,12 @@
 
                     </div>
 
-                    <div class="col-12 md:col-6">
+                    <div class="field col-12 md:col-6">
                       <label for="materialsInputInitial">Materials</label>  
                       <InputNumber id="materialsInputInitial" v-model="analysisInitial.materialsInputInitial" mode="decimal" :maxFractionDigits="3"
                         showButtons :step="0.25" decrementButtonClass="p-button-info"
                         incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
-                        :allowEmpty="false" :min="0.001"
+                        :allowEmpty="false" :min="0.001" class="mb-3"
                         @focus="onFocusValue=analysisInitial.materialsInputInitial; $event.target.select()"
                         @keypress.enter="$event.target.blur()"
                         @focusout="onCellEditCompleteAnalysis('materialsInputInitial', analysisInitial.materialsInputInitial, true)"/>
@@ -1618,7 +1619,7 @@
                       <InputNumber id="eventsInputInitial" v-model="analysisInitial.eventsInputInitial" mode="decimal" :maxFractionDigits="3"
                         showButtons :step="0.25" decrementButtonClass="p-button-info"
                         incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
-                        :allowEmpty="false" :min="0.001"
+                        :allowEmpty="false" :min="0.001" class="mb-3"
                         @focus="onFocusValue=analysisInitial.eventsInputInitial; $event.target.select()"
                         @keypress.enter="$event.target.blur()"
                         @focusout="onCellEditCompleteAnalysis('eventsInputInitial', analysisInitial.eventsInputInitial, true)"/>
@@ -1627,7 +1628,7 @@
                       <InputNumber id="printableDeliverablesInputInitial" v-model="analysisInitial.printableDeliverablesInputInitial" mode="decimal" :maxFractionDigits="3"
                         showButtons :step="0.25" decrementButtonClass="p-button-info"
                         incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
-                        :allowEmpty="false" :min="0.001"
+                        :allowEmpty="false" :min="0.001" class="mb-3"
                         @focus="onFocusValue=analysisInitial.printableDeliverablesInputInitial; $event.target.select()"
                         @keypress.enter="$event.target.blur()"
                         @focusout="onCellEditCompleteAnalysis('printableDeliverablesInputInitial', analysisInitial.printableDeliverablesInputInitial, true)"/>
@@ -1653,13 +1654,14 @@
                   <h4>Project in execution phase</h4>
                   <Chart type="radar" :data="chartDataExecution" :options="chartOptions" />
                   
-                  <div class="p-fluid grid">
-                    <div class="col-12 md:col-6">
+                  <h4>Reference values for KPI-3</h4>
+                  <div class="p-fluid formgrid grid">
+                    <div class="field col-12 md:col-6">
                       <label for="heatInputExecution">Heat</label>
                       <InputNumber id="heatInputExecution" v-model="analysisExecution.heatInputExecution" mode="decimal" :maxFractionDigits="3"
                         showButtons :step="0.25" decrementButtonClass="p-button-info"
                         incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
-                        :allowEmpty="false" :min="0.001"
+                        :allowEmpty="false" :min="0.001" class="mb-3"
                         @focus="onFocusValue=analysisExecution.heatInputExecution; $event.target.select()"
                         @keypress.enter="$event.target.blur()"
                         @focusout="onCellEditCompleteAnalysis('heatInputExecution', analysisExecution.heatInputExecution, false)"/>
@@ -1668,7 +1670,7 @@
                       <InputNumber id="electricityInputExecution" v-model="analysisExecution.electricityInputExecution" mode="decimal" :maxFractionDigits="3"
                         showButtons :step="0.25" decrementButtonClass="p-button-info"
                         incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
-                        :allowEmpty="false" :min="0.001"
+                        :allowEmpty="false" :min="0.001" class="mb-3"
                         @focus="onFocusValue=analysisExecution.electricityInputExecution; $event.target.select()"
                         @keypress.enter="$event.target.blur()"
                         @focusout="onCellEditCompleteAnalysis('electricityInputExecution', analysisExecution.electricityInputExecution, false)"/>
@@ -1677,7 +1679,7 @@
                       <InputNumber id="waterInputExecution" v-model="analysisExecution.waterInputExecution" mode="decimal" :maxFractionDigits="3"
                         showButtons :step="0.25" decrementButtonClass="p-button-info"
                         incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
-                        :allowEmpty="false" :min="0.001"
+                        :allowEmpty="false" :min="0.001" class="mb-3"
                         @focus="onFocusValue=analysisExecution.waterInputExecution; $event.target.select()"
                         @keypress.enter="$event.target.blur()"
                         @focusout="onCellEditCompleteAnalysis('waterInputExecution', analysisExecution.waterInputExecution, false)"/>
@@ -1693,12 +1695,12 @@
 
                     </div>
 
-                    <div class="col-12 md:col-6">
+                    <div class="field col-12 md:col-6">
                       <label for="materialsInputExecution">Materials</label>  
                       <InputNumber id="materialsInputExecution" v-model="analysisExecution.materialsInputExecution" mode="decimal" :maxFractionDigits="3"
                         showButtons :step="0.25" decrementButtonClass="p-button-info"
                         incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
-                        :allowEmpty="false" :min="0.001"
+                        :allowEmpty="false" :min="0.001" class="mb-3"
                         @focus="onFocusValue=analysisExecution.materialsInputExecution; $event.target.select()"
                         @keypress.enter="$event.target.blur()"
                         @focusout="onCellEditCompleteAnalysis('materialsInputExecution', analysisExecution.materialsInputExecution, false)"/>
@@ -1707,7 +1709,7 @@
                       <InputNumber id="eventsInputExecution" v-model="analysisExecution.eventsInputExecution" mode="decimal" :maxFractionDigits="3"
                         showButtons :step="0.25" decrementButtonClass="p-button-info"
                         incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
-                        :allowEmpty="false" :min="0.001"
+                        :allowEmpty="false" :min="0.001" class="mb-3"
                         @focus="onFocusValue=analysisExecution.eventsInputExecution; $event.target.select()"
                         @keypress.enter="$event.target.blur()"
                         @focusout="onCellEditCompleteAnalysis('eventsInputExecution', analysisExecution.eventsInputExecution, false)"/>
@@ -1716,7 +1718,7 @@
                       <InputNumber id="printableDeliverablesInputExecution" v-model="analysisExecution.printableDeliverablesInputExecution" mode="decimal" :maxFractionDigits="3"
                         showButtons :step="0.25" decrementButtonClass="p-button-info"
                         incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
-                        :allowEmpty="false" :min="0.001"
+                        :allowEmpty="false" :min="0.001" class="mb-3"
                         @focus="onFocusValue=analysisExecution.printableDeliverablesInputExecution; $event.target.select()"
                         @keypress.enter="$event.target.blur()"
                         @focusout="onCellEditCompleteAnalysis('printableDeliverablesInputExecution', analysisExecution.printableDeliverablesInputExecution, false)"/>
@@ -1899,12 +1901,12 @@ export default {
 					},
           {
 						label: 'KPI-3',
-						backgroundColor: '#32a852',
-						borderColor: 'rgba(255,99,132,1)',
-						pointBackgroundColor: '#32a852',
-						pointBorderColor: '#32a852',
-						pointHoverBackgroundColor: '#32a852',
-						pointHoverBorderColor: '#32a852',
+						backgroundColor: 'rgba(50,168,82,0.2)',
+						borderColor: 'rgba(50,168,82,1)',
+						pointBackgroundColor: 'rgba(50,168,82,1)',
+						pointBorderColor: '##fff',
+						pointHoverBackgroundColor: '#fff',
+						pointHoverBorderColor: 'rgba(50,168,82,1)',
 						data: [0, 0, 0, 0, 0, 0, 0, 0]
 					}
 				]
@@ -1934,12 +1936,12 @@ export default {
 					},
           {
 						label: 'KPI-3',
-						backgroundColor: 'rgba(255,99,132,0.2)',
-						borderColor: 'rgba(255,99,132,1)',
-						pointBackgroundColor: 'rgba(255,99,132,1)',
-						pointBorderColor: '#32a852',
-						pointHoverBackgroundColor: '#32a852',
-						pointHoverBorderColor: 'rgba(255,99,132,1)',
+						backgroundColor: 'rgba(50,168,82,0.2)',
+						borderColor: 'rgba(50,168,82,1)',
+						pointBackgroundColor: 'rgba(50,168,82,1)',
+						pointBorderColor: '##fff',
+						pointHoverBackgroundColor: '#fff',
+						pointHoverBorderColor: 'rgba(50,168,82,1)',
 						data: [0, 0, 0, 0, 0, 0, 0, 0]
 					}
 				]
@@ -2009,6 +2011,9 @@ export default {
       this.$store.dispatch("toggleView")
   },
   methods: {
+    round(num) {
+        return Math.round((num + Number.EPSILON) * 100) / 100
+    },
     generatePDF() {
       var html = htmlToPdfmake(document.getElementById('pdfPrintDiv').innerHTML);
       const documentDefinition = { content: html, pageOrientation: 'landscape' };
@@ -2054,22 +2059,25 @@ export default {
       this.displayUpdateInitialValues = false;
     },
     calculateCF() {
-
       this.checkEventsNotFilled()
+
       for (let partner of this.project.partners) {
         if (partner.country === "Select a country") {
           this.partnersWithoutCountry.push(partner)
         }
       }
+
       for(let partner of this.project.partners) {
         if(partner.twoWayTravels === null ||
             partner.employeesPersonMonths === null ) {
               this.partnersWithDefaultValues.push(partner);
             }
       }
+
       if (this.partnersWithoutCountry.length > 0) {
         this.displayPartnersWithoutCountryErrorDialog();
       }
+
       if (this.partnersWithDefaultValues.length > 0){
         this.displayPartnersWithDefaultValuesErrorDialog();
       }
@@ -2077,7 +2085,6 @@ export default {
       if(this.checkEventsOrganization() == true || this.checkEventsParticipation() == true) {
         this.displayEventsErrorDialog();
       }
-
 
       if (this.displayPartnersWithoutCountryDialog || this.displayPartnersWithDefaultValues > 0) {
         this.displayPartnersErrorDialog();
@@ -2095,15 +2102,6 @@ export default {
 
         axios.put(`/projects/calculateAdvancedCF/${this.$route.params.id}`)
         .then((response) => {
-          // let partners = this.project.partners
-          // let printableDeliverables = this.project.printableDeliverables
-          // let coordinator = this.project.coordinator
-          
-          // this.project = response.data;
-          // this.project.partners = partners
-          // this.project.printableDeliverables = printableDeliverables
-          // this.project.coordinator = coordinator
-
           this.project.fuelsHeatAdvancedCF = response.data.fuelsHeatAdvancedCF
           this.project.electricityAdvancedCF = response.data.electricityAdvancedCF
           this.project.waterAdvancedCF = response.data.waterAdvancedCF
@@ -2273,7 +2271,6 @@ export default {
       this.$store.dispatch("updateSelectedPartner", event.value);
     },
     getProject(){
-      console.log("Valor de la store de initial", this.analysisInitial);
       this.axios.get(`/projects/${this.$route.params.id}`)
       .then((response) => {
         this.project = response.data;
@@ -3033,11 +3030,9 @@ export default {
 
       return res;
     },
-
     toggleProject(event) {
       this.$refs.menu.toggle(event);
     },
-
     toggleViewProject() {
       this.$store.commit("toggleViewProject");
       location.href = '/projects/' + this.project.initialProject
@@ -3101,8 +3096,6 @@ export default {
       this.chartDataExecution.datasets[1].data[5] = eventsExecutionKPI2;
       this.chartDataExecution.datasets[1].data[6] = materialsExecutionKPI2;
       this.chartDataExecution.datasets[1].data[7] = heatExecutionKPI2;
-
-
     },
     calculateKPI3(){
       
@@ -3117,14 +3110,14 @@ export default {
       let materialsReferenceValueInitial = initialParams.materialsInputInitial;
       let heatReferenceValueInitial = initialParams.heatInputInitial;
 
-      let printableDeliverablesInitialKPI3 = (this.projectInitial.printableDeliverablesAdvancedCF / printableDeliverablesReferenceValueInitial) * 100;
-      let equipmentInitialKPI3 = (this.projectInitial.equipmentAdvancedCF / equipmentReferenceValueInitial) * 100;
-      let electricityInitialKPI3 = (this.projectInitial.electricityAdvancedCF / electricityReferenceValueInitial) * 100;
-      let waterInitialKPI3 = (this.projectInitial.waterAdvancedCF / waterReferenceValueInitial) * 100;
-      let transportationInitialKPI3 = (this.projectInitial.transportationAdvancedCF / transportationReferenceValueInitial) * 100;
-      let eventsInitialKPI3 = (this.projectInitial.eventsAdvancedCF / eventsReferenceValueInitial) * 100;
-      let materialsInitialKPI3 = (this.projectInitial.materialsAdvancedCF / materialsReferenceValueInitial) * 100;
-      let heatInitialKPI3 = (this.projectInitial.fuelsHeatAdvancedCF / heatReferenceValueInitial) * 100;
+      let printableDeliverablesInitialKPI3 = (this.projectInitial.printableDeliverablesAdvancedCF / printableDeliverablesReferenceValueInitial)
+      let equipmentInitialKPI3 = (this.projectInitial.equipmentAdvancedCF / equipmentReferenceValueInitial)
+      let electricityInitialKPI3 = (this.projectInitial.electricityAdvancedCF / electricityReferenceValueInitial)
+      let waterInitialKPI3 = (this.projectInitial.waterAdvancedCF / waterReferenceValueInitial)
+      let transportationInitialKPI3 = (this.projectInitial.transportationAdvancedCF / transportationReferenceValueInitial)
+      let eventsInitialKPI3 = (this.projectInitial.eventsAdvancedCF / eventsReferenceValueInitial)
+      let materialsInitialKPI3 = (this.projectInitial.materialsAdvancedCF / materialsReferenceValueInitial)
+      let heatInitialKPI3 = (this.projectInitial.fuelsHeatAdvancedCF / heatReferenceValueInitial)
 
       // Dataset para el proyecto en fase execution para los KPI3
       let executionParams = this.$store.state.analysisParamsExecution;
@@ -3137,14 +3130,14 @@ export default {
       let materialsReferenceValueExecution = executionParams.materialsInputExecution;
       let heatReferenceValueExecution = executionParams.heatInputExecution;
 
-      let printableDeliverablesExecutionKPI3 = (this.project.printableDeliverablesAdvancedCF / printableDeliverablesReferenceValueExecution) * 100;
-      let equipmentExecutionKPI3 = (this.project.equipmentAdvancedCF / equipmentReferenceValueExecution) * 100;
-      let electricityExecutionKPI3 = (this.project.electricityAdvancedCF / electricityReferenceValueExecution) * 100;
-      let waterExecutionKPI3 = (this.project.waterAdvancedCF / waterReferenceValueExecution) * 100;
-      let transportationExecutionKPI3 = (this.project.transportationAdvancedCF / transportationReferenceValueExecution) * 100;
-      let eventsExecutionKPI3 = (this.project.eventsAdvancedCF / eventsReferenceValueExecution) * 100;
-      let materialsExecutionKPI3 = (this.project.materialsAdvancedCF / materialsReferenceValueExecution) * 100;
-      let heatExecutionKPI3 = (this.project.fuelsHeatAdvancedCF / heatReferenceValueExecution) * 100;
+      let printableDeliverablesExecutionKPI3 = (this.project.printableDeliverablesAdvancedCF / printableDeliverablesReferenceValueExecution)
+      let equipmentExecutionKPI3 = (this.project.equipmentAdvancedCF / equipmentReferenceValueExecution)
+      let electricityExecutionKPI3 = (this.project.electricityAdvancedCF / electricityReferenceValueExecution)
+      let waterExecutionKPI3 = (this.project.waterAdvancedCF / waterReferenceValueExecution)
+      let transportationExecutionKPI3 = (this.project.transportationAdvancedCF / transportationReferenceValueExecution)
+      let eventsExecutionKPI3 = (this.project.eventsAdvancedCF / eventsReferenceValueExecution)
+      let materialsExecutionKPI3 = (this.project.materialsAdvancedCF / materialsReferenceValueExecution)
+      let heatExecutionKPI3 = (this.project.fuelsHeatAdvancedCF / heatReferenceValueExecution)
 
       // Asignamos los valores al dataset de los KPI3
 

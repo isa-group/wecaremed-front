@@ -243,7 +243,7 @@
       </table>
 
       <h2>Tons of equivalent carbon dioxide emitted: {{project.initialCF}}</h2> 
-      <h2 style="margin-bottom: 40px">CO2 permits cost: {{project.initialCF * co2PermitsPrice + ' €'}}</h2>
+      <h2 style="margin-bottom: 40px">CO2 permits cost: {{round(project.initialCF * co2PermitsPrice) + ' €'}}</h2>
       
       <h3 style="margin-bottom: 10px">CF Breakdown (Tons):</h3>
       <ul>
@@ -890,7 +890,7 @@
         </div>
         <div>
           <h2 class="mt-2">CO2 permits cost:
-            <Badge :value="project.initialCF * co2PermitsPrice + ' €'" class="ml-2" size="xlarge" />
+            <Badge :value="round(project.initialCF * co2PermitsPrice) + ' €'" class="ml-2" size="xlarge" />
           </h2>
         </div>
         <div>
