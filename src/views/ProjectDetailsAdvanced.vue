@@ -2012,7 +2012,7 @@ export default {
   },
   methods: {
     round(num) {
-        return Math.round((num + Number.EPSILON) * 100) / 100
+      return Math.round((num + Number.EPSILON) * 100) / 100
     },
     generatePDF() {
       var html = htmlToPdfmake(document.getElementById('pdfPrintDiv').innerHTML);
@@ -2881,7 +2881,6 @@ export default {
         axios.delete('/projects/' + this.project.initialProject)
         .then(() => {
           let newInitialProject = Object.assign({}, this.project);
-          newInitialProject.name += "_initial"; 
           newInitialProject.isInitialProject = new Boolean(true);
           newInitialProject._id = this.project.initialProject;
           newInitialProject.initialProject = this.project._id;

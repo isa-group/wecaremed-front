@@ -150,7 +150,6 @@ export default {
       this.newProject.to = new Date(this.newProject.to.getFullYear(), this.newProject.to.getMonth() + 1, 0)
       this.submitted = true;
       this.newInitialProject = Object.assign({}, this.newProject);
-      this.newInitialProject.name += "_initial"; 
       this.newInitialProject.isInitialProject = new Boolean(true);
       this.newInitialProject._id = new mongoose.Types.ObjectId();
       this.newProject._id = new mongoose.Types.ObjectId();
@@ -162,7 +161,7 @@ export default {
         axios.post('/projects', this.newInitialProject),
         axios.post('/projects', this.newProject)
       ]).then(async () => {
-        await axios.put('/projects/' + this.newInitialProject._id, this.newInitialProject)
+        // await axios.put('/projects/' + this.newInitialProject._id, this.newInitialProject)
         this.$router.push({ path: `/projects/${this.newProject._id}` })
       }).catch(error => {
         this.errors = error.response.data
@@ -174,7 +173,6 @@ export default {
       .then(() => {
         let updateInitialProject = Object.assign({}, this.newProject);
         updateInitialProject._id = this.newProject.initialProject;
-        updateInitialProject.name += '_initial';
         updateInitialProject.isInitialProject = new Boolean(true);
         axios.put('/projects/' + this.newProject.initialProject, updateInitialProject).then( () => {
           this.$router.push({ path: `/projects/${this.newProject._id}` });
