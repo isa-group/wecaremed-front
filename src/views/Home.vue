@@ -223,7 +223,7 @@ export default {
 
       // We create a copy of the clone for create a initial project to the clone
       this.projectClonedInitial._id = new mongoose.Types.ObjectId();
-      this.projectClonedInitial.name = this.projects[this.projectToClone.tableIndex].name + "_copy_" + nextNumCopies + '_initial';
+      this.projectClonedInitial.name = this.projects[this.projectToClone.tableIndex].name + "_copy_" + nextNumCopies
       this.projectClonedInitial.numCopies = 0;
       this.projectClonedInitial.isInitialProject = new Boolean(true);
 
