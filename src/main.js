@@ -14,6 +14,7 @@ import './assets/styles/layout.scss';
 import './assets/flags/flags.css';
 
 import ToastService from 'primevue/toastservice';
+import Tooltip from 'primevue/tooltip';
 import DataTable from 'primevue/datatable';
 
 require("dotenv").config();
@@ -34,6 +35,7 @@ app
 .use(router)
 .use(VueAxios, axios)
 .use(PrimeVue, { ripple: true, inputStyle: 'outlined' })
+.directive('tooltip', Tooltip)
 .use(ToastService)
 .component('DataTable', DataTable)
 .mount('#app');
