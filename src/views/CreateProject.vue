@@ -161,7 +161,6 @@ export default {
         axios.post('/projects', this.newInitialProject),
         axios.post('/projects', this.newProject)
       ]).then(async () => {
-        // await axios.put('/projects/' + this.newInitialProject._id, this.newInitialProject)
         this.$router.push({ path: `/projects/${this.newProject._id}` })
       }).catch(error => {
         this.errors = error.response.data

@@ -8,19 +8,18 @@
       <div class="card">
 
         <div style="display: flex; align-items: center; justify-content: space-between;">
-          <h2 v-if="project.isInitialProject">Project in initial phase</h2>
-          <h2 v-else-if="!project.isInitialProject">Project in execution phase</h2>
+        <h2 v-if="project.isInitialProject">Project's initial data</h2>
+        <h2 v-else-if="!project.isInitialProject">Project's current data</h2>
 
-          <div v-if="project.isInitialProject" style="margin: 1.5rem 0 1rem 0;">
-              <label id="app-mode-label">Project in initial phase</label>
-              <InputSwitch id="appMode" v-model="toggleProject" @click="toggleViewProject" />    
-          </div>
-
-          <div v-else-if="!project.isInitialProject" style="margin: 1.5rem 0 1rem 0;">
-            <label id="app-mode-label">Project in execution phase</label>
-            <InputSwitch id="appMode" v-model="toggleProject" @click="toggleViewProject" />
+        <div style="margin: 1.5rem 0 1rem 0;">
+          <div style="text-align: center">
+            <h5 class="m-0 mb-2">Project data</h5>
+            <label id="app-mode-label" class="initialDataLabel">Initial</label>
+            <InputSwitch id="projectData" v-model="toggleProject" @click="toggleViewProject" />    
+            <label id="app-mode-label" class="currentDataLabel" style="margin-left: 0.75rem; margin-right: auto;">Current</label>
           </div>
         </div>
+      </div>
 
         <!-- Data -->
 
@@ -1436,12 +1435,12 @@
               <div class="card p-fluid" style="display: flex; flex-direction: column; align-items: center; justify-content: space-around;">
                 <div>
                   <h2 class="mb-2">Equivalent carbon dioxide emitted:
-                    <Badge :value="project.currentCF  + ' t CO2e'" class="ml-2" size="xlarge" :severity="getTextColorFromCFIndex(project.currentCF)" />
+                    <Badge :value="project.currentCF  + ' t CO2e'" class="ml-2 currentCF" size="xlarge" :severity="getTextColorFromCFIndex(project.currentCF)" />
                   </h2>
                 </div>
                 <div>
                   <h2 class="mt-2">CO2 permits cost:
-                    <Badge :value="round(project.currentCF * co2PermitsPrice) + ' €'" class="ml-2" size="xlarge" />
+                    <Badge :value="round(project.currentCF * co2PermitsPrice) + ' €'" class="ml-2 currentCF" size="xlarge" />
                   </h2>
                 </div>
                 <div>
@@ -1502,25 +1501,25 @@
                   <div class="card p-fluid col-2" style="display: flex; flex-direction: column; align-items: center; justify-content: space-around;">
                     <h2 class="font-medium text-3xl">Fuels Heat</h2>
                     <div class="flex align-items-center py-3 px-2 border-top-1 surface-border">
-                      <Badge :value="project.fuelsHeatAdvancedCF" size="xlarge" severity="info" />
+                      <Badge :value="project.fuelsHeatAdvancedCF" size="xlarge" class="currentCF"/>
                     </div>
                   </div>
                   <div class="card p-fluid col-2" style="display: flex; flex-direction: column; align-items: center; justify-content: space-around;">
                     <h2 class="font-medium text-3xl">Electricity</h2>
                     <div class="flex align-items-center py-3 px-2 border-top-1 surface-border">
-                      <Badge :value="project.electricityAdvancedCF" size="xlarge" severity="info" />
+                      <Badge :value="project.electricityAdvancedCF" size="xlarge" class="currentCF"/>
                     </div>
                   </div>
                   <div class="card p-fluid col-2" style="display: flex; flex-direction: column; align-items: center; justify-content: space-around;">
                     <h2 class="font-medium text-3xl">Water</h2>
                     <div class="flex align-items-center py-3 px-2 border-top-1 surface-border">
-                      <Badge :value="project.waterAdvancedCF" size="xlarge" severity="info" />
+                      <Badge :value="project.waterAdvancedCF" size="xlarge" class="currentCF"/>
                     </div>
                   </div>
                   <div class="card p-fluid col-2" style="display: flex; flex-direction: column; align-items: center; justify-content: space-around;">
                     <h2 class="font-medium text-3xl">Transportation</h2>
                     <div class="flex align-items-center py-3 px-2 border-top-1 surface-border">
-                      <Badge :value="project.transportationAdvancedCF" size="xlarge" severity="info" />
+                      <Badge :value="project.transportationAdvancedCF" size="xlarge" class="currentCF"/>
                     </div>
                   </div>
                 </div>
@@ -1528,25 +1527,25 @@
                   <div class="card p-fluid col-2" style="display: flex; flex-direction: column; align-items: center; justify-content: space-around;">
                     <h2 class="font-medium text-3xl">Materials</h2>
                     <div class="flex align-items-center py-3 px-2 border-top-1 surface-border">
-                      <Badge :value="project.materialsAdvancedCF" size="xlarge" severity="info" />
+                      <Badge :value="project.materialsAdvancedCF" size="xlarge" class="currentCF"/>
                     </div>
                   </div>
                   <div class="card p-fluid col-2" style="display: flex; flex-direction: column; align-items: center; justify-content: space-around;">
                     <h2 class="font-medium text-3xl">Printable<br>Deliverables</h2>
                     <div class="flex align-items-center py-3 px-2 border-top-1 surface-border">
-                      <Badge :value="project.printableDeliverablesAdvancedCF" size="xlarge" severity="info" />
+                      <Badge :value="project.printableDeliverablesAdvancedCF" size="xlarge" class="currentCF"/>
                     </div>
                   </div>
                   <div class="card p-fluid col-2" style="display: flex; flex-direction: column; align-items: center; justify-content: space-around;">
                     <h2 class="font-medium text-3xl">Equipment</h2>
                     <div class="flex align-items-center py-3 px-2 border-top-1 surface-border">
-                      <Badge :value="project.equipmentAdvancedCF" size="xlarge" severity="info" />
+                      <Badge :value="project.equipmentAdvancedCF" size="xlarge" class="currentCF"/>
                     </div>
                   </div>
                   <div class="card p-fluid col-2" style="display: flex; flex-direction: column; align-items: center; justify-content: space-around;">
                     <h2 class="font-medium text-3xl">Events</h2>
                     <div class="flex align-items-center py-3 px-2 border-top-1 surface-border">
-                      <Badge :value="project.eventsAdvancedCF" size="xlarge" severity="info" />
+                      <Badge :value="project.eventsAdvancedCF" size="xlarge" class="currentCF"/>
                     </div>
                   </div>
                 </div>
@@ -3176,6 +3175,9 @@ export default {
 </script>
 
 <style>
+.initialDataLabel + .p-inputswitch .p-inputswitch-slider {
+  background: #3B82F6;
+}
 
 .projectDetailsElectrictyGrid {
   display: flex;
@@ -3193,7 +3195,6 @@ export default {
     padding: 0.5rem;
     width: 100%;
 }
-
 
 #app-mode-label {
     position: relative;
