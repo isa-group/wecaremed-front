@@ -5,12 +5,12 @@ export default createStore({
   plugins: [createPersistedState()],
   state: {
     toggleValue: false,
+    toggleProject: false,
     appModeText: "Simple",
     selectedPartnerForEquipmentSimple: "",
     username: '',
     password: '',
     userId: '',
-    toggleProject: false,
     analysisParamsInitial :{
       heatInputInitial: 1.0,
       electricityInputInitial: 1.0,
@@ -44,6 +44,13 @@ export default createStore({
         state.toggleValue = true;
       }
     },
+    toggleProject(state){
+      if (state.toggleProject) {
+        state.toggleProject = false;
+      } else {
+        state.toggleProject = true;
+      }
+    },
     updateSelectedPartner(state, selectedOption) {
       state.selectedPartnerForEquipmentSimple = selectedOption;
     },
@@ -60,30 +67,22 @@ export default createStore({
     saveUserId(state, userId){
       state.userId = userId;
     },
-    toggleViewProject(state) {
-      state.toggleProject = !state.toggleProject;
-    },
-    toggleProject(state){
-      if (state.toggleProject) {
-        state.toggleProject = false;
-      } else {
-        state.toggleProject = true;
-      }
-    },
     analysisParamsInitial(state, newValues) {
       state.analysisParamsInitial = newValues;
     },
     analysisParamsExecution(state, newValues) {
       state.analysisParamsExecution= newValues;
     }
-    
   },
   actions: {
-    toggleView(context) {
-      context.commit("toggleView")
+    toggleView({commit}) {
+      commit("toggleView")
     },
     toggleValue({commit}){
       commit("toggleValue");
+    },
+    toggleProject({commit}){
+      commit("toggleProject");
     },
     updateSelectedPartner({commit}, selectedOption) {
       commit("updateSelectedPartner", selectedOption)
@@ -99,12 +98,6 @@ export default createStore({
     },
     saveUserId({commit}, userId) {
       commit("saveUserId", userId);
-    },
-    toggleViewProject(context) {
-      context.commit("toggleViewProject")
-    },
-    toggleProject({commit}){
-      commit("toggleProject");
     },
     analysisParamsInitial({commit}, newValues) {
       commit("analysisParamsInitial", newValues);

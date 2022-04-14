@@ -8,18 +8,18 @@
       <div class="card">
 
         <div style="display: flex; align-items: center; justify-content: space-between;">
-        <h2 v-if="project.isInitialProject">Project's initial data</h2>
-        <h2 v-else-if="!project.isInitialProject">Project's current data</h2>
+          <h2 v-if="project.isInitialProject">Project's initial data</h2>
+          <h2 v-else-if="!project.isInitialProject">Project's current data</h2>
 
-        <div style="margin: 1.5rem 0 1rem 0;">
-          <div style="text-align: center">
-            <h5 class="m-0 mb-2">Project data</h5>
-            <label id="app-mode-label" class="initialDataLabel">Initial</label>
-            <InputSwitch id="projectData" v-model="toggleProject" @click="toggleViewProject" />    
-            <label id="app-mode-label" class="currentDataLabel" style="margin-left: 0.75rem; margin-right: auto;">Current</label>
+          <div style="margin: 1.5rem 0 1rem 0;">
+            <div style="text-align: center">
+              <h5 class="m-0 mb-2">Project data</h5>
+              <label id="app-mode-label" class="initialDataLabel">Initial</label>
+              <InputSwitch id="projectData" v-model="toggleProject" @click="toggleProjectView()" />    
+              <label id="app-mode-label" class="currentDataLabel" style="margin-left: 0.75rem; margin-right: auto;">Current</label>
+            </div>
           </div>
         </div>
-      </div>
 
         <!-- Data -->
 
@@ -2274,124 +2274,128 @@ export default {
       .then((response) => {
         this.project = response.data;
 
-        this.chartDataExecution.datasets[0].data[0] = this.project.printableDeliverablesAdvancedCF,
-        this.chartDataExecution.datasets[0].data[1] = this.project.equipmentAdvancedCF,
-        this.chartDataExecution.datasets[0].data[2] = this.project.electricityAdvancedCF,
-        this.chartDataExecution.datasets[0].data[3] = this.project.waterAdvancedCF,
-        this.chartDataExecution.datasets[0].data[4] = this.project.transportationAdvancedCF,
-        this.chartDataExecution.datasets[0].data[5] = this.project.eventsAdvancedCF,
-        this.chartDataExecution.datasets[0].data[6] = this.project.materialsAdvancedC,
-        this.chartDataExecution.datasets[0].data[7] = this.project.fuelsHeatAdvancedCF
+        if (this.project.isInitialProject == this.$store.state.toggleProject) {
+          location.href = '/projects/' + this.project.initialProject
+        } else {
+          this.chartDataExecution.datasets[0].data[0] = this.project.printableDeliverablesAdvancedCF,
+          this.chartDataExecution.datasets[0].data[1] = this.project.equipmentAdvancedCF,
+          this.chartDataExecution.datasets[0].data[2] = this.project.electricityAdvancedCF,
+          this.chartDataExecution.datasets[0].data[3] = this.project.waterAdvancedCF,
+          this.chartDataExecution.datasets[0].data[4] = this.project.transportationAdvancedCF,
+          this.chartDataExecution.datasets[0].data[5] = this.project.eventsAdvancedCF,
+          this.chartDataExecution.datasets[0].data[6] = this.project.materialsAdvancedC,
+          this.chartDataExecution.datasets[0].data[7] = this.project.fuelsHeatAdvancedCF
 
-        this.axios.get(`/projects/` + this.project.initialProject)
-        .then( (res) => {
-          this.projectInitial = res.data;
+          this.axios.get(`/projects/` + this.project.initialProject)
+          .then( (res) => {
+            this.projectInitial = res.data;
 
-          this.chartDataInitial.datasets[0].data[0] = this.projectInitial.printableDeliverablesAdvancedCF,
-          this.chartDataInitial.datasets[0].data[1] = this.projectInitial.equipmentAdvancedCF,
-          this.chartDataInitial.datasets[0].data[2] = this.projectInitial.electricityAdvancedCF,
-          this.chartDataInitial.datasets[0].data[3] = this.projectInitial.waterAdvancedCF,
-          this.chartDataInitial.datasets[0].data[4] = this.projectInitial.transportationAdvancedCF,
-          this.chartDataInitial.datasets[0].data[5] = this.projectInitial.eventsAdvancedCF,
-          this.chartDataInitial.datasets[0].data[6] = this.projectInitial.materialsAdvancedC,
-          this.chartDataInitial.datasets[0].data[7] = this.projectInitial.fuelsHeatAdvancedCF
+            this.chartDataInitial.datasets[0].data[0] = this.projectInitial.printableDeliverablesAdvancedCF,
+            this.chartDataInitial.datasets[0].data[1] = this.projectInitial.equipmentAdvancedCF,
+            this.chartDataInitial.datasets[0].data[2] = this.projectInitial.electricityAdvancedCF,
+            this.chartDataInitial.datasets[0].data[3] = this.projectInitial.waterAdvancedCF,
+            this.chartDataInitial.datasets[0].data[4] = this.projectInitial.transportationAdvancedCF,
+            this.chartDataInitial.datasets[0].data[5] = this.projectInitial.eventsAdvancedCF,
+            this.chartDataInitial.datasets[0].data[6] = this.projectInitial.materialsAdvancedC,
+            this.chartDataInitial.datasets[0].data[7] = this.projectInitial.fuelsHeatAdvancedCF
 
-          this.calculateKPI2();
-          this.calculateKPI3();
+            this.calculateKPI2();
+            this.calculateKPI3();
 
-        })
-        .catch((error) => {
-          console.log('error' + error);
-        })
+          })
+          .catch((error) => {
+            console.log('error' + error);
+          })
 
-        this.axios.get(`/partners?projectId=${this.$route.params.id}`)
-        .then((response) => {
-          this.project.partners = response.data;
-          if (response.data.length > 0) {
-            this.project.coordinator = response.data.find(p => p.coordinator)._id
-            this.$store.dispatch("updateSelectedPartner", response.data[0].name);
-          }
-        })
-        .catch((e)=>{
-          console.log('error' + e);
-        })
-
-        this.axios.get(`/externalExperts?projectId=${this.$route.params.id}`)
-        .then((response) => {
-          this.project.externalExperts = response.data;
-        })
-        .catch((e)=>{
-          console.log('error' + e);
-        })
-
-        this.axios.get(`/events?projectId=${this.$route.params.id}`)
-        .then((response) => {
-          let events = response.data;
-          this.project.events = {organization: [], participation: []}
-
-          for (let e of events) {
-            this.project.events[e.category].push(e)
-          }
-          this.eventsLoaded = true
-        })
-        .catch((e)=>{
-          console.log('error' + e);
-        })
-
-        this.axios.get(`/printableDeliverables?projectId=${this.$route.params.id}`)
-        .then((response) => {
-          this.project.printableDeliverables = response.data;
-        })
-        .catch((e)=>{
-          console.log('error' + e);
-        })
-      
-        let projectID = this.$route.params.id;
-        axios.get('/customs?projectId=' + projectID, { params: {
-          projectId: projectID
-        }})
-        .then((response) => {
-          
-          this.project.customHeat = [];
-          this.project.customElectricity = [];
-          this.project.customWater = [];
-          this.project.customTransportation = [];
-          this.project.customMaterials = [];
-          this.project.customEvents = [];
-          this.project.customPrintableDeliverables = [];
-          this.project.customEquipment = [];
-          
-          for(let i = 0; i < response.data.length; i++){
-            if (response.data[i].type.endsWith("Heat")) {
-              this.customHeat.push(response.data[i]);
-            } else if(response.data[i].type.endsWith("Electricity")){
-              this.customElectricity.push(response.data[i]);
-            } else if(response.data[i].type.endsWith("Water")) {
-              this.customWater.push(response.data[i]);
-            } else if(response.data[i].type.endsWith("Transportation")) {
-              this.customTransportation.push(response.data[i]);
-            } else if(response.data[i].type.endsWith("Materials")) {
-              this.customMaterials.push(response.data[i]);
-            } else if(response.data[i].type.endsWith("Events")) {
-              this.customEvents.push(response.data[i]);
-            } else if(response.data[i].type.endsWith("Deliverables")) {
-              this.customPrintableDeliverables.push(response.data[i]);
-            } else if(response.data[i].type.endsWith("Equipment")) {
-              this.customEquipment.push(response.data[i]);
+          this.axios.get(`/partners?projectId=${this.$route.params.id}`)
+          .then((response) => {
+            this.project.partners = response.data;
+            if (response.data.length > 0) {
+              this.project.coordinator = response.data.find(p => p.coordinator)._id
+              this.$store.dispatch("updateSelectedPartner", response.data[0].name);
             }
-            this.project.customHeat = this.customHeat;
-            this.project.customElectricity = this.customElectricity;
-            this.project.customWater = this.customWater;
-            this.project.customTransportation = this.customTransportation;
-            this.project.customMaterials = this.customMaterials;
-            this.project.customEvents = this.customEvents;
-            this.project.customPrintableDeliverables = this.customPrintableDeliverables;
-            this.project.customEquipment = this.customEquipment;
-          }
-        })
-        .catch((e)=>{
-          console.log('error' + e);
-        })     
+          })
+          .catch((e)=>{
+            console.log('error' + e);
+          })
+
+          this.axios.get(`/externalExperts?projectId=${this.$route.params.id}`)
+          .then((response) => {
+            this.project.externalExperts = response.data;
+          })
+          .catch((e)=>{
+            console.log('error' + e);
+          })
+
+          this.axios.get(`/events?projectId=${this.$route.params.id}`)
+          .then((response) => {
+            let events = response.data;
+            this.project.events = {organization: [], participation: []}
+
+            for (let e of events) {
+              this.project.events[e.category].push(e)
+            }
+            this.eventsLoaded = true
+          })
+          .catch((e)=>{
+            console.log('error' + e);
+          })
+
+          this.axios.get(`/printableDeliverables?projectId=${this.$route.params.id}`)
+          .then((response) => {
+            this.project.printableDeliverables = response.data;
+          })
+          .catch((e)=>{
+            console.log('error' + e);
+          })
+        
+          let projectID = this.$route.params.id;
+          axios.get('/customs?projectId=' + projectID, { params: {
+            projectId: projectID
+          }})
+          .then((response) => {
+            
+            this.project.customHeat = [];
+            this.project.customElectricity = [];
+            this.project.customWater = [];
+            this.project.customTransportation = [];
+            this.project.customMaterials = [];
+            this.project.customEvents = [];
+            this.project.customPrintableDeliverables = [];
+            this.project.customEquipment = [];
+            
+            for(let i = 0; i < response.data.length; i++){
+              if (response.data[i].type.endsWith("Heat")) {
+                this.customHeat.push(response.data[i]);
+              } else if(response.data[i].type.endsWith("Electricity")){
+                this.customElectricity.push(response.data[i]);
+              } else if(response.data[i].type.endsWith("Water")) {
+                this.customWater.push(response.data[i]);
+              } else if(response.data[i].type.endsWith("Transportation")) {
+                this.customTransportation.push(response.data[i]);
+              } else if(response.data[i].type.endsWith("Materials")) {
+                this.customMaterials.push(response.data[i]);
+              } else if(response.data[i].type.endsWith("Events")) {
+                this.customEvents.push(response.data[i]);
+              } else if(response.data[i].type.endsWith("Deliverables")) {
+                this.customPrintableDeliverables.push(response.data[i]);
+              } else if(response.data[i].type.endsWith("Equipment")) {
+                this.customEquipment.push(response.data[i]);
+              }
+              this.project.customHeat = this.customHeat;
+              this.project.customElectricity = this.customElectricity;
+              this.project.customWater = this.customWater;
+              this.project.customTransportation = this.customTransportation;
+              this.project.customMaterials = this.customMaterials;
+              this.project.customEvents = this.customEvents;
+              this.project.customPrintableDeliverables = this.customPrintableDeliverables;
+              this.project.customEquipment = this.customEquipment;
+            }
+          })
+          .catch((e)=>{
+            console.log('error' + e);
+          })
+        }
       })
       .catch((e)=>{
         console.log('error' + e);
@@ -2820,7 +2824,6 @@ export default {
       if (newValue === data[field]) return;
 
       const paramsData = {}
-
       newData[field] = newValue;
       paramsData[field] = newValue;
       
@@ -2844,7 +2847,6 @@ export default {
       allCustoms.push(this.project.customPrintableDeliverables);
       allCustoms.push(this.project.customEquipment);
 
-      
       this.axios.put('/customs/updateAll', allCustoms)
       .then(() => {
         this.$toast.add({severity:'success', summary: 'Successful', detail: 'All customs updated', life: 3000});
@@ -2981,17 +2983,9 @@ export default {
           console.log('error' + e);
         })
       }
-      
     },
-    goToLinkedProject() {
-      location.href = '/projects/' + this.project.initialProject;
-    },
-
     checkEventsOrganization() {
       let res = false;
-
-      // Case organized
-    
       for( let event of this.project.events.organization) {
         if(event.type.endsWith('type') || event.hostingCountry.endsWith('country')) {
           res = true;
@@ -3000,7 +2994,6 @@ export default {
       }
       return res;
     },
-
     checkEventsParticipation() {
       let res = false;
 
@@ -3028,11 +3021,8 @@ export default {
 
       return res;
     },
-    toggleProject(event) {
-      this.$refs.menu.toggle(event);
-    },
-    toggleViewProject() {
-      this.$store.commit("toggleViewProject");
+    toggleProjectView() {
+      this.$store.commit("toggleProject");
       location.href = '/projects/' + this.project.initialProject
     },
     onCellEditCompleteAnalysis(analysisField, newValue, isInitial) {
@@ -3161,7 +3151,7 @@ export default {
   },
   computed: {
     ...mapState([
-       'toggleProject', 'selectedPartnerForEquipmentSimple'
+      'selectedPartnerForEquipmentSimple', 'toggleProject'
     ]),
     selectedPartner() {
       if (!this.project.partners) return {}
@@ -3177,6 +3167,10 @@ export default {
 <style>
 .initialDataLabel + .p-inputswitch .p-inputswitch-slider {
   background: #3B82F6;
+}
+
+.initialDataLabel + .p-inputswitch:not(.p-disabled):hover .p-inputswitch-slider {
+    background: #003399;
 }
 
 .projectDetailsElectrictyGrid {

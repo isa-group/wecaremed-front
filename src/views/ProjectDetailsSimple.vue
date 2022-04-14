@@ -265,11 +265,11 @@
         <h2 v-if="project.isInitialProject">Project's initial data</h2>
         <h2 v-else-if="!project.isInitialProject">Project's current data</h2>
 
-        <div v-if="project.isInitialProject" style="margin: 1.5rem 0 1rem 0;">
+        <div style="margin: 1.5rem 0 1rem 0;">
           <div style="text-align: center">
             <h5 class="m-0 mb-2">Project data</h5>
             <label id="app-mode-label" class="initialDataLabel">Initial</label>
-            <InputSwitch id="projectData" v-model="toggleProject" @click="toggleViewProject" />    
+            <InputSwitch id="projectData" v-model="toggleProject" @click="toggleProjectView()" />    
             <label id="app-mode-label" class="currentDataLabel" style="margin-left: 0.75rem; margin-right: auto;">Current</label>
           </div>
         </div>
@@ -1233,25 +1233,30 @@ export default {
       .then((response) => {
         this.project = response.data;
         this.isInitialProject = this.project.isInitialProject;
-        this.axios.get(`/partners?projectId=${this.$route.params.id}`)
-        .then((response) => {
-          this.project.partners = response.data;
-          if (response.data.length > 0) {
-            this.project.coordinator = response.data.find(p => p.coordinator)._id
-            this.$store.dispatch("updateSelectedPartner", response.data[0].name);
-          }
-        })
-        .catch((e)=>{
-          console.log('error' + e);
-        })
 
-        this.axios.get(`/printableDeliverables?projectId=${this.$route.params.id}`)
-        .then((response) => {
-          this.project.printableDeliverables = response.data;
-        })
-        .catch((e)=>{
-          console.log('error' + e);
-        })
+        if (this.project.isInitialProject == this.$store.state.toggleProject) {
+          location.href = '/projects/' + this.project.initialProject
+        } else {
+          this.axios.get(`/partners?projectId=${this.$route.params.id}`)
+          .then((response) => {
+            this.project.partners = response.data;
+            if (response.data.length > 0) {
+              this.project.coordinator = response.data.find(p => p.coordinator)._id
+              this.$store.dispatch("updateSelectedPartner", response.data[0].name);
+            }
+          })
+          .catch((e)=>{
+            console.log('error' + e);
+          })
+
+          this.axios.get(`/printableDeliverables?projectId=${this.$route.params.id}`)
+          .then((response) => {
+            this.project.printableDeliverables = response.data;
+          })
+          .catch((e)=>{
+            console.log('error' + e);
+          })
+        }
       })
       .catch((e)=>{
         console.log('error' + e);
@@ -1692,20 +1697,14 @@ export default {
         })
       }
     },
-
-    toggleProject(event) {
-      this.$refs.menu.toggle(event);
-    },
-
-    toggleViewProject() {
-      this.$store.commit("toggleViewProject");
+    toggleProjectView() {
+      this.$store.commit("toggleProject");
       location.href = '/projects/' + this.project.initialProject
     }
-
   },
   computed: {
     ...mapState([
-      'toggleProject', 'selectedPartnerForEquipmentSimple'
+      'selectedPartnerForEquipmentSimple', 'toggleProject'
     ]),
     selectedPartner() {
       if (!this.project.partners) return {}
@@ -1721,10 +1720,6 @@ export default {
 <style>
 .defaultValue {
   background-color: #d0e1fd;
-}
-
-.initialDataLabel + .p-inputswitch .p-inputswitch-slider {
-  background: #3B82F6;
 }
 
 .projectDetailsSimpleGrid {
