@@ -57,13 +57,13 @@
         </template>
 
         <template v-else>
-          <Column field="initialCF" header="Initial CF" :sortable="true">
+          <Column field="initialCF" header="Preparation Phase CF (t CO2e)" :sortable="true">
             <template #body="slotProps">
               <span :class="getTextColorFromCFIndex(slotProps.data.initialCF)">{{slotProps.data.initialCF}}</span>
             </template>
           </Column>
 
-          <Column field="currentCF" header="Current CF" :sortable="true">
+          <Column field="currentCF" header="Execution Phase CF (t CO2e)" :sortable="true">
             <template #body="slotProps">
               <span :class="getTextColorFromCFIndex(slotProps.data.currentCF)">{{slotProps.data.currentCF}}</span>
             </template>
@@ -73,16 +73,16 @@
         <Column field="actions" header="Actions">
           <template #body="slotProps">
             <router-link :to="'/projects/' + (this.$store.state.toggleProject == true ? slotProps.data._id : slotProps.data.initialProject)">
-              <i class="pi pi-arrow-circle-right mr-3" />
+              <i class="pi pi-arrow-circle-right mr-3" v-tooltip.top="'Go to project'" />
             </router-link>
             <router-link :to="'/editProject/' + (slotProps.data._id)">
-              <i class="pi pi-pencil mr-3" />
+              <i class="pi pi-pencil mr-3" v-tooltip.top="'Edit project'" />
             </router-link>
             <router-link to="/">
-              <i class="pi pi-clone mr-3" @click="confirmCloneProject(projects.indexOf(slotProps.data))" />
+              <i class="pi pi-clone mr-3" @click="confirmCloneProject(projects.indexOf(slotProps.data))" v-tooltip.top="'Clone project'" />
             </router-link>
             <router-link to="/">
-              <i class="pi pi-trash" @click="confirmDeleteProject(projects.indexOf(slotProps.data))" />
+              <i class="pi pi-trash" @click="confirmDeleteProject(projects.indexOf(slotProps.data))" v-tooltip.top="'Delete project'" />
             </router-link>
           </template>
         </Column>

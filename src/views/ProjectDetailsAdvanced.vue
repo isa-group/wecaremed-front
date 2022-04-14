@@ -356,7 +356,7 @@
 
                 <Column field="actions" header="Actions">
                   <template #body="slotProps">
-                    <i class="pi pi-trash" @click="deletePartner(project.partners.indexOf(slotProps.data))" />
+                    <i class="pi pi-trash" @click="deletePartner(project.partners.indexOf(slotProps.data))" v-tooltip.top="'Delete partner'" />
                   </template>
                 </Column>
               
@@ -430,7 +430,7 @@
 
                 <Column field="actions" header="Actions">
                   <template #body="slotProps">
-                    <i class="pi pi-trash" @click="deleteExternalExperts(project.externalExperts.indexOf(slotProps.data))" />
+                    <i class="pi pi-trash" @click="deleteExternalExperts(project.externalExperts.indexOf(slotProps.data))" v-tooltip.top="'Delete external expert'" />
                   </template>
                 </Column>
               
@@ -648,7 +648,7 @@
 
                       <Column field="actions" header="Actions">
                         <template #body="slotProps">
-                          <i class="pi pi-trash" @click="deleteEvent(project.events.organization.indexOf(slotProps.data), 'organization')" />
+                          <i class="pi pi-trash" @click="deleteEvent(project.events.organization.indexOf(slotProps.data), 'organization')" v-tooltip.top="'Delete organized event'" />
                         </template>
                       </Column>
                     
@@ -809,7 +809,7 @@
 
                       <Column field="actions">
                         <template #body="slotProps">
-                          <i class="pi pi-trash" @click="deleteEvent(project.events.participation.indexOf(slotProps.data), 'participation')" />
+                          <i class="pi pi-trash" @click="deleteEvent(project.events.participation.indexOf(slotProps.data), 'participation')" v-tooltip.top="'Delete participation in event'" />
                         </template>
                       </Column>
                       
@@ -925,7 +925,7 @@
                   
                   <Column field="actions" header="Actions">
                     <template #body="slotProps">
-                      <i class="pi pi-trash" @click="deletePrintableDeliverable(project.printableDeliverables.indexOf(slotProps.data))" />
+                      <i class="pi pi-trash" @click="deletePrintableDeliverable(project.printableDeliverables.indexOf(slotProps.data))" v-tooltip.top="'Delete printable deliverable'" />
                     </template>
                   </Column>
 
@@ -993,7 +993,7 @@
                     
                     <Column field="actions" header="Actions">
                       <template #body="slotProps">
-                        <i class="pi pi-trash" @click="deleteCustom(project.customHeat.indexOf(slotProps.data), 'customHeat', 'heat')" />
+                        <i class="pi pi-trash" @click="deleteCustom(project.customHeat.indexOf(slotProps.data), 'customHeat', 'heat')" v-tooltip.top="'Delete heat custom'" />
                       </template>
                     </Column>
                   
@@ -1051,7 +1051,7 @@
                   
                   <Column field="actions" header="Actions">
                     <template #body="slotProps">
-                      <i class="pi pi-trash" @click="deleteCustom(project.customElectricity.indexOf(slotProps.data), 'customElectricity', 'electricity')" />
+                      <i class="pi pi-trash" @click="deleteCustom(project.customElectricity.indexOf(slotProps.data), 'customElectricity', 'electricity')" v-tooltip.top="'Delete electricity custom'" />
                     </template>
                   </Column>
                 
@@ -1110,7 +1110,7 @@
                   
                   <Column field="actions" header="Actions">
                     <template #body="slotProps">
-                      <i class="pi pi-trash" @click="deleteCustom(project.customWater.indexOf(slotProps.data), 'customWater', 'water')" />
+                      <i class="pi pi-trash" @click="deleteCustom(project.customWater.indexOf(slotProps.data), 'customWater', 'water')" v-tooltip.top="'Delete water custom'" />
                     </template>
                   </Column>
                 
@@ -1170,7 +1170,7 @@
                     
                     <Column field="actions" header="Actions">
                       <template #body="slotProps">
-                        <i class="pi pi-trash" @click="deleteCustom(project.customTransportation.indexOf(slotProps.data), 'customTransportation', 'transportation')" />
+                        <i class="pi pi-trash" @click="deleteCustom(project.customTransportation.indexOf(slotProps.data), 'customTransportation', 'transportation')" v-tooltip.top="'Delete transportation custom'" />
                       </template>
                     </Column>
                   
@@ -1230,7 +1230,7 @@
                     
                     <Column field="actions" header="Actions">
                       <template #body="slotProps">
-                        <i class="pi pi-trash" @click="deleteCustom(project.customMaterials.indexOf(slotProps.data), 'customMaterials', 'materials')" />
+                        <i class="pi pi-trash" @click="deleteCustom(project.customMaterials.indexOf(slotProps.data), 'customMaterials', 'materials')" v-tooltip.top="'Delete materials custom'" />
                       </template>
                     </Column>
                   
@@ -1290,7 +1290,7 @@
                   
                   <Column field="actions" header="Actions">
                     <template #body="slotProps">
-                      <i class="pi pi-trash" @click="deleteCustom(project.customEvents.indexOf(slotProps.data) * 5, 'customEvents', 'event')" />
+                      <i class="pi pi-trash" @click="deleteCustom(project.customEvents.indexOf(slotProps.data) * 5, 'customEvents', 'event')" v-tooltip.top="'Delete events custom'" />
                     </template>
                   </Column>
                 
@@ -1351,7 +1351,7 @@
 
                       <Column field="actions" header="Actions">
                         <template #body="slotProps">
-                          <i class="pi pi-trash" @click="deleteCustom(project.customPrintableDeliverables.indexOf(slotProps.data), 'customPrintableDeliverables', 'Printable Deliverables')" />
+                          <i class="pi pi-trash" @click="deleteCustom(project.customPrintableDeliverables.indexOf(slotProps.data), 'customPrintableDeliverables', 'Printable Deliverables')" v-tooltip.top="'Delete printable deliverables custom'" />
                         </template>
                       </Column>
                     
@@ -1411,7 +1411,7 @@
 
                       <Column field="actions" header="Actions">
                         <template #body="slotProps">
-                          <i class="pi pi-trash" @click="deleteCustom(project.customEquipment.indexOf(slotProps.data), 'customEquipment', 'Equipment')" />
+                          <i class="pi pi-trash" @click="deleteCustom(project.customEquipment.indexOf(slotProps.data), 'customEquipment', 'Equipment')" v-tooltip.top="'Delete equipment custom'" />
                         </template>
                       </Column>
                     

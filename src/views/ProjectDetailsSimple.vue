@@ -376,7 +376,7 @@
 
         <Column field="actions" header="Actions">
           <template #body="slotProps">
-            <i class="pi pi-trash" @click="deletePartner(project.partners.indexOf(slotProps.data))" />
+            <i class="pi pi-trash" @click="deletePartner(project.partners.indexOf(slotProps.data))" v-tooltip.top="'Delete partner'"/>
           </template>
         </Column>
       
@@ -859,7 +859,7 @@
           
           <Column field="actions" header="Actions">
             <template #body="slotProps">
-              <i class="pi pi-trash" @click="deletePrintableDeliverable(project.printableDeliverables.indexOf(slotProps.data))" />
+              <i class="pi pi-trash" @click="deletePrintableDeliverable(project.printableDeliverables.indexOf(slotProps.data))" v-tooltip.top="'Delete printable deliverable'" />
             </template>
           </Column>
 
