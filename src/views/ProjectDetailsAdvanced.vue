@@ -1,5 +1,5 @@
 <template>
-  
+  <Toast position="bottom-right" />
   <Topbar v-model:projectInfo="project" />
 
   <div class="projectDetailsElectrictyGrid">
@@ -7,360 +7,1015 @@
     <div class="colCustom">
       <div class="card">
 
+        <div style="display: flex; align-items: center; justify-content: space-between;">
+          <h2 v-if="project.isInitialProject">Project's initial data</h2>
+          <h2 v-else-if="!project.isInitialProject">Project's current data</h2>
+
+          <div style="margin: 1.5rem 0 1rem 0;">
+            <div style="text-align: center">
+              <h5 class="m-0 mb-2">Project data</h5>
+              <label id="app-mode-label" class="initialDataLabel">Initial</label>
+              <InputSwitch id="projectData" v-model="toggleProject" @click="toggleProjectView()" />    
+              <label id="app-mode-label" class="currentDataLabel" style="margin-left: 0.75rem; margin-right: auto;">Current</label>
+            </div>
+          </div>
+        </div>
+
         <!-- Data -->
 
 				<TabView>
 					<TabPanel header="Data">
-						<TabView>
+            <div id="pdfPrintDiv" style="display: none">
+              
+              <h1>{{project.name}}&nbsp;
+                ({{ (new Date(project.from).getMonth() + 1).toString().padStart(2, "0") + '/' + new Date(project.from).getFullYear()}} -&nbsp;
+                {{(new Date(project.to).getMonth() + 1).toString().padStart(2, "0") + '/' + new Date(project.to).getFullYear()}})
+                [{{project.initialCF}} / {{project.currentCF}}] t CO2e&nbsp;
+              </h1>   
 
-              <!-- General -->
-
-              <TabPanel header="General">
-                <div class="card">
-
-                  <!-- Tabla Parners -->
-
-                  <h5>Partners</h5>
-
-                <DataTable :value="project.partners" editMode="cell" :paginator="true" class="p-datatable-gridlines" dataKey="_id"
-                :rowHover="true" @cell-edit-complete="onCellEditCompletePartner" sortMode="multiple" :rows="5" v-model:filters="partnerFilters"
-                filterDisplay="menu" :loading="loading" :filters="partnerFilters" responsiveLayout="scroll"
-                :globalFilterFields="['name','country','personMonthsPP','personMonthsWPP', 'externalExpertsPersonMonths', 'employeesWorkingWPP', 
-                                      'seasonalEmployees', 'externalExperts', 'coordinator']" @page="currentPagePartnersTable = $event.page">
-                  
-                  <template #header>
-                      <div class="flex justify-content-between flex-column sm:flex-row">
-                        <div>
-                          <Button class="p-button-info mr-2" @click="addPartner"><i class="pi pi-plus mr-2" />New partner</Button>
-                          <span class="p-input-icon-left">
-                            <i class="pi pi-search" />
-                            <InputText v-model="partnerFilters['global'].value" placeholder="Keyword Search" style="width: 100%"/>
-                          </span>
-                          <Button class="ml-2" label="Save" icon="pi pi-check" @click="savePartners" />
-                        </div>
+              <h3>Partners</h3>
                         
-                        <Button type="button" icon="pi pi-filter-slash" label="Clear" class="p-button-warning" @click="clearPartnerFilter()"/>
-                      </div>
-                  </template>
+              <table class="table table-bordered" style="margin-bottom: 35px">
+                <thead>
+                  <tr>
+                    <th>Coordinator</th>
+                    <th>Name</th>
+                    <th>Country</th>
+                    <th>Number full time employees</th>
+                    <th>Number part time employees</th>
+                    <th>Sum person months (full time + part time)</th>
+                    <th>Number of external experts</th>
+                    <th>Sum person months for the external experts</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr v-for="partner in project.partners" :key="partner._id">
+                    <td>{{partner.coordinator}}</td>
+                    <td>{{partner.name}}</td>
+                    <td>{{partner.country}}</td>
+                    <td>{{partner.employeesWorkingWPP}}</td>
+                    <td>{{partner.seasonalEmployees}}</td>
+                    <td>{{partner.employeesPersonMonths}}</td>
+                    <td>{{partner.externalExperts}}</td>
+                    <td>{{partner.externalExpertsPersonMonths}}</td>
+                  </tr>
+                </tbody>
+              </table>
 
-                  <template #empty>
-                      No partners found.
-                  </template>
+              <h3>Equipment</h3>
 
-                  <template #loading>
-                      Loading partners. Please wait.
-                  </template>
+              <p>Number of IT electrical equipment that will be purchased during the project</p>
+              <div v-for="partner in project.partners" :key="partner._id">
+                <h5>{{partner.name}}</h5>
 
-                  <Column field="name" header="Name" :sortable="true">
-                    <template #editor="slotProps">
-                        <InputText v-model="slotProps.data[slotProps.field]" />
-                    </template>
-                    <template #filter="{filterModel, field}">
-                        <InputText type="text" v-model="filterModel.value" class="p-column-filter" :placeholder="'Filter by ' + field"/>
-                    </template>
-                  </Column>
+                <table class="table table-bordered" style="margin-bottom: 20px">
+                  <thead>
+                    <tr>
+                      <th>PCs</th>
+                      <th>PCs with flat screen</th>
+                      <th>Laptop computers</th>
+                      <th>Flat screens</th>
+                      <th>Printers</th>
+                      <th>Copy machines</th>
+                      <th>Fax machines</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>{{partner.pcsBoughtDuringProject}}</td>
+                      <td>{{partner.pcsFlatScreenBoughtDuringProject}}</td>
+                      <td>{{partner.laptopsBoughtDuringProject}}</td>
+                      <td>{{partner.flatScreensBoughtDuringProject}}</td>
+                      <td>{{partner.printersBoughtDuringProject}}</td>
+                      <td>{{partner.copyMachinesBoughtDuringProject}}</td>
+                      <td>{{partner.faxMachinesBoughtDuringProject}}</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
 
-                  <Column field="country" header="Country" :sortable="true">
-                    <template #editor="slotProps">
-                      <Dropdown :options="countriesForDropdown" v-model="slotProps.data[slotProps.field]" />
-                    </template>
-                  </Column>
+              <h3 style="margin-top: 20px">Events</h3>
 
-                  <Column field="personMonthsPP" header="PersonMonths PP*" :sortable="true">
-                    <template #editor="slotProps" class="p-field">
-                      <InputNumber v-model="slotProps.data[slotProps.field]" mode="decimal" :maxFractionDigits="3"
-                      showButtons :step="0.25" decrementButtonClass="p-button-info"
-                      incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
-                      :allowEmpty="false" :min="0" />
-                    </template>
-                  </Column>
+              <div>
+                <h5>Public events</h5>
 
-                  <Column field="personMonthsWPP" header="PersonMonths WPP*" :sortable="true">
-                    <template #editor="slotProps">
-                      <InputNumber v-model="slotProps.data[slotProps.field]" mode="decimal" :maxFractionDigits="3"
-                      showButtons :step="0.25" decrementButtonClass="p-button-info"
-                      incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
-                      :allowEmpty="false" :min="0" />
-                    </template>
-                  </Column>
-                  
-                  <Column field="coordinator" header="Coordinator" :sortable="true">
-                    <template #body="slotProps">
-                      <RadioButton name="projectCoordinator" :value="slotProps.data._id" v-model="project.coordinator"
-                      @change="onCellEditCompletePartnerCoordinator(slotProps.data, $event)" />
-                    </template>
-                  </Column>
+                <h6>In presence</h6>
+                <table class="table table-bordered" style="margin-bottom: 20px">
+                  <thead>
+                    <tr>
+                      <th>Number of in presence public events</th>
+                      <th>Average number of physical participants</th>
+                      <th>Average number of non-local physical participants</th>
+                      <th>Average duration (days)</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>{{project.publicOnSiteEventsNumber}}</td>
+                      <td>{{project.publicOnSiteEventsAveragePhysicalParticipants}}</td>
+                      <td>{{project.publicOnSiteEventsAverageNonLocalPhysicalParticipants}}</td>
+                      <td>{{project.publicOnSiteEventsAverageDuration}}</td>
+                    </tr>
+                  </tbody>
+                </table>
 
-                  <Column field="actions" header="Actions">
-                    <template #body="slotProps">
-                      <i class="pi pi-trash" @click="deletePartner(slotProps.index + currentPagePartnersTable * 5)" />
-                    </template>
-                  </Column>
+                <h6>Mixed mode: both in presence and on-line</h6>
+                <table class="table table-bordered" style="margin-bottom: 20px">
+                  <thead>
+                    <tr>
+                      <th>Number of mixed public events</th>
+                      <th>Average number of physical participants</th>
+                      <th>Average number of non-local physical participants</th>
+                      <th>Average number of on-line participants</th>
+                      <th>Average duration (days)</th>
+                      <th>Average duration (hours/day)</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>{{project.publicHybridEventsNumber}}</td>
+                      <td>{{project.publicHybridEventsAveragePhysicalParticipants}}</td>
+                      <td>{{project.publicHybridEventsAverageNonLocalPhysicalParticipants}}</td>
+                      <td>{{project.publicHybridEventsAverageVirtualParticipants}}</td>
+                      <td>{{project.publicHybridEventsAverageDuration}}</td>
+                      <td>{{project.publicHybridEventsAverageHoursPerDays}}</td>
+                    </tr>
+                  </tbody>
+                </table>
+
+                <h6>On-line</h6>
+                <table class="table table-bordered" style="margin-bottom: 20px">
+                  <thead>
+                    <tr>
+                      <th>Number of on-line public events</th>
+                      <th>Average number of on-line participants</th>
+                      <th>Average duration (hours)</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>{{project.publicVirtualEventsNumber}}</td>
+                      <td>{{project.publicVirtualEventsAverageVirtualParticipants}}</td>
+                      <td>{{project.publicVirtualEventsAverageDuration}}</td>
+                    </tr>
+                  </tbody>
+                </table>
+
+              <h5 style="margin-top: 20px">Internal events/meetings</h5>
+
+                <h6>In presence</h6>
+                <table class="table table-bordered" style="margin-bottom: 20px">
+                  <thead>
+                    <tr>
+                      <th>Number of in presence internal events/meetings</th>
+                      <th>Average number of physical participants</th>
+                      <th>Average number of non-local physical participants</th>
+                      <th>Average duration (days)</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>{{project.internalOnSiteEventsNumber}}</td>
+                      <td>{{project.internalOnSiteEventsAveragePhysicalParticipants}}</td>
+                      <td>{{project.internalOnSiteEventsAverageNonLocalPhysicalParticipants}}</td>
+                      <td>{{project.internalOnSiteEventsAverageDuration}}</td>
+                    </tr>
+                  </tbody>
+                </table>
+
+                <h6>Mixed mode: both in presence and on-line</h6>
+                <table class="table table-bordered" style="margin-bottom: 20px">
+                  <thead>
+                    <tr>
+                      <th>Number of mixed internal events/meetings</th>
+                      <th>Average number of physical participants</th>
+                      <th>Average number of non-local physical participants</th>
+                      <th>Average number of on-line participants</th>
+                      <th>Average duration (days)</th>
+                      <th>Average duration (hours/day)</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>{{project.internalHybridEventsNumber}}</td>
+                      <td>{{project.internalHybridEventsAveragePhysicalParticipants}}</td>
+                      <td>{{project.internalHybridEventsAverageNonLocalPhysicalParticipants}}</td>
+                      <td>{{project.internalHybridEventsAverageVirtualParticipants}}</td>
+                      <td>{{project.internalHybridEventsAverageDuration}}</td>
+                      <td>{{project.internalHybridEventsAverageHoursPerDays}}</td>
+                    </tr>
+                  </tbody>
+                </table>
+
+                <h6>On-line</h6>
+                <table class="table table-bordered" style="margin-bottom: 20px">
+                  <thead>
+                    <tr>
+                      <th>Number of on-line internal events/meetings</th>
+                      <th>Average number of on-line participants</th>
+                      <th>Average duration (hours)</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>{{project.internalVirtualEventsNumber}}</td>
+                      <td>{{project.internalVirtualEventsAverageVirtualParticipants}}</td>
+                      <td>{{project.internalVirtualEventsAverageDuration}}</td>
+                    </tr>
+                  </tbody>
+                </table>
+
+              <h5 style="margin-top: 20px">Events participated by the project</h5>
+
+                <h6>In presence</h6>
+                <table class="table table-bordered" style="margin-bottom: 20px">
+                  <thead>
+                    <tr>
+                      <th>Number of in presence events participated by the project</th>
+                      <th>Average number of participants of the project</th>
+                      <th>Average duration (days)</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>{{project.participatedOnSiteEventsNumber}}</td>
+                      <td>{{project.participatedOnSiteEventsAverageParticipants}}</td>
+                      <td>{{project.participatedOnSiteEventsAverageDuration}}</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+
+              <h3 style="margin-top: 20px">Printable deliverables</h3>
+                        
+              <table class="table table-bordered" style="margin-bottom: 35px">
+                <thead>
+                  <tr>
+                    <th>Deliverable type</th>
+                    <th>Copies</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr v-for="pd in project.printableDeliverables" :key="pd._id">
+                    <td>{{pd.deliverableType}}</td>
+                    <td>{{pd.copies}}</td>
+                  </tr>
+                </tbody>
+              </table>
+
+              <h2>Tons of equivalent carbon dioxide emitted: {{project.currentCF}}</h2> 
+              <h2 style="margin-bottom: 40px">CO2 permits cost: {{round(project.currentCF * co2PermitsPrice) + ' €'}}</h2>
+              
+              <h3 style="margin-bottom: 10px">CF Breakdown (Tons):</h3>
+              <ul>
+                <li style="margin-bottom: 10px; font-size: 20px">Fuels heat: {{project.fuelsHeatAdvancedCF}}</li>
+                <li style="margin-bottom: 10px; font-size: 20px">Electricity: {{project.electricityAdvancedCF}}</li>
+                <li style="margin-bottom: 10px; font-size: 20px">Water: {{project.waterAdvancedCF}}</li>
+                <li style="margin-bottom: 10px; font-size: 20px">Transportation: {{project.transportationAdvancedCF}}</li>
+                <li style="margin-bottom: 10px; font-size: 20px">Materials: {{project.materialsAdvancedCF}}</li>
+                <li style="margin-bottom: 10px; font-size: 20px">Printable deliverables: {{project.printableDeliverablesAdvancedCF}}</li>
+                <li style="margin-bottom: 10px; font-size: 20px">Equipment: {{project.equipmentAdvancedCF}}</li>
+                <li style="font-size: 20px">Events: {{project.eventsAdvancedCF}}</li>
+              </ul>
+
+            </div>
+
+            <div class="card col-12">
+
+              <h4>Partners</h4>
+
+              <DataTable :value="project.partners" editMode="cell" :paginator="true" class="p-datatable-gridlines" dataKey="_id"
+              :rowHover="true" @cell-edit-complete="onCellEditCompletePartner" sortMode="multiple" :rows="5" v-model:filters="partnerFilters"
+              filterDisplay="menu" :loading="loading" :filters="partnerFilters" responsiveLayout="scroll"
+              :globalFilterFields="['name','country','employeesPersonMonths', 'externalExpertsPersonMonths', 'employeesWorkingWPP', 
+                                    'seasonalEmployees', 'externalExperts', 'coordinator'] " removableSort>
                 
-                </DataTable>
-                </div>
+                <template #header>
+                    <div class="flex justify-content-between flex-column sm:flex-row">
+                      <div>
+                        <Button class="p-button-info mr-2" @click="addPartner"><i class="pi pi-plus mr-2" />New partner</Button>
+                        <span class="p-input-icon-left">
+                          <i class="pi pi-search" />
+                          <InputText v-model="partnerFilters['global'].value" placeholder="Keyword Search" style="width: 100%"/>
+                        </span>
+                        <Button class="ml-2" label="Save" icon="pi pi-check" @click="savePartners" />
+                      </div>
+                      
+                      <Button type="button" icon="pi pi-filter-slash" label="Clear" class="p-button-warning" @click="clearPartnerFilter()"/>
+                    </div>
+                </template>
 
-              </TabPanel>
+                <template #empty>
+                    No partners found.
+                </template>
 
-              <!-- Heat -->
+                <template #loading>
+                    Loading partners. Please wait.
+                </template>
+                <Column field="coordinator" header="Coordinator" :sortable="true">
+                  <template #body="slotProps">
+                    <RadioButton name="projectCoordinator" :value="slotProps.data._id" v-model="project.coordinator"
+                    @change="onCellEditCompletePartnerCoordinator(slotProps.data, $event)" />
+                  </template>
+                </Column>
 
-              <TabPanel header="Heat">
+                <Column field="name" header="Name" :sortable="true">
+                  <template #body="slotProps">
+                    <td :class="slotProps.data[slotProps.field] == 'New partner' ? 'defaultValue' : ''" style="display:block;">{{slotProps.data[slotProps.field]}}</td>
+                  </template>
+                  <template #editor="slotProps">
+                      <InputText v-model="slotProps.data[slotProps.field]" @focus="$event.target.select()"/>
+                  </template>
+                </Column>
 
-                <!-- Heat Table -->
+                <Column field="country" header="Country" :sortable="true">
+                  <template #body="slotProps">
+                    <td :class="slotProps.data[slotProps.field] == 'Select a country' ? 'defaultValue' : ''" style="display:block;">{{slotProps.data[slotProps.field]}}</td>
+                  </template>
+                  <template #editor="slotProps">
+                    <Dropdown :options="countriesForDropdown" v-model="slotProps.data[slotProps.field]" />
+                  </template>
+                </Column>
 
-                <div class="card">
+                <Column field="employeesPersonMonths" header="Sum person months (full time + part time)" :sortable="true">
+                  <template #editor="slotProps" class="p-field">
+                    <InputNumber v-model="slotProps.data[slotProps.field]" mode="decimal" :maxFractionDigits="3"
+                    showButtons :step="0.25" decrementButtonClass="p-button-info"
+                    incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
+                    :allowEmpty="false" :min="0" @focus="$event.target.select()" />
+                  </template>
+                </Column>
 
-                  <DataTable :value="project.partners" editMode="cell" :paginator="true" class="p-datatable-gridlines" dataKey="_id"
-                  :rowHover="true" @cell-edit-complete="onCellEditCompletePartner" sortMode="multiple" :rows="5" v-model:filters="partnerFilters"
-                  filterDisplay="menu" :loading="loading" :filters="partnerFilters" responsiveLayout="scroll"
-                  :globalFilterFields="['country']">
-                    
-                    <template #header>
-                        <div class="flex justify-content-between flex-column sm:flex-row">
-                          <Button type="button" label="Clear" class="p-button-warning" @click="clearPartnerFilter()"/>
-                        </div>
-                    </template>
+                <Column field="twoWayTravels" header="Number two-way travels" :sortable="true">
+                  <template #editor="slotProps">
+                    <InputNumber v-model="slotProps.data[slotProps.field]" mode="decimal" showButtons decrementButtonClass="p-button-info"
+                    incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
+                    :allowEmpty="false" :min="0" @focus="$event.target.select()" />
+                  </template>
+                </Column>
 
-                    <template #empty>
-                        No heat items found.
-                    </template>
+                <Column field="actions" header="Actions">
+                  <template #body="slotProps">
+                    <i class="pi pi-trash" @click="deletePartner(project.partners.indexOf(slotProps.data))" v-tooltip.top="'Delete partner'" />
+                  </template>
+                </Column>
+              
+              </DataTable>
+            </div>
 
-                    <template #loading>
-                        Loading items. Please wait.
-                    </template>
+            <div class="card">
+              <h4>External experts</h4>
 
-                    <Column field="country" header="Country" :sortable="true">
-                      <template #editor="slotProps">
-                        <Dropdown :options="countriesForDropdown" v-model="slotProps.data[slotProps.field]" />
-                      </template>
-                    </Column>
+              <DataTable :value="this.project.externalExperts" editMode="cell" :paginator="true" class="p-datatable-gridlines" dataKey="_id"
+              :rowHover="true" @cell-edit-complete="onCellEditCompleteExternalExpert" sortMode="multiple" :rows="5" v-model:filters="externalExpertFilters"
+              filterDisplay="menu" :loading="loading" :filters="externalExpertFilters" responsiveLayout="scroll"
+              :globalFilterFields="['typeOfExpertise','country','personMonthsWPP', 'twoWayTravels']" removableSort>
+                
+                <template #header>
+                    <div class="flex justify-content-between flex-column sm:flex-row">
+                      <div>
+                        <Button class="p-button-info mr-2" @click="addExternalExpert"><i class="pi pi-plus mr-2" />New external expert</Button>
+                        <span class="p-input-icon-left">
+                          <i class="pi pi-search" />
+                          <InputText v-model="externalExpertFilters['global'].value" placeholder="Keyword Search" style="width: 100%"/>
+                        </span>
+                        <Button class="ml-2" label="Save" icon="pi pi-check" @click="saveExternalExperts" />
+                      </div>
+                      
+                      <Button type="button" icon="pi pi-filter-slash" label="Clear" class="p-button-warning" @click="clearExternalExpertFilter()"/>
+                    </div>
+                </template>
 
-                    <Column field="fuelTypeHeat" header="FuelType" :sortable="true">
-                      <template #editor="slotProps" class="p-field">
-                        <Dropdown :options="fuelTypesForDropdown" v-model="slotProps.data[slotProps.field]" />
-                      </template>
-                    </Column>
+                <template #empty>
+                    No external experts found.
+                </template>
 
-                    <Column field="coordinator" header="Coordinator" :sortable="true">
-                      <template #body="slotProps">
-                        <RadioButton name="projectCoordinator" :value="slotProps.data._id" v-model="project.coordinator"
-                        @change="onCellEditCompletePartnerCoordinator(slotProps.data, $event)" />
-                      </template>
-                    </Column>
+                <template #loading>
+                    Loading external experts. Please wait.
+                </template>
 
-                    <Column field="actions" header="Actions">
-                      <template #body="slotProps">
-                        <i class="pi pi-trash" @click="deletePartner(slotProps.index)" />
-                      </template>
-                    </Column>
-                  
-                  </DataTable>
-                </div>
+                <Column field="typeOfExpertise" header="Type of expertise" :sortable="true">
+                  <template #body="slotProps">
+                    <td :class="slotProps.data[slotProps.field] == 'New external expert' ? 'defaultValue' : ''" style="display:block;">{{slotProps.data[slotProps.field]}}</td>
+                  </template>
+                  <template #editor="slotProps">
+                      <InputText v-model="slotProps.data[slotProps.field]" @focus="$event.target.select()"/>
+                  </template>
+                </Column>
 
-                <!-- Custom Heat Emissions -->
+                <Column field="country" header="Country" :sortable="true">
+                  <template #body="slotProps">
+                    <td :class="slotProps.data[slotProps.field] == 'Select a country' ? 'defaultValue' : ''" style="display:block;">{{slotProps.data[slotProps.field]}}</td>
+                  </template>
+                  <template #editor="slotProps">
+                    <Dropdown :options="countriesForDropdown" v-model="slotProps.data[slotProps.field]" />
+                  </template>
+                </Column>
 
-                <div class="card">
-                  <h5>Aditional custom defined transportation emission</h5>
-                  
-                </div>
-              </TabPanel>
+                <Column field="personMonthsWPP" header="Person months" :sortable="true">
+                  <template #editor="slotProps">
+                    <InputNumber v-model="slotProps.data[slotProps.field]" mode="decimal" showButtons decrementButtonClass="p-button-info"
+                    incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
+                    :allowEmpty="false" :min="0" @focus="$event.target.select()" />
+                  </template>
+                </Column>
 
-              <!-- Electricity -->
+                <Column field="twoWayTravels" header="Number of two-way travels" :sortable="true">
+                  <template #editor="slotProps">
+                    <InputNumber v-model="slotProps.data[slotProps.field]" mode="decimal" showButtons decrementButtonClass="p-button-info"
+                    incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
+                    :allowEmpty="false" :min="0" @focus="$event.target.select()" />
+                  </template>
+                </Column>
 
-              <TabPanel header="Electricity">
-
-                <!-- Electricity table -->
-
-                <div class="card">
-                  
-                </div>
-
-                <!-- Custom Electricity emission table -->
-
-                <div class="card">
-                  <h5>Aditional custom defined electricity emission</h5>
-                  
-                </div>
-              </TabPanel>
-
-              <!-- Water -->
-
-              <TabPanel header="Water">
-
-                <!-- Water table -->
-
-                <div class="card">
-                  
-                </div>
-
-                <!-- Water custom table -->
-
-                <div class="card">
-                  <h5>Aditional custom defined water emission</h5>
-                  
-                </div>
-              </TabPanel>
-
-              <!-- Transportation -->
-
-              <TabPanel header="Transportation">
-
-                <!-- Transportation table -->
-                <div class="card">
-                  
-                </div>
-
-                <!-- Custom transportation table -->
-
-                <div class="card">
-                  <h5>Aditional custom defined transportation emission</h5>
-                  
-                </div>
-              </TabPanel>
-
-              <!-- Materials -->
-
-              <TabPanel header="Materials">
-
-                <!-- Materials table -->
-                <div class="card">
-                  <h5>Distribution of materials usage</h5>
-                  
-                </div>
+                <Column field="actions" header="Actions">
+                  <template #body="slotProps">
+                    <i class="pi pi-trash" @click="deleteExternalExperts(project.externalExperts.indexOf(slotProps.data))" v-tooltip.top="'Delete external expert'" />
+                  </template>
+                </Column>
+              
+              </DataTable>
+            </div>
 
 
-               <!-- Custom Materials table --> 
-                <div class="card">
-                  <h5>Aditional custom defined material emission</h5>
+            <div class="col-12">    
+              <div class="card">
+                <h4>Equipment</h4>
+                <template v-if="selectedPartner">
+                  <div class="mb-5">
+                  <label for="partnerEquipmentDropdown">Showing data for partner: </label>
+                    <Dropdown class="ml-2" :options="project.partners" optionLabel="name" optionValue="name"
+                              v-model="selectedPartnerForEquipmentSimple" @change="updateSelectedPartner" />
+                  </div> 
 
-                </div>
-
-              </TabPanel>
-              <TabPanel header="Events">
-
-              </TabPanel>
-              <TabPanel header="Printable deliverables">
-                <div class="col-12">
                   <div class="card">
-                    <h4>Printable deliverables</h4>
-                  
-                    <DataTable :value="project.printableDeliverables" editMode="cell" @cell-edit-complete="onCellEditCompletePrintableDeliverable" 
-                      sortMode="multiple" :paginator="true" :rows="5" v-model:filters="printableDeliverableFilters" filterDisplay="menu"
-                      :loading="loading" :filters="printableDeliverableFilters" responsiveLayout="scroll" :rowHover="true" class="p-datatable-gridlines"
-                      :globalFilterFields="['deliverableType', 'deliverableName', 'copies', 'avgPagesPerCopy']"
-                      @page="currentPagePrintableDeliverablesTable = $event.page">
+                    <h5>Number of IT electrical equipment that will be purchased during the project</h5>
 
+                    <div class="p-fluid formgrid grid">
+                      <div class="field col-12 md:col-3">
+                        <label for="pcsBoughtDuringProject">PCs</label>
+                        <InputNumber v-model="selectedPartner.pcsBoughtDuringProject" decrementButtonClass="p-button-info"
+                        incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus" mode="decimal"
+                        showButtons :allowEmpty="false" :min="0" id="pcsBoughtDuringProject" :inputClass="selectedPartner.pcsBoughtDuringProject == 0 ? 'defaultValue' : ''"
+                        @focus="onFocusValue=selectedPartner.pcsBoughtDuringProject; $event.target.select()" @keypress.enter="$event.target.blur()"
+                        @focusout="onCellEditCompletePartnerEquipment('pcsBoughtDuringProject', selectedPartner.pcsBoughtDuringProject)" />
+                      </div>
+                      <div class="field col-12 md:col-3">
+                        <label for="pcsFlatScreenBoughtDuringProject">PCs with flat screen</label>
+                        <InputNumber v-model="selectedPartner.pcsFlatScreenBoughtDuringProject" mode="decimal" decrementButtonClass="p-button-info"
+                        showButtons incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
+                        :allowEmpty="false" :min="0" id="pcsFlatScreenBoughtDuringProject" :inputClass="selectedPartner.pcsFlatScreenBoughtDuringProject == 0 ? 'defaultValue' : ''"
+                        @focus="onFocusValue=selectedPartner.pcsFlatScreenBoughtDuringProject; $event.target.select()" @keypress.enter="$event.target.blur()"
+                        @focusout="onCellEditCompletePartnerEquipment('pcsFlatScreenBoughtDuringProject', selectedPartner.pcsFlatScreenBoughtDuringProject)" />
+                      </div>
+                      <div class="field col-12 md:col-3">
+                        <label for="laptopsBoughtDuringProject">Laptop computers</label>
+                        <InputNumber v-model="selectedPartner.laptopsBoughtDuringProject" mode="decimal"
+                        showButtons decrementButtonClass="p-button-info" incrementButtonClass="p-button-info" :inputClass="selectedPartner.laptopsBoughtDuringProject == 0 ? 'defaultValue' : ''"
+                        incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus" :allowEmpty="false" :min="0" id="laptopsBoughtDuringProject"
+                        @focus="onFocusValue=selectedPartner.laptopsBoughtDuringProject; $event.target.select()" @keypress.enter="$event.target.blur()"
+                        @focusout="onCellEditCompletePartnerEquipment('laptopsBoughtDuringProject', selectedPartner.laptopsBoughtDuringProject)" />
+                      </div>
+                      <div class="field col-12 md:col-3">
+                        <label for="flatScreensBoughtDuringProject">Flat screens</label>
+                        <InputNumber v-model="selectedPartner.flatScreensBoughtDuringProject" mode="decimal"
+                        showButtons decrementButtonClass="p-button-info" incrementButtonClass="p-button-info" :inputClass="selectedPartner.flatScreensBoughtDuringProject == 0 ? 'defaultValue' : ''"
+                        incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus" :allowEmpty="false" :min="0" id="flatScreensBoughtDuringProject"
+                        @focus="onFocusValue=selectedPartner.flatScreensBoughtDuringProject; $event.target.select()" @keypress.enter="$event.target.blur()"
+                        @focusout="onCellEditCompletePartnerEquipment('flatScreensBoughtDuringProject', selectedPartner.flatScreensBoughtDuringProject)" />
+                      </div>
+                      <div class="field col-12 md:col-3">
+                        <label for="printersBoughtDuringProject">Printers</label>
+                        <InputNumber v-model="selectedPartner.printersBoughtDuringProject" mode="decimal"
+                        showButtons decrementButtonClass="p-button-info" incrementButtonClass="p-button-info" :inputClass="selectedPartner.printersBoughtDuringProject == 0 ? 'defaultValue' : ''"
+                        incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus" :allowEmpty="false" :min="0" id="printersBoughtDuringProject"
+                        @focus="onFocusValue=selectedPartner.printersBoughtDuringProject; $event.target.select()" @keypress.enter="$event.target.blur()"
+                        @focusout="onCellEditCompletePartnerEquipment('printersBoughtDuringProject', selectedPartner.printersBoughtDuringProject)" />
+                      </div>
+                      <div class="field col-12 md:col-3">
+                        <label for="copyMachinesBoughtDuringProject">Copy machines</label>
+                        <InputNumber v-model="selectedPartner.copyMachinesBoughtDuringProject" mode="decimal" 
+                        showButtons decrementButtonClass="p-button-info" :allowEmpty="false" :min="0" id="copyMachinesBoughtDuringProject"
+                        incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus" :inputClass="selectedPartner.copyMachinesBoughtDuringProject == 0 ? 'defaultValue' : ''"
+                        @focus="onFocusValue=selectedPartner.copyMachinesBoughtDuringProject; $event.target.select()" @keypress.enter="$event.target.blur()"
+                        @focusout="onCellEditCompletePartnerEquipment('copyMachinesBoughtDuringProject', selectedPartner.copyMachinesBoughtDuringProject)" />
+                      </div>
+                      <div class="field col-12 md:col-3">
+                        <label for="faxMachinesBoughtDuringProject">Fax machines</label>
+                        <InputNumber v-model="selectedPartner.faxMachinesBoughtDuringProject" mode="decimal"
+                        showButtons decrementButtonClass="p-button-info" :allowEmpty="false" :min="0" id="faxMachinesBoughtDuringProject"
+                        incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus" :inputClass="selectedPartner.faxMachinesBoughtDuringProject == 0 ? 'defaultValue' : ''"
+                        @focus="onFocusValue=selectedPartner.faxMachinesBoughtDuringProject; $event.target.select()" @keypress.enter="$event.target.blur()"
+                        @focusout="onCellEditCompletePartnerEquipment('faxMachinesBoughtDuringProject', selectedPartner.faxMachinesBoughtDuringProject)" />
+                      </div>
+                    </div>
+                  </div>
+                </template>
+
+                <template v-else>
+                  <strong>Equipment data cannot be displayed because there aren't any partners in this project</strong>
+                </template>
+              </div>
+            </div>
+
+            <div class="col-12" v-if="project.events">
+              <div class="card">
+                <h4>Events*</h4>
+
+                <TabView>
+                  <TabPanel header="Events organized by the project" v-if="project.events && project.events.organization">
+
+                    <DataTable :value="project.events.organization" editMode="cell" :paginator="true" class="p-datatable-gridlines" dataKey="_id"
+                    :rowHover="true" @cell-edit-complete="onCellEditCompleteEvents" sortMode="multiple" :rows="5" v-model:filters="organizationEventsFilters"
+                    filterDisplay="menu" :loading="loading" :filters="organizationEventsFilters" responsiveLayout="scroll" :globalFilterFields="['name',
+                    'type','physicalParticipants', 'nonLocalPhysicalParticipants', 'virtualParticipants', 'durationDays',
+                    'durationHoursPerDay', 'hostingCountry']" removableSort>
+                      
                       <template #header>
                           <div class="flex justify-content-between flex-column sm:flex-row">
                             <div>
-                              <Button class="p-button-info mr-2" @click="addPrintableDeliverable"><i class="pi pi-plus mr-2" />New printable deliverable</Button>
+                              <Button class="p-button-info mr-2" @click="addEvents('organization')"><i class="pi pi-plus mr-2" />New organized event</Button>
                               <span class="p-input-icon-left">
                                 <i class="pi pi-search" />
-                                <InputText v-model="printableDeliverableFilters['global'].value" placeholder="Keyword Search" style="width: 100%"/>
+                                <InputText v-model="organizationEventsFilters['global'].value" placeholder="Keyword Search" style="width: 100%"/>
                               </span>
-                              <Button class="ml-2" label="Save" icon="pi pi-check" @click="savePrintableDeliverables" />
+                              <Button class="ml-2" label="Save" icon="pi pi-check" @click="saveEvents" />
                             </div>
                             
-                            <Button type="button" icon="pi pi-filter-slash" label="Clear" class="p-button-warning" @click="clearPrintableDeliverableFilter()"/>
+                            <Button type="button" icon="pi pi-filter-slash" label="Clear" class="p-button-warning" @click="clearOrganizationEventsFilter()"/>
                           </div>
                       </template>
 
                       <template #empty>
-                          No printable deliverables found.
+                          No organized events found.
                       </template>
 
                       <template #loading>
-                          Loading printable deliverables. Please wait.
+                          Loading events organized. Please wait.
                       </template>
 
-                      <Column field="deliverableType" header="Deliverable type" :sortable="true">
+                      <Column field="name" header="Name" :sortable="true">
+                        <template #body="slotProps">
+                          <td :class="slotProps.data[slotProps.field] == 'New event' ? 'defaultValue' : ''" style="display:block;">{{slotProps.data[slotProps.field]}}</td>
+                        </template>
                         <template #editor="slotProps">
-                          <Dropdown :options="deliverableOptions" v-model="slotProps.data[slotProps.field]" optionLabel="value" optionValue="value"
-                                    placeholder="Select a deliverable type">
-                            <template #value="slotProps">
-                              <div v-if="slotProps.value">
-                                <span>{{slotProps.value}}</span>
-                              </div>
-                              <span v-else>
-                                  {{slotProps.placeholder}}
-                              </span>
-                            </template>
-                            <template #option="slotProps">
-                                <span>{{slotProps.option.value}} ({{slotProps.option.avgPagesPerCopy}} pages, {{slotProps.option.size}})</span>
-                            </template>
-                          </Dropdown>
+                            <InputText v-model="slotProps.data[slotProps.field]" @focus="$event.target.select()"/>
                         </template>
                       </Column>
 
-                      <Column field="copies" header="Copies" :sortable="true">
+                      <Column field="type" header="Type" :sortable="true">
+                        <template #body="slotProps">
+                          <td :class="slotProps.data[slotProps.field] == 'Select a type' ? 'defaultValue' : ''" style="display:block;">{{slotProps.data[slotProps.field]}}</td>
+                        </template>
                         <template #editor="slotProps">
-                            <InputNumber v-model="slotProps.data[slotProps.field]" mode="decimal"
-                                  showButtons decrementButtonClass="p-button-info"
-                                  incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
-                                  :allowEmpty="false" :min="0" />
+                          <Dropdown :options="eventTypesForDropdown" v-model="slotProps.data[slotProps.field]" />
                         </template>
                       </Column>
 
-                      <Column field="avgPagesPerCopy" header="Average pages per copy" :sortable="true">
+                      <Column field="physicalParticipants" header="Physical participants" :sortable="true">
+                        <template #body="slotProps">
+                          <td :class="slotProps.data[slotProps.field] == 0 && slotProps.data['type'] !== 'On-line' ? 'defaultValue' : ''"
+                          style="display:block;" @click="slotProps.data['type'] !== 'On-line' ? '' : slotProps.data[slotProps.field] = 0"
+                          >{{slotProps.data['type'] !== 'On-line' ? slotProps.data[slotProps.field] : 0}}</td>
+                        </template>
                         <template #editor="slotProps">
-                            <InputNumber v-model="slotProps.data[slotProps.field]" mode="decimal"
-                                  showButtons decrementButtonClass="p-button-info"
-                                  incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
-                                  :allowEmpty="false" :min="0" />
+                          <InputNumber v-model="slotProps.data[slotProps.field]" mode="decimal" showButtons decrementButtonClass="p-button-info"
+                          incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
+                          :allowEmpty="false" :min="0" @focus="$event.target.select()" :disabled="slotProps.data['type'] !== 'On-line' ? false : true" />
                         </template>
                       </Column>
 
-                      <Column field="size" header="Paper size" :sortable="true">
+                      <Column field="nonLocalPhysicalParticipants" header="Non-local physical participants" :sortable="true">
+                        <template #body="slotProps">
+                          <td :class="slotProps.data[slotProps.field] == 0 && slotProps.data['type'] !== 'On-line' ? 'defaultValue' : ''"
+                          style="display:block;" @click="slotProps.data['type'] !== 'On-line' ? '' : slotProps.data[slotProps.field] = 0"
+                          >{{slotProps.data['type'] !== 'On-line' ? slotProps.data[slotProps.field] : 0}}</td>
+                        </template>
                         <template #editor="slotProps">
-                          <Dropdown :options="paperSizes" v-model="slotProps.data[slotProps.field]" placeholder="Select a paper size">
-                            <template #value="slotProps">
-                              <div v-if="slotProps.value">
-                                <span>{{slotProps.value}}</span>
-                              </div>
-                              <span v-else>
-                                  {{slotProps.placeholder}}
-                              </span>
-                            </template>
-                            <template #option="slotProps">
-                                <span>{{slotProps.option}}</span>
-                            </template>
-                          </Dropdown>
+                          <InputNumber v-model="slotProps.data[slotProps.field]"  mode="decimal" showButtons decrementButtonClass="p-button-info"
+                          incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
+                          :allowEmpty="false" :min="0" @focus="$event.target.select()" :disabled="slotProps.data['type'] !== 'On-line' ? false : true"  />
+                        </template>
+                      </Column>
+
+                      <Column field="virtualParticipants" header="Virtual participants" :sortable="true">
+                        <template #body="slotProps">
+                          <td :class="slotProps.data[slotProps.field] == 0 && slotProps.data['type'] !== 'In presence' ? 'defaultValue' : ''"
+                          style="display:block;" @click="slotProps.data['type'] !== 'In presence' ? '' : slotProps.data[slotProps.field] = 0"
+                          >{{slotProps.data['type'] !== 'In presence' ? slotProps.data[slotProps.field] : 0}}</td>
+                        </template>
+                        <template #editor="slotProps" class="p-field">
+                          <InputNumber v-model="slotProps.data[slotProps.field]" mode="decimal" showButtons decrementButtonClass="p-button-info"
+                          incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
+                          :allowEmpty="false" :min="0" @focus="$event.target.select()" :disabled="slotProps.data['type'] !== 'In presence' ? false : true"/>
+                        </template>
+                      </Column>
+
+                      <Column field="durationDays" header="Duration (in days)" :sortable="true">
+                        <template #body="slotProps">
+                          <td :class="slotProps.data[slotProps.field] == 0 && slotProps.data['type'] !== 'On-line' ? 'defaultValue' : ''"
+                          style="display:block;">{{slotProps.data[slotProps.field]}}</td>
+                        </template>
+                        <template #editor="slotProps">
+                          <InputNumber v-model="slotProps.data[slotProps.field]" mode="decimal" showButtons decrementButtonClass="p-button-info"
+                          incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
+                          :allowEmpty="false" :min="0" @focus="$event.target.select()"/>
+                        </template>
+                      </Column>
+
+                      <Column field="durationHoursPerDay" header="Duration (hours/day)" :sortable="true">
+                        <template #body="slotProps">
+                          <td :class="slotProps.data[slotProps.field] == 0 && slotProps.data['type'] !== 'In presence' ? 'defaultValue' : ''"
+                          style="display:block;" @click="slotProps.data['type'] !== 'In presence' ? '' : slotProps.data[slotProps.field] = 0"
+                          >{{slotProps.data['type'] !== 'In presence' ? slotProps.data[slotProps.field] : 0}}</td>
+                        </template>
+                        <template #editor="slotProps">
+                          <InputNumber v-model="slotProps.data[slotProps.field]" mode="decimal" :maxFractionDigits="3"
+                          showButtons :step="0.25" decrementButtonClass="p-button-info"
+                          incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
+                          :allowEmpty="false" :min="0" @focus="$event.target.select()" :disabled="slotProps.data['type'] !== 'In presence' ? false : true" />
+                        </template>
+                      </Column>
+
+                      <Column field="hostingCountry" header="Hosting country" :sortable="true">
+                        <template #body="slotProps">
+                          <td :class="slotProps.data[slotProps.field] == 'Select a country' ? 'defaultValue' : ''" style="display:block;">{{slotProps.data[slotProps.field]}}</td>
+                        </template>
+                        <template #editor="slotProps">
+                          <Dropdown :options="countriesForDropdown" v-model="slotProps.data[slotProps.field]" />
                         </template>
                       </Column>
 
                       <Column field="actions" header="Actions">
                         <template #body="slotProps">
-                          <i class="pi pi-trash" @click="deletePrintableDeliverable(slotProps.index + currentPagePrintableDeliverablesTable * 5)" />
+                          <i class="pi pi-trash" @click="deleteEvent(project.events.organization.indexOf(slotProps.data), 'organization')" v-tooltip.top="'Delete organized event'" />
+                        </template>
+                      </Column>
+                    
+                    </DataTable>
+                  </TabPanel>
+
+                  <TabPanel header="Project participation in events" v-if="project.events && project.events.participation">
+
+                    <DataTable :value="project.events.participation" editMode="cell" :paginator="true" class="p-datatable-gridlines" dataKey="_id"
+                    :rowHover="true" @cell-edit-complete="onCellEditCompleteEvents" sortMode="multiple" :rows="5" v-model:filters="participationEventsFilters"
+                    filterDisplay="menu" :loading="loading" :filters="participationEventsFilters" responsiveLayout="scroll"
+                    :globalFilterFields="['name','type', 'nonLocalPhysicalParticipants','durationDays', 'hostingCountry',
+                    'distanceTravelledArrive', 'travelModeArrive', 'fuelTypeArrive', 'distanceTravelledDepart', 'travelModeDepart',
+                    'fuelTypeDepart']" removableSort>
+                      
+                      <template #header>
+                          <div class="flex justify-content-between flex-column sm:flex-row">
+                            <div>
+                              <Button class="p-button-info mr-2" @click="addEvents('participation')"><i class="pi pi-plus mr-2" />New participation in event</Button>
+                              <span class="p-input-icon-left">
+                                <i class="pi pi-search" />
+                                <InputText v-model="participationEventsFilters['global'].value" placeholder="Keyword Search" style="width: 100%"/>
+                              </span>
+                              <Button class="ml-2" label="Save" icon="pi pi-check" @click="saveEvents" />
+                            </div>
+                            
+                            <Button type="button" icon="pi pi-filter-slash" label="Clear" class="p-button-warning" @click="clearParticipationEventsFilter()"/>
+                          </div>
+                      </template>
+
+                      <template #empty>
+                          No participation in events found.
+                      </template>
+
+                      <template #loading>
+                          Loading participation in events. Please wait.
+                      </template>
+
+                      <ColumnGroup type="header">
+                        <Row>
+                            <Column header="Name" :sortable="true" :rowspan="2" field="name" />
+                            <Column header="Type" :sortable="true" :rowspan="2" field="type" />
+                            <Column header="Non-local physical participants" :sortable="true" :rowspan="2" field="nonLocalPhysicalParticipants" />
+                            <Column header="Duration (in days)" :sortable="true" :rowspan="2" field="durationDays" />
+                            <Column header="Hosting country" :sortable="true" :rowspan="2" field="hostingCountry" />
+                            <Column header="Arrive at hosting city" :colspan="3" />
+                            <Column header="Depart from hosting city" :colspan="3" />
+                            <Column header="Actions" :rowspan="2" />
+                        </Row>
+                        <Row>
+                            <Column header="Distance travelled (km)" :sortable="true" field="distanceTravelledArrive"/>
+                            <Column header="Travel mode" :sortable="true" field="travelModeArrive"/>
+                            <Column header="Fuel type*" :sortable="true" field="fuelTypeArrive"/>
+                            <Column header="Distance travelled (km)" :sortable="true" field="distanceTravelledDepart"/>
+                            <Column header="Travel mode" :sortable="true" field="travelModeDepart"/>
+                            <Column header="Fuel type*" :sortable="true" field="fuelTypeDepart"/>
+                        </Row>
+                      </ColumnGroup>
+
+                      <Column field="name">
+                          <template #body="slotProps">
+                            <td :class="slotProps.data[slotProps.field] == 'New event' ? 'defaultValue' : ''" style="display:block;">{{slotProps.data[slotProps.field]}}</td>
+                          </template>
+                          <template #editor="slotProps">
+                              <InputText v-model="slotProps.data[slotProps.field]" @focus="$event.target.select()"/>
+                          </template>
+                        </Column>
+
+                      <Column field="type">
+                        <template #body="slotProps">
+                          <td :class="slotProps.data[slotProps.field] == 'Select a type' ? 'defaultValue' : ''" style="display:block;">{{slotProps.data[slotProps.field]}}</td>
+                        </template>
+                        <template #editor="slotProps">
+                          <Dropdown :options="eventTypesForDropdown" v-model="slotProps.data[slotProps.field]" disabled />
                         </template>
                       </Column>
 
+                      <Column field="nonLocalPhysicalParticipants">
+                        <template #editor="slotProps">
+                          <InputNumber v-model="slotProps.data[slotProps.field]" mode="decimal" showButtons decrementButtonClass="p-button-info"
+                          incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
+                          :allowEmpty="false" :min="0" @focus="$event.target.select()" />
+                        </template>
+                      </Column>
+
+                      <Column field="durationDays">
+                        <template #editor="slotProps">
+                          <InputNumber v-model="slotProps.data[slotProps.field]" mode="decimal" showButtons decrementButtonClass="p-button-info"
+                          incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
+                          :allowEmpty="false" :min="0" @focus="$event.target.select()" />
+                        </template>
+                      </Column>
+
+                      <Column field="hostingCountry">
+                        <template #body="slotProps">
+                          <td :class="slotProps.data[slotProps.field] == 'Select a country' ? 'defaultValue' : ''" style="display:block;">{{slotProps.data[slotProps.field]}}</td>
+                        </template>
+                        <template #editor="slotProps">
+                          <Dropdown :options="countriesForDropdown" v-model="slotProps.data[slotProps.field]" />
+                        </template>
+                      </Column>
+
+                      <Column field="distanceTravelledArrive">
+                        <template #editor="slotProps">
+                          <InputNumber v-model="slotProps.data[slotProps.field]" mode="decimal" showButtons decrementButtonClass="p-button-info"
+                          incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
+                          :allowEmpty="false" :min="0" @focus="$event.target.select()" />
+                        </template>
+                      </Column>
+
+                      <Column field="travelModeArrive">
+                        <template #body="slotProps">
+                          <td :class="slotProps.data[slotProps.field] == 'Select a travel mode' ? 'defaultValue' : ''" style="display:block;">{{slotProps.data[slotProps.field]}}</td>
+                        </template>
+                        <template #editor="slotProps">
+                          <Dropdown :options="travelModesForDropdown" v-model="slotProps.data[slotProps.field]" />
+                        </template>
+                      </Column>
+
+                      <Column field="fuelTypeArrive">
+                        <template #body="slotProps">
+                          <td :class="slotProps.data[slotProps.field] == 'Select a fuel type' && slotProps.data['travelModeArrive'] === 'Car'
+                          ? 'defaultValue' : ''" style="display:block;" @click="slotProps.data['travelModeArrive'] === 'Car' ? '' : slotProps.data['fuelTypeArrive'] = '-'"
+                          >{{slotProps.data['travelModeArrive'] === 'Car' ? slotProps.data[slotProps.field] : '-'}}</td>
+                        </template>
+                        <template #editor="slotProps">
+                          <Dropdown :options="fuelTypesForDropdown" v-model="slotProps.data[slotProps.field]" :disabled="slotProps.data['travelModeArrive'] === 'Car' ? false : true" />
+                        </template>
+                      </Column>
+
+                      <Column field="distanceTravelledDepart">
+                        <template #editor="slotProps">
+                          <InputNumber v-model="slotProps.data[slotProps.field]" mode="decimal" showButtons decrementButtonClass="p-button-info"
+                          incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
+                          :allowEmpty="false" :min="0" @focus="$event.target.select()" />
+                        </template>
+                      </Column>
+
+                      <Column field="travelModeDepart">
+                        <template #body="slotProps">
+                          <td :class="slotProps.data[slotProps.field] == 'Select a travel mode' ? 'defaultValue' : ''" style="display:block;">{{slotProps.data[slotProps.field]}}</td>
+                        </template>
+                        <template #editor="slotProps">
+                          <Dropdown :options="travelModesForDropdown" v-model="slotProps.data[slotProps.field]" />
+                        </template>
+                      </Column>
+
+                      <Column field="fuelTypeDepart">
+                        <template #body="slotProps">
+                          <td :class="slotProps.data[slotProps.field] == 'Select a fuel type' && slotProps.data['travelModeDepart'] === 'Car'
+                          ? 'defaultValue' : ''" style="display:block;" @click="slotProps.data['travelModeDepart'] === 'Car' ? '' : slotProps.data['fuelTypeDepart'] = '-'"
+                          >{{slotProps.data['travelModeDepart'] === 'Car' ? slotProps.data[slotProps.field] : '-'}}</td>
+                        </template>
+                        <template #editor="slotProps">
+                          <Dropdown :options="fuelTypesForDropdown" v-model="slotProps.data[slotProps.field]" :disabled="slotProps.data['travelModeDepart'] === 'Car' ? false : true" />
+                        </template>
+                      </Column>
+
+                      <Column field="actions">
+                        <template #body="slotProps">
+                          <i class="pi pi-trash" @click="deleteEvent(project.events.participation.indexOf(slotProps.data), 'participation')" v-tooltip.top="'Delete participation in event'" />
+                        </template>
+                      </Column>
+                      
+                      <p>* Fuel type may only be chosen when "Car" is the selected Travel mode</p>
                     </DataTable>
-                    <div style="text-align: left; margin-top: 10px">
-                      * Report type includes the following deliverables: Report/Plan/Analysis/Study/Methodology/Manual/Guidance/Roadmap/Strategy/Proceedings
-                    </div>
-                  </div>
+
+                  </TabPanel>
+                </TabView>
+              </div>
+            </div>
+
+
+            <div class="col-12">
+              <div class="card">
+                <h4>Printable deliverables</h4>
+              
+                <DataTable :value="project.printableDeliverables" editMode="cell" @cell-edit-complete="onCellEditCompletePrintableDeliverable" 
+                  sortMode="multiple" :paginator="true" :rows="5" v-model:filters="printableDeliverableFilters" filterDisplay="menu"
+                  :loading="loading" :filters="printableDeliverableFilters" responsiveLayout="scroll" :rowHover="true" class="p-datatable-gridlines"
+                  :globalFilterFields="['deliverableType', 'deliverableName', 'copies', 'avgPagesPerCopy']" removableSort>
+
+                  <template #header>
+                      <div class="flex justify-content-between flex-column sm:flex-row">
+                        <div>
+                          <Button class="p-button-info mr-2" @click="addPrintableDeliverable"><i class="pi pi-plus mr-2" />New printable deliverable</Button>
+                          <span class="p-input-icon-left">
+                            <i class="pi pi-search" />
+                            <InputText v-model="printableDeliverableFilters['global'].value" placeholder="Keyword Search" style="width: 100%"/>
+                          </span>
+                          <Button class="ml-2" label="Save" icon="pi pi-check" @click="savePrintableDeliverables" />
+                        </div>
+                        
+                        <Button type="button" icon="pi pi-filter-slash" label="Clear" class="p-button-warning" @click="clearPrintableDeliverableFilter()"/>
+                      </div>
+                  </template>
+
+                  <template #empty>
+                      No printable deliverables found.
+                  </template>
+
+                  <template #loading>
+                      Loading printable deliverables. Please wait.
+                  </template>
+
+                  <Column field="deliverableType" header="Deliverable type" :sortable="true">
+                    <template #body="slotProps">
+                      <td :class="slotProps.data[slotProps.field] == 'Select a deliverable type' ? 'defaultValue' : ''" style="display:block;">{{slotProps.data[slotProps.field]}}</td>
+                    </template>
+                    <template #editor="slotProps">
+                      <Dropdown :options="deliverableOptions" v-model="slotProps.data[slotProps.field]" optionLabel="value" optionValue="value"
+                                placeholder="Select a deliverable type">
+                        <template #value="slotProps">
+                          <div v-if="slotProps.value">
+                            <span>{{slotProps.value}}</span>
+                          </div>
+                          <span v-else>
+                              {{slotProps.placeholder}}
+                          </span>
+                        </template>
+                        <template #option="slotProps">
+                            <span>{{slotProps.option.value}} ({{slotProps.option.avgPagesPerCopy}} pages, {{slotProps.option.size}})</span>
+                        </template>
+                      </Dropdown>
+                    </template>
+                  </Column>
+
+                  <Column field="copies" header="Copies" :sortable="true">
+                  <template #body="slotProps">
+                      <td :class="slotProps.data[slotProps.field] == 1 ? 'defaultValue' : ''" style="display:block;">{{slotProps.data[slotProps.field]}}</td>
+                  </template>
+                    <template #editor="slotProps">
+                        <InputNumber v-model="slotProps.data[slotProps.field]" mode="decimal"
+                        showButtons decrementButtonClass="p-button-info"
+                        incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
+                        :allowEmpty="false" :min="0" @focus="$event.target.select()" :class="slotProps.data[slotProps.field] == 1 ? 'defaultValue' : ''" />
+                    </template>
+                  </Column>
+
+                  <Column field="avgPagesPerCopy" header="Average pages per copy" :sortable="true">
+                    <template #body="slotProps">
+                      <td style="display:block;"
+                      :class="deliverableOptions.find(d => {return d.value == slotProps.data.deliverableType}) && slotProps.data[slotProps.field] == deliverableOptions.find(d => {return d.value == slotProps.data.deliverableType}).avgPagesPerCopy ? 'defaultValue' : ''"
+                      >{{slotProps.data[slotProps.field]}}</td>
+                    </template>
+                    <template #editor="slotProps">
+                      <InputNumber v-model="slotProps.data[slotProps.field]" mode="decimal"
+                      showButtons decrementButtonClass="p-button-info"
+                      incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
+                      :allowEmpty="false" :min="0" @focus="$event.target.select()" />
+                    </template>
+                  </Column>
+
+                  <Column field="size" header="Paper size" :sortable="true">
+                    <template #body="slotProps">
+                      <td :class="slotProps.data[slotProps.field] == 'Select a paper size' ? 'defaultValue' : ''" style="display:block;">{{slotProps.data[slotProps.field]}}</td>
+                    </template>
+                    <template #editor="slotProps">
+                      <Dropdown :options="paperSizes" v-model="slotProps.data[slotProps.field]" placeholder="Select a paper size">
+                        <template #value="slotProps">
+                          <div v-if="slotProps.value">
+                            <span>{{slotProps.value}}</span>
+                          </div>
+                          <span v-else>
+                              {{slotProps.placeholder}}
+                          </span>
+                        </template>
+                        <template #option="slotProps">
+                            <span>{{slotProps.option}}</span>
+                        </template>
+                      </Dropdown>
+                    </template>
+                  </Column>
+                  
+                  <Column field="actions" header="Actions">
+                    <template #body="slotProps">
+                      <i class="pi pi-trash" @click="deletePrintableDeliverable(project.printableDeliverables.indexOf(slotProps.data))" v-tooltip.top="'Delete printable deliverable'" />
+                    </template>
+                  </Column>
+
+                </DataTable>
+                <div style="text-align: left; margin-top: 10px">
+                  * Report type includes the following deliverables: Report/Plan/Analysis/Study/Methodology/Manual/Guidance/Roadmap/Strategy/Proceedings
                 </div>
+              </div>
+            </div>
 
-                <div class="card">
+            <div class="card">
+              <h4>Customs</h4>
+              <TabView>
+                <TabPanel header="Heat">
+                        <!-- Tabla Custom Heat emissions -->
 
-                  <!-- Tabla Custom Printable Deliverables -->
+                  <h5>Additional custom defined Heat emission</h5>
 
-                <h5>Additional custom defined printable deliverable emission</h5>
+                  <DataTable :value="project.customHeat" editMode="cell" :paginator="true" class="p-datatable-gridlines" dataKey="_id"
+                  :rowHover="true" @cell-edit-complete="onCellEditCompleteCustom($event, 'customHeat', 'heat')" sortMode="multiple" :rows="5" v-model:filters="partnerFilters"
+                  filterDisplay="menu" :loading="loading" :filters="customFilters" responsiveLayout="scroll"
+                  :globalFilterFields="['nameCustom','valueCustom']" removableSort>
+                    
+                    <template #header>
+                        <div class="flex justify-content-between flex-column sm:flex-row">
+                          <div>
+                            <Button class="p-button-info mr-2" @click="addCustom(this.customTypes[0].value, 'customHeat', 'Heat')"><i class="pi pi-plus mr-2" />New additional custom Heat emission</Button>
+                            <span class="p-input-icon-left">
+                              <i class="pi pi-search" />
+                              <InputText v-model="customFilters['global'].value" placeholder="Keyword Search" style="width: 100%"/>
+                            </span>
+                            <Button class="ml-2" label="Save" icon="pi pi-check" @click="saveCustoms" />
+                          </div>
+                          
+                          <Button type="button" icon="pi pi-filter-slash" label="Clear" class="p-button-warning" @click="clearCustomFilter()"/>
+                        </div>
+                    </template>
 
-                <DataTable :value="this.project.customPrintableDeliverables" editMode="cell" :paginator="true" class="p-datatable-gridlines" dataKey="_id"
-                :rowHover="true" @cell-edit-complete="onCellEditCompleteCustomPrintableDeliverable" sortMode="multiple" :rows="5" v-model:filters="partnerFilters"
-                filterDisplay="menu" :loading="loading" :filters="partnerFilters" responsiveLayout="scroll"
-                :globalFilterFields="['nameCustom','valueCustom']" @page="currentPageCustomPrintableDeliverablesTable = $event.page">
+                    <template #empty>
+                        No additional custom heat emission found.
+                    </template>
+
+                    <template #loading>
+                        Loading custom heat emission. Please wait.
+                    </template>
+
+                    <Column field="name" header="Item" :sortable="true">
+                      <template #editor="slotProps">
+                          <InputText v-model="slotProps.data[slotProps.field]" @focus="$event.target.select()"/>
+                      </template>
+                      <template #filter="{filterModel, field}">
+                          <InputText type="text" v-model="filterModel.value" class="p-column-filter" :placeholder="'Filter by ' + field" />
+                      </template>
+                    </Column>
+
+                    <Column field="value" header="Value (t CO2e)" :sortable="true">
+                      <template #editor="slotProps" class="p-field">
+                        <InputNumber v-model="slotProps.data[slotProps.field]" mode="decimal" :maxFractionDigits="3"
+                        showButtons :step="0.25" decrementButtonClass="p-button-info"
+                        incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
+                        :allowEmpty="false" :min="0" @focus="$event.target.select()" />
+                      </template>
+                    </Column>
+
+                    
+                    <Column field="actions" header="Actions">
+                      <template #body="slotProps">
+                        <i class="pi pi-trash" @click="deleteCustom(project.customHeat.indexOf(slotProps.data), 'customHeat', 'heat')" v-tooltip.top="'Delete heat custom'" />
+                      </template>
+                    </Column>
+                  
+                  </DataTable>
+                </TabPanel>
+
+                <TabPanel header="Electricity">
+                  <h5>Aditional custom defined electricity emission</h5>
+                  <DataTable :value="project.customElectricity" editMode="cell" :paginator="true" class="p-datatable-gridlines" dataKey="_id"
+                  :rowHover="true" @cell-edit-complete="onCellEditCompleteCustom($event, 'customElectricity', 'electricity')" sortMode="multiple" :rows="5" v-model:filters="partnerFilters"
+                  filterDisplay="menu" :loading="loading" :filters="customFilters" responsiveLayout="scroll"
+                  :globalFilterFields="['nameCustom','valueCustom']" removableSort>
                   
                   <template #header>
                       <div class="flex justify-content-between flex-column sm:flex-row">
                         <div>
-                          <Button class="p-button-info mr-2" @click="addCustomPrintableDeliverable(this.customTypes[6].value)"><i class="pi pi-plus mr-2" />New additional custom printable deliverable</Button>
+                          <Button class="p-button-info mr-2" @click="addCustom(this.customTypes[1].value, 'customElectricity', 'electricity')"><i class="pi pi-plus mr-2" />New additional custom Electricity</Button>
                           <span class="p-input-icon-left">
                             <i class="pi pi-search" />
-                            <InputText v-model="partnerFilters['global'].value" placeholder="Keyword Search" style="width: 100%"/>
+                            <InputText v-model="customFilters['global'].value" placeholder="Keyword Search" style="width: 100%"/>
                           </span>
-                          <Button class="ml-2" label="Save" icon="pi pi-check" @click="saveCustomPrintableDeliverables" />
+                          <Button class="ml-2" label="Save" icon="pi pi-check" @click="saveCustoms" />
                         </div>
                         
                         <Button type="button" icon="pi pi-filter-slash" label="Clear" class="p-button-warning" @click="clearPartnerFilter()"/>
@@ -368,163 +1023,740 @@
                   </template>
 
                   <template #empty>
-                      No additional custom printable deliverables found.
+                      No additional custom electricity found.
                   </template>
 
                   <template #loading>
-                      Loading custom printable deliverables. Please wait.
+                      Loading custom electricity. Please wait.
                   </template>
 
                   <Column field="name" header="Item" :sortable="true">
                     <template #editor="slotProps">
-                        <InputText v-model="slotProps.data[slotProps.field]" />
+                        <InputText v-model="slotProps.data[slotProps.field]" @focus="$event.target.select()"/>
                     </template>
                     <template #filter="{filterModel, field}">
                         <InputText type="text" v-model="filterModel.value" class="p-column-filter" :placeholder="'Filter by ' + field"/>
                     </template>
                   </Column>
 
-                  <Column field="value" header="Value" :sortable="true">
+                  <Column field="value" header="Value (t CO2e)" :sortable="true">
                     <template #editor="slotProps" class="p-field">
                       <InputNumber v-model="slotProps.data[slotProps.field]" mode="decimal" :maxFractionDigits="3"
                       showButtons :step="0.25" decrementButtonClass="p-button-info"
                       incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
-                      :allowEmpty="false" :min="0" />
+                      :allowEmpty="false" :min="0" @focus="$event.target.select()"/>
                     </template>
                   </Column>
 
                   
                   <Column field="actions" header="Actions">
                     <template #body="slotProps">
-                      <i class="pi pi-trash" @click="deleteCustomPrintableDeliverable(slotProps.index + currentPageCustomPrintableDeliverablesTable * 5)" />
+                      <i class="pi pi-trash" @click="deleteCustom(project.customElectricity.indexOf(slotProps.data), 'customElectricity', 'electricity')" v-tooltip.top="'Delete electricity custom'" />
                     </template>
                   </Column>
                 
                 </DataTable>
-                </div>
+                </TabPanel>
 
-              </TabPanel>
-            </TabView>
-          </TabPanel>
+                <TabPanel header="Water">
 
-          <TabPanel header="Actions">
-												<TabView>
-              <TabPanel header="General">
+                  <h5>Aditional custom defined water emission</h5>
+                  <DataTable :value="project.customWater" editMode="cell" :paginator="true" class="p-datatable-gridlines" dataKey="_id"
+                  :rowHover="true" @cell-edit-complete="onCellEditCompleteCustom($event, 'customWater', 'water')" sortMode="multiple" :rows="5" v-model:filters="partnerFilters"
+                  filterDisplay="menu" :loading="loading" :filters="customFilters" responsiveLayout="scroll"
+                  :globalFilterFields="['nameCustom','valueCustom']" removableSort>
+                  
+                  <template #header>
+                      <div class="flex justify-content-between flex-column sm:flex-row">
+                        <div>
+                          <Button class="p-button-info mr-2" @click="addCustom(this.customTypes[2].value,'customWater', 'water')"><i class="pi pi-plus mr-2" />New additional custom water emission</Button>
+                          <span class="p-input-icon-left">
+                            <i class="pi pi-search" />
+                            <InputText v-model="customFilters['global'].value" placeholder="Keyword Search" style="width: 100%"/>
+                          </span>
+                          <Button class="ml-2" label="Save" icon="pi pi-check" @click="saveCustoms" />
+                        </div>
+                        
+                        <Button type="button" icon="pi pi-filter-slash" label="Clear" class="p-button-warning" @click="clearCustomFilter()"/>
+                      </div>
+                  </template>
 
-              </TabPanel>
-              <TabPanel header="Heat">
+                  <template #empty>
+                      No additional custom water emission found.
+                  </template>
 
-              </TabPanel>
-              <TabPanel header="Electricity">
-                <div class="card">
-                  <Chart type="radar" :data="chartData" :options="chartOptions" style='width:50'/>
-                </div>
-                <div class="card">
-                  <h5>Aditional custom defined electricity emission</h5>
-                  <DataTable :value="project.partners" editMode="cell" :paginator="true" class="p-datatable-gridlines" dataKey="_id"
-                    :rowHover="true" @cell-edit-complete="onCellEditCompletePartner" sortMode="multiple" :rows="5" v-model:filters="partnerFilters"
-                    filterDisplay="menu" :loading="loading" :filters="partnerFilters" responsiveLayout="scroll"
-                    :globalFilterFields="['name','country','personMonthsPP','personMonthsWPP', 'externalExpertsPersonMonths', 'employeesWorkingWPP', 
-                                          'seasonalEmployees', 'externalExperts', 'coordinator']">
+                  <template #loading>
+                      Loading custom water emissions. Please wait.
+                  </template>
+
+                  <Column field="name" header="Item" :sortable="true">
+                    <template #editor="slotProps">
+                        <InputText v-model="slotProps.data[slotProps.field]" @focus="$event.target.select()"/>
+                    </template>
+                    <template #filter="{filterModel, field}">
+                        <InputText type="text" v-model="filterModel.value" class="p-column-filter" :placeholder="'Filter by ' + field"/>
+                    </template>
+                  </Column>
+
+                  <Column field="value" header="Value (t CO2e)" :sortable="true">
+                    <template #editor="slotProps" class="p-field">
+                      <InputNumber v-model="slotProps.data[slotProps.field]" mode="decimal" :maxFractionDigits="3"
+                      showButtons :step="0.25" decrementButtonClass="p-button-info"
+                      incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
+                      :allowEmpty="false" :min="0" @focus="$event.target.select()"/>
+                    </template>
+                  </Column>
+
+                  
+                  <Column field="actions" header="Actions">
+                    <template #body="slotProps">
+                      <i class="pi pi-trash" @click="deleteCustom(project.customWater.indexOf(slotProps.data), 'customWater', 'water')" v-tooltip.top="'Delete water custom'" />
+                    </template>
+                  </Column>
+                
+                </DataTable>
+
+                </TabPanel>
+
+                <TabPanel header="Transportation">
+
+                    <h5>Aditional custom defined transportation emission</h5>
+                    <DataTable :value="project.customTransportation" editMode="cell" :paginator="true" class="p-datatable-gridlines" dataKey="_id"
+                    :rowHover="true" @cell-edit-complete="onCellEditCompleteCustom($event, 'customTransportation', 'transportation')" sortMode="multiple" :rows="5" v-model:filters="partnerFilters"
+                    filterDisplay="menu" :loading="loading" :filters="customFilters" responsiveLayout="scroll"
+                    :globalFilterFields="['nameCustom','valueCustom']" removableSort>
+                    
+                    <template #header>
+                        <div class="flex justify-content-between flex-column sm:flex-row">
+                          <div>
+                            <Button class="p-button-info mr-2" @click="addCustom(this.customTypes[3].value, 'customTransportation', 'transportation')"><i class="pi pi-plus mr-2" />New additional custom transportation emission</Button>
+                            <span class="p-input-icon-left">
+                              <i class="pi pi-search" />
+                              <InputText v-model="customFilters['global'].value" placeholder="Keyword Search" style="width: 100%"/>
+                            </span>
+                            <Button class="ml-2" label="Save" icon="pi pi-check" @click="saveCustoms" />
+                          </div>
+                          
+                          <Button type="button" icon="pi pi-filter-slash" label="Clear" class="p-button-warning" @click="clearCustomFilter()"/>
+                        </div>
+                    </template>
+
+                    <template #empty>
+                        No additional custom transportation emission found.
+                    </template>
+
+                    <template #loading>
+                        Loading custom transportation emissions. Please wait.
+                    </template>
+
+                    <Column field="name" header="Item" :sortable="true">
+                      <template #editor="slotProps">
+                          <InputText v-model="slotProps.data[slotProps.field]" @focus="$event.target.select()"/>
+                      </template>
+                      <template #filter="{filterModel, field}">
+                          <InputText type="text" v-model="filterModel.value" class="p-column-filter" :placeholder="'Filter by ' + field"/>
+                      </template>
+                    </Column>
+
+                    <Column field="value" header="Value (t CO2e)" :sortable="true">
+                      <template #editor="slotProps" class="p-field">
+                        <InputNumber v-model="slotProps.data[slotProps.field]" mode="decimal" :maxFractionDigits="3"
+                        showButtons :step="0.25" decrementButtonClass="p-button-info"
+                        incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
+                        :allowEmpty="false" :min="0" @focus="$event.target.select()"/>
+                      </template>
+                    </Column>
+
+                    
+                    <Column field="actions" header="Actions">
+                      <template #body="slotProps">
+                        <i class="pi pi-trash" @click="deleteCustom(project.customTransportation.indexOf(slotProps.data), 'customTransportation', 'transportation')" v-tooltip.top="'Delete transportation custom'" />
+                      </template>
+                    </Column>
+                  
+                  </DataTable>
+
+                </TabPanel>
+
+                <TabPanel header="Materials">
+
+                    <h5>Aditional custom defined material emission</h5>
+                    <DataTable :value="project.customMaterials" editMode="cell" :paginator="true" class="p-datatable-gridlines" dataKey="_id"
+                    :rowHover="true" @cell-edit-complete="onCellEditCompleteCustom($event, 'customMaterials', 'materials')" sortMode="multiple" :rows="5" v-model:filters="partnerFilters"
+                    filterDisplay="menu" :loading="loading" :filters="customFilters" responsiveLayout="scroll"
+                    :globalFilterFields="['nameCustom','valueCustom']" removableSort>
+                    
+                    <template #header>
+                        <div class="flex justify-content-between flex-column sm:flex-row">
+                          <div>
+                            <Button class="p-button-info mr-2" @click="addCustom(this.customTypes[4].value, 'customMaterials', 'materials')"><i class="pi pi-plus mr-2" />New additional custom material emission</Button>
+                            <span class="p-input-icon-left">
+                              <i class="pi pi-search" />
+                              <InputText v-model="customFilters['global'].value" placeholder="Keyword Search" style="width: 100%"/>
+                            </span>
+                            <Button class="ml-2" label="Save" icon="pi pi-check" @click="saveCustoms" />
+                          </div>
+                          
+                          <Button type="button" icon="pi pi-filter-slash" label="Clear" class="p-button-warning" @click="clearCustomFilter()"/>
+                        </div>
+                    </template>
+
+                    <template #empty>
+                        No additional custom materials emission found.
+                    </template>
+
+                    <template #loading>
+                        Loading custom materials emissions. Please wait.
+                    </template>
+
+                    <Column field="name" header="Item" :sortable="true">
+                      <template #editor="slotProps">
+                          <InputText v-model="slotProps.data[slotProps.field]" @focus="$event.target.select()"/>
+                      </template>
+                      <template #filter="{filterModel, field}">
+                          <InputText type="text" v-model="filterModel.value" class="p-column-filter" :placeholder="'Filter by ' + field"/>
+                      </template>
+                    </Column>
+
+                    <Column field="value" header="Value (t CO2e)" :sortable="true">
+                      <template #editor="slotProps" class="p-field">
+                        <InputNumber v-model="slotProps.data[slotProps.field]" mode="decimal" :maxFractionDigits="3"
+                        showButtons :step="0.25" decrementButtonClass="p-button-info"
+                        incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
+                        :allowEmpty="false" :min="0" @focus="$event.target.select()"/>
+                      </template>
+                    </Column>
+
+                    
+                    <Column field="actions" header="Actions">
+                      <template #body="slotProps">
+                        <i class="pi pi-trash" @click="deleteCustom(project.customMaterials.indexOf(slotProps.data), 'customMaterials', 'materials')" v-tooltip.top="'Delete materials custom'" />
+                      </template>
+                    </Column>
+                  
+                  </DataTable>
+
+                </TabPanel>
+
+                <TabPanel header="Events">
+
+                  <h5>Aditional custom defined events emission</h5>
+                  <DataTable :value="project.customEvents" editMode="cell" :paginator="true" class="p-datatable-gridlines" dataKey="_id"
+                  :rowHover="true" @cell-edit-complete="onCellEditCompleteCustom($event, 'customEvents', 'event')" sortMode="multiple" :rows="5" v-model:filters="partnerFilters"
+                  filterDisplay="menu" :loading="loading" :filters="customFilters" responsiveLayout="scroll"
+                  :globalFilterFields="['nameCustom','valueCustom']" removableSort>
+                  
+                  <template #header>
+                      <div class="flex justify-content-between flex-column sm:flex-row">
+                        <div>
+                          <Button class="p-button-info mr-2" @click="addCustom(this.customTypes[5].value,'customEvents', 'event')"><i class="pi pi-plus mr-2" />New additional custom event emission</Button>
+                          <span class="p-input-icon-left">
+                            <i class="pi pi-search" />
+                            <InputText v-model="customFilters['global'].value" placeholder="Keyword Search" style="width: 100%"/>
+                          </span>
+                          <Button class="ml-2" label="Save" icon="pi pi-check" @click="saveCustoms" />
+                        </div>
+                        
+                        <Button type="button" icon="pi pi-filter-slash" label="Clear" class="p-button-warning" @click="clearCustomFilter()"/>
+                      </div>
+                  </template>
+
+                  <template #empty>
+                      No additional custom event emission found.
+                  </template>
+
+                  <template #loading>
+                      Loading custom events emissions. Please wait.
+                  </template>
+
+                  <Column field="name" header="Item" :sortable="true">
+                    <template #editor="slotProps">
+                        <InputText v-model="slotProps.data[slotProps.field]" @focus="$event.target.select()"/>
+                    </template>
+                    <template #filter="{filterModel, field}">
+                        <InputText type="text" v-model="filterModel.value" class="p-column-filter" :placeholder="'Filter by ' + field"/>
+                    </template>
+                  </Column>
+
+                  <Column field="value" header="Value (t CO2e)" :sortable="true">
+                    <template #editor="slotProps" class="p-field">
+                      <InputNumber v-model="slotProps.data[slotProps.field]" mode="decimal" :maxFractionDigits="3"
+                      showButtons :step="0.25" decrementButtonClass="p-button-info"
+                      incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
+                      :allowEmpty="false" :min="0" @focus="$event.target.select()"/>
+                    </template>
+                  </Column>
+
+                  
+                  <Column field="actions" header="Actions">
+                    <template #body="slotProps">
+                      <i class="pi pi-trash" @click="deleteCustom(project.customEvents.indexOf(slotProps.data) * 5, 'customEvents', 'event')" v-tooltip.top="'Delete events custom'" />
+                    </template>
+                  </Column>
+                
+                </DataTable>
+
+                </TabPanel>
+
+
+                <TabPanel header="Printable Deliverables">
+
+                    <h5>Additional custom defined printable deliverable emission</h5>
+
+                    <DataTable :value="project.customPrintableDeliverables" editMode="cell" :paginator="true" class="p-datatable-gridlines" dataKey="_id"
+                    :rowHover="true" @cell-edit-complete="onCellEditCompleteCustom($event, 'customPrintableDeliverables', 'Printable Deliverables')" sortMode="multiple" :rows="5" v-model:filters="partnerFilters"
+                    filterDisplay="menu" :loading="loading" :filters="customFilters" responsiveLayout="scroll"
+                    :globalFilterFields="['nameCustom','valueCustom']" removableSort>
                       
                       <template #header>
                           <div class="flex justify-content-between flex-column sm:flex-row">
                             <div>
-                              <Button class="p-button-info mr-2" @click="addPartner"><i class="pi pi-plus mr-2" />Add Electricity Emission</Button>
+                              <Button class="p-button-info mr-2" @click="addCustom(this.customTypes[6].value, 'customPrintableDeliverables', 'Printable Deliverables')"><i class="pi pi-plus mr-2" />New additional custom printable deliverable</Button>
+                              <span class="p-input-icon-left">
+                                <i class="pi pi-search" />
+                                <InputText v-model="customFilters['global'].value" placeholder="Keyword Search" style="width: 100%"/>
+                              </span>
+                              <Button class="ml-2" label="Save" icon="pi pi-check" @click="saveCustoms" />
                             </div>
-                            <div>
-                              <Button type="button" label="Clear" class="p-button-warning" @click="clearPartnerFilter()"/>
-                            </div>
+                            
+                            <Button type="button" icon="pi pi-filter-slash" label="Clear" class="p-button-warning" @click="clearCustomFilter()"/>
                           </div>
                       </template>
 
                       <template #empty>
-                          No Electricity Emissions found.
+                          No additional custom printable deliverables found.
                       </template>
 
                       <template #loading>
-                          Loading Electricity Emissions. Please wait.
+                          Loading custom printable deliverables. Please wait.
                       </template>
 
-                      <Column field="item" header="Item" :sortable="true">
+                      <Column field="name" header="Item" :sortable="true">
                         <template #editor="slotProps">
-                             <InputText v-model="slotProps.data[slotProps.field]" />
+                            <InputText v-model="slotProps.data[slotProps.field]" @focus="$event.target.select()"/>
+                        </template>
+                        <template #filter="{filterModel, field}">
+                            <InputText type="text" v-model="filterModel.value" class="p-column-filter" :placeholder="'Filter by ' + field"/>
                         </template>
                       </Column>
 
-                      <Column field="dailyConsumptionPerEmployee" header="Estimated emission (CO2 gr)" :sortable="true">
-                        <template #editor="slotProps">
+                      <Column field="value" header="Value (t CO2e)" :sortable="true">
+                        <template #editor="slotProps" class="p-field">
                           <InputNumber v-model="slotProps.data[slotProps.field]" mode="decimal" :maxFractionDigits="3"
                           showButtons :step="0.25" decrementButtonClass="p-button-info"
                           incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
-                          :allowEmpty="false" :min="0" />
+                          :allowEmpty="false" :min="0" @focus="$event.target.select()"/>
                         </template>
                       </Column>
+
+                      <Column field="actions" header="Actions">
+                        <template #body="slotProps">
+                          <i class="pi pi-trash" @click="deleteCustom(project.customPrintableDeliverables.indexOf(slotProps.data), 'customPrintableDeliverables', 'Printable Deliverables')" v-tooltip.top="'Delete printable deliverables custom'" />
+                        </template>
+                      </Column>
+                    
                     </DataTable>
+
+                </TabPanel>
+
+                <TabPanel header="Equipment">
+
+                    <h5>Additional custom defined equipment emission</h5>
+
+                    <DataTable :value="project.customEquipment" editMode="cell" :paginator="true" class="p-datatable-gridlines" dataKey="_id"
+                    :rowHover="true" @cell-edit-complete="onCellEditCompleteCustom($event, 'customEquipment', 'Equipment')" sortMode="multiple" :rows="5" v-model:filters="partnerFilters"
+                    filterDisplay="menu" :loading="loading" :filters="customFilters" responsiveLayout="scroll"
+                    :globalFilterFields="['nameCustom','valueCustom']" removableSort>
+                      
+                      <template #header>
+                          <div class="flex justify-content-between flex-column sm:flex-row">
+                            <div>
+                              <Button class="p-button-info mr-2" @click="addCustom(this.customTypes[7].value, 'customEquipment', 'Equipment')"><i class="pi pi-plus mr-2" />New additional custom equipment</Button>
+                              <span class="p-input-icon-left">
+                                <i class="pi pi-search" />
+                                <InputText v-model="customFilters['global'].value" placeholder="Keyword Search" style="width: 100%"/>
+                              </span>
+                              <Button class="ml-2" label="Save" icon="pi pi-check" @click="saveCustoms" />
+                            </div>
+                            
+                            <Button type="button" icon="pi pi-filter-slash" label="Clear" class="p-button-warning" @click="clearCustomFilter()"/>
+                          </div>
+                      </template>
+
+                      <template #empty>
+                          No additional custom equipment found.
+                      </template>
+
+                      <template #loading>
+                          Loading custom equipment. Please wait.
+                      </template>
+
+                      <Column field="name" header="Item" :sortable="true">
+                        <template #editor="slotProps">
+                            <InputText v-model="slotProps.data[slotProps.field]" @focus="$event.target.select()"/>
+                        </template>
+                        <template #filter="{filterModel, field}">
+                            <InputText type="text" v-model="filterModel.value" class="p-column-filter" :placeholder="'Filter by ' + field"/>
+                        </template>
+                      </Column>
+
+                      <Column field="value" header="Value" :sortable="true">
+                        <template #editor="slotProps" class="p-field">
+                          <InputNumber v-model="slotProps.data[slotProps.field]" mode="decimal" :maxFractionDigits="3"
+                          showButtons :step="0.25" decrementButtonClass="p-button-info"
+                          incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
+                          :allowEmpty="false" :min="0" @focus="$event.target.select()"/>
+                        </template>
+                      </Column>
+
+                      <Column field="actions" header="Actions">
+                        <template #body="slotProps">
+                          <i class="pi pi-trash" @click="deleteCustom(project.customEquipment.indexOf(slotProps.data), 'customEquipment', 'Equipment')" v-tooltip.top="'Delete equipment custom'" />
+                        </template>
+                      </Column>
+                    
+                    </DataTable>
+
+                </TabPanel>
+
+              </TabView>
+            </div>
+
+            <div class="card" style="display:flex; justify-content:space-around">
+              <template v-if="!project.isInitialProject">
+                <Button  label="Save all" @click="saveCurrentProject" />
+               <!-- <Button  label="Update current values as initial values" @click="displayUpdateInitialValuesDialog" /> -->
+              </template>
+              <template v-else-if="project.isInitialProject">
+                <Button label="Save all" @click="displayUpdateInitialValuesDialog" />
+              </template>
+            </div>
+            <div class="col-12">
+              <div class="card p-fluid" style="display: flex; flex-direction: column; align-items: center; justify-content: space-around;">
+                <div>
+                  <h2 class="mb-2">Equivalent carbon dioxide emitted:
+                    <Badge :value="project.currentCF  + ' t CO2e'" class="ml-2 currentCF" size="xlarge" :severity="getTextColorFromCFIndex(project.currentCF)" />
+                  </h2>
                 </div>
-              </TabPanel>
-              <TabPanel header="Water">
-
-              </TabPanel>
-              <TabPanel header="Transportation">
-
-              </TabPanel>
-              <TabPanel header="Materials">
-
-              </TabPanel>
-              <TabPanel header="Events">
-
-              </TabPanel>
-              
-              <TabPanel header="Printable deliverables">
-
-              </TabPanel>
-            </TabView>
-          </TabPanel>
-
-					<TabPanel header="Analisys">
-						<div class="card">
-              <h5>On-site</h5>
-
-              <div class="p-fluid formgrid grid">
-                <div class="field col-12 md:col-4">
-                  <label for="participatedOnSiteEventsNumber">Number of on-site events participated by the project</label>
-                  <InputNumber v-model="project.participatedOnSiteEventsNumber" mode="decimal"
-                  showButtons decrementButtonClass="p-button-info" @keypress.enter="$event.target.blur()"
-                  incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
-                  :allowEmpty="false" :min="0" @focus="onFocusValue=project.participatedOnSiteEventsNumber" 
-                  @focusout="onCellEditComplete('participatedOnSiteEventsNumber', project.participatedOnSiteEventsNumber)"
-                  id ="participatedOnSiteEventsNumber"/>
+                <div>
+                  <h2 class="mt-2">CO2 permits cost:
+                    <Badge :value="round(project.currentCF * co2PermitsPrice) + ' €'" class="ml-2 currentCF" size="xlarge" />
+                  </h2>
                 </div>
-                <div class="field col-12 md:col-4">
-                  <label for="participatedOnSiteEventsAverageParticipants">Average number of participants</label>
-                  <InputNumber v-model="project.participatedOnSiteEventsAverageParticipants" mode="decimal" :maxFractionDigits="3"
-                  showButtons decrementButtonClass="p-button-info" :step="0.25" @keypress.enter="$event.target.blur()"
-                  incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
-                  :allowEmpty="false" :min="0" @focus="onFocusValue=project.participatedOnSiteEventsAverageParticipants" 
-                  @focusout="onCellEditComplete('participatedOnSiteEventsAverageParticipants', project.participatedOnSiteEventsAverageParticipants)"
-                  id ="participatedOnSiteEventsAverageParticipants"/>
-                </div>
-                <div class="field col-12 md:col-4">
-                  <label for="participatedOnSiteEventsAverageDuration">Average duration (days)</label>
-                  <InputNumber v-model="project.participatedOnSiteEventsAverageDuration" mode="decimal" :maxFractionDigits="3"
-                  showButtons decrementButtonClass="p-button-info" :step="0.25" @keypress.enter="$event.target.blur()"
-                  incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
-                  :allowEmpty="false" @focus="onFocusValue=project.participatedOnSiteEventsAverageDuration" 
-                  @focusout="onCellEditComplete('participatedOnSiteEventsAverageDuration', project.participatedOnSiteEventsAverageDuration)"
-                  id ="participatedOnSiteEventsAverageDuration"/>
+                <div>
+                  <Button icon="pi pi-replay" class="p-button-rounded p-button-outlined p-button-plain mr-5" label="Recalculate"
+                          style="width: 15rem; font-size: 1.1rem" @click="calculateCF()" />
+                  <Button icon="pi pi-file-pdf" class="p-button-rounded p-button-outlined p-button-plain mr-5 mt-3" label="Generate PDF"
+                          style="width: 15rem; font-size: 1.1rem" @click="generatePDF()"/>
                 </div>
               </div>
             </div>
-					</TabPanel>
+
+            <Dialog header="Error" v-model:visible="displayPartnersError" class="col-4" :modal="true">
+                <div v-if="displayPartnersWithoutCountryDialog" class="flex align-items-center  pb-5">
+                    <i class="pi pi-exclamation-triangle mr-3" style="font-size: 2rem" />
+                    <div>
+                      <p>You need to select a country for each partner in order to calculate the CF of the project!</p>
+                      <p>Partners without country:</p>
+                      <p v-for="partner in partnersWithoutCountry" :key="partner._id">{{partner.name}}</p>
+                    </div>
+                </div>
+                <div v-if="displayPartnersWithDefaultValues" class="flex align-items-center border-top-1 surface-border pt-5">
+                    <i class="pi pi-exclamation-triangle mr-3" style="font-size: 2rem" />
+                    <div>
+                      <p>There are partners with empty values!</p>
+                      <p>Partners with empty values:</p>
+                      <p v-for="partner in partnersWithDefaultValues" :key="partner._id">{{partner.name}}</p>
+                    </div>
+                </div>
+
+                <template #footer>
+                    <Button label="Ok" @click="closePartnersWithoutCountryErrorDialog" class="p-button-text p-button-info" autofocus/>
+                </template>
+            </Dialog>
+
+            <Dialog header="Error" v-model:visible="displayEventsWithDefaultValues" class="col-4" :modal="true">
+                
+                <div class="flex align-items-center border-top-1 surface-border pt-5">
+                    <i class="pi pi-exclamation-triangle mr-3" style="font-size: 2rem" />
+                    <div>
+                      <p>There are events with empty values!</p>
+                      <p>Events with empty values:</p>
+                      <p v-for="eventOrganization in eventsOrganizedByTheprojectNotDefined" :key="eventOrganization._id">{{eventOrganization.name}}</p>
+                      <p v-for="eventParticipation in eventsParticipationNotDefined" :key="eventParticipation._id">{{eventParticipation.name}}</p>
+                    </div>
+                </div>
+
+                <template #footer>
+                    <Button label="Ok" @click="closeEventsErrorDialog" class="p-button-text p-button-info" autofocus/>
+                </template>
+            </Dialog>
+
+
+
+            <div class="col-12">
+              <div class="card p-fluid" style="display: flex; flex-direction: column; align-items: center; justify-content: space-around;">
+                <h2>CF Breakdown (Tons)</h2>
+                <div class="col-12" style="display: flex; justify-content: space-evenly;">
+                  <div class="card p-fluid col-2" style="display: flex; flex-direction: column; align-items: center; justify-content: space-around;">
+                    <h2 class="font-medium text-3xl">Fuels Heat</h2>
+                    <div class="flex align-items-center py-3 px-2 border-top-1 surface-border">
+                      <Badge :value="project.fuelsHeatAdvancedCF" size="xlarge" class="currentCF"/>
+                    </div>
+                  </div>
+                  <div class="card p-fluid col-2" style="display: flex; flex-direction: column; align-items: center; justify-content: space-around;">
+                    <h2 class="font-medium text-3xl">Electricity</h2>
+                    <div class="flex align-items-center py-3 px-2 border-top-1 surface-border">
+                      <Badge :value="project.electricityAdvancedCF" size="xlarge" class="currentCF"/>
+                    </div>
+                  </div>
+                  <div class="card p-fluid col-2" style="display: flex; flex-direction: column; align-items: center; justify-content: space-around;">
+                    <h2 class="font-medium text-3xl">Water</h2>
+                    <div class="flex align-items-center py-3 px-2 border-top-1 surface-border">
+                      <Badge :value="project.waterAdvancedCF" size="xlarge" class="currentCF"/>
+                    </div>
+                  </div>
+                  <div class="card p-fluid col-2" style="display: flex; flex-direction: column; align-items: center; justify-content: space-around;">
+                    <h2 class="font-medium text-3xl">Transportation</h2>
+                    <div class="flex align-items-center py-3 px-2 border-top-1 surface-border">
+                      <Badge :value="project.transportationAdvancedCF" size="xlarge" class="currentCF"/>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-12" style="display: flex; justify-content: space-evenly;">
+                  <div class="card p-fluid col-2" style="display: flex; flex-direction: column; align-items: center; justify-content: space-around;">
+                    <h2 class="font-medium text-3xl">Materials</h2>
+                    <div class="flex align-items-center py-3 px-2 border-top-1 surface-border">
+                      <Badge :value="project.materialsAdvancedCF" size="xlarge" class="currentCF"/>
+                    </div>
+                  </div>
+                  <div class="card p-fluid col-2" style="display: flex; flex-direction: column; align-items: center; justify-content: space-around;">
+                    <h2 class="font-medium text-3xl">Printable<br>Deliverables</h2>
+                    <div class="flex align-items-center py-3 px-2 border-top-1 surface-border">
+                      <Badge :value="project.printableDeliverablesAdvancedCF" size="xlarge" class="currentCF"/>
+                    </div>
+                  </div>
+                  <div class="card p-fluid col-2" style="display: flex; flex-direction: column; align-items: center; justify-content: space-around;">
+                    <h2 class="font-medium text-3xl">Equipment</h2>
+                    <div class="flex align-items-center py-3 px-2 border-top-1 surface-border">
+                      <Badge :value="project.equipmentAdvancedCF" size="xlarge" class="currentCF"/>
+                    </div>
+                  </div>
+                  <div class="card p-fluid col-2" style="display: flex; flex-direction: column; align-items: center; justify-content: space-around;">
+                    <h2 class="font-medium text-3xl">Events</h2>
+                    <div class="flex align-items-center py-3 px-2 border-top-1 surface-border">
+                      <Badge :value="project.eventsAdvancedCF" size="xlarge" class="currentCF"/>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </TabPanel>
+
+          <TabPanel v-if="!this.project.isInitialProject" header="Analysis">
+            <div class="card">
+
+              <h3>Analysis of the project in preparation and execution phase</h3>
+
+              <div class="flex justify-content-around text-center">
+                <div class="col-6">
+                  <h4>Project in preparation phase</h4>
+                  <Chart type="radar" :data="chartDataInitial" :options="chartOptions" />
+
+                  <h4>Reference values for KPI-3</h4>
+                  <div class="p-fluid formgrid grid">
+                    <div class="field col-12 md:col-6">
+                      <label for="heatInputInitial">Heat</label>
+                      <InputNumber id="heatInputInitial" v-model="analysisInitial.heatInputInitial" mode="decimal" :maxFractionDigits="3"
+                        showButtons :step="0.25" decrementButtonClass="p-button-info"
+                        incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
+                        :allowEmpty="false" :min="0.001" class="mb-3"
+                        @focus="onFocusValue=analysisInitial.heatInputInitial; $event.target.select()"
+                        @keypress.enter="$event.target.blur()"
+                        @focusout="onCellEditCompleteAnalysis('heatInputInitial', analysisInitial.heatInputInitial, true)" />
+
+                      <label for="electricityInputInitial">Electricity</label>  
+                      <InputNumber id="electricityInputInitial" v-model="analysisInitial.electricityInputInitial" mode="decimal" :maxFractionDigits="3"
+                        showButtons :step="0.25" decrementButtonClass="p-button-info"
+                        incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
+                        :allowEmpty="false" :min="0.001" class="mb-3"
+                        @focus="onFocusValue=analysisInitial.electricityInputInitial; $event.target.select()"
+                        @keypress.enter="$event.target.blur()"
+                        @focusout="onCellEditCompleteAnalysis('electricityInputInitial', analysisInitial.electricityInputInitial, true)" />
+
+                      <label for="waterInputInitial">Water</label>  
+                      <InputNumber id="waterInputInitial" v-model="analysisInitial.waterInputInitial" mode="decimal" :maxFractionDigits="3"
+                        showButtons :step="0.25" decrementButtonClass="p-button-info"
+                        incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
+                        :allowEmpty="false" :min="0.001" class="mb-3"
+                        @focus="onFocusValue=analysisInitial.waterInputInitial; $event.target.select()"
+                        @keypress.enter="$event.target.blur()"
+                        @focusout="onCellEditCompleteAnalysis('waterInputInitial', analysisInitial.waterInputInitial, true)" />
+
+                      <label for="transportationInputInitial">Transportation</label>
+                      <InputNumber id="transportationInputInitial" v-model="analysisInitial.transportationInputInitial" mode="decimal" :maxFractionDigits="3"
+                        showButtons :step="0.25" decrementButtonClass="p-button-info"
+                        incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
+                        :allowEmpty="false" :min="0.001"
+                        @focus="onFocusValue=analysisInitial.transportationInputInitial; $event.target.select()"
+                        @keypress.enter="$event.target.blur()"
+                        @focusout="onCellEditCompleteAnalysis('transportationInputInitial', analysisInitial.transportationInputInitial, true)" />
+
+                    </div>
+
+                    <div class="field col-12 md:col-6">
+                      <label for="materialsInputInitial">Materials</label>  
+                      <InputNumber id="materialsInputInitial" v-model="analysisInitial.materialsInputInitial" mode="decimal" :maxFractionDigits="3"
+                        showButtons :step="0.25" decrementButtonClass="p-button-info"
+                        incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
+                        :allowEmpty="false" :min="0.001" class="mb-3"
+                        @focus="onFocusValue=analysisInitial.materialsInputInitial; $event.target.select()"
+                        @keypress.enter="$event.target.blur()"
+                        @focusout="onCellEditCompleteAnalysis('materialsInputInitial', analysisInitial.materialsInputInitial, true)"/>
+
+                      <label for="eventsInputInitial">Events</label>  
+                      <InputNumber id="eventsInputInitial" v-model="analysisInitial.eventsInputInitial" mode="decimal" :maxFractionDigits="3"
+                        showButtons :step="0.25" decrementButtonClass="p-button-info"
+                        incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
+                        :allowEmpty="false" :min="0.001" class="mb-3"
+                        @focus="onFocusValue=analysisInitial.eventsInputInitial; $event.target.select()"
+                        @keypress.enter="$event.target.blur()"
+                        @focusout="onCellEditCompleteAnalysis('eventsInputInitial', analysisInitial.eventsInputInitial, true)"/>
+
+                      <label for="printableDeliverablesInputInitial">Printable Deliverables</label>
+                      <InputNumber id="printableDeliverablesInputInitial" v-model="analysisInitial.printableDeliverablesInputInitial" mode="decimal" :maxFractionDigits="3"
+                        showButtons :step="0.25" decrementButtonClass="p-button-info"
+                        incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
+                        :allowEmpty="false" :min="0.001" class="mb-3"
+                        @focus="onFocusValue=analysisInitial.printableDeliverablesInputInitial; $event.target.select()"
+                        @keypress.enter="$event.target.blur()"
+                        @focusout="onCellEditCompleteAnalysis('printableDeliverablesInputInitial', analysisInitial.printableDeliverablesInputInitial, true)"/>
+
+                      <label for="equipmentInputInitial">Equipment</label>
+                      <InputNumber id="equimentInputInitial" v-model="analysisInitial.equipmentInputInitial" mode="decimal" :maxFractionDigits="3"
+                        showButtons :step="0.25" decrementButtonClass="p-button-info"
+                        incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
+                        :allowEmpty="false" :min="0.001"
+                        @focus="onFocusValue=analysisInitial.equimentInputInitial; $event.target.select()"
+                        @keypress.enter="$event.target.blur()"
+                        @focusout="onCellEditCompleteAnalysis('equipmentInputInitial', analysisInitial.equipmentInputInitial, true)"/>
+                    </div>  
+                  </div>
+                </div>
+
+                <div>
+                    <Divider layout="vertical">
+                    </Divider>
+                </div>
+
+                <div class="col-6">
+                  <h4>Project in execution phase</h4>
+                  <Chart type="radar" :data="chartDataExecution" :options="chartOptions" />
+                  
+                  <h4>Reference values for KPI-3</h4>
+                  <div class="p-fluid formgrid grid">
+                    <div class="field col-12 md:col-6">
+                      <label for="heatInputExecution">Heat</label>
+                      <InputNumber id="heatInputExecution" v-model="analysisExecution.heatInputExecution" mode="decimal" :maxFractionDigits="3"
+                        showButtons :step="0.25" decrementButtonClass="p-button-info"
+                        incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
+                        :allowEmpty="false" :min="0.001" class="mb-3"
+                        @focus="onFocusValue=analysisExecution.heatInputExecution; $event.target.select()"
+                        @keypress.enter="$event.target.blur()"
+                        @focusout="onCellEditCompleteAnalysis('heatInputExecution', analysisExecution.heatInputExecution, false)"/>
+
+                      <label for="electricityInputExecution">Electricity</label>  
+                      <InputNumber id="electricityInputExecution" v-model="analysisExecution.electricityInputExecution" mode="decimal" :maxFractionDigits="3"
+                        showButtons :step="0.25" decrementButtonClass="p-button-info"
+                        incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
+                        :allowEmpty="false" :min="0.001" class="mb-3"
+                        @focus="onFocusValue=analysisExecution.electricityInputExecution; $event.target.select()"
+                        @keypress.enter="$event.target.blur()"
+                        @focusout="onCellEditCompleteAnalysis('electricityInputExecution', analysisExecution.electricityInputExecution, false)"/>
+
+                      <label for="waterInputExecution">Water</label>  
+                      <InputNumber id="waterInputExecution" v-model="analysisExecution.waterInputExecution" mode="decimal" :maxFractionDigits="3"
+                        showButtons :step="0.25" decrementButtonClass="p-button-info"
+                        incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
+                        :allowEmpty="false" :min="0.001" class="mb-3"
+                        @focus="onFocusValue=analysisExecution.waterInputExecution; $event.target.select()"
+                        @keypress.enter="$event.target.blur()"
+                        @focusout="onCellEditCompleteAnalysis('waterInputExecution', analysisExecution.waterInputExecution, false)"/>
+
+                      <label for="transportationInputExecution">Transportation</label>
+                      <InputNumber id="transportationInputExecution" v-model="analysisExecution.transportationInputExecution" mode="decimal" :maxFractionDigits="3"
+                        showButtons :step="0.25" decrementButtonClass="p-button-info"
+                        incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
+                        :allowEmpty="false" :min="0.001"
+                        @focus="onFocusValue=analysisExecution.transportationInputExecution; $event.target.select()"
+                        @keypress.enter="$event.target.blur()"
+                        @focusout="onCellEditCompleteAnalysis('transportationInputExecution', analysisExecution.transportationInputExecution, false)"/>
+
+                    </div>
+
+                    <div class="field col-12 md:col-6">
+                      <label for="materialsInputExecution">Materials</label>  
+                      <InputNumber id="materialsInputExecution" v-model="analysisExecution.materialsInputExecution" mode="decimal" :maxFractionDigits="3"
+                        showButtons :step="0.25" decrementButtonClass="p-button-info"
+                        incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
+                        :allowEmpty="false" :min="0.001" class="mb-3"
+                        @focus="onFocusValue=analysisExecution.materialsInputExecution; $event.target.select()"
+                        @keypress.enter="$event.target.blur()"
+                        @focusout="onCellEditCompleteAnalysis('materialsInputExecution', analysisExecution.materialsInputExecution, false)"/>
+
+                      <label for="eventsInputExecution">Events</label>  
+                      <InputNumber id="eventsInputExecution" v-model="analysisExecution.eventsInputExecution" mode="decimal" :maxFractionDigits="3"
+                        showButtons :step="0.25" decrementButtonClass="p-button-info"
+                        incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
+                        :allowEmpty="false" :min="0.001" class="mb-3"
+                        @focus="onFocusValue=analysisExecution.eventsInputExecution; $event.target.select()"
+                        @keypress.enter="$event.target.blur()"
+                        @focusout="onCellEditCompleteAnalysis('eventsInputExecution', analysisExecution.eventsInputExecution, false)"/>
+
+                      <label for="printableDeliverablesInputExecution">Printable Deliverables</label>
+                      <InputNumber id="printableDeliverablesInputExecution" v-model="analysisExecution.printableDeliverablesInputExecution" mode="decimal" :maxFractionDigits="3"
+                        showButtons :step="0.25" decrementButtonClass="p-button-info"
+                        incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
+                        :allowEmpty="false" :min="0.001" class="mb-3"
+                        @focus="onFocusValue=analysisExecution.printableDeliverablesInputExecution; $event.target.select()"
+                        @keypress.enter="$event.target.blur()"
+                        @focusout="onCellEditCompleteAnalysis('printableDeliverablesInputExecution', analysisExecution.printableDeliverablesInputExecution, false)"/>
+
+                      <label for="equipmentInputExecution">Equipment</label>
+                      <InputNumber id="equimentInputExecution" v-model="analysisExecution.equipmentInputExecution" mode="decimal" :maxFractionDigits="3"
+                        showButtons :step="0.25" decrementButtonClass="p-button-info"
+                        incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
+                        :allowEmpty="false" :min="0.001"
+                        @focus="onFocusValue=analysisExecution.equipmentInputExecution; $event.target.select()"
+                        @keypress.enter="$event.target.blur()"
+                        @focusout="onCellEditCompleteAnalysis('equimentInputExecution', analysisExecution.equimentInputExecution, false)"/>
+                    </div>  
+                  </div>
+
+                </div>
+              </div>
+            </div>
+          </TabPanel>
 				</TabView>
       </div>
     </div>
+
+    <Dialog header="Warning" v-model:visible="displayUpdateInitialValues" class="col-4" :modal="true">
+      <div class="flex align-items-center  pb-5">
+          <i class="pi pi-exclamation-triangle mr-3" style="font-size: 2rem" />
+          <div>
+            <p>The values of the project will be updated in it's initial phase, are you sure?</p>
+          </div>
+      </div>
+      <template #footer>
+          <Button label="Cancel" @click="declineUpdateInitialValuesDialog" class="p-button-text p-button-info" />
+          <Button label="Ok" @click="confirmUpdateInitialValuesDialog" class="p-button-text p-button-info" /> 
+      </template>
+    </Dialog>
   </div>
     
 
 </template>
-
 <script>
 import Dropdown from 'primevue/dropdown';
 import { mapState } from 'vuex'
@@ -540,17 +1772,23 @@ import TabView from 'primevue/tabview';
 import TabPanel from 'primevue/tabpanel';
 import Topbar from '@/components/Topbar.vue';
 import Mongoose from "mongoose"
-// import Toast from 'primevue/toast';
-// import Badge from 'primevue/badge';
-// import Dialog from 'primevue/dialog';
+import Toast from 'primevue/toast';
+import Badge from 'primevue/badge';
+import Dialog from 'primevue/dialog';
 import Chart from 'primevue/chart'
+import ColumnGroup from 'primevue/columngroup'
+import Row from 'primevue/row'
 import 'primeicons/primeicons.css';
+import pdfMake from 'pdfmake';
+import pdfFonts from 'pdfmake/build/vfs_fonts';
+import htmlToPdfmake from 'html-to-pdfmake';
+import InputSwitch from 'primevue/inputswitch';
+import Divider from 'primevue/divider';
 
 export default {
   name: 'ProjectDetailsAdvanced',
   components: {
     Dropdown,
-    // Dialog,
     Button,
     DataTable,
     Column,
@@ -560,14 +1798,21 @@ export default {
     TabView,
     TabPanel,
     Topbar,
-    // Toast,
-    // Badge,
-    Chart
+    Toast,
+    Chart,
+    Badge,
+    Dialog,
+    ColumnGroup,
+    Row,
+    InputSwitch,
+    Divider
   },
   data() {
     return {
+      co2PermitsPrice: process.env.VUE_APP_CO2_PERMITS_PRICE,
       placeholder: "Select a partner",
       project: {},
+      projectInitial: {},
       customHeat: [],
       customElectricity: [],
       customWater: [],
@@ -575,14 +1820,27 @@ export default {
       customMaterials: [],
       customEvents: [],
       customPrintableDeliverables: [],
+      customEquipment: [],
+      electricityValuesTable:[],
       object: {},
-      countriesForDropdown: ["Albania", "Bosnia & Herzegovina", "Croatia", "Cyprus", "France", "Greece", "Italy", "Malta", "Montenegro", "Portugal", "Slovenia", "Spain", "Bulgaria", "North Macedonia"],
+      analysisInitial: this.$store.state.analysisParamsInitial,
+      analysisExecution: this.$store.state.analysisParamsExecution,
+      KPI1ParamsInitial: {},
+      KPI1ParamsExecution: {},
+      KPI2ParamsInitial: {},
+      KPI2ParamsExecution: {},
+      KPI3ParamsInitial: {},
+      KPI3ParamsExecution: {},
+      countriesForDropdown: ["Albania", "Bosnia & Herzegovina", "Croatia", "Cyprus", "Europe", "France", "Greece", "Italy", "Malta", "Montenegro", "Portugal", "Slovenia", "Spain", "Bulgaria", "North Macedonia"],
+      eventTypesForDropdown: ["In presence", "Mixed", "On-line"],
+      travelModesForDropdown: ["Airplane", "Bus", "Car", "Ferries", "International Rail", "Light rail and tram/Underground", "Motorbikes", "National Rail", "Taxi"],
+      fuelTypesForDropdown: ["Battery electric vehicle", "CNG", "Diesel", "Hybrid", "LPG", "Other", "Petrol", "Plug-in hybrid electric vehicle"],
       paperSizes: ["A0", "A1", "A2", "A3", "A4", "A5", "A6"],
       deliverableOptions: [
         {value: "Report type*", avgPagesPerCopy: 50, size: "A4"},
         {value: "Articles/Newsletter/Booklet", avgPagesPerCopy: 10, size: "A4"},
         {value: "Brochure/Flyer", avgPagesPerCopy: 2, size: "A4"},
-        {value: "Poster", avgPagesPerCopy: 1, size: "A0"},
+        {value: "Poster/Rollup", avgPagesPerCopy: 1, size: "A0"},
       ],
       deliverableAdvancedOptions: [
         {value: "Application form", deliverableNames: ["Application form"]},
@@ -609,89 +1867,197 @@ export default {
       ],
       customTypes : [
         {value: "Heat"},
-        {value: "Electrity"},
+        {value: "Electricity"},
         {value: "Water"},
         {value: "Transportation"},
         {value: "Materials"},
         {value: "Events"},
-        {value: "Printable Deliverables"}
+        {value: "Printable Deliverables"},
+        {value: "Equipment"},
       ],
-      chartData: {
-				labels: ['Electricity', 'Water', 'Printable deliverables', 'Events', 'Materials', 'Transportation', 'Heat'],
+      chartDataInitial: {
+				labels: ['Printable deliverables', 'Equipment', 'Electricity', 'Water', 'Transportation', 'Events', 'Materials', 'Heat'],
 				datasets: [
 					{
-						label: 'My First dataset',
+						label: 'KPI-1',
 						backgroundColor: 'rgba(179,181,198,0.2)',
 						borderColor: 'rgba(179,181,198,1)',
 						pointBackgroundColor: 'rgba(179,181,198,1)',
 						pointBorderColor: '#fff',
 						pointHoverBackgroundColor: '#fff',
 						pointHoverBorderColor: 'rgba(179,181,198,1)',
-						data: [65, 59, 90, 81, 56, 55, 40]
+						data: [0, 0, 0, 0, 0, 0, 0, 0]
 					},
 					{
-						label: 'My Second dataset',
+						label: 'KPI-2',
 						backgroundColor: 'rgba(255,99,132,0.2)',
 						borderColor: 'rgba(255,99,132,1)',
 						pointBackgroundColor: 'rgba(255,99,132,1)',
 						pointBorderColor: '#fff',
 						pointHoverBackgroundColor: '#fff',
 						pointHoverBorderColor: 'rgba(255,99,132,1)',
-						data: [28, 48, 40, 19, 96, 27, 100]
+						data: [0, 0, 0, 0, 0, 0, 0, 0]
+					},
+          {
+						label: 'KPI-3',
+						backgroundColor: 'rgba(50,168,82,0.2)',
+						borderColor: 'rgba(50,168,82,1)',
+						pointBackgroundColor: 'rgba(50,168,82,1)',
+						pointBorderColor: '##fff',
+						pointHoverBackgroundColor: '#fff',
+						pointHoverBorderColor: 'rgba(50,168,82,1)',
+						data: [0, 0, 0, 0, 0, 0, 0, 0]
+					}
+				]
+			},
+      chartDataExecution: {
+				labels: ['Printable deliverables', 'Equipment', 'Electricity', 'Water', 'Transportation', 'Events', 'Materials', 'Heat'],
+				datasets: [
+					{
+						label: 'KPI-1',
+						backgroundColor: 'rgba(179,181,198,0.2)',
+						borderColor: 'rgba(179,181,198,1)',
+						pointBackgroundColor: 'rgba(179,181,198,1)',
+						pointBorderColor: '#fff',
+						pointHoverBackgroundColor: '#fff',
+						pointHoverBorderColor: 'rgba(179,181,198,1)',
+						data: [0, 0, 0, 0, 0, 0, 0, 0]
+					},
+					{
+						label: 'KPI-2',
+						backgroundColor: 'rgba(255,99,132,0.2)',
+						borderColor: 'rgba(255,99,132,1)',
+						pointBackgroundColor: 'rgba(255,99,132,1)',
+						pointBorderColor: '#fff',
+						pointHoverBackgroundColor: '#fff',
+						pointHoverBorderColor: 'rgba(255,99,132,1)',
+						data: [0, 0, 0, 0, 0, 0, 0, 0]
+					},
+          {
+						label: 'KPI-3',
+						backgroundColor: 'rgba(50,168,82,0.2)',
+						borderColor: 'rgba(50,168,82,1)',
+						pointBackgroundColor: 'rgba(50,168,82,1)',
+						pointBorderColor: '##fff',
+						pointHoverBackgroundColor: '#fff',
+						pointHoverBorderColor: 'rgba(50,168,82,1)',
+						data: [0, 0, 0, 0, 0, 0, 0, 0]
 					}
 				]
 			},
 			chartOptions: {
 				plugins: {
-                    legend: {
-                        labels: {
-                            color: '#495057'
-                        }
-                    }
-                },
-                scales: {
-                    r: {
-                        pointLabels: {
-                            color: '#495057',
-                        },
-                        grid: {
-                            color: '#ebedef',
-                        },
-                        angleLines: {
-                            color: '#ebedef'
-                        }
-                    }
-                }
+          legend: {
+            labels: {
+              color: '#495057'
+            }
+          }
+        },
+        scales: {
+          r: {
+            pointLabels: {
+              color: '#495057',
+              font: {
+                size: 18
+              }
+            },
+            grid: {
+              color: '#ebedef',
+
+            },
+            angleLines: {
+              color: '#ebedef'
+            }
+          }
+        }
 			},
       partnerFilters: null,
+      externalExpertFilters: null,
+      organizationEventsFilters: null,
+      participationEventsFilters: null,
       printableDeliverableFilters: null,
+      customFilters: null,
       loading: true,
       onFocusValue: null,
-      currentPagePartnersTable: 0,
-      currentPagePrintableDeliverablesTable: 0,
-      currentPageCustomPrintableDeliverablesTable: 0,
       displayPartnersWithoutCountryDialog: false,
+      displayPartnersWithDefaultValues: false,
+      displayEventsWithDefaultValues : false,
       partnersWithoutCountry: [],
+      partnersWithDefaultValues: [],
+      eventsOrganizedByTheprojectNotDefined: [],
+      eventsParticipationNotDefined: [],
+      displayPartnersError: false,
+      eventsLoaded: false,
+      displayUpdateInitialValues: false
     }
   },
   created() {
+    this.project.events = {}
+    this.project.events.organization = []
+    this.project.events.participation = []
+
     this.getProject();
     this.initPartnerFilters();
+    this.initExternalExpertFilters();
+    this.initOrganizationEventsFilters();
+    this.initParticipationEventsFilters();
     this.initPrintableDeliverableFilters();
+    this.initCustomFilters();
   },
   mounted() {
     this.loading = false;
+    if (this.$store.state.toggleValue === false)
+      this.$store.dispatch("toggleView")
   },
   methods: {
+    round(num) {
+      return Math.round((num + Number.EPSILON) * 100) / 100
+    },
+    generatePDF() {
+      var html = htmlToPdfmake(document.getElementById('pdfPrintDiv').innerHTML);
+      const documentDefinition = { content: html, pageOrientation: 'landscape' };
+      pdfMake.vfs = pdfFonts.pdfMake.vfs;
+      pdfMake.createPdf(documentDefinition).open();
+    },
     displayPartnersWithoutCountryErrorDialog() {
       this.displayPartnersWithoutCountryDialog = true
     },
+    displayPartnersWithDefaultValuesErrorDialog(){
+      this.displayPartnersWithDefaultValues = true;
+    },
+    displayPartnersErrorDialog() {
+      this.displayPartnersError = true;
+    },
+    displayUpdateInitialValuesDialog() {
+      this.displayUpdateInitialValues = true;
+    },
+    displayEventsErrorDialog() {
+      this.displayEventsWithDefaultValues = true;
+    },
     closePartnersWithoutCountryErrorDialog() {
-      this.displayPartnersWithoutCountryDialog = false
-      this.partnersWithoutCountry = []
+      this.displayPartnersError = false;
+      this.displayPartnersWithoutCountryDialog = false;
+      this.displayPartnersWithDefaultValues = false;
+      this.partnersWithoutCountry = [];
+      this.partnersWithDefaultValues = [];
+    },
+    closeEventsErrorDialog() {
+      this.displayEventsWithDefaultValues = false;
+      this.eventsOrganizedByTheprojectNotDefined = [];
+      this.eventsParticipationNotDefined = [];
+    },
+    confirmUpdateInitialValuesDialog() {
+      this.displayUpdateInitialValues = false;
+      if(this.project.isInitialProject) {
+        this.saveCurrentProject();
+      } else {
+        this.updateInitialValues();
+      }
+    },
+    declineUpdateInitialValuesDialog() {
+      this.displayUpdateInitialValues = false;
     },
     calculateCF() {
-      
       this.checkEventsNotFilled()
 
       for (let partner of this.project.partners) {
@@ -700,28 +2066,50 @@ export default {
         }
       }
 
-      if (this.partnersWithoutCountry.length > 0) {
-        this.displayPartnersWithoutCountryErrorDialog()
-      } else {
+      for(let partner of this.project.partners) {
+        if(partner.twoWayTravels === null ||
+            partner.employeesPersonMonths === null ) {
+              this.partnersWithDefaultValues.push(partner);
+            }
+      }
 
+      if (this.partnersWithoutCountry.length > 0) {
+        this.displayPartnersWithoutCountryErrorDialog();
+      }
+
+      if (this.partnersWithDefaultValues.length > 0){
+        this.displayPartnersWithDefaultValuesErrorDialog();
+      }
+
+      if(this.checkEventsOrganization() == true || this.checkEventsParticipation() == true) {
+        this.displayEventsErrorDialog();
+      }
+
+      if (this.displayPartnersWithoutCountryDialog || this.displayPartnersWithDefaultValues > 0) {
+        this.displayPartnersErrorDialog();
+      } else if (!this.checkHoursNotGreaterThan24() && !this.checkNonLocalPhysicalGreaterThanPhysicalParticipants()) {
         axios.put(`/projects/${this.$route.params.id}`, this.project)
         .catch((error) => {
           console.log(error);
         })
-
+        
         this.savePrintableDeliverables()
         this.savePartners()
+        this.saveEvents()
+        this.saveCustoms()
+        this.saveExternalExperts()
 
-        axios.put(`/projects/calculateCF/${this.$route.params.id}`)
+        axios.put(`/projects/calculateAdvancedCF/${this.$route.params.id}`)
         .then((response) => {
-          let partners = this.project.partners
-          let printableDeliverables = this.project.printableDeliverables
-          let coordinator = this.project.coordinator
-          
-          this.project = response.data;
-          this.project.partners = partners
-          this.project.printableDeliverables = printableDeliverables
-          this.project.coordinator = coordinator
+          this.project.fuelsHeatAdvancedCF = response.data.fuelsHeatAdvancedCF
+          this.project.electricityAdvancedCF = response.data.electricityAdvancedCF
+          this.project.waterAdvancedCF = response.data.waterAdvancedCF
+          this.project.transportationAdvancedCF = response.data.transportationAdvancedCF
+          this.project.materialsAdvancedCF = response.data.materialsAdvancedCF
+          this.project.eventsAdvancedCF = response.data.eventsAdvancedCF
+          this.project.printableDeliverablesAdvancedCF = response.data.printableDeliverablesAdvancedCF
+          this.project.currentCF = response.data.currentCF
+          this.project.equipmentAdvancedCF = response.data.equipmentAdvancedCF
 
           this.$toast.add({severity:'success', summary: 'Successful', detail: 'Project CF calculated', life: 3000});
         })
@@ -730,13 +2118,105 @@ export default {
         })
       }
     },
+    checkEventsNotFilled() {
+      if (this.project.publicOnSiteEventsNumber === 0) {
+        if (this.project.publicOnSiteEventsAveragePhysicalParticipants !== 0
+            || this.project.publicOnSiteEventsAverageNonLocalPhysicalParticipants !== 0
+            || this.project.publicOnSiteEventsAverageDuration !== 0) {
+          this.$toast.add({severity:'warn', summary: 'Caution', detail: 'Some values were input while the number of public in presence events is 0!', life: 8000});
+        }
+      }
+
+      if (this.project.publicHybridEventsNumber === 0) {
+        if (this.project.publicHybridEventsAveragePhysicalParticipants !== 0
+            || this.project.publicHybridEventsAverageNonLocalPhysicalParticipants !== 0
+            || this.project.publicHybridEventsAverageVirtualParticipants !== 0
+            || this.project.publicHybridEventsAverageDuration !== 0
+            || this.project.publicHybridEventsAverageHoursPerDays !== 0) {
+          this.$toast.add({severity:'warn', summary: 'Caution', detail: 'Some values were input while the number of public mixed events is 0!', life: 8000});
+        }
+      }
+
+      if (this.project.publicVirtualEventsNumber === 0) {
+        if (this.project.publicVirtualEventsAverageVirtualParticipants !== 0
+            || this.project.publicVirtualEventsAverageDuration !== 0) {
+          this.$toast.add({severity:'warn', summary: 'Caution', detail: 'Some values were input while the number of public on-line events is 0!', life: 8000});
+        }
+      }
+  
+      if (this.project.internalOnSiteEventsNumber === 0) {
+        if (this.project.internalOnSiteEventsAveragePhysicalParticipants !== 0
+            || this.project.internalOnSiteEventsAverageNonLocalPhysicalParticipants !== 0
+            || this.project.internalOnSiteEventsAverageDuration !== 0) {
+          this.$toast.add({severity:'warn', summary: 'Caution', detail: 'Some values were input while the number of internal in presence events is 0!', life: 8000});
+        }
+      }
+
+      if (this.project.internalHybridEventsNumber === 0) {
+        if (this.project.internalHybridEventsAveragePhysicalParticipants !== 0
+            || this.project.internalHybridEventsAverageNonLocalPhysicalParticipants !== 0
+            || this.project.internalHybridEventsAverageVirtualParticipants !== 0
+            || this.project.internalHybridEventsAverageDuration !== 0
+            || this.project.internalHybridEventsAverageHoursPerDays !== 0) {
+          this.$toast.add({severity:'warn', summary: 'Caution', detail: 'Some values were input while the number of internal mixed events is 0!', life: 8000});
+        }
+      }
+
+      if (this.project.internalVirtualEventsNumber === 0) {
+        if (this.project.internalVirtualEventsAverageVirtualParticipants !== 0
+            || this.project.internalVirtualEventsAverageDuration !== 0) {
+          this.$toast.add({severity:'warn', summary: 'Caution', detail: 'Some values were input while the number of internal on-line events is 0!', life: 8000});
+        }
+      }
+  
+      if (this.project.participatedOnSiteEventsNumber === 0) {
+        if (this.project.participatedOnSiteEventsAverageParticipants !== 0
+            || this.project.participatedOnSiteEventsAverageDuration !== 0) {
+          this.$toast.add({severity:'warn', summary: 'Caution', detail: 'Some values were input while the number of participated in presence events is 0!', life: 8000});
+        }
+      }  
+    },
+    checkHoursNotGreaterThan24(){
+      let res = false;
+      if (this.project.publicHybridEventsAverageHoursPerDays > 24 || this.project.internalHybridEventsAverageHoursPerDays > 24) {
+        res = true;
+        this.$toast.add({severity:'error', summary: 'Caution', detail: 'The value of Average duration (hours/day) should be lower than 24', life: 8000});
+      }
+      return res;
+    },
+    checkNonLocalPhysicalGreaterThanPhysicalParticipants(){
+      let res = false;
+      if (this.project.publicOnSiteEventsAverageNonLocalPhysicalParticipants > this.project.publicOnSiteEventsAveragePhysicalParticipants 
+        || this.project.publicHybridEventsAverageNonLocalPhysicalParticipants > this.project.publicHybridEventsAveragePhysicalParticipants
+        || this.project.internalOnSiteEventsAverageNonLocalPhysicalParticipants > this.project.internalOnSiteEventsAveragePhysicalParticipants
+        || this.project.internalHybridEventsAverageNonLocalPhysicalParticipants > this.project.internalHybridEventsAveragePhysicalParticipants) {
+          res = true;
+        this.$toast.add({severity:'error', summary: 'Caution', detail: 'Average number of non-local physical participants cannot be greater than the value of Average number of physical participants', life: 8000});
+      }
+      return res;
+    },
+    saveCurrentProject(){
+        this.savePrintableDeliverables();
+        this.savePartners();
+        this.saveEvents()
+        this.saveCustoms()
+        this.saveExternalExperts()
+        
+        axios.put("/projects/" + this.project._id, this.project).then(() => {
+          this.$toast.add({severity:'success', summary: 'Successful', detail: 'Project saved', life: 3000});
+        }).catch(error =>{
+          console.log(error)
+       })
+    },
     getTextColorFromCFIndex(cfIndex) {
-        if (cfIndex < 150)
-            return "success"
-        else if (cfIndex > 150 & cfIndex < 250)
-            return "warning"
-        else
-            return "danger"
+      cfIndex
+        // if (cfIndex < 150)
+        //     return "success"
+        // else if (cfIndex > 150 & cfIndex < 250)
+        //     return "warning"
+        // else
+        //     return "danger"
+        return ""
     },
     initPartnerFilters() {
       this.partnerFilters = {
@@ -746,6 +2226,30 @@ export default {
     clearPartnerFilter() {
       this.initPartnerFilters();
     },
+    initExternalExpertFilters() {
+      this.externalExpertFilters = {
+        'global': {value: null, matchMode: FilterMatchMode.CONTAINS},
+      }
+    },
+    clearExternalExpertFilter() {
+      this.initExternalExpertFilters();
+    },
+    initOrganizationEventsFilters() {
+      this.organizationEventsFilters = {
+        'global': {value: null, matchMode: FilterMatchMode.CONTAINS},
+      }
+    },
+    initParticipationEventsFilters() {
+      this.participationEventsFilters = {
+        'global': {value: null, matchMode: FilterMatchMode.CONTAINS},
+      }
+    },
+    clearOrganizationEventsFilter() {
+      this.initOrganizationEventsFilters();
+    },
+    clearParticipationEventsFilter() {
+      this.initParticipationEventsFilters();
+    },
     initPrintableDeliverableFilters() {
       this.printableDeliverableFilters = {
         'global': {value: null, matchMode: FilterMatchMode.CONTAINS},
@@ -754,6 +2258,14 @@ export default {
     clearPrintableDeliverableFilter() {
       this.initPrintableDeliverableFilters();
     },
+    initCustomFilters() {
+      this.customFilters = {
+        'global': {value: null, matchMode: FilterMatchMode.CONTAINS},
+      }
+    },
+    clearCustomFilter() {
+      this.initCustomFilters();
+    },
     updateSelectedPartner(event) {
       this.$store.dispatch("updateSelectedPartner", event.value);
     },
@@ -761,64 +2273,129 @@ export default {
       this.axios.get(`/projects/${this.$route.params.id}`)
       .then((response) => {
         this.project = response.data;
-        this.axios.get(`/partners?projectId=${this.$route.params.id}`)
-        .then((response) => {
-          this.project.partners = response.data;
-          if (response.data.length > 0) {
-            this.project.coordinator = response.data.find(p => p.coordinator)._id
-            this.$store.dispatch("updateSelectedPartner", response.data[0].name);
-          }
-        })
-        .catch((e)=>{
-          console.log('error' + e);
-        })
 
-        this.axios.get(`/printableDeliverables?projectId=${this.$route.params.id}`)
-        .then((response) => {
-          this.project.printableDeliverables = response.data;
-        })
-        .catch((e)=>{
-          console.log('error' + e);
-        })
-      
-        let projectID = this.$route.params.id;
-        axios.get('/customs?projectId=' + projectID, { params: {
-          projectId: projectID
-        }})
-        .then((response) => {
-      
-          for(let i = 0; i < response.data.length; i++){
-            if (response.data[i].type.endsWith("Heat")) {
-              this.customHeat.push(response.data[i]);
-            } else if(response.data[i].type.endsWith("Electricity")){
-              this.customElectricity.push(response.data[i]);
-            } else if(response.data[i].type.endsWith("Water")) {
-              this.customWater.push(response.data[i]);
-            } else if(response.data[i].type.endsWith("Transportation")) {
-              this.customTransportation.push(response.data[i]);
-            } else if(response.data[i].type.endsWith("Materials")) {
-              this.customMaterials.push(response.data[i]);
-            } else if(response.data[i].type.endsWith("Events")) {
-              this.customEvents.push(response.data[i]);
-            } else if(response.data[i].type.endsWith("Deliverables")) {
-              this.customPrintableDeliverables.push(response.data[i]);
+        if (this.project.isInitialProject == this.$store.state.toggleProject) {
+          location.href = '/projects/' + this.project.initialProject
+        } else {
+          this.chartDataExecution.datasets[0].data[0] = this.project.printableDeliverablesAdvancedCF,
+          this.chartDataExecution.datasets[0].data[1] = this.project.equipmentAdvancedCF,
+          this.chartDataExecution.datasets[0].data[2] = this.project.electricityAdvancedCF,
+          this.chartDataExecution.datasets[0].data[3] = this.project.waterAdvancedCF,
+          this.chartDataExecution.datasets[0].data[4] = this.project.transportationAdvancedCF,
+          this.chartDataExecution.datasets[0].data[5] = this.project.eventsAdvancedCF,
+          this.chartDataExecution.datasets[0].data[6] = this.project.materialsAdvancedC,
+          this.chartDataExecution.datasets[0].data[7] = this.project.fuelsHeatAdvancedCF
+
+          this.axios.get(`/projects/` + this.project.initialProject)
+          .then( (res) => {
+            this.projectInitial = res.data;
+
+            this.chartDataInitial.datasets[0].data[0] = this.projectInitial.printableDeliverablesAdvancedCF,
+            this.chartDataInitial.datasets[0].data[1] = this.projectInitial.equipmentAdvancedCF,
+            this.chartDataInitial.datasets[0].data[2] = this.projectInitial.electricityAdvancedCF,
+            this.chartDataInitial.datasets[0].data[3] = this.projectInitial.waterAdvancedCF,
+            this.chartDataInitial.datasets[0].data[4] = this.projectInitial.transportationAdvancedCF,
+            this.chartDataInitial.datasets[0].data[5] = this.projectInitial.eventsAdvancedCF,
+            this.chartDataInitial.datasets[0].data[6] = this.projectInitial.materialsAdvancedC,
+            this.chartDataInitial.datasets[0].data[7] = this.projectInitial.fuelsHeatAdvancedCF
+
+            this.calculateKPI2();
+            this.calculateKPI3();
+
+          })
+          .catch((error) => {
+            console.log('error' + error);
+          })
+
+          this.axios.get(`/partners?projectId=${this.$route.params.id}`)
+          .then((response) => {
+            this.project.partners = response.data;
+            if (response.data.length > 0) {
+              this.project.coordinator = response.data.find(p => p.coordinator)._id
+              this.$store.dispatch("updateSelectedPartner", response.data[0].name);
             }
-            this.project.customHeat = this.customHeat;
-            this.project.customElectricity = this.customElectricity;
-            this.project.customWater = this.customWater;
-            this.project.customTransportation = this.customTransportation;
-            this.project.customMaterials = this.customMaterials;
-            this.project.customEvents = this.customEvents;
-            this.project.customPrintableDeliverables = this.customPrintableDeliverables;
-            console.log("Custom PD:", this.project.customPrintableDeliverables);
-          }
-        })
-        .catch((e)=>{
-          console.log('error' + e);
-        })
+          })
+          .catch((e)=>{
+            console.log('error' + e);
+          })
 
+          this.axios.get(`/externalExperts?projectId=${this.$route.params.id}`)
+          .then((response) => {
+            this.project.externalExperts = response.data;
+          })
+          .catch((e)=>{
+            console.log('error' + e);
+          })
 
+          this.axios.get(`/events?projectId=${this.$route.params.id}`)
+          .then((response) => {
+            let events = response.data;
+            this.project.events = {organization: [], participation: []}
 
+            for (let e of events) {
+              this.project.events[e.category].push(e)
+            }
+            this.eventsLoaded = true
+          })
+          .catch((e)=>{
+            console.log('error' + e);
+          })
+
+          this.axios.get(`/printableDeliverables?projectId=${this.$route.params.id}`)
+          .then((response) => {
+            this.project.printableDeliverables = response.data;
+          })
+          .catch((e)=>{
+            console.log('error' + e);
+          })
+        
+          let projectID = this.$route.params.id;
+          axios.get('/customs?projectId=' + projectID, { params: {
+            projectId: projectID
+          }})
+          .then((response) => {
+            
+            this.project.customHeat = [];
+            this.project.customElectricity = [];
+            this.project.customWater = [];
+            this.project.customTransportation = [];
+            this.project.customMaterials = [];
+            this.project.customEvents = [];
+            this.project.customPrintableDeliverables = [];
+            this.project.customEquipment = [];
+            
+            for(let i = 0; i < response.data.length; i++){
+              if (response.data[i].type.endsWith("Heat")) {
+                this.customHeat.push(response.data[i]);
+              } else if(response.data[i].type.endsWith("Electricity")){
+                this.customElectricity.push(response.data[i]);
+              } else if(response.data[i].type.endsWith("Water")) {
+                this.customWater.push(response.data[i]);
+              } else if(response.data[i].type.endsWith("Transportation")) {
+                this.customTransportation.push(response.data[i]);
+              } else if(response.data[i].type.endsWith("Materials")) {
+                this.customMaterials.push(response.data[i]);
+              } else if(response.data[i].type.endsWith("Events")) {
+                this.customEvents.push(response.data[i]);
+              } else if(response.data[i].type.endsWith("Deliverables")) {
+                this.customPrintableDeliverables.push(response.data[i]);
+              } else if(response.data[i].type.endsWith("Equipment")) {
+                this.customEquipment.push(response.data[i]);
+              }
+              this.project.customHeat = this.customHeat;
+              this.project.customElectricity = this.customElectricity;
+              this.project.customWater = this.customWater;
+              this.project.customTransportation = this.customTransportation;
+              this.project.customMaterials = this.customMaterials;
+              this.project.customEvents = this.customEvents;
+              this.project.customPrintableDeliverables = this.customPrintableDeliverables;
+              this.project.customEquipment = this.customEquipment;
+            }
+          })
+          .catch((e)=>{
+            console.log('error' + e);
+          })
+        }
       })
       .catch((e)=>{
         console.log('error' + e);
@@ -848,12 +2425,11 @@ export default {
         _id: new Mongoose.Types.ObjectId(),
         name: "New partner",
         country: "Select a country",
-        personMonthsPP: 1,
-        personMonthsWPP: 1,
-        externalExpertsPersonMonths: 1,
-        employeesWorkingWPP: 1,
-        seasonalEmployees: 1,
-        externalExperts: 1,
+        employeesPersonMonths: "",
+        employeesWorkingWPP: "",
+        seasonalEmployees: "",
+        externalExperts: "",
+        externalExpertsPersonMonths: "",
         coordinator: false,
 
         pcsBoughtDuringProject: 0,
@@ -927,6 +2503,102 @@ export default {
         console.log('error' + e);
       })
     },
+    addExternalExpert() {
+      let newExternalExpert = {
+        _id: new Mongoose.Types.ObjectId(),
+        typeOfExpertise: "New external expert",
+        country: "Select a country",
+        personMonthsWPP: 0,
+        twoWayTravels: 0,
+        
+        project: this.project._id
+      }
+
+      this.axios.post('/externalExperts', newExternalExpert)
+      .then((response) => {
+        this.project.externalExperts.push(response.data)
+        this.$toast.add({severity:'success', summary: 'Successful', detail: 'External experts created', life: 3000});
+      })
+      .catch((e)=>{
+        console.log('error' + e);
+      })
+    },
+    deleteExternalExperts(index) {
+      let externalExpert = this.project.externalExperts[index]
+      
+      this.axios.delete('/externalExperts/' + externalExpert._id)
+      .then(() => {
+
+        this.axios.get(`/externalExperts?projectId=${this.$route.params.id}`)
+        .then((response) => {
+          this.project.externalExperts = response.data
+        })
+        .catch((e)=>{
+          console.log('error' + e);
+        })
+
+        this.$toast.add({severity:'success', summary: 'Successful', detail: 'External expert deleted', life: 3000});
+      })
+      .catch((e)=>{
+        console.log('error' + e);
+      })
+    },
+    addEvents(eventCategory) {
+      let newEvent = {
+        _id: new Mongoose.Types.ObjectId(),
+        name: "New event",
+        category: eventCategory,
+        type: eventCategory == 'participation' ? "In presence" : "Select a type",
+        physicalParticipants: 0,
+        nonLocalPhysicalParticipants: 0,
+        virtualParticipants: 0,
+        durationDays: 0,
+        durationHoursPerDay: 0,
+        hostingCountry: "Select a country",
+        
+        distanceTravelledArrive: 0,
+        travelModeArrive: "Select a travel mode",
+        fuelTypeArrive: "Select a fuel type",
+        distanceTravelledDepart: 0,
+        travelModeDepart: "Select a travel mode",
+        fuelTypeDepart: "Select a fuel type",
+        project: this.project._id
+      }
+
+      this.axios.post('/events', newEvent)
+      .then((response) => {
+        this.project.events[eventCategory].push(response.data)
+        this.$toast.add({severity:'success', summary: 'Successful', detail: 'Event created', life: 3000});
+      })
+      .catch((e)=>{
+        console.log('error' + e);
+      })
+    },
+    deleteEvent(index, eventCategory) {
+      let event = this.project.events[eventCategory][index]
+      
+      this.axios.delete('/events/' + event._id)
+      .then(() => {
+
+        this.axios.get(`/events?projectId=${this.$route.params.id}`)
+        .then((response) => {
+          let events = response.data;
+          this.project.events = {organization: [], participation: []}
+
+          for (let e of events) {
+            this.project.events[e.category].push(e)
+          }
+        })
+        .catch((e)=>{
+          console.log('error' + e);
+        })
+
+        this.$toast.add({severity:'success', summary: 'Successful', detail: 'Event deleted', life: 3000});
+      })
+      .catch((e)=>{
+        console.log('error' + e);
+      })
+    },
     savePrintableDeliverables() {
       this.axios.put('/printableDeliverables/updateAll', this.project.printableDeliverables)
       .then(() => {
@@ -939,6 +2611,34 @@ export default {
       this.axios.put('/partners/updateAll', this.project.partners)
       .then(() => {
         this.$toast.add({severity:'success', summary: 'Successful', detail: 'All Partners updated', life: 3000});
+      }).catch((error) =>{
+        console.log(error)
+      })
+    },
+    saveEvents() {
+      let allEvents = [];
+
+      if (this.project.events) {
+        for(let event of this.project.events.organization) {
+          allEvents.push(event);
+        }
+
+        for(let event of this.project.events.participation) {
+          allEvents.push(event);
+        }
+
+        this.axios.put('/events/updateAll', allEvents)
+        .then(() => {
+          this.$toast.add({severity:'success', summary: 'Successful', detail: 'All Events updated', life: 3000});
+        }).catch((error) =>{
+          console.log(error)
+        })
+      }
+    },
+    saveExternalExperts() {
+      this.axios.put('/externalExperts/updateAll', this.project.externalExperts)
+      .then(() => {
+        this.$toast.add({severity:'success', summary: 'Successful', detail: 'All External experts updated', life: 3000});
       }).catch((error) =>{
         console.log(error)
       })
@@ -1036,6 +2736,40 @@ export default {
         console.log(error)
       })
     },
+    onCellEditCompleteExternalExpert(event) {
+      let { data, newValue, newData, field } = event;
+
+      if (newValue === data[field]) return;
+
+      const paramsData = {}
+
+      newData[field] = newValue;
+      paramsData[field] = newValue;
+
+      axios.put("/externalExperts/" + data._id, paramsData).then(() => {
+        this.project.externalExperts.splice(this.project.externalExperts.indexOf(data), 1, newData)
+        this.$toast.add({severity:'success', summary: 'Successful', detail: 'External experts updated', life: 3000});
+      }).catch(error =>{
+        console.log(error)
+      })
+    },
+    onCellEditCompleteEvents(event) {
+      let { data, newValue, newData, field } = event;
+
+      if (newValue === data[field]) return;
+
+      const paramsData = {}
+
+      newData[field] = newValue;
+      paramsData[field] = newValue;
+
+      axios.put("/events/" + data._id, paramsData).then(() => {
+        this.project.events[data.category].splice(this.project.events[data.category].indexOf(data), 1, newData)
+        this.$toast.add({severity:'success', summary: 'Successful', detail: 'Events updated', life: 3000});
+      }).catch(error =>{
+        console.log(error)
+      })
+    },
     onCellEditCompletePrintableDeliverable(event) {
       let { data, newValue, newData, field } = event;
 
@@ -1065,66 +2799,7 @@ export default {
         console.log(error)
       })
     },
-    checkEventsNotFilled() {
-      if (this.project.publicOnSiteEventsNumber === 0) {
-        if (this.project.publicOnSiteEventsAveragePhysicalParticipants !== 0
-            || this.project.publicOnSiteEventsAverageNonLocalPhysicalParticipants !== 0
-            || this.project.publicOnSiteEventsAverageDuration !== 0) {
-          this.$toast.add({severity:'warn', summary: 'Caution', detail: 'Some values were input while the number of public in presence events is 0!', life: 8000});
-        }
-      }
-
-      if (this.project.publicHybridEventsNumber === 0) {
-        if (this.project.publicHybridEventsAveragePhysicalParticipants !== 0
-            || this.project.publicHybridEventsAverageNonLocalPhysicalParticipants !== 0
-            || this.project.publicHybridEventsAverageVirtualParticipants !== 0
-            || this.project.publicHybridEventsAverageDuration !== 0
-            || this.project.publicHybridEventsAverageHoursPerDays !== 0) {
-          this.$toast.add({severity:'warn', summary: 'Caution', detail: 'Some values were input while the number of public mixed events is 0!', life: 8000});
-        }
-      }
-
-      if (this.project.publicVirtualEventsNumber === 0) {
-        if (this.project.publicVirtualEventsAverageVirtualParticipants !== 0
-            || this.project.publicVirtualEventsAverageDuration !== 0) {
-          this.$toast.add({severity:'warn', summary: 'Caution', detail: 'Some values were input while the number of public on-line events is 0!', life: 8000});
-        }
-      }
-  
-      if (this.project.internalOnSiteEventsNumber === 0) {
-        if (this.project.internalOnSiteEventsAveragePhysicalParticipants !== 0
-            || this.project.internalOnSiteEventsAverageNonLocalPhysicalParticipants !== 0
-            || this.project.internalOnSiteEventsAverageDuration !== 0) {
-          this.$toast.add({severity:'warn', summary: 'Caution', detail: 'Some values were input while the number of internal in presence events is 0!', life: 8000});
-        }
-      }
-
-      if (this.project.internalHybridEventsNumber === 0) {
-        if (this.project.internalHybridEventsAveragePhysicalParticipants !== 0
-            || this.project.internalHybridEventsAverageNonLocalPhysicalParticipants !== 0
-            || this.project.internalHybridEventsAverageVirtualParticipants !== 0
-            || this.project.internalHybridEventsAverageDuration !== 0
-            || this.project.internalHybridEventsAverageHoursPerDays !== 0) {
-          this.$toast.add({severity:'warn', summary: 'Caution', detail: 'Some values were input while the number of internal mixed events is 0!', life: 8000});
-        }
-      }
-
-      if (this.project.internalVirtualEventsNumber === 0) {
-        if (this.project.internalVirtualEventsAverageVirtualParticipants !== 0
-            || this.project.internalVirtualEventsAverageDuration !== 0) {
-          this.$toast.add({severity:'warn', summary: 'Caution', detail: 'Some values were input while the number of internal on-line events is 0!', life: 8000});
-        }
-      }
-  
-      if (this.project.participatedOnSiteEventsNumber === 0) {
-        if (this.project.participatedOnSiteEventsAverageParticipants !== 0
-            || this.project.participatedOnSiteEventsAverageDuration !== 0) {
-          this.$toast.add({severity:'warn', summary: 'Caution', detail: 'Some values were input while the number of participated in presence events is 0!', life: 8000});
-        }
-      }
-    },
-    addCustomPrintableDeliverable(customType){
-      console.log("Custom type: ", customType);
+    addCustom(customType, custom, toastMessage){
       let newCustom = {
         _id: new Mongoose.Types.ObjectId(),
         name: "New Custom Item",
@@ -1134,70 +2809,349 @@ export default {
       }
         
       this.axios.post('/customs', newCustom)
-      .then((response) => {
-        this.project.customPrintableDeliverables.push(response.data)
+      .then(() => {
+        this.project[custom].push(newCustom);
         
-        this.$toast.add({severity:'success', summary: 'Successful', detail: 'Custom Printable Deliverables created', life: 3000});
+        this.$toast.add({severity:'success', summary: 'Successful', detail: 'Custom ' + toastMessage + ' created', life: 3000});
       })
       .catch((e)=>{
         console.log('error' + e);
       })
     },
-    onCellEditCompleteCustomPrintableDeliverable(event) {
+    onCellEditCompleteCustom(event, custom, toastMessage) {
       let { data, newValue, newData, field } = event;
-
-      console.log(event);
 
       if (newValue === data[field]) return;
 
       const paramsData = {}
-
       newData[field] = newValue;
       paramsData[field] = newValue;
       
       axios.put("/customs/" + data._id, paramsData).then(() => {
-        this.project.customPrintableDeliverables.splice(this.project.customPrintableDeliverables.indexOf(data), 1, newData)
-        this.$toast.add({severity:'success', summary: 'Successful', detail: 'Custom Printable deliverables updated', life: 3000});
+        this.project[custom].splice(this.project[custom].indexOf(data), 1, newData)
+        this.$toast.add({severity:'success', summary: 'Successful', detail: 'Custom ' + toastMessage + ' updated', life: 3000});
       }).catch(error =>{
         console.log(error)
       })
     },
     
-    saveCustomPrintableDeliverables() {
-      this.axios.put('/customs/updateAll', this.project.customPrintableDeliverables)
+    saveCustoms() {
+      let allCustoms = [];
+
+      allCustoms.push(this.project.customHeat);
+      allCustoms.push(this.project.customElectricity);
+      allCustoms.push(this.project.customWater);
+      allCustoms.push(this.project.customTransportation);
+      allCustoms.push(this.project.customMaterials);
+      allCustoms.push(this.project.customEvents);
+      allCustoms.push(this.project.customPrintableDeliverables);
+      allCustoms.push(this.project.customEquipment);
+
+      this.axios.put('/customs/updateAll', allCustoms)
       .then(() => {
-        this.$toast.add({severity:'success', summary: 'Successful', detail: 'All Customs updated', life: 3000});
+        this.$toast.add({severity:'success', summary: 'Successful', detail: 'All customs updated', life: 3000});
+        this.allCustoms = [];
       }).catch((error) =>{
         console.log(error)
       })
     },
-    deleteCustomPrintableDeliverable(index) {
-      let customPrintableDeliverables = this.project.customPrintableDeliverables[index]
+    deleteCustom(index, custom, toastMessage) {
+      let customData = this.project[custom][index]
 
-      this.axios.delete('/customs/' + customPrintableDeliverables._id)
+      this.axios.delete('/customs/' + customData._id)
       .then(() => {
-
+        this.project[custom].splice(index, 1);
         let projectID = this.$route.params.id;
         axios.get('/customs?projectId=' + projectID, { params: {
           projectId: projectID
         }})
-        .then((response) => {
-          this.project.customPrintableDeliverables = response.data;
-        })
         .catch((e)=>{
           console.log('error' + e);
         })
 
-        this.$toast.add({severity:'success', summary: 'Successful', detail: 'Custom Printable deliverable deleted', life: 3000});
+        this.$toast.add({severity:'success', summary: 'Successful', detail: 'Custom ' + toastMessage + ' deleted', life: 3000});
       })
       .catch((e)=>{
         console.log('error' + e);
       })
+    },
+    updateInitialValues(){
+      if(this.project.isInitialProject){
+        this.saveCurrentProject();
+      } else {
+        axios.delete('/projects/' + this.project.initialProject)
+        .then(() => {
+          let newInitialProject = Object.assign({}, this.project);
+          newInitialProject.isInitialProject = new Boolean(true);
+          newInitialProject._id = this.project.initialProject;
+          newInitialProject.initialProject = this.project._id;
+
+          for(let partner of newInitialProject.partners){
+            partner.project = this.project.initialProject;
+          }
+
+          for(let pd of newInitialProject.printableDeliverables) {
+            pd.project = this.project.initialProject;
+          }
+
+          axios.post('/projects', newInitialProject,{
+          auth: {
+              username: this.$store.state.username,
+              password: this.$store.state.password
+            }
+          })
+          .then( () => {
+            for (let pd of newInitialProject.printableDeliverables){
+              pd._id = new Mongoose.Types.ObjectId();
+              this.axios.post('/printableDeliverables', pd)
+              .catch((e)=>{
+                console.log('error' + e);
+              })
+            }
+
+            for(let partner of newInitialProject.partners) {
+              partner._id = new Mongoose.Types.ObjectId();
+              this.axios.post('/partners', partner)
+              .catch((e)=>{
+                console.log('error' + e);
+              })
+            }
+            this.$toast.add({severity:'success', summary: 'Successful', detail: 'All Printable deliverables saved', life: 3000});
+            this.$toast.add({severity:'success', summary: 'Successful', detail: 'All Partners saved', life: 3000});
+            
+          })
+          .catch( (error) => {
+            console.log('error', error);
+          })
+          axios.get('/customs?projectId=' + this.project._id, { params: {
+              projectId: this.project._id
+            }
+          })
+          .then( (response) => {
+            this.project.customs = response.data;
+            for(let custom of this.project.customs) {
+              custom._id = new Mongoose.Types.ObjectId();
+              custom.project = this.project.initialProject;
+
+              this.axios.post('/customs', custom)
+              .catch((e)=>{
+                console.log('error' + e);
+              })
+            }
+            this.$toast.add({severity:'success', summary: 'Successful', detail: 'All Customs saved', life: 3000});
+          })
+          .catch((e)=>{
+            console.log('error' + e);
+          })
+
+          this.axios.get(`/externalExperts?projectId=` + this.project._id)
+          .then((response) => {
+            this.project.externalExperts = response.data;
+            for(let externalExpert of response.data) {
+              externalExpert._id = new Mongoose.Types.ObjectId();
+              externalExpert.project = this.project.initialProject;
+              axios.post('/externalExperts', externalExpert)
+              .catch((e)=>{
+                console.log('error' + e);
+              })
+            }
+            this.$toast.add({severity:'success', summary: 'Successful', detail: 'All external experts saved', life: 3000});
+          })
+          .catch((e)=>{
+            console.log('error' + e);
+          })
+
+          this.axios.get(`/events?projectId=` + this.project._id)
+          .then((response) => {
+            
+          for(let event of response.data) {
+              event._id = new Mongoose.Types.ObjectId();
+              event.project = this.project.initialProject;
+
+              axios.post('/events', event)
+              .catch((e)=>{
+                console.log('error' + e);
+              })
+            }
+          this.$toast.add({severity:'success', summary: 'Successful', detail: 'All events saved', life: 3000});
+          })
+          .catch((e)=>{
+            console.log('error' + e);
+          })
+        })
+        .catch((e)=>{
+          console.log('error' + e);
+        })
+      }
+    },
+    checkEventsOrganization() {
+      let res = false;
+      for( let event of this.project.events.organization) {
+        if(event.type.endsWith('type') || event.hostingCountry.endsWith('country')) {
+          res = true;
+          this.eventsOrganizedByTheprojectNotDefined.push(Object.assign({}, event));
+        }
+      }
+      return res;
+    },
+    checkEventsParticipation() {
+      let res = false;
+
+      for (let event of this.project.events.participation) {
+        if(event.type.endsWith('type') || event.hostingCountry.endsWith('country')) {
+          res = true;
+          this.eventsParticipationNotDefined.push(Object.assign({}, event));
+          break;
+        }
+        if(event.travelModeArrive == 'Car') {
+          if(event.fuelTypeArrive.endsWith('type')) {
+            res = true;
+            this.eventsParticipationNotDefined.push(Object.assign({}, event));
+            break;
+          }
+        }
+        if(event.travelModeDepart.endsWith('Car')) {
+          if(event.fuelTypeDepart.endsWith('type')) {
+            res = true;
+            this.eventsParticipationNotDefined.push(Object.assign({}, event));
+            break;
+          }
+        }
+      }
+
+      return res;
+    },
+    toggleProjectView() {
+      this.$store.commit("toggleProject");
+      location.href = '/projects/' + this.project.initialProject
+    },
+    onCellEditCompleteAnalysis(analysisField, newValue, isInitial) {
+      // La variable isInitial la vamos a usar para saber si el valor del campo
+      // es para el proyecto en la fase inicial o si es de la fase de ejecución
+      if(newValue == this.onFocusValue) return;
+
+      if (isInitial == true) {
+        this.analysisInitial[analysisField] = newValue;
+        this.$store.commit("analysisParamsInitial", this.analysisInitial);
+      } else {
+        this.analysisExecution[analysisField] = newValue;
+        this.$store.commit("analysisParamsExecution", this.analysisExecution);
+      }
+      this.calculateKPI3();
+    },
+    calculateKPI2(){
+      
+      // Dataset para el proyecto en fase inicial para los KPI2
+      let advancedCFInitial = this.projectInitial.currentCF;
+
+      let printableDeliverablesInitialKPI2 = (this.projectInitial.printableDeliverablesAdvancedCF / advancedCFInitial) * 100;
+      let equipmentInitialKPI2 = (this.projectInitial.equipmentAdvancedCF / advancedCFInitial) * 100;
+      let electricityInitialKPI2 = (this.projectInitial.electricityAdvancedCF / advancedCFInitial) * 100;
+      let waterInitialKPI2 = (this.projectInitial.waterAdvancedCF / advancedCFInitial) * 100;
+      let transportationInitialKPI2 = (this.projectInitial.transportationAdvancedCF / advancedCFInitial) * 100;
+      let eventsInitialKPI2 = (this.projectInitial.eventsAdvancedCF / advancedCFInitial) * 100;
+      let materialsInitialKPI2 = (this.projectInitial.materialsAdvancedCF / advancedCFInitial) * 100;
+      let heatInitialKPI2 = (this.projectInitial.fuelsHeatAdvancedCF / advancedCFInitial) * 100;
+
+      // Dataset para el proyecto en fase execution para los KPI2
+      let advancedCFExecution = this.project.currentCF;
+
+      let printableDeliverablesExecutionKPI2 = (this.project.printableDeliverablesAdvancedCF / advancedCFExecution) * 100;
+      let equipmentExecutionKPI2 = (this.project.equipmentAdvancedCF / advancedCFExecution) * 100;
+      let electricityExecutionKPI2 = (this.project.electricityAdvancedCF / advancedCFExecution) * 100;
+      let waterExecutionKPI2 = (this.project.waterAdvancedCF / advancedCFExecution) * 100;
+      let transportationExecutionKPI2 = (this.project.transportationAdvancedCF / advancedCFExecution) * 100;
+      let eventsExecutionKPI2 = (this.project.eventsAdvancedCF / advancedCFExecution) * 100;
+      let materialsExecutionKPI2 = (this.project.materialsAdvancedCF / advancedCFExecution) * 100;
+      let heatExecutionKPI2 = (this.project.fuelsHeatAdvancedCF / advancedCFExecution) * 100;
+
+      // Asignamos los valores al dataset de los KPI2
+
+      this.chartDataInitial.datasets[1].data[0] = printableDeliverablesInitialKPI2;
+      this.chartDataInitial.datasets[1].data[1] = equipmentInitialKPI2;
+      this.chartDataInitial.datasets[1].data[2] = electricityInitialKPI2;
+      this.chartDataInitial.datasets[1].data[3] = waterInitialKPI2;
+      this.chartDataInitial.datasets[1].data[4] = transportationInitialKPI2;
+      this.chartDataInitial.datasets[1].data[5] = eventsInitialKPI2;
+      this.chartDataInitial.datasets[1].data[6] = materialsInitialKPI2;
+      this.chartDataInitial.datasets[1].data[7] = heatInitialKPI2;
+
+      this.chartDataExecution.datasets[1].data[0] = printableDeliverablesExecutionKPI2;
+      this.chartDataExecution.datasets[1].data[1] = equipmentExecutionKPI2;
+      this.chartDataExecution.datasets[1].data[2] = electricityExecutionKPI2;
+      this.chartDataExecution.datasets[1].data[3] = waterExecutionKPI2;
+      this.chartDataExecution.datasets[1].data[4] = transportationExecutionKPI2;
+      this.chartDataExecution.datasets[1].data[5] = eventsExecutionKPI2;
+      this.chartDataExecution.datasets[1].data[6] = materialsExecutionKPI2;
+      this.chartDataExecution.datasets[1].data[7] = heatExecutionKPI2;
+    },
+    calculateKPI3(){
+      
+      // Dataset para el proyecto en fase inicial para los KPI3
+      let initialParams = this.$store.state.analysisParamsInitial;
+      let printableDeliverablesReferenceValueInitial = initialParams.printableDeliverablesInputInitial;
+      let equipmentReferenceValueInitial = initialParams.equipmentInputInitial;
+      let electricityReferenceValueInitial = initialParams.electricityInputInitial;
+      let waterReferenceValueInitial = initialParams.waterInputInitial;
+      let transportationReferenceValueInitial = initialParams.transportationInputInitial;
+      let eventsReferenceValueInitial = initialParams.eventsInputInitial;
+      let materialsReferenceValueInitial = initialParams.materialsInputInitial;
+      let heatReferenceValueInitial = initialParams.heatInputInitial;
+
+      let printableDeliverablesInitialKPI3 = (this.projectInitial.printableDeliverablesAdvancedCF / printableDeliverablesReferenceValueInitial)
+      let equipmentInitialKPI3 = (this.projectInitial.equipmentAdvancedCF / equipmentReferenceValueInitial)
+      let electricityInitialKPI3 = (this.projectInitial.electricityAdvancedCF / electricityReferenceValueInitial)
+      let waterInitialKPI3 = (this.projectInitial.waterAdvancedCF / waterReferenceValueInitial)
+      let transportationInitialKPI3 = (this.projectInitial.transportationAdvancedCF / transportationReferenceValueInitial)
+      let eventsInitialKPI3 = (this.projectInitial.eventsAdvancedCF / eventsReferenceValueInitial)
+      let materialsInitialKPI3 = (this.projectInitial.materialsAdvancedCF / materialsReferenceValueInitial)
+      let heatInitialKPI3 = (this.projectInitial.fuelsHeatAdvancedCF / heatReferenceValueInitial)
+
+      // Dataset para el proyecto en fase execution para los KPI3
+      let executionParams = this.$store.state.analysisParamsExecution;
+      let printableDeliverablesReferenceValueExecution = executionParams.printableDeliverablesInputExecution;
+      let equipmentReferenceValueExecution = executionParams.equipmentInputExecution;
+      let electricityReferenceValueExecution = executionParams.electricityInputExecution;
+      let waterReferenceValueExecution = executionParams.waterInputExecution;
+      let transportationReferenceValueExecution = executionParams.transportationInputExecution;
+      let eventsReferenceValueExecution = executionParams.eventsInputExecution;
+      let materialsReferenceValueExecution = executionParams.materialsInputExecution;
+      let heatReferenceValueExecution = executionParams.heatInputExecution;
+
+      let printableDeliverablesExecutionKPI3 = (this.project.printableDeliverablesAdvancedCF / printableDeliverablesReferenceValueExecution)
+      let equipmentExecutionKPI3 = (this.project.equipmentAdvancedCF / equipmentReferenceValueExecution)
+      let electricityExecutionKPI3 = (this.project.electricityAdvancedCF / electricityReferenceValueExecution)
+      let waterExecutionKPI3 = (this.project.waterAdvancedCF / waterReferenceValueExecution)
+      let transportationExecutionKPI3 = (this.project.transportationAdvancedCF / transportationReferenceValueExecution)
+      let eventsExecutionKPI3 = (this.project.eventsAdvancedCF / eventsReferenceValueExecution)
+      let materialsExecutionKPI3 = (this.project.materialsAdvancedCF / materialsReferenceValueExecution)
+      let heatExecutionKPI3 = (this.project.fuelsHeatAdvancedCF / heatReferenceValueExecution)
+
+      // Asignamos los valores al dataset de los KPI3
+
+      this.chartDataInitial.datasets[2].data[0] = printableDeliverablesInitialKPI3;
+      this.chartDataInitial.datasets[2].data[1] = equipmentInitialKPI3;
+      this.chartDataInitial.datasets[2].data[2] = electricityInitialKPI3;
+      this.chartDataInitial.datasets[2].data[3] = waterInitialKPI3;
+      this.chartDataInitial.datasets[2].data[4] = transportationInitialKPI3;
+      this.chartDataInitial.datasets[2].data[5] = eventsInitialKPI3;
+      this.chartDataInitial.datasets[2].data[6] = materialsInitialKPI3;
+      this.chartDataInitial.datasets[2].data[7] = heatInitialKPI3;
+
+      this.chartDataExecution.datasets[2].data[0] = printableDeliverablesExecutionKPI3;
+      this.chartDataExecution.datasets[2].data[1] = equipmentExecutionKPI3;
+      this.chartDataExecution.datasets[2].data[2] = electricityExecutionKPI3;
+      this.chartDataExecution.datasets[2].data[3] = waterExecutionKPI3;
+      this.chartDataExecution.datasets[2].data[4] = transportationExecutionKPI3;
+      this.chartDataExecution.datasets[2].data[5] = eventsExecutionKPI3;
+      this.chartDataExecution.datasets[2].data[6] = materialsExecutionKPI3;
+      this.chartDataExecution.datasets[2].data[7] = heatExecutionKPI3;
     }
+
   },
   computed: {
     ...mapState([
-      'selectedPartnerForEquipmentSimple'
+      'selectedPartnerForEquipmentSimple', 'toggleProject'
     ]),
     selectedPartner() {
       if (!this.project.partners) return {}
@@ -1211,6 +3165,13 @@ export default {
 </script>
 
 <style>
+.initialDataLabel + .p-inputswitch .p-inputswitch-slider {
+  background: #3B82F6;
+}
+
+.initialDataLabel + .p-inputswitch:not(.p-disabled):hover .p-inputswitch-slider {
+    background: #003399;
+}
 
 .projectDetailsElectrictyGrid {
   display: flex;
@@ -1229,4 +3190,15 @@ export default {
     width: 100%;
 }
 
+#app-mode-label {
+    position: relative;
+    bottom: 7px;
+    margin-right: 0.75rem;
+}
+
+.layout-topbar-menu {
+    align-items: center;
+    width: max-content;
+    margin-right: 0.75rem;
+}
 </style>

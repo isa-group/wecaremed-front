@@ -7,8 +7,11 @@
     <Toast position="bottom-right" />
 
     <div id="pdfPrintDiv" style="display: none">
-      <h1 style="margin-bottom: 20px">{{project.name}} ({{project.from}} - {{project.to}}) [{{project.initialCF}} / {{project.currentCF}}] t CO2e</h1>
-
+      <h1 style="margin-bottom: 20px">{{project.name}} 
+      ({{(new Date(project.from).getMonth() + 1).toString().padStart(2, "0") + '/' + new Date(project.from).getFullYear()}}
+      - {{(new Date(project.to).getMonth() + 1).toString().padStart(2, "0") + '/' + new Date(project.to).getFullYear()}})
+      [{{project.currentCF}} / {{project.initialCF}}] t CO2e</h1>
+                        
       <h3>Partners</h3>
                 
       <table class="table table-bordered" style="margin-bottom: 35px">
@@ -239,30 +242,46 @@
         </tbody>
       </table>
 
-      <h2 style="margin-bottom: 40px">Tons of equivalent carbon dioxide emitted: {{project.initialCF}}</h2> 
+      <h2>Tons of equivalent carbon dioxide emitted: {{project.initialCF}}</h2> 
+      <h2 style="margin-bottom: 40px">CO2 permits cost: {{round(project.initialCF * co2PermitsPrice) + ' €'}}</h2>
       
       <h3 style="margin-bottom: 10px">CF Breakdown (Tons):</h3>
       <ul>
-        <li style="margin-bottom: 10px; font-size: 20px">Fuels heat: {{project.fuelsHeatCF}}</li>
-        <li style="margin-bottom: 10px; font-size: 20px">Electricity: {{project.electricityCF}}</li>
-        <li style="margin-bottom: 10px; font-size: 20px">Water: {{project.waterCF}}</li>
-        <li style="margin-bottom: 10px; font-size: 20px">Transportation: {{project.transportationCF}}</li>
-        <li style="margin-bottom: 10px; font-size: 20px">Materials: {{project.materialsCF}}</li>
-        <li style="margin-bottom: 10px; font-size: 20px">Printable deliverables: {{project.printableDeliverablesCF}}</li>
-        <li style="margin-bottom: 10px; font-size: 20px">Equipment: {{project.equipmentCF}}</li>
-        <li style="font-size: 20px">Events: {{project.eventsCF}}</li>
+        <li style="margin-bottom: 10px; font-size: 20px">Fuels heat: {{project.fuelsHeatSimpleCF}}</li>
+        <li style="margin-bottom: 10px; font-size: 20px">Electricity: {{project.electricitySimpleCF}}</li>
+        <li style="margin-bottom: 10px; font-size: 20px">Water: {{project.waterSimpleCF}}</li>
+        <li style="margin-bottom: 10px; font-size: 20px">Transportation: {{project.transportationSimpleCF}}</li>
+        <li style="margin-bottom: 10px; font-size: 20px">Materials: {{project.materialsSimpleCF}}</li>
+        <li style="margin-bottom: 10px; font-size: 20px">Printable deliverables: {{project.printableDeliverablesSimpleCF}}</li>
+        <li style="margin-bottom: 10px; font-size: 20px">Equipment: {{project.equipmentSimpleCF}}</li>
+        <li style="font-size: 20px">Events: {{project.eventsSimpleCF}}</li>
       </ul>
 
     </div>
 
     <div class="card col-12">
+
+      <div style="display: flex; align-items: center; justify-content: space-between;">
+        <h2 v-if="project.isInitialProject">Project's initial data</h2>
+        <h2 v-else-if="!project.isInitialProject">Project's current data</h2>
+
+        <div style="margin: 1.5rem 0 1rem 0;">
+          <div style="text-align: center">
+            <h5 class="m-0 mb-2">Project data</h5>
+            <label id="app-mode-label" class="initialDataLabel">Initial</label>
+            <InputSwitch id="projectData" v-model="toggleProject" @click="toggleProjectView()" />    
+            <label id="app-mode-label" class="currentDataLabel" style="margin-left: 0.75rem; margin-right: auto;">Current</label>
+          </div>
+        </div>
+      </div>
+
       <h4>Partners</h4>
 
       <DataTable :value="project.partners" editMode="cell" :paginator="true" class="p-datatable-gridlines" dataKey="_id"
       :rowHover="true" @cell-edit-complete="onCellEditCompletePartner" sortMode="multiple" :rows="5" v-model:filters="partnerFilters"
       filterDisplay="menu" :loading="loading" :filters="partnerFilters" responsiveLayout="scroll"
       :globalFilterFields="['name','country','employeesPersonMonths', 'externalExpertsPersonMonths', 'employeesWorkingWPP', 
-                            'seasonalEmployees', 'externalExperts', 'coordinator']" @page="currentPagePartnersTable = $event.page">
+                            'seasonalEmployees', 'externalExperts', 'coordinator']" removableSort>
         
         <template #header>
             <div class="flex justify-content-between flex-column sm:flex-row">
@@ -298,7 +317,7 @@
             <td :class="slotProps.data[slotProps.field] == 'New partner' ? 'defaultValue' : ''" style="display:block;">{{slotProps.data[slotProps.field]}}</td>
           </template>
           <template #editor="slotProps">
-              <InputText v-model="slotProps.data[slotProps.field]" />
+              <InputText v-model="slotProps.data[slotProps.field]" @focus="$event.target.select()"/>
           </template>
         </Column>
 
@@ -357,7 +376,7 @@
 
         <Column field="actions" header="Actions">
           <template #body="slotProps">
-            <i class="pi pi-trash" @click="deletePartner(slotProps.index + currentPagePartnersTable * 5)" />
+            <i class="pi pi-trash" @click="deletePartner(project.partners.indexOf(slotProps.data))" v-tooltip.top="'Delete partner'"/>
           </template>
         </Column>
       
@@ -778,8 +797,7 @@
         <DataTable :value="project.printableDeliverables" editMode="cell" @cell-edit-complete="onCellEditCompletePrintableDeliverable" 
           sortMode="multiple" :paginator="true" :rows="5" v-model:filters="printableDeliverableFilters" filterDisplay="menu"
           :loading="loading" :filters="printableDeliverableFilters" responsiveLayout="scroll" :rowHover="true" class="p-datatable-gridlines"
-          :globalFilterFields="['deliverableType', 'deliverableName', 'copies', 'avgPagesPerCopy']"
-          @page="currentPagePrintableDeliverablesTable = $event.page">
+          :globalFilterFields="['deliverableType', 'deliverableName', 'copies', 'avgPagesPerCopy']" removableSort>
 
           <template #header>
               <div class="flex justify-content-between flex-column sm:flex-row">
@@ -841,7 +859,7 @@
           
           <Column field="actions" header="Actions">
             <template #body="slotProps">
-              <i class="pi pi-trash" @click="deletePrintableDeliverable(slotProps.index + currentPagePrintableDeliverablesTable * 5)" />
+              <i class="pi pi-trash" @click="deletePrintableDeliverable(project.printableDeliverables.indexOf(slotProps.data))" v-tooltip.top="'Delete printable deliverable'" />
             </template>
           </Column>
 
@@ -852,24 +870,34 @@
       </div>
     </div>
 
-    <div class="col-12">
-
-      <div class="card p-fluid" style="display: flex; flex-direction: column; align-items: center; justify-content: space-around;">
-        <Button class="ml-2" label="Save current project" @click="saveCurrentProject" />
-      </div>
+    <div class="card col-12" style="display:flex; justify-content:space-around">
+      <template v-if="!this.project.isInitialProject" >
+        <Button  label="Save all" @click="saveCurrentProject" />
+        <!-- <Button  label="Update current values as initial values" @click="displayUpdateInitialValuesDialog" /> -->      
+      </template>
+      <template v-else-if="this.project.isInitialProject">
+        <Button label="Save all" @click="displayUpdateInitialValuesDialog" />
+      </template>
     </div>
-
+    
     <div class="col-12">
       <div class="card p-fluid" style="display: flex; flex-direction: column; align-items: center; justify-content: space-around;">
         <div>
-          <h2>Tons of equivalent carbon dioxide emitted:
-            <Badge :value="project.initialCF" class="ml-3" size="xlarge" :severity="getTextColorFromCFIndex(project.initialCF)" />
+          <h2 class="mb-2">Equivalent carbon dioxide emitted:
+            <Badge :value="project.initialCF  + ' t CO2e'" class="ml-2 currentCF" size="xlarge" :severity="getTextColorFromCFIndex(project.initialCF)" />
           </h2>
         </div>
-        <Button icon="pi pi-replay" class="p-button-rounded p-button-outlined p-button-plain mr-5" label="Recalculate"
-                style="width: 15rem; font-size: 1.1rem" @click="calculateCF" />
-        <Button icon="pi pi-file-pdf" class="p-button-rounded p-button-outlined p-button-plain mr-5 mt-3" label="Generate PDF"
-                style="width: 15rem; font-size: 1.1rem" @click="generatePDF"/>
+        <div>
+          <h2 class="mt-2">CO2 permits cost:
+            <Badge :value="round(project.initialCF * co2PermitsPrice) + ' €'" class="ml-2 currentCF" size="xlarge" />
+          </h2>
+        </div>
+        <div>
+          <Button icon="pi pi-replay" class="p-button-rounded p-button-outlined p-button-plain mr-5" label="Recalculate"
+                  style="width: 15rem; font-size: 1.1rem" @click="calculateCF()" />
+          <Button icon="pi pi-file-pdf" class="p-button-rounded p-button-outlined p-button-plain mr-5 mt-3" label="Generate PDF"
+                  style="width: 15rem; font-size: 1.1rem" @click="generatePDF()"/>
+        </div>
       </div>
     </div>
 
@@ -902,25 +930,25 @@
           <div class="card p-fluid col-2" style="display: flex; flex-direction: column; align-items: center; justify-content: space-around;">
             <h2 class="font-medium text-3xl">Fuels Heat</h2>
             <div class="flex align-items-center py-3 px-2 border-top-1 surface-border">
-              <Badge :value="project.fuelsHeatCF" size="xlarge" severity="info" />
+              <Badge :value="project.fuelsHeatSimpleCF" size="xlarge" class="currentCF" />
             </div>
           </div>
           <div class="card p-fluid col-2" style="display: flex; flex-direction: column; align-items: center; justify-content: space-around;">
             <h2 class="font-medium text-3xl">Electricity</h2>
             <div class="flex align-items-center py-3 px-2 border-top-1 surface-border">
-              <Badge :value="project.electricityCF" size="xlarge" severity="info" />
+              <Badge :value="project.electricitySimpleCF" size="xlarge" class="currentCF" />
             </div>
           </div>
           <div class="card p-fluid col-2" style="display: flex; flex-direction: column; align-items: center; justify-content: space-around;">
             <h2 class="font-medium text-3xl">Water</h2>
             <div class="flex align-items-center py-3 px-2 border-top-1 surface-border">
-              <Badge :value="project.waterCF" size="xlarge" severity="info" />
+              <Badge :value="project.waterSimpleCF" size="xlarge" class="currentCF" />
             </div>
           </div>
           <div class="card p-fluid col-2" style="display: flex; flex-direction: column; align-items: center; justify-content: space-around;">
             <h2 class="font-medium text-3xl">Transportation</h2>
             <div class="flex align-items-center py-3 px-2 border-top-1 surface-border">
-              <Badge :value="project.transportationCF" size="xlarge" severity="info" />
+              <Badge :value="project.transportationSimpleCF" size="xlarge" class="currentCF" />
             </div>
           </div>
         </div>
@@ -928,30 +956,43 @@
           <div class="card p-fluid col-2" style="display: flex; flex-direction: column; align-items: center; justify-content: space-around;">
             <h2 class="font-medium text-3xl">Materials</h2>
             <div class="flex align-items-center py-3 px-2 border-top-1 surface-border">
-              <Badge :value="project.materialsCF" size="xlarge" severity="info" />
+              <Badge :value="project.materialsSimpleCF" size="xlarge" class="currentCF" />
             </div>
           </div>
           <div class="card p-fluid col-2" style="display: flex; flex-direction: column; align-items: center; justify-content: space-around;">
             <h2 class="font-medium text-3xl">Printable<br>Deliverables</h2>
             <div class="flex align-items-center py-3 px-2 border-top-1 surface-border">
-              <Badge :value="project.printableDeliverablesCF" size="xlarge" severity="info" />
+              <Badge :value="project.printableDeliverablesSimpleCF" size="xlarge" class="currentCF" />
             </div>
           </div>
           <div class="card p-fluid col-2" style="display: flex; flex-direction: column; align-items: center; justify-content: space-around;">
             <h2 class="font-medium text-3xl">Equipment</h2>
             <div class="flex align-items-center py-3 px-2 border-top-1 surface-border">
-              <Badge :value="project.equipmentCF" size="xlarge" severity="info" />
+              <Badge :value="project.equipmentSimpleCF" size="xlarge" class="currentCF" />
             </div>
           </div>
           <div class="card p-fluid col-2" style="display: flex; flex-direction: column; align-items: center; justify-content: space-around;">
             <h2 class="font-medium text-3xl">Events</h2>
             <div class="flex align-items-center py-3 px-2 border-top-1 surface-border">
-              <Badge :value="project.eventsCF" size="xlarge" severity="info" />
+              <Badge :value="project.eventsSimpleCF" size="xlarge" class="currentCF" />
             </div>
           </div>
         </div>
       </div>
     </div>
+
+    <Dialog header="Warning" v-model:visible="displayUpdateInitialValues" class="col-4" :modal="true">
+        <div class="flex align-items-center  pb-5">
+            <i class="pi pi-exclamation-triangle mr-3" style="font-size: 2rem" />
+            <div>
+              <p>The values of the project will be updated in it's initial phase, are you sure?</p>
+            </div>
+        </div>
+        <template #footer>
+            <Button label="Cancel" @click="declineUpdateInitialValuesDialog" class="p-button-text p-button-info" />
+            <Button label="Ok" @click="confirmUpdateInitialValuesDialog" class="p-button-text p-button-info" /> 
+        </template>
+    </Dialog>
 
   </div>
 
@@ -978,6 +1019,7 @@ import Dialog from 'primevue/dialog';
 import pdfMake from 'pdfmake';
 import pdfFonts from 'pdfmake/build/vfs_fonts';
 import htmlToPdfmake from 'html-to-pdfmake';
+import InputSwitch from 'primevue/inputswitch';
 
 import 'primeicons/primeicons.css';
 
@@ -997,11 +1039,14 @@ export default {
     Topbar,
     Toast,
     Badge,
+    InputSwitch
   },
   data() {
     return {
+      co2PermitsPrice: process.env.VUE_APP_CO2_PERMITS_PRICE,
       placeholder: "Select a partner",
       project: {},
+      initialProject: {},
       object: {},
       countriesForDropdown: ["Albania", "Bosnia & Herzegovina", "Croatia", "Cyprus", "France", "Greece", "Italy", "Malta", "Montenegro", "Portugal", "Slovenia", "Spain", "Bulgaria", "North Macedonia"],
       paperSizes: ["A0", "A1", "A2", "A3", "A4", "A5", "A6"],
@@ -1038,13 +1083,13 @@ export default {
       printableDeliverableFilters: null,
       loading: true,
       onFocusValue: null,
-      currentPagePartnersTable: 0,
-      currentPagePrintableDeliverablesTable: 0,
       displayPartnersWithoutCountryDialog: false,
       displayPartnersWithDefaultValues: false,
       partnersWithoutCountry: [],
       partnersWithDefaultValues: [],
-      displayPartnersError: false
+      displayPartnersError: false,
+      isInitialProject: false,
+      displayUpdateInitialValues: false
     }
   },
   created() {
@@ -1054,17 +1099,18 @@ export default {
   },
   mounted() {
     this.loading = false;
+    if (this.$store.state.toggleValue === true)
+      this.$store.dispatch("toggleView")
   },
   methods: {
+    round(num) {
+      return Math.round((num + Number.EPSILON) * 100) / 100
+    },
     generatePDF() {
-    // var doc = new jsPDF()
-    // doc.html(projectHtml).then(() => doc.save('test.pdf'));
-    // doc.save('test.pdf');
-
-    var html = htmlToPdfmake(document.getElementById('pdfPrintDiv').innerHTML);
-    const documentDefinition = { content: html };
-    pdfMake.vfs = pdfFonts.pdfMake.vfs;
-    pdfMake.createPdf(documentDefinition).open();
+      var html = htmlToPdfmake(document.getElementById('pdfPrintDiv').innerHTML);
+      const documentDefinition = { content: html, pageOrientation: 'landscape' };
+      pdfMake.vfs = pdfFonts.pdfMake.vfs;
+      pdfMake.createPdf(documentDefinition).open();
     },
     displayPartnersWithoutCountryErrorDialog() {
       this.displayPartnersWithoutCountryDialog = true
@@ -1075,12 +1121,26 @@ export default {
     displayPartnersErrorDialog() {
       this.displayPartnersError = true;
     },
+    displayUpdateInitialValuesDialog() {
+      this.displayUpdateInitialValues = true;
+    },
     closePartnersWithoutCountryErrorDialog() {
       this.displayPartnersError = false;
       this.displayPartnersWithoutCountryDialog = false
       this.displayPartnersWithDefaultValues = false;
       this.partnersWithoutCountry = []
       this.partnersWithDefaultValues = [];
+    },
+    confirmUpdateInitialValuesDialog() {
+      this.displayUpdateInitialValues = false;
+      if(this.project.isInitialProject) {
+        this.saveCurrentProject();
+      } else {
+        this.updateInitialValues();
+      }
+    },
+    declineUpdateInitialValuesDialog() {
+      this.displayUpdateInitialValues = false;
     },
     calculateCF() {
       
@@ -1140,12 +1200,14 @@ export default {
       }
     },
     getTextColorFromCFIndex(cfIndex) {
-        if (cfIndex < 150)
-            return "success"
-        else if (cfIndex > 150 & cfIndex < 250)
-            return "warning"
-        else
-            return "danger"
+      cfIndex
+        // if (cfIndex < 150)
+        //     return "success"
+        // else if (cfIndex > 150 & cfIndex < 250)
+        //     return "warning"
+        // else
+        //     return "danger"
+      return ""
     },
     initPartnerFilters() {
       this.partnerFilters = {
@@ -1170,25 +1232,31 @@ export default {
       this.axios.get(`/projects/${this.$route.params.id}`)
       .then((response) => {
         this.project = response.data;
-        this.axios.get(`/partners?projectId=${this.$route.params.id}`)
-        .then((response) => {
-          this.project.partners = response.data;
-          if (response.data.length > 0) {
-            this.project.coordinator = response.data.find(p => p.coordinator)._id
-            this.$store.dispatch("updateSelectedPartner", response.data[0].name);
-          }
-        })
-        .catch((e)=>{
-          console.log('error' + e);
-        })
+        this.isInitialProject = this.project.isInitialProject;
 
-        this.axios.get(`/printableDeliverables?projectId=${this.$route.params.id}`)
-        .then((response) => {
-          this.project.printableDeliverables = response.data;
-        })
-        .catch((e)=>{
-          console.log('error' + e);
-        })
+        if (this.project.isInitialProject == this.$store.state.toggleProject) {
+          location.href = '/projects/' + this.project.initialProject
+        } else {
+          this.axios.get(`/partners?projectId=${this.$route.params.id}`)
+          .then((response) => {
+            this.project.partners = response.data;
+            if (response.data.length > 0) {
+              this.project.coordinator = response.data.find(p => p.coordinator)._id
+              this.$store.dispatch("updateSelectedPartner", response.data[0].name);
+            }
+          })
+          .catch((e)=>{
+            console.log('error' + e);
+          })
+
+          this.axios.get(`/printableDeliverables?projectId=${this.$route.params.id}`)
+          .then((response) => {
+            this.project.printableDeliverables = response.data;
+          })
+          .catch((e)=>{
+            console.log('error' + e);
+          })
+        }
       })
       .catch((e)=>{
         console.log('error' + e);
@@ -1519,11 +1587,124 @@ export default {
         }).catch(error =>{
           console.log(error)
        })
+    },
+    updateInitialValues(){
+      if(this.project.isInitialProject){
+        this.saveCurrentProject();
+      } else {
+        axios.delete('/projects/' + this.project.initialProject)
+        .then(() => {
+          let newInitialProject = Object.assign({}, this.project);
+          newInitialProject.isInitialProject = new Boolean(true);
+          newInitialProject._id = this.project.initialProject;
+          newInitialProject.initialProject = this.project._id;
+
+          for(let partner of newInitialProject.partners){
+            partner.project = this.project.initialProject;
+          }
+
+          for(let pd of newInitialProject.printableDeliverables) {
+            pd.project = this.project.initialProject;
+          }
+
+          axios.post('/projects', newInitialProject,{
+          auth: {
+              username: this.$store.state.username,
+              password: this.$store.state.password
+            }
+          })
+          .then( () => {
+            for (let pd of newInitialProject.printableDeliverables){
+              pd._id = new Mongoose.Types.ObjectId();
+              this.axios.post('/printableDeliverables', pd)
+              .catch((e)=>{
+                console.log('error' + e);
+              })
+            }
+
+            for(let partner of newInitialProject.partners) {
+              partner._id = new Mongoose.Types.ObjectId();
+              this.axios.post('/partners', partner)
+              .catch((e)=>{
+                console.log('error' + e);
+              })
+            }
+            this.$toast.add({severity:'success', summary: 'Successful', detail: 'All Printable deliverables saved', life: 3000});
+            this.$toast.add({severity:'success', summary: 'Successful', detail: 'All Partners saved', life: 3000});
+            
+          })
+          .catch( (error) => {
+            console.log('error', error);
+          })
+          axios.get('/customs?projectId=' + this.project._id, { params: {
+              projectId: this.project._id
+            }
+          })
+          .then( (response) => {
+            this.project.customs = response.data;
+            for(let custom of this.project.customs) {
+              custom._id = new Mongoose.Types.ObjectId();
+              custom.project = this.project.initialProject;
+
+              this.axios.post('/customs', custom)
+              .catch((e)=>{
+                console.log('error' + e);
+              })
+            }
+            this.$toast.add({severity:'success', summary: 'Successful', detail: 'All Customs saved', life: 3000});
+          })
+          .catch((e)=>{
+            console.log('error' + e);
+          })
+
+          this.axios.get(`/externalExperts?projectId=` + this.project._id)
+          .then((response) => {
+            this.project.externalExperts = response.data;
+            for(let externalExpert of response.data) {
+              externalExpert._id = new Mongoose.Types.ObjectId();
+              externalExpert.project = this.project.initialProject;
+              axios.post('/externalExperts', externalExpert)
+              .catch((e)=>{
+                console.log('error' + e);
+              })
+            }
+            this.$toast.add({severity:'success', summary: 'Successful', detail: 'All external experts saved', life: 3000});
+          })
+          .catch((e)=>{
+            console.log('error' + e);
+          })
+
+          this.axios.get(`/events?projectId=` + this.project._id)
+          .then((response) => {
+            
+          for(let event of response.data) {
+              event._id = new Mongoose.Types.ObjectId();
+              event.project = this.project.initialProject;
+
+              axios.post('/events', event)
+              .catch((e)=>{
+                console.log('error' + e);
+              })
+            }
+          this.$toast.add({severity:'success', summary: 'Successful', detail: 'All events saved', life: 3000});
+          })
+          .catch((e)=>{
+            console.log('error' + e);
+          })
+        })
+        .catch((e)=>{
+          console.log('error' + e);
+        })
+      }
+    },
+    toggleProjectView() {
+      this.$store.commit("toggleProject");
+      location.href = '/projects/' + this.project.initialProject
     }
   },
   computed: {
     ...mapState([
-      'selectedPartnerForEquipmentSimple'
+      'selectedPartnerForEquipmentSimple', 'toggleProject'
     ]),
     selectedPartner() {
       if (!this.project.partners) return {}
@@ -1537,7 +1718,6 @@ export default {
 </script>
 
 <style>
-
 .defaultValue {
   background-color: #d0e1fd;
 }
@@ -1553,4 +1733,15 @@ export default {
   flex-direction: column;
 }
 
+#app-mode-label {
+    position: relative;
+    bottom: 7px;
+    margin-right: 0.75rem;
+}
+
+.layout-topbar-menu {
+    align-items: center;
+    width: max-content;
+    margin-right: 0.75rem;
+}
 </style>

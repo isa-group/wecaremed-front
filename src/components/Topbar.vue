@@ -4,21 +4,24 @@
         <template v-if="projectInfo">
             <div style="display: flex; align-items: center;">
                 <router-link to="/" class="layout-topbar-logo mr-3">
-                    <img alt="Wecaremed Logo" :src="WecaremedLogo" class="ml-2" />
+                    <img alt="Wecaremed Logo" :src="WecaremedLogo" class="ml-2" v-tooltip.bottom="'Go to home'" />
                 </router-link>
 
                     <div style="display: flex;align-items: center;width: 100%;place-content: center;">
                         
                         <h2>{{projectInfo.name}}&nbsp;</h2>
-                        <h2>({{projectInfo.from}} -&nbsp;</h2>
-                        <h2>{{projectInfo.to}})&nbsp;</h2> 
+                        <h2>({{ (new Date(projectInfo.from).getMonth() + 1).toString().padStart(2, "0") + '/' + new Date(projectInfo.from).getFullYear()}} -&nbsp;</h2>
+                        <h2>{{(new Date(projectInfo.to).getMonth() + 1).toString().padStart(2, "0") + '/' + new Date(projectInfo.to).getFullYear()}})&nbsp;</h2> 
+                        
+                        <Badge :value="initialCF + ' t CO2e'" size="large" :class="toggleValue == true ? 'initialCF' : 'currentCF'" :severity="getTextColorFromCFIndex(initialCF)"
+                        v-tooltip.bottom="'Preparation Phase CF'" />
                         
                         <span v-if="$store.state.toggleValue">
-                            <Badge :value="currentCF + ' t CO2e'" size="large" :severity="getTextColorFromCFIndex(currentCF)" />
-                            &nbsp;<span style="font-size: 16px">/</span>&nbsp;
+                            &nbsp;<span style="font-size: 16px">--></span>&nbsp;
+                            <Badge :value="currentCF + ' t CO2e'" size="large" class="currentCF" :severity="getTextColorFromCFIndex(currentCF)"
+                            v-tooltip.bottom="'Execution Phase CF'"/>
                         </span>
                         
-                        <Badge :value="initialCF + ' t CO2e'" size="large" :severity="getTextColorFromCFIndex(initialCF)" />
 
                         <!-- Al recalcular el CF, se devuelve el project con los nuevos datos, por tanto, es necesario actualizar
                              la vista, y para ello hay que modificar informacion fuera de este componente, lo cual, complica las cosas -->
@@ -58,7 +61,7 @@
 
         <template v-else-if="!projectInfo">
             <router-link to="/" class="layout-topbar-logo mr-3">
-                <img alt="Wecaremed Logo" :src="WecaremedLogo" class="ml-2" />
+                <img alt="Wecaremed Logo" :src="WecaremedLogo" class="ml-2" v-tooltip.bottom="'Go to home'" />
 
             </router-link>
             
@@ -102,7 +105,7 @@ import Dialog from 'primevue/dialog';
 import Button from 'primevue/button';
 import InputSwitch from 'primevue/inputswitch';
 import axios from 'axios';
-import { mapState, mapActions } from 'vuex'
+import { mapState } from 'vuex'
 import Badge from 'primevue/badge'
 
 export default {
@@ -130,7 +133,6 @@ export default {
     methods: {
         toggleMenu(event) {
             this.$refs.menu.toggle(event);
-            this.$store.state.dispatch("toggleValue");
         },
         openConfirmation() {
             this.displayConfirmation = true;
@@ -138,26 +140,24 @@ export default {
         closeConfirmation() {
             this.displayConfirmation = false;
         },
-        ...mapActions([
-        "toggleView"
-        ]),
-        // calculateCF() {
-        //     this.axios.put(`/projects/calculateCF/${this.$route.params.id}`)
-        //     .then((response) => {
-        //         // this.project = response.data;
-        //         console.log(response.data)
-        //     })
-        //     .catch((e)=>{
-        //         console.log('error' + e);
-        //     })
-        // },
+        toggleView() {
+            this.$store.commit("toggleView")
+            if (this.$route.name === "Project Details Simple" && this.$store.state.toggleValue === true) {
+                window.location = ("/projects/" + this.$route.params.id + "/advanced")
+            }
+            if (this.$route.name === "Project Details Advanced" && this.$store.state.toggleValue === false) {
+                window.location = ("/projects/" + this.$route.params.id)
+            }
+        },
         getTextColorFromCFIndex(cfIndex) {
-            if (cfIndex < 150)
-                return "success"
-            else if (cfIndex > 150 & cfIndex < 250)
-                return "warning"
-            else
-                return "danger"
+            cfIndex
+            // if (cfIndex < 150)
+            //     return "success"
+            // else if (cfIndex > 150 & cfIndex < 250)
+            //     return "warning"
+            // else
+            //     return "danger"
+            return ""
         },
         logout() {
             this.$store.dispatch("saveUsername", '');
@@ -195,6 +195,16 @@ export default {
     .layout-topbar-menu {
         align-items: center;
         width: max-content;
+    }
+
+    .initialCF {
+        background-color: white;
+        color: black;
+    }
+
+    .currentCF {
+        background-color: black;
+        color: white;
     }
 </style>
 

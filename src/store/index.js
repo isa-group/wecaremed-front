@@ -5,11 +5,32 @@ export default createStore({
   plugins: [createPersistedState()],
   state: {
     toggleValue: false,
+    toggleProject: false,
     appModeText: "Simple",
     selectedPartnerForEquipmentSimple: "",
     username: '',
     password: '',
-    userId: ''
+    userId: '',
+    analysisParamsInitial :{
+      heatInputInitial: 1.0,
+      electricityInputInitial: 1.0,
+      waterInputInitial: 1.0,
+      transportationInputInitial: 1.0,
+      materialsInputInitial: 1.0,
+      eventsInputInitial: 1.0,
+      printableDeliverablesInputInitial: 1.0,
+      equipmentInputInitial: 1.0
+    },
+    analysisParamsExecution :{
+      heatInputExecution: 1.0,
+      electricityInputExecution: 1.0,
+      waterInputExecution: 1.0,
+      transportationInputExecution: 1.0,
+      materialsInputExecution: 1.0,
+      eventsInputExecution: 1.0,
+      printableDeliverablesInputExecution: 1.0,
+      equipmentInputExecution: 1.0
+    }
   },
   mutations: {
     toggleView(state) {
@@ -21,6 +42,13 @@ export default createStore({
         state.toggleValue = false;
       } else {
         state.toggleValue = true;
+      }
+    },
+    toggleProject(state){
+      if (state.toggleProject) {
+        state.toggleProject = false;
+      } else {
+        state.toggleProject = true;
       }
     },
     updateSelectedPartner(state, selectedOption) {
@@ -38,14 +66,23 @@ export default createStore({
     },
     saveUserId(state, userId){
       state.userId = userId;
+    },
+    analysisParamsInitial(state, newValues) {
+      state.analysisParamsInitial = newValues;
+    },
+    analysisParamsExecution(state, newValues) {
+      state.analysisParamsExecution= newValues;
     }
   },
   actions: {
-    toggleView(context) {
-      context.commit("toggleView")
+    toggleView({commit}) {
+      commit("toggleView")
     },
     toggleValue({commit}){
       commit("toggleValue");
+    },
+    toggleProject({commit}){
+      commit("toggleProject");
     },
     updateSelectedPartner({commit}, selectedOption) {
       commit("updateSelectedPartner", selectedOption)
@@ -61,6 +98,12 @@ export default createStore({
     },
     saveUserId({commit}, userId) {
       commit("saveUserId", userId);
+    },
+    analysisParamsInitial({commit}, newValues) {
+      commit("analysisParamsInitial", newValues);
+    },
+    analysisParamsExecution({commit}, newValues) {
+      commit("analysisParamsExecution", newValues);
     }
   },
   modules: {
