@@ -4,7 +4,7 @@
         <template v-if="projectInfo">
             <div style="display: flex; align-items: center;">
                 <router-link to="/" class="layout-topbar-logo mr-3">
-                    <img alt="Wecaremed Logo" :src="WecaremedLogo" class="ml-2" />
+                    <img alt="Wecaremed Logo" :src="WecaremedLogo" class="ml-2" v-tooltip.bottom="'Go to home'" />
                 </router-link>
 
                     <div style="display: flex;align-items: center;width: 100%;place-content: center;">
@@ -61,7 +61,7 @@
 
         <template v-else-if="!projectInfo">
             <router-link to="/" class="layout-topbar-logo mr-3">
-                <img alt="Wecaremed Logo" :src="WecaremedLogo" class="ml-2" />
+                <img alt="Wecaremed Logo" :src="WecaremedLogo" class="ml-2" v-tooltip.bottom="'Go to home'" />
 
             </router-link>
             
