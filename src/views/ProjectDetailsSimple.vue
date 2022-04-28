@@ -243,8 +243,9 @@
       </table>
 
       <h2>Tons of equivalent carbon dioxide emitted: {{project.initialCF}}</h2> 
+      <h2>Price of the ton of CO2 equivalent: {{co2PermitsPrice + ' €'}}</h2>
       <h2 style="margin-bottom: 40px">CO2 permits cost: {{round(project.initialCF * co2PermitsPrice) + ' €'}}</h2>
-      
+
       <h3 style="margin-bottom: 10px">CF Breakdown (Tons):</h3>
       <ul>
         <li style="margin-bottom: 10px; font-size: 20px">Fuels heat: {{project.fuelsHeatSimpleCF}}</li>
@@ -294,7 +295,7 @@
                 <Button class="ml-2" label="Save" icon="pi pi-check" @click="savePartners" />
               </div>
               
-              <Button type="button" icon="pi pi-filter-slash" label="Clear" class="p-button-warning" @click="clearPartnerFilter()"/>
+              <Button type="button" icon="pi pi-filter-slash" label="Clear filters" class="p-button-warning" @click="clearPartnerFilter()"/>
             </div>
         </template>
 
@@ -810,7 +811,7 @@
                   <Button class="ml-2" label="Save" icon="pi pi-check" @click="savePrintableDeliverables" />
                 </div>
                 
-                <Button type="button" icon="pi pi-filter-slash" label="Clear" class="p-button-warning" @click="clearPrintableDeliverableFilter()"/>
+                <Button type="button" icon="pi pi-filter-slash" label="Clear filters" class="p-button-warning" @click="clearPrintableDeliverableFilter()"/>
               </div>
           </template>
 
@@ -885,6 +886,11 @@
         <div>
           <h2 class="mb-2">Equivalent carbon dioxide emitted:
             <Badge :value="project.initialCF  + ' t CO2e'" class="ml-2 currentCF" size="xlarge" :severity="getTextColorFromCFIndex(project.initialCF)" />
+          </h2>
+        </div>
+        <div>
+          <h2 class="mt-2">Price of the ton of CO2 equivalent:
+            <Badge :value="co2PermitsPrice + ' €'" class="ml-2 currentCF" size="xlarge" />
           </h2>
         </div>
         <div>
