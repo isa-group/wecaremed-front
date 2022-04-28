@@ -263,7 +263,8 @@
                 </tbody>
               </table>
 
-              <h2>Tons of equivalent carbon dioxide emitted: {{project.currentCF}}</h2> 
+              <h2>Tons of equivalent carbon dioxide emitted: {{project.currentCF}}</h2>
+              <h2>Price of the ton of CO2 equivalent: {{co2PermitsPrice + ' €'}}</h2>
               <h2 style="margin-bottom: 40px">CO2 permits cost: {{round(project.currentCF * co2PermitsPrice) + ' €'}}</h2>
               
               <h3 style="margin-bottom: 10px">CF Breakdown (Tons):</h3>
@@ -301,7 +302,7 @@
                         <Button class="ml-2" label="Save" icon="pi pi-check" @click="savePartners" />
                       </div>
                       
-                      <Button type="button" icon="pi pi-filter-slash" label="Clear" class="p-button-warning" @click="clearPartnerFilter()"/>
+                      <Button type="button" icon="pi pi-filter-slash" label="Clear filters" class="p-button-warning" @click="clearPartnerFilter()"/>
                     </div>
                 </template>
 
@@ -382,7 +383,7 @@
                         <Button class="ml-2" label="Save" icon="pi pi-check" @click="saveExternalExperts" />
                       </div>
                       
-                      <Button type="button" icon="pi pi-filter-slash" label="Clear" class="p-button-warning" @click="clearExternalExpertFilter()"/>
+                      <Button type="button" icon="pi pi-filter-slash" label="Clear filters" class="p-button-warning" @click="clearExternalExpertFilter()"/>
                     </div>
                 </template>
 
@@ -542,7 +543,7 @@
                               <Button class="ml-2" label="Save" icon="pi pi-check" @click="saveEvents" />
                             </div>
                             
-                            <Button type="button" icon="pi pi-filter-slash" label="Clear" class="p-button-warning" @click="clearOrganizationEventsFilter()"/>
+                            <Button type="button" icon="pi pi-filter-slash" label="Clear filters" class="p-button-warning" @click="clearOrganizationEventsFilter()"/>
                           </div>
                       </template>
 
@@ -675,7 +676,7 @@
                               <Button class="ml-2" label="Save" icon="pi pi-check" @click="saveEvents" />
                             </div>
                             
-                            <Button type="button" icon="pi pi-filter-slash" label="Clear" class="p-button-warning" @click="clearParticipationEventsFilter()"/>
+                            <Button type="button" icon="pi pi-filter-slash" label="Clear filters" class="p-button-warning" @click="clearParticipationEventsFilter()"/>
                           </div>
                       </template>
 
@@ -842,7 +843,7 @@
                           <Button class="ml-2" label="Save" icon="pi pi-check" @click="savePrintableDeliverables" />
                         </div>
                         
-                        <Button type="button" icon="pi pi-filter-slash" label="Clear" class="p-button-warning" @click="clearPrintableDeliverableFilter()"/>
+                        <Button type="button" icon="pi pi-filter-slash" label="Clear filters" class="p-button-warning" @click="clearPrintableDeliverableFilter()"/>
                       </div>
                   </template>
 
@@ -945,7 +946,7 @@
                   <h5>Additional custom defined Heat emission</h5>
 
                   <DataTable :value="project.customHeat" editMode="cell" :paginator="true" class="p-datatable-gridlines" dataKey="_id"
-                  :rowHover="true" @cell-edit-complete="onCellEditCompleteCustom($event, 'customHeat', 'heat')" sortMode="multiple" :rows="5" v-model:filters="partnerFilters"
+                  :rowHover="true" @cell-edit-complete="onCellEditCompleteCustom($event, 'customHeat', 'heat')" sortMode="multiple" :rows="5" v-model:filters="customFilters"
                   filterDisplay="menu" :loading="loading" :filters="customFilters" responsiveLayout="scroll"
                   :globalFilterFields="['nameCustom','valueCustom']" removableSort>
                     
@@ -960,7 +961,7 @@
                             <Button class="ml-2" label="Save" icon="pi pi-check" @click="saveCustoms" />
                           </div>
                           
-                          <Button type="button" icon="pi pi-filter-slash" label="Clear" class="p-button-warning" @click="clearCustomFilter()"/>
+                          <Button type="button" icon="pi pi-filter-slash" label="Clear filters" class="p-button-warning" @click="clearCustomFilter()"/>
                         </div>
                     </template>
 
@@ -1003,7 +1004,7 @@
                 <TabPanel header="Electricity">
                   <h5>Aditional custom defined electricity emission</h5>
                   <DataTable :value="project.customElectricity" editMode="cell" :paginator="true" class="p-datatable-gridlines" dataKey="_id"
-                  :rowHover="true" @cell-edit-complete="onCellEditCompleteCustom($event, 'customElectricity', 'electricity')" sortMode="multiple" :rows="5" v-model:filters="partnerFilters"
+                  :rowHover="true" @cell-edit-complete="onCellEditCompleteCustom($event, 'customElectricity', 'electricity')" sortMode="multiple" :rows="5" v-model:filters="customFilters"
                   filterDisplay="menu" :loading="loading" :filters="customFilters" responsiveLayout="scroll"
                   :globalFilterFields="['nameCustom','valueCustom']" removableSort>
                   
@@ -1018,7 +1019,7 @@
                           <Button class="ml-2" label="Save" icon="pi pi-check" @click="saveCustoms" />
                         </div>
                         
-                        <Button type="button" icon="pi pi-filter-slash" label="Clear" class="p-button-warning" @click="clearPartnerFilter()"/>
+                        <Button type="button" icon="pi pi-filter-slash" label="Clear filters" class="p-button-warning" @click="clearPartnerFilter()"/>
                       </div>
                   </template>
 
@@ -1062,7 +1063,7 @@
 
                   <h5>Aditional custom defined water emission</h5>
                   <DataTable :value="project.customWater" editMode="cell" :paginator="true" class="p-datatable-gridlines" dataKey="_id"
-                  :rowHover="true" @cell-edit-complete="onCellEditCompleteCustom($event, 'customWater', 'water')" sortMode="multiple" :rows="5" v-model:filters="partnerFilters"
+                  :rowHover="true" @cell-edit-complete="onCellEditCompleteCustom($event, 'customWater', 'water')" sortMode="multiple" :rows="5" v-model:filters="customFilters"
                   filterDisplay="menu" :loading="loading" :filters="customFilters" responsiveLayout="scroll"
                   :globalFilterFields="['nameCustom','valueCustom']" removableSort>
                   
@@ -1077,7 +1078,7 @@
                           <Button class="ml-2" label="Save" icon="pi pi-check" @click="saveCustoms" />
                         </div>
                         
-                        <Button type="button" icon="pi pi-filter-slash" label="Clear" class="p-button-warning" @click="clearCustomFilter()"/>
+                        <Button type="button" icon="pi pi-filter-slash" label="Clear filters" class="p-button-warning" @click="clearCustomFilter()"/>
                       </div>
                   </template>
 
@@ -1122,7 +1123,7 @@
 
                     <h5>Aditional custom defined transportation emission</h5>
                     <DataTable :value="project.customTransportation" editMode="cell" :paginator="true" class="p-datatable-gridlines" dataKey="_id"
-                    :rowHover="true" @cell-edit-complete="onCellEditCompleteCustom($event, 'customTransportation', 'transportation')" sortMode="multiple" :rows="5" v-model:filters="partnerFilters"
+                    :rowHover="true" @cell-edit-complete="onCellEditCompleteCustom($event, 'customTransportation', 'transportation')" sortMode="multiple" :rows="5" v-model:filters="customFilters"
                     filterDisplay="menu" :loading="loading" :filters="customFilters" responsiveLayout="scroll"
                     :globalFilterFields="['nameCustom','valueCustom']" removableSort>
                     
@@ -1137,7 +1138,7 @@
                             <Button class="ml-2" label="Save" icon="pi pi-check" @click="saveCustoms" />
                           </div>
                           
-                          <Button type="button" icon="pi pi-filter-slash" label="Clear" class="p-button-warning" @click="clearCustomFilter()"/>
+                          <Button type="button" icon="pi pi-filter-slash" label="Clear filters" class="p-button-warning" @click="clearCustomFilter()"/>
                         </div>
                     </template>
 
@@ -1182,7 +1183,7 @@
 
                     <h5>Aditional custom defined material emission</h5>
                     <DataTable :value="project.customMaterials" editMode="cell" :paginator="true" class="p-datatable-gridlines" dataKey="_id"
-                    :rowHover="true" @cell-edit-complete="onCellEditCompleteCustom($event, 'customMaterials', 'materials')" sortMode="multiple" :rows="5" v-model:filters="partnerFilters"
+                    :rowHover="true" @cell-edit-complete="onCellEditCompleteCustom($event, 'customMaterials', 'materials')" sortMode="multiple" :rows="5" v-model:filters="customFilters"
                     filterDisplay="menu" :loading="loading" :filters="customFilters" responsiveLayout="scroll"
                     :globalFilterFields="['nameCustom','valueCustom']" removableSort>
                     
@@ -1197,7 +1198,7 @@
                             <Button class="ml-2" label="Save" icon="pi pi-check" @click="saveCustoms" />
                           </div>
                           
-                          <Button type="button" icon="pi pi-filter-slash" label="Clear" class="p-button-warning" @click="clearCustomFilter()"/>
+                          <Button type="button" icon="pi pi-filter-slash" label="Clear filters" class="p-button-warning" @click="clearCustomFilter()"/>
                         </div>
                     </template>
 
@@ -1242,7 +1243,7 @@
 
                   <h5>Aditional custom defined events emission</h5>
                   <DataTable :value="project.customEvents" editMode="cell" :paginator="true" class="p-datatable-gridlines" dataKey="_id"
-                  :rowHover="true" @cell-edit-complete="onCellEditCompleteCustom($event, 'customEvents', 'event')" sortMode="multiple" :rows="5" v-model:filters="partnerFilters"
+                  :rowHover="true" @cell-edit-complete="onCellEditCompleteCustom($event, 'customEvents', 'event')" sortMode="multiple" :rows="5" v-model:filters="customFilters"
                   filterDisplay="menu" :loading="loading" :filters="customFilters" responsiveLayout="scroll"
                   :globalFilterFields="['nameCustom','valueCustom']" removableSort>
                   
@@ -1257,7 +1258,7 @@
                           <Button class="ml-2" label="Save" icon="pi pi-check" @click="saveCustoms" />
                         </div>
                         
-                        <Button type="button" icon="pi pi-filter-slash" label="Clear" class="p-button-warning" @click="clearCustomFilter()"/>
+                        <Button type="button" icon="pi pi-filter-slash" label="Clear filters" class="p-button-warning" @click="clearCustomFilter()"/>
                       </div>
                   </template>
 
@@ -1304,7 +1305,7 @@
                     <h5>Additional custom defined printable deliverable emission</h5>
 
                     <DataTable :value="project.customPrintableDeliverables" editMode="cell" :paginator="true" class="p-datatable-gridlines" dataKey="_id"
-                    :rowHover="true" @cell-edit-complete="onCellEditCompleteCustom($event, 'customPrintableDeliverables', 'Printable Deliverables')" sortMode="multiple" :rows="5" v-model:filters="partnerFilters"
+                    :rowHover="true" @cell-edit-complete="onCellEditCompleteCustom($event, 'customPrintableDeliverables', 'Printable Deliverables')" sortMode="multiple" :rows="5" v-model:filters="customFilters"
                     filterDisplay="menu" :loading="loading" :filters="customFilters" responsiveLayout="scroll"
                     :globalFilterFields="['nameCustom','valueCustom']" removableSort>
                       
@@ -1319,7 +1320,7 @@
                               <Button class="ml-2" label="Save" icon="pi pi-check" @click="saveCustoms" />
                             </div>
                             
-                            <Button type="button" icon="pi pi-filter-slash" label="Clear" class="p-button-warning" @click="clearCustomFilter()"/>
+                            <Button type="button" icon="pi pi-filter-slash" label="Clear filters" class="p-button-warning" @click="clearCustomFilter()"/>
                           </div>
                       </template>
 
@@ -1364,7 +1365,7 @@
                     <h5>Additional custom defined equipment emission</h5>
 
                     <DataTable :value="project.customEquipment" editMode="cell" :paginator="true" class="p-datatable-gridlines" dataKey="_id"
-                    :rowHover="true" @cell-edit-complete="onCellEditCompleteCustom($event, 'customEquipment', 'Equipment')" sortMode="multiple" :rows="5" v-model:filters="partnerFilters"
+                    :rowHover="true" @cell-edit-complete="onCellEditCompleteCustom($event, 'customEquipment', 'Equipment')" sortMode="multiple" :rows="5" v-model:filters="customFilters"
                     filterDisplay="menu" :loading="loading" :filters="customFilters" responsiveLayout="scroll"
                     :globalFilterFields="['nameCustom','valueCustom']" removableSort>
                       
@@ -1379,7 +1380,7 @@
                               <Button class="ml-2" label="Save" icon="pi pi-check" @click="saveCustoms" />
                             </div>
                             
-                            <Button type="button" icon="pi pi-filter-slash" label="Clear" class="p-button-warning" @click="clearCustomFilter()"/>
+                            <Button type="button" icon="pi pi-filter-slash" label="Clear filters" class="p-button-warning" @click="clearCustomFilter()"/>
                           </div>
                       </template>
 
@@ -1436,6 +1437,11 @@
                 <div>
                   <h2 class="mb-2">Equivalent carbon dioxide emitted:
                     <Badge :value="project.currentCF  + ' t CO2e'" class="ml-2 currentCF" size="xlarge" :severity="getTextColorFromCFIndex(project.currentCF)" />
+                  </h2>
+                </div>
+                <div>
+                  <h2 class="mt-2">Price of the ton of CO2 equivalent:
+                    <Badge :value="co2PermitsPrice + ' €'" class="ml-2 currentCF" size="xlarge" />
                   </h2>
                 </div>
                 <div>
