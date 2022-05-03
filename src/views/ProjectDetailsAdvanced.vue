@@ -1837,7 +1837,7 @@ export default {
       KPI2ParamsExecution: {},
       KPI3ParamsInitial: {},
       KPI3ParamsExecution: {},
-      countriesForDropdown: ["Albania", "Bosnia & Herzegovina", "Croatia", "Cyprus", "Europe", "France", "Greece", "Italy", "Malta", "Montenegro", "Portugal", "Slovenia", "Spain", "Bulgaria", "North Macedonia"],
+      countriesForDropdown: ["Albania", "Bosnia & Herzegovina", "Bulgaria", "Croatia", "Cyprus", "Europe", "France", "Greece", "Italy", "Malta", "Montenegro", "North Macedonia", "Portugal", "Slovenia", "Spain"],
       eventTypesForDropdown: ["In presence", "Mixed", "On-line"],
       travelModesForDropdown: ["Airplane", "Bus", "Car", "Ferries", "International Rail", "Light rail and tram/Underground", "Motorbikes", "National Rail", "Taxi"],
       fuelTypesForDropdown: ["Battery electric vehicle", "CNG", "Diesel", "Hybrid", "LPG", "Other", "Petrol", "Plug-in hybrid electric vehicle"],
