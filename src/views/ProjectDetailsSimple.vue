@@ -1054,7 +1054,7 @@ export default {
       project: {},
       initialProject: {},
       object: {},
-      countriesForDropdown: ["Albania", "Bosnia & Herzegovina", "Croatia", "Cyprus", "France", "Greece", "Italy", "Malta", "Montenegro", "Portugal", "Slovenia", "Spain", "Bulgaria", "North Macedonia"],
+      countriesForDropdown: ["Albania", "Bosnia & Herzegovina", "Bulgaria", "Croatia", "Cyprus", "Europe", "France", "Greece", "Italy", "Malta", "Montenegro", "North Macedonia", "Portugal", "Slovenia", "Spain"],
       paperSizes: ["A0", "A1", "A2", "A3", "A4", "A5", "A6"],
       deliverableOptions: [
         {value: "Report type*", avgPagesPerCopy: 50, size: "A4"},
