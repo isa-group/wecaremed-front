@@ -761,8 +761,8 @@
                 </div>
                 <div class="field col-12 md:col-4">
                   <label for="participatedOnSiteEventsAverageParticipants">Average number of participants of the project</label>
-                  <InputNumber v-model="project.participatedOnSiteEventsAverageParticipants" mode="decimal" :maxFractionDigits="3"
-                  showButtons decrementButtonClass="p-button-info" :step="0.25" @keypress.enter="$event.target.blur()" :inputClass="project.participatedOnSiteEventsAverageParticipants == 0 ? 'defaultValue' : ''"
+                  <InputNumber v-model="project.participatedOnSiteEventsAverageParticipants" mode="decimal"
+                  showButtons decrementButtonClass="p-button-info" @keypress.enter="$event.target.blur()" :inputClass="project.participatedOnSiteEventsAverageParticipants == 0 ? 'defaultValue' : ''"
                   incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
                   :allowEmpty="false" :min="0" @focus="onFocusValue=project.participatedOnSiteEventsAverageParticipants; $event.target.select()" 
                   @focusout="onCellEditComplete('participatedOnSiteEventsAverageParticipants', project.participatedOnSiteEventsAverageParticipants)"
