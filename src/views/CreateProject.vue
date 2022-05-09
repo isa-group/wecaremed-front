@@ -32,8 +32,10 @@
                 <Calendar v-model="newProject.to" view="month" dateFormat="mm/yy" id="projectFinalDuration" name="projectFinalDuration"
                 :class="{'p-invalid': submitted && errors.filter(e => e.field === 'duration').length > 0}" />
               </div>
-
             </div>
+
+            <p>Duration of the project (months): {{projectDurationMonths}}</p>
+
             <div class="col-12 md:col-12" style="display: flex; justify-content: center;">
               <small class="p-error" v-for="error in errors.filter(e => submitted && e.field === 'duration')" :key="error.message">{{error.message}}</small>
             </div>
@@ -90,7 +92,7 @@ export default {
       newProject: {
         name: "",
         from: new Date(new Date().getFullYear(), new Date().getMonth(), 1),
-        to: new Date(new Date().getFullYear() + 2, new Date().getMonth(), 1),
+        to: new Date(new Date().getFullYear() + 2, new Date().getMonth(), 0),
         callId: "",
         proposalId: "",
         isInitialProject: new Boolean(false),
@@ -130,6 +132,13 @@ export default {
       errors: [],
       submitted: false,
     }
+  },
+  computed: {
+    projectDurationMonths() {
+      let fromDate = new Date(this.newProject.from)
+      let toDate = new Date(this.newProject.to)
+      return toDate.getMonth() - fromDate.getMonth() + 1 + 12 * (toDate.getFullYear() - fromDate.getFullYear())
+    },
   },
   created() {
     if (this.$route.params.id) {
