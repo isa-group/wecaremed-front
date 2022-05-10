@@ -85,7 +85,6 @@ describe('Create a partner: ', () => {
       flatScreensBoughtDuringProject: 0,
       printersBoughtDuringProject: 0,
       copyMachinesBoughtDuringProject: 0,
-      faxMachinesBoughtDuringProject: 0,
 
       totalWeightOtherElectricalEquipment: 0.001,
 

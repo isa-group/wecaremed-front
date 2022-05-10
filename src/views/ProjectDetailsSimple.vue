@@ -56,7 +56,6 @@
               <th>Flat screens</th>
               <th>Printers</th>
               <th>Copy machines</th>
-              <th>Fax machines</th>
             </tr>
           </thead>
           <tbody>
@@ -67,7 +66,6 @@
               <td>{{partner.flatScreensBoughtDuringProject}}</td>
               <td>{{partner.printersBoughtDuringProject}}</td>
               <td>{{partner.copyMachinesBoughtDuringProject}}</td>
-              <td>{{partner.faxMachinesBoughtDuringProject}}</td>
             </tr>
           </tbody>
         </table>
@@ -398,7 +396,7 @@
             <h5>Number of IT electrical equipment that will be purchased during the project</h5>
 
             <div class="p-fluid formgrid grid">
-              <div class="field col-12 md:col-3">
+              <div class="field col-12 md:col-4">
                 <label for="pcsBoughtDuringProject">PCs</label>
                 <InputNumber v-model="selectedPartner.pcsBoughtDuringProject" decrementButtonClass="p-button-info"
                 incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus" mode="decimal"
@@ -406,7 +404,7 @@
                 @focus="onFocusValue=selectedPartner.pcsBoughtDuringProject; $event.target.select()" @keypress.enter="$event.target.blur()"
                 @focusout="onCellEditCompletePartnerEquipment('pcsBoughtDuringProject', selectedPartner.pcsBoughtDuringProject)" />
               </div>
-              <div class="field col-12 md:col-3">
+              <div class="field col-12 md:col-4">
                 <label for="pcsFlatScreenBoughtDuringProject">PCs with flat screen</label>
                 <InputNumber v-model="selectedPartner.pcsFlatScreenBoughtDuringProject" mode="decimal" decrementButtonClass="p-button-info"
                 showButtons incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
@@ -414,7 +412,7 @@
                 @focus="onFocusValue=selectedPartner.pcsFlatScreenBoughtDuringProject; $event.target.select()" @keypress.enter="$event.target.blur()"
                 @focusout="onCellEditCompletePartnerEquipment('pcsFlatScreenBoughtDuringProject', selectedPartner.pcsFlatScreenBoughtDuringProject)" />
               </div>
-              <div class="field col-12 md:col-3">
+              <div class="field col-12 md:col-4">
                 <label for="laptopsBoughtDuringProject">Laptop computers</label>
                 <InputNumber v-model="selectedPartner.laptopsBoughtDuringProject" mode="decimal"
                 showButtons decrementButtonClass="p-button-info" incrementButtonClass="p-button-info" :inputClass="selectedPartner.laptopsBoughtDuringProject == 0 ? 'defaultValue' : ''"
@@ -422,7 +420,7 @@
                 @focus="onFocusValue=selectedPartner.laptopsBoughtDuringProject; $event.target.select()" @keypress.enter="$event.target.blur()"
                 @focusout="onCellEditCompletePartnerEquipment('laptopsBoughtDuringProject', selectedPartner.laptopsBoughtDuringProject)" />
               </div>
-              <div class="field col-12 md:col-3">
+              <div class="field col-12 md:col-4">
                 <label for="flatScreensBoughtDuringProject">Flat screens</label>
                 <InputNumber v-model="selectedPartner.flatScreensBoughtDuringProject" mode="decimal"
                 showButtons decrementButtonClass="p-button-info" incrementButtonClass="p-button-info" :inputClass="selectedPartner.flatScreensBoughtDuringProject == 0 ? 'defaultValue' : ''"
@@ -430,7 +428,7 @@
                 @focus="onFocusValue=selectedPartner.flatScreensBoughtDuringProject; $event.target.select()" @keypress.enter="$event.target.blur()"
                 @focusout="onCellEditCompletePartnerEquipment('flatScreensBoughtDuringProject', selectedPartner.flatScreensBoughtDuringProject)" />
               </div>
-              <div class="field col-12 md:col-3">
+              <div class="field col-12 md:col-4">
                 <label for="printersBoughtDuringProject">Printers</label>
                 <InputNumber v-model="selectedPartner.printersBoughtDuringProject" mode="decimal"
                 showButtons decrementButtonClass="p-button-info" incrementButtonClass="p-button-info" :inputClass="selectedPartner.printersBoughtDuringProject == 0 ? 'defaultValue' : ''"
@@ -438,21 +436,13 @@
                 @focus="onFocusValue=selectedPartner.printersBoughtDuringProject; $event.target.select()" @keypress.enter="$event.target.blur()"
                 @focusout="onCellEditCompletePartnerEquipment('printersBoughtDuringProject', selectedPartner.printersBoughtDuringProject)" />
               </div>
-              <div class="field col-12 md:col-3">
+              <div class="field col-12 md:col-4">
                 <label for="copyMachinesBoughtDuringProject">Copy machines</label>
                 <InputNumber v-model="selectedPartner.copyMachinesBoughtDuringProject" mode="decimal" 
                 showButtons decrementButtonClass="p-button-info" :allowEmpty="false" :min="0" id="copyMachinesBoughtDuringProject"
                 incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus" :inputClass="selectedPartner.copyMachinesBoughtDuringProject == 0 ? 'defaultValue' : ''"
                 @focus="onFocusValue=selectedPartner.copyMachinesBoughtDuringProject; $event.target.select()" @keypress.enter="$event.target.blur()"
                 @focusout="onCellEditCompletePartnerEquipment('copyMachinesBoughtDuringProject', selectedPartner.copyMachinesBoughtDuringProject)" />
-              </div>
-              <div class="field col-12 md:col-3">
-                <label for="faxMachinesBoughtDuringProject">Fax machines</label>
-                <InputNumber v-model="selectedPartner.faxMachinesBoughtDuringProject" mode="decimal"
-                showButtons decrementButtonClass="p-button-info" :allowEmpty="false" :min="0" id="faxMachinesBoughtDuringProject"
-                incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus" :inputClass="selectedPartner.faxMachinesBoughtDuringProject == 0 ? 'defaultValue' : ''"
-                @focus="onFocusValue=selectedPartner.faxMachinesBoughtDuringProject; $event.target.select()" @keypress.enter="$event.target.blur()"
-                @focusout="onCellEditCompletePartnerEquipment('faxMachinesBoughtDuringProject', selectedPartner.faxMachinesBoughtDuringProject)" />
               </div>
             </div>
           </div>
@@ -1305,7 +1295,6 @@ export default {
         flatScreensBoughtDuringProject: 0,
         printersBoughtDuringProject: 0,
         copyMachinesBoughtDuringProject: 0,
-        faxMachinesBoughtDuringProject: 0,
 
         totalWeightOtherElectricalEquipment: 0,
 
