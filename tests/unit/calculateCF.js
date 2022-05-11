@@ -85,7 +85,6 @@ describe('Create a partner: ', () => {
       flatScreensBoughtDuringProject: 0,
       printersBoughtDuringProject: 0,
       copyMachinesBoughtDuringProject: 0,
-      faxMachinesBoughtDuringProject: 0,
 
       totalWeightOtherElectricalEquipment: 0.001,
 
@@ -149,7 +148,7 @@ describe('Calculate CF for the project: ', () => {
     .end(function(err,res) {
       console.log(res.body)
       expect(res).to.have.status(200);
-      expect(res.body.initialCF).to.equal(99.33)
+      expect(res.body.initialCF).to.equal(99.36)
       done();
     });
   });

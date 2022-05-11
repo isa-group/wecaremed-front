@@ -77,7 +77,6 @@
                       <th>Flat screens</th>
                       <th>Printers</th>
                       <th>Copy machines</th>
-                      <th>Fax machines</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -88,7 +87,6 @@
                       <td>{{partner.flatScreensBoughtDuringProject}}</td>
                       <td>{{partner.printersBoughtDuringProject}}</td>
                       <td>{{partner.copyMachinesBoughtDuringProject}}</td>
-                      <td>{{partner.faxMachinesBoughtDuringProject}}</td>
                     </tr>
                   </tbody>
                 </table>
@@ -263,7 +261,8 @@
                 </tbody>
               </table>
 
-              <h2>Tons of equivalent carbon dioxide emitted: {{project.currentCF}}</h2> 
+              <h2>Tons of equivalent carbon dioxide emitted: {{project.currentCF}}</h2>
+              <h2>Price of the ton of CO2 equivalent: {{co2PermitsPrice + ' €'}}</h2>
               <h2 style="margin-bottom: 40px">CO2 permits cost: {{round(project.currentCF * co2PermitsPrice) + ' €'}}</h2>
               
               <h3 style="margin-bottom: 10px">CF Breakdown (Tons):</h3>
@@ -285,7 +284,7 @@
               <h4>Partners</h4>
 
               <DataTable :value="project.partners" editMode="cell" :paginator="true" class="p-datatable-gridlines" dataKey="_id"
-              :rowHover="true" @cell-edit-complete="onCellEditCompletePartner" sortMode="multiple" :rows="5" v-model:filters="partnerFilters"
+              :rowHover="true" @cell-edit-complete="onCellEditCompletePartner" sortMode="multiple" :rows="10" v-model:filters="partnerFilters"
               filterDisplay="menu" :loading="loading" :filters="partnerFilters" responsiveLayout="scroll"
               :globalFilterFields="['name','country','employeesPersonMonths', 'externalExpertsPersonMonths', 'employeesWorkingWPP', 
                                     'seasonalEmployees', 'externalExperts', 'coordinator'] " removableSort>
@@ -301,7 +300,7 @@
                         <Button class="ml-2" label="Save" icon="pi pi-check" @click="savePartners" />
                       </div>
                       
-                      <Button type="button" icon="pi pi-filter-slash" label="Clear" class="p-button-warning" @click="clearPartnerFilter()"/>
+                      <Button type="button" icon="pi pi-filter-slash" label="Clear filters" class="p-button-warning" @click="clearPartnerFilter()"/>
                     </div>
                 </template>
 
@@ -346,7 +345,7 @@
                   </template>
                 </Column>
 
-                <Column field="twoWayTravels" header="Number two-way travels" :sortable="true">
+                <Column field="twoWayTravels" header="Number of two-way travels*" :sortable="true">
                   <template #editor="slotProps">
                     <InputNumber v-model="slotProps.data[slotProps.field]" mode="decimal" showButtons decrementButtonClass="p-button-info"
                     incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
@@ -361,6 +360,7 @@
                 </Column>
               
               </DataTable>
+              *The values of this field are referred only to staff members concerning the whole project duration
             </div>
 
             <div class="card">
@@ -382,7 +382,7 @@
                         <Button class="ml-2" label="Save" icon="pi pi-check" @click="saveExternalExperts" />
                       </div>
                       
-                      <Button type="button" icon="pi pi-filter-slash" label="Clear" class="p-button-warning" @click="clearExternalExpertFilter()"/>
+                      <Button type="button" icon="pi pi-filter-slash" label="Clear filters" class="p-button-warning" @click="clearExternalExpertFilter()"/>
                     </div>
                 </template>
 
@@ -420,7 +420,7 @@
                   </template>
                 </Column>
 
-                <Column field="twoWayTravels" header="Number of two-way travels" :sortable="true">
+                <Column field="twoWayTravels" header="Number of two-way travels*" :sortable="true">
                   <template #editor="slotProps">
                     <InputNumber v-model="slotProps.data[slotProps.field]" mode="decimal" showButtons decrementButtonClass="p-button-info"
                     incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
@@ -435,6 +435,7 @@
                 </Column>
               
               </DataTable>
+              *The values of this field are referred only to external experts concerning the whole project duration
             </div>
 
 
@@ -452,7 +453,7 @@
                     <h5>Number of IT electrical equipment that will be purchased during the project</h5>
 
                     <div class="p-fluid formgrid grid">
-                      <div class="field col-12 md:col-3">
+                      <div class="field col-12 md:col-4">
                         <label for="pcsBoughtDuringProject">PCs</label>
                         <InputNumber v-model="selectedPartner.pcsBoughtDuringProject" decrementButtonClass="p-button-info"
                         incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus" mode="decimal"
@@ -460,7 +461,7 @@
                         @focus="onFocusValue=selectedPartner.pcsBoughtDuringProject; $event.target.select()" @keypress.enter="$event.target.blur()"
                         @focusout="onCellEditCompletePartnerEquipment('pcsBoughtDuringProject', selectedPartner.pcsBoughtDuringProject)" />
                       </div>
-                      <div class="field col-12 md:col-3">
+                      <div class="field col-12 md:col-4">
                         <label for="pcsFlatScreenBoughtDuringProject">PCs with flat screen</label>
                         <InputNumber v-model="selectedPartner.pcsFlatScreenBoughtDuringProject" mode="decimal" decrementButtonClass="p-button-info"
                         showButtons incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
@@ -468,7 +469,7 @@
                         @focus="onFocusValue=selectedPartner.pcsFlatScreenBoughtDuringProject; $event.target.select()" @keypress.enter="$event.target.blur()"
                         @focusout="onCellEditCompletePartnerEquipment('pcsFlatScreenBoughtDuringProject', selectedPartner.pcsFlatScreenBoughtDuringProject)" />
                       </div>
-                      <div class="field col-12 md:col-3">
+                      <div class="field col-12 md:col-4">
                         <label for="laptopsBoughtDuringProject">Laptop computers</label>
                         <InputNumber v-model="selectedPartner.laptopsBoughtDuringProject" mode="decimal"
                         showButtons decrementButtonClass="p-button-info" incrementButtonClass="p-button-info" :inputClass="selectedPartner.laptopsBoughtDuringProject == 0 ? 'defaultValue' : ''"
@@ -476,7 +477,7 @@
                         @focus="onFocusValue=selectedPartner.laptopsBoughtDuringProject; $event.target.select()" @keypress.enter="$event.target.blur()"
                         @focusout="onCellEditCompletePartnerEquipment('laptopsBoughtDuringProject', selectedPartner.laptopsBoughtDuringProject)" />
                       </div>
-                      <div class="field col-12 md:col-3">
+                      <div class="field col-12 md:col-4">
                         <label for="flatScreensBoughtDuringProject">Flat screens</label>
                         <InputNumber v-model="selectedPartner.flatScreensBoughtDuringProject" mode="decimal"
                         showButtons decrementButtonClass="p-button-info" incrementButtonClass="p-button-info" :inputClass="selectedPartner.flatScreensBoughtDuringProject == 0 ? 'defaultValue' : ''"
@@ -484,7 +485,7 @@
                         @focus="onFocusValue=selectedPartner.flatScreensBoughtDuringProject; $event.target.select()" @keypress.enter="$event.target.blur()"
                         @focusout="onCellEditCompletePartnerEquipment('flatScreensBoughtDuringProject', selectedPartner.flatScreensBoughtDuringProject)" />
                       </div>
-                      <div class="field col-12 md:col-3">
+                      <div class="field col-12 md:col-4">
                         <label for="printersBoughtDuringProject">Printers</label>
                         <InputNumber v-model="selectedPartner.printersBoughtDuringProject" mode="decimal"
                         showButtons decrementButtonClass="p-button-info" incrementButtonClass="p-button-info" :inputClass="selectedPartner.printersBoughtDuringProject == 0 ? 'defaultValue' : ''"
@@ -492,21 +493,13 @@
                         @focus="onFocusValue=selectedPartner.printersBoughtDuringProject; $event.target.select()" @keypress.enter="$event.target.blur()"
                         @focusout="onCellEditCompletePartnerEquipment('printersBoughtDuringProject', selectedPartner.printersBoughtDuringProject)" />
                       </div>
-                      <div class="field col-12 md:col-3">
+                      <div class="field col-12 md:col-4">
                         <label for="copyMachinesBoughtDuringProject">Copy machines</label>
                         <InputNumber v-model="selectedPartner.copyMachinesBoughtDuringProject" mode="decimal" 
                         showButtons decrementButtonClass="p-button-info" :allowEmpty="false" :min="0" id="copyMachinesBoughtDuringProject"
                         incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus" :inputClass="selectedPartner.copyMachinesBoughtDuringProject == 0 ? 'defaultValue' : ''"
                         @focus="onFocusValue=selectedPartner.copyMachinesBoughtDuringProject; $event.target.select()" @keypress.enter="$event.target.blur()"
                         @focusout="onCellEditCompletePartnerEquipment('copyMachinesBoughtDuringProject', selectedPartner.copyMachinesBoughtDuringProject)" />
-                      </div>
-                      <div class="field col-12 md:col-3">
-                        <label for="faxMachinesBoughtDuringProject">Fax machines</label>
-                        <InputNumber v-model="selectedPartner.faxMachinesBoughtDuringProject" mode="decimal"
-                        showButtons decrementButtonClass="p-button-info" :allowEmpty="false" :min="0" id="faxMachinesBoughtDuringProject"
-                        incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus" :inputClass="selectedPartner.faxMachinesBoughtDuringProject == 0 ? 'defaultValue' : ''"
-                        @focus="onFocusValue=selectedPartner.faxMachinesBoughtDuringProject; $event.target.select()" @keypress.enter="$event.target.blur()"
-                        @focusout="onCellEditCompletePartnerEquipment('faxMachinesBoughtDuringProject', selectedPartner.faxMachinesBoughtDuringProject)" />
                       </div>
                     </div>
                   </div>
@@ -542,7 +535,7 @@
                               <Button class="ml-2" label="Save" icon="pi pi-check" @click="saveEvents" />
                             </div>
                             
-                            <Button type="button" icon="pi pi-filter-slash" label="Clear" class="p-button-warning" @click="clearOrganizationEventsFilter()"/>
+                            <Button type="button" icon="pi pi-filter-slash" label="Clear filters" class="p-button-warning" @click="clearOrganizationEventsFilter()"/>
                           </div>
                       </template>
 
@@ -623,7 +616,7 @@
                         </template>
                       </Column>
 
-                      <Column field="durationHoursPerDay" header="Duration (hours/day)" :sortable="true">
+                      <Column field="durationHoursPerDay" header="Duration (hours per day)" :sortable="true">
                         <template #body="slotProps">
                           <td :class="slotProps.data[slotProps.field] == 0 && slotProps.data['type'] !== 'In presence' ? 'defaultValue' : ''"
                           style="display:block;" @click="slotProps.data['type'] !== 'In presence' ? '' : slotProps.data[slotProps.field] = 0"
@@ -633,7 +626,7 @@
                           <InputNumber v-model="slotProps.data[slotProps.field]" mode="decimal" :maxFractionDigits="3"
                           showButtons :step="0.25" decrementButtonClass="p-button-info"
                           incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
-                          :allowEmpty="false" :min="0" @focus="$event.target.select()" :disabled="slotProps.data['type'] !== 'In presence' ? false : true" />
+                          :allowEmpty="false" :min="0" :max="24" @focus="$event.target.select()" :disabled="slotProps.data['type'] !== 'In presence' ? false : true" />
                         </template>
                       </Column>
 
@@ -675,7 +668,7 @@
                               <Button class="ml-2" label="Save" icon="pi pi-check" @click="saveEvents" />
                             </div>
                             
-                            <Button type="button" icon="pi pi-filter-slash" label="Clear" class="p-button-warning" @click="clearParticipationEventsFilter()"/>
+                            <Button type="button" icon="pi pi-filter-slash" label="Clear filters" class="p-button-warning" @click="clearParticipationEventsFilter()"/>
                           </div>
                       </template>
 
@@ -842,7 +835,7 @@
                           <Button class="ml-2" label="Save" icon="pi pi-check" @click="savePrintableDeliverables" />
                         </div>
                         
-                        <Button type="button" icon="pi pi-filter-slash" label="Clear" class="p-button-warning" @click="clearPrintableDeliverableFilter()"/>
+                        <Button type="button" icon="pi pi-filter-slash" label="Clear filters" class="p-button-warning" @click="clearPrintableDeliverableFilter()"/>
                       </div>
                   </template>
 
@@ -945,7 +938,7 @@
                   <h5>Additional custom defined Heat emission</h5>
 
                   <DataTable :value="project.customHeat" editMode="cell" :paginator="true" class="p-datatable-gridlines" dataKey="_id"
-                  :rowHover="true" @cell-edit-complete="onCellEditCompleteCustom($event, 'customHeat', 'heat')" sortMode="multiple" :rows="5" v-model:filters="partnerFilters"
+                  :rowHover="true" @cell-edit-complete="onCellEditCompleteCustom($event, 'customHeat', 'heat')" sortMode="multiple" :rows="5" v-model:filters="customFilters"
                   filterDisplay="menu" :loading="loading" :filters="customFilters" responsiveLayout="scroll"
                   :globalFilterFields="['nameCustom','valueCustom']" removableSort>
                     
@@ -960,7 +953,7 @@
                             <Button class="ml-2" label="Save" icon="pi pi-check" @click="saveCustoms" />
                           </div>
                           
-                          <Button type="button" icon="pi pi-filter-slash" label="Clear" class="p-button-warning" @click="clearCustomFilter()"/>
+                          <Button type="button" icon="pi pi-filter-slash" label="Clear filters" class="p-button-warning" @click="clearCustomFilter()"/>
                         </div>
                     </template>
 
@@ -1003,7 +996,7 @@
                 <TabPanel header="Electricity">
                   <h5>Aditional custom defined electricity emission</h5>
                   <DataTable :value="project.customElectricity" editMode="cell" :paginator="true" class="p-datatable-gridlines" dataKey="_id"
-                  :rowHover="true" @cell-edit-complete="onCellEditCompleteCustom($event, 'customElectricity', 'electricity')" sortMode="multiple" :rows="5" v-model:filters="partnerFilters"
+                  :rowHover="true" @cell-edit-complete="onCellEditCompleteCustom($event, 'customElectricity', 'electricity')" sortMode="multiple" :rows="5" v-model:filters="customFilters"
                   filterDisplay="menu" :loading="loading" :filters="customFilters" responsiveLayout="scroll"
                   :globalFilterFields="['nameCustom','valueCustom']" removableSort>
                   
@@ -1018,7 +1011,7 @@
                           <Button class="ml-2" label="Save" icon="pi pi-check" @click="saveCustoms" />
                         </div>
                         
-                        <Button type="button" icon="pi pi-filter-slash" label="Clear" class="p-button-warning" @click="clearPartnerFilter()"/>
+                        <Button type="button" icon="pi pi-filter-slash" label="Clear filters" class="p-button-warning" @click="clearPartnerFilter()"/>
                       </div>
                   </template>
 
@@ -1062,7 +1055,7 @@
 
                   <h5>Aditional custom defined water emission</h5>
                   <DataTable :value="project.customWater" editMode="cell" :paginator="true" class="p-datatable-gridlines" dataKey="_id"
-                  :rowHover="true" @cell-edit-complete="onCellEditCompleteCustom($event, 'customWater', 'water')" sortMode="multiple" :rows="5" v-model:filters="partnerFilters"
+                  :rowHover="true" @cell-edit-complete="onCellEditCompleteCustom($event, 'customWater', 'water')" sortMode="multiple" :rows="5" v-model:filters="customFilters"
                   filterDisplay="menu" :loading="loading" :filters="customFilters" responsiveLayout="scroll"
                   :globalFilterFields="['nameCustom','valueCustom']" removableSort>
                   
@@ -1077,7 +1070,7 @@
                           <Button class="ml-2" label="Save" icon="pi pi-check" @click="saveCustoms" />
                         </div>
                         
-                        <Button type="button" icon="pi pi-filter-slash" label="Clear" class="p-button-warning" @click="clearCustomFilter()"/>
+                        <Button type="button" icon="pi pi-filter-slash" label="Clear filters" class="p-button-warning" @click="clearCustomFilter()"/>
                       </div>
                   </template>
 
@@ -1122,7 +1115,7 @@
 
                     <h5>Aditional custom defined transportation emission</h5>
                     <DataTable :value="project.customTransportation" editMode="cell" :paginator="true" class="p-datatable-gridlines" dataKey="_id"
-                    :rowHover="true" @cell-edit-complete="onCellEditCompleteCustom($event, 'customTransportation', 'transportation')" sortMode="multiple" :rows="5" v-model:filters="partnerFilters"
+                    :rowHover="true" @cell-edit-complete="onCellEditCompleteCustom($event, 'customTransportation', 'transportation')" sortMode="multiple" :rows="5" v-model:filters="customFilters"
                     filterDisplay="menu" :loading="loading" :filters="customFilters" responsiveLayout="scroll"
                     :globalFilterFields="['nameCustom','valueCustom']" removableSort>
                     
@@ -1137,7 +1130,7 @@
                             <Button class="ml-2" label="Save" icon="pi pi-check" @click="saveCustoms" />
                           </div>
                           
-                          <Button type="button" icon="pi pi-filter-slash" label="Clear" class="p-button-warning" @click="clearCustomFilter()"/>
+                          <Button type="button" icon="pi pi-filter-slash" label="Clear filters" class="p-button-warning" @click="clearCustomFilter()"/>
                         </div>
                     </template>
 
@@ -1182,7 +1175,7 @@
 
                     <h5>Aditional custom defined material emission</h5>
                     <DataTable :value="project.customMaterials" editMode="cell" :paginator="true" class="p-datatable-gridlines" dataKey="_id"
-                    :rowHover="true" @cell-edit-complete="onCellEditCompleteCustom($event, 'customMaterials', 'materials')" sortMode="multiple" :rows="5" v-model:filters="partnerFilters"
+                    :rowHover="true" @cell-edit-complete="onCellEditCompleteCustom($event, 'customMaterials', 'materials')" sortMode="multiple" :rows="5" v-model:filters="customFilters"
                     filterDisplay="menu" :loading="loading" :filters="customFilters" responsiveLayout="scroll"
                     :globalFilterFields="['nameCustom','valueCustom']" removableSort>
                     
@@ -1197,7 +1190,7 @@
                             <Button class="ml-2" label="Save" icon="pi pi-check" @click="saveCustoms" />
                           </div>
                           
-                          <Button type="button" icon="pi pi-filter-slash" label="Clear" class="p-button-warning" @click="clearCustomFilter()"/>
+                          <Button type="button" icon="pi pi-filter-slash" label="Clear filters" class="p-button-warning" @click="clearCustomFilter()"/>
                         </div>
                     </template>
 
@@ -1242,7 +1235,7 @@
 
                   <h5>Aditional custom defined events emission</h5>
                   <DataTable :value="project.customEvents" editMode="cell" :paginator="true" class="p-datatable-gridlines" dataKey="_id"
-                  :rowHover="true" @cell-edit-complete="onCellEditCompleteCustom($event, 'customEvents', 'event')" sortMode="multiple" :rows="5" v-model:filters="partnerFilters"
+                  :rowHover="true" @cell-edit-complete="onCellEditCompleteCustom($event, 'customEvents', 'event')" sortMode="multiple" :rows="5" v-model:filters="customFilters"
                   filterDisplay="menu" :loading="loading" :filters="customFilters" responsiveLayout="scroll"
                   :globalFilterFields="['nameCustom','valueCustom']" removableSort>
                   
@@ -1257,7 +1250,7 @@
                           <Button class="ml-2" label="Save" icon="pi pi-check" @click="saveCustoms" />
                         </div>
                         
-                        <Button type="button" icon="pi pi-filter-slash" label="Clear" class="p-button-warning" @click="clearCustomFilter()"/>
+                        <Button type="button" icon="pi pi-filter-slash" label="Clear filters" class="p-button-warning" @click="clearCustomFilter()"/>
                       </div>
                   </template>
 
@@ -1304,7 +1297,7 @@
                     <h5>Additional custom defined printable deliverable emission</h5>
 
                     <DataTable :value="project.customPrintableDeliverables" editMode="cell" :paginator="true" class="p-datatable-gridlines" dataKey="_id"
-                    :rowHover="true" @cell-edit-complete="onCellEditCompleteCustom($event, 'customPrintableDeliverables', 'Printable Deliverables')" sortMode="multiple" :rows="5" v-model:filters="partnerFilters"
+                    :rowHover="true" @cell-edit-complete="onCellEditCompleteCustom($event, 'customPrintableDeliverables', 'Printable Deliverables')" sortMode="multiple" :rows="5" v-model:filters="customFilters"
                     filterDisplay="menu" :loading="loading" :filters="customFilters" responsiveLayout="scroll"
                     :globalFilterFields="['nameCustom','valueCustom']" removableSort>
                       
@@ -1319,7 +1312,7 @@
                               <Button class="ml-2" label="Save" icon="pi pi-check" @click="saveCustoms" />
                             </div>
                             
-                            <Button type="button" icon="pi pi-filter-slash" label="Clear" class="p-button-warning" @click="clearCustomFilter()"/>
+                            <Button type="button" icon="pi pi-filter-slash" label="Clear filters" class="p-button-warning" @click="clearCustomFilter()"/>
                           </div>
                       </template>
 
@@ -1364,7 +1357,7 @@
                     <h5>Additional custom defined equipment emission</h5>
 
                     <DataTable :value="project.customEquipment" editMode="cell" :paginator="true" class="p-datatable-gridlines" dataKey="_id"
-                    :rowHover="true" @cell-edit-complete="onCellEditCompleteCustom($event, 'customEquipment', 'Equipment')" sortMode="multiple" :rows="5" v-model:filters="partnerFilters"
+                    :rowHover="true" @cell-edit-complete="onCellEditCompleteCustom($event, 'customEquipment', 'Equipment')" sortMode="multiple" :rows="5" v-model:filters="customFilters"
                     filterDisplay="menu" :loading="loading" :filters="customFilters" responsiveLayout="scroll"
                     :globalFilterFields="['nameCustom','valueCustom']" removableSort>
                       
@@ -1379,7 +1372,7 @@
                               <Button class="ml-2" label="Save" icon="pi pi-check" @click="saveCustoms" />
                             </div>
                             
-                            <Button type="button" icon="pi pi-filter-slash" label="Clear" class="p-button-warning" @click="clearCustomFilter()"/>
+                            <Button type="button" icon="pi pi-filter-slash" label="Clear filters" class="p-button-warning" @click="clearCustomFilter()"/>
                           </div>
                       </template>
 
@@ -1436,6 +1429,11 @@
                 <div>
                   <h2 class="mb-2">Equivalent carbon dioxide emitted:
                     <Badge :value="project.currentCF  + ' t CO2e'" class="ml-2 currentCF" size="xlarge" :severity="getTextColorFromCFIndex(project.currentCF)" />
+                  </h2>
+                </div>
+                <div>
+                  <h2 class="mt-2">Price of the ton of CO2 equivalent:
+                    <Badge :value="co2PermitsPrice + ' €'" class="ml-2 currentCF" size="xlarge" />
                   </h2>
                 </div>
                 <div>
@@ -1831,7 +1829,7 @@ export default {
       KPI2ParamsExecution: {},
       KPI3ParamsInitial: {},
       KPI3ParamsExecution: {},
-      countriesForDropdown: ["Albania", "Bosnia & Herzegovina", "Croatia", "Cyprus", "Europe", "France", "Greece", "Italy", "Malta", "Montenegro", "Portugal", "Slovenia", "Spain", "Bulgaria", "North Macedonia"],
+      countriesForDropdown: ["Albania", "Bosnia & Herzegovina", "Bulgaria", "Croatia", "Cyprus", "Europe", "France", "Greece", "Italy", "Malta", "Montenegro", "North Macedonia", "Portugal", "Slovenia", "Spain"],
       eventTypesForDropdown: ["In presence", "Mixed", "On-line"],
       travelModesForDropdown: ["Airplane", "Bus", "Car", "Ferries", "International Rail", "Light rail and tram/Underground", "Motorbikes", "National Rail", "Taxi"],
       fuelTypesForDropdown: ["Battery electric vehicle", "CNG", "Diesel", "Hybrid", "LPG", "Other", "Petrol", "Plug-in hybrid electric vehicle"],
@@ -2438,7 +2436,6 @@ export default {
         flatScreensBoughtDuringProject: 0,
         printersBoughtDuringProject: 0,
         copyMachinesBoughtDuringProject: 0,
-        faxMachinesBoughtDuringProject: 0,
 
         totalWeightOtherElectricalEquipment: 0,
 

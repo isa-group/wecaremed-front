@@ -10,7 +10,7 @@
       <h1>My projects</h1>
 
       <DataTable :value="projects" :paginator="true" class="p-datatable-gridlines" dataKey="id"
-      :rowHover="true" sortMode="multiple" :rows="5" :loading="loading" responsiveLayout="scroll">
+      :rowHover="true" sortMode="multiple" :rows="10" :loading="loading" responsiveLayout="scroll">
         
         <template #header>
             <div class="flex justify-content-between flex-column sm:flex-row">

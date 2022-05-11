@@ -56,7 +56,6 @@
               <th>Flat screens</th>
               <th>Printers</th>
               <th>Copy machines</th>
-              <th>Fax machines</th>
             </tr>
           </thead>
           <tbody>
@@ -67,7 +66,6 @@
               <td>{{partner.flatScreensBoughtDuringProject}}</td>
               <td>{{partner.printersBoughtDuringProject}}</td>
               <td>{{partner.copyMachinesBoughtDuringProject}}</td>
-              <td>{{partner.faxMachinesBoughtDuringProject}}</td>
             </tr>
           </tbody>
         </table>
@@ -243,8 +241,9 @@
       </table>
 
       <h2>Tons of equivalent carbon dioxide emitted: {{project.initialCF}}</h2> 
+      <h2>Price of the ton of CO2 equivalent: {{co2PermitsPrice + ' €'}}</h2>
       <h2 style="margin-bottom: 40px">CO2 permits cost: {{round(project.initialCF * co2PermitsPrice) + ' €'}}</h2>
-      
+
       <h3 style="margin-bottom: 10px">CF Breakdown (Tons):</h3>
       <ul>
         <li style="margin-bottom: 10px; font-size: 20px">Fuels heat: {{project.fuelsHeatSimpleCF}}</li>
@@ -278,7 +277,7 @@
       <h4>Partners</h4>
 
       <DataTable :value="project.partners" editMode="cell" :paginator="true" class="p-datatable-gridlines" dataKey="_id"
-      :rowHover="true" @cell-edit-complete="onCellEditCompletePartner" sortMode="multiple" :rows="5" v-model:filters="partnerFilters"
+      :rowHover="true" @cell-edit-complete="onCellEditCompletePartner" sortMode="multiple" :rows="10" v-model:filters="partnerFilters"
       filterDisplay="menu" :loading="loading" :filters="partnerFilters" responsiveLayout="scroll"
       :globalFilterFields="['name','country','employeesPersonMonths', 'externalExpertsPersonMonths', 'employeesWorkingWPP', 
                             'seasonalEmployees', 'externalExperts', 'coordinator']" removableSort>
@@ -294,7 +293,7 @@
                 <Button class="ml-2" label="Save" icon="pi pi-check" @click="savePartners" />
               </div>
               
-              <Button type="button" icon="pi pi-filter-slash" label="Clear" class="p-button-warning" @click="clearPartnerFilter()"/>
+              <Button type="button" icon="pi pi-filter-slash" label="Clear filters" class="p-button-warning" @click="clearPartnerFilter()"/>
             </div>
         </template>
 
@@ -397,7 +396,7 @@
             <h5>Number of IT electrical equipment that will be purchased during the project</h5>
 
             <div class="p-fluid formgrid grid">
-              <div class="field col-12 md:col-3">
+              <div class="field col-12 md:col-4">
                 <label for="pcsBoughtDuringProject">PCs</label>
                 <InputNumber v-model="selectedPartner.pcsBoughtDuringProject" decrementButtonClass="p-button-info"
                 incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus" mode="decimal"
@@ -405,7 +404,7 @@
                 @focus="onFocusValue=selectedPartner.pcsBoughtDuringProject; $event.target.select()" @keypress.enter="$event.target.blur()"
                 @focusout="onCellEditCompletePartnerEquipment('pcsBoughtDuringProject', selectedPartner.pcsBoughtDuringProject)" />
               </div>
-              <div class="field col-12 md:col-3">
+              <div class="field col-12 md:col-4">
                 <label for="pcsFlatScreenBoughtDuringProject">PCs with flat screen</label>
                 <InputNumber v-model="selectedPartner.pcsFlatScreenBoughtDuringProject" mode="decimal" decrementButtonClass="p-button-info"
                 showButtons incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
@@ -413,7 +412,7 @@
                 @focus="onFocusValue=selectedPartner.pcsFlatScreenBoughtDuringProject; $event.target.select()" @keypress.enter="$event.target.blur()"
                 @focusout="onCellEditCompletePartnerEquipment('pcsFlatScreenBoughtDuringProject', selectedPartner.pcsFlatScreenBoughtDuringProject)" />
               </div>
-              <div class="field col-12 md:col-3">
+              <div class="field col-12 md:col-4">
                 <label for="laptopsBoughtDuringProject">Laptop computers</label>
                 <InputNumber v-model="selectedPartner.laptopsBoughtDuringProject" mode="decimal"
                 showButtons decrementButtonClass="p-button-info" incrementButtonClass="p-button-info" :inputClass="selectedPartner.laptopsBoughtDuringProject == 0 ? 'defaultValue' : ''"
@@ -421,7 +420,7 @@
                 @focus="onFocusValue=selectedPartner.laptopsBoughtDuringProject; $event.target.select()" @keypress.enter="$event.target.blur()"
                 @focusout="onCellEditCompletePartnerEquipment('laptopsBoughtDuringProject', selectedPartner.laptopsBoughtDuringProject)" />
               </div>
-              <div class="field col-12 md:col-3">
+              <div class="field col-12 md:col-4">
                 <label for="flatScreensBoughtDuringProject">Flat screens</label>
                 <InputNumber v-model="selectedPartner.flatScreensBoughtDuringProject" mode="decimal"
                 showButtons decrementButtonClass="p-button-info" incrementButtonClass="p-button-info" :inputClass="selectedPartner.pcsBoughtDuringProject == 0 ? 'defaultValue' : ''"
@@ -429,7 +428,7 @@
                 @focus="onFocusValue=selectedPartner.flatScreensBoughtDuringProject; $event.target.select()" @keypress.enter="$event.target.blur()"
                 @focusout="onCellEditCompletePartnerEquipment('flatScreensBoughtDuringProject', selectedPartner.flatScreensBoughtDuringProject)" />
               </div>
-              <div class="field col-12 md:col-3">
+              <div class="field col-12 md:col-4">
                 <label for="printersBoughtDuringProject">Printers</label>
                 <InputNumber v-model="selectedPartner.printersBoughtDuringProject" mode="decimal"
                 showButtons decrementButtonClass="p-button-info" incrementButtonClass="p-button-info" :inputClass="selectedPartner.pcsBoughtDuringProject == 0 ? 'defaultValue' : ''"
@@ -437,21 +436,13 @@
                 @focus="onFocusValue=selectedPartner.printersBoughtDuringProject; $event.target.select()" @keypress.enter="$event.target.blur()"
                 @focusout="onCellEditCompletePartnerEquipment('printersBoughtDuringProject', selectedPartner.printersBoughtDuringProject)" />
               </div>
-              <div class="field col-12 md:col-3">
+              <div class="field col-12 md:col-4">
                 <label for="copyMachinesBoughtDuringProject">Copy machines</label>
                 <InputNumber v-model="selectedPartner.copyMachinesBoughtDuringProject" mode="decimal" 
                 showButtons decrementButtonClass="p-button-info" :allowEmpty="false" :min="0" id="copyMachinesBoughtDuringProject"
                 incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus" :inputClass="selectedPartner.pcsBoughtDuringProject == 0 ? 'defaultValue' : ''"
                 @focus="onFocusValue=selectedPartner.copyMachinesBoughtDuringProject; $event.target.select()" @keypress.enter="$event.target.blur()"
                 @focusout="onCellEditCompletePartnerEquipment('copyMachinesBoughtDuringProject', selectedPartner.copyMachinesBoughtDuringProject)" />
-              </div>
-              <div class="field col-12 md:col-3">
-                <label for="faxMachinesBoughtDuringProject">Fax machines</label>
-                <InputNumber v-model="selectedPartner.faxMachinesBoughtDuringProject" mode="decimal"
-                showButtons decrementButtonClass="p-button-info" :allowEmpty="false" :min="0" id="faxMachinesBoughtDuringProject"
-                incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus" :inputClass="selectedPartner.pcsBoughtDuringProject == 0 ? 'defaultValue' : ''"
-                @focus="onFocusValue=selectedPartner.faxMachinesBoughtDuringProject; $event.target.select()" @keypress.enter="$event.target.blur()"
-                @focusout="onCellEditCompletePartnerEquipment('faxMachinesBoughtDuringProject', selectedPartner.faxMachinesBoughtDuringProject)" />
               </div>
             </div>
           </div>
@@ -565,7 +556,7 @@
                   <InputNumber v-model="project.publicHybridEventsAverageHoursPerDays" mode="decimal" :maxFractionDigits="3"
                   showButtons decrementButtonClass="p-button-info" :step="0.25" @keypress.enter="$event.target.blur()" :inputClass="project.publicHybridEventsAverageHoursPerDays == 0 ? 'defaultValue' : ''"
                   incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
-                  :allowEmpty="false" :min="0" @focus="onFocusValue=project.publicHybridEventsAverageHoursPerDays; $event.target.select()" 
+                  :allowEmpty="false" :min="0" :max="24" @focus="onFocusValue=project.publicHybridEventsAverageHoursPerDays; $event.target.select()" 
                   @focusout="onCellEditComplete('publicHybridEventsAverageHoursPerDays', project.publicHybridEventsAverageHoursPerDays)"
                   id ="publicHybridEventsAverageHoursPerDays"/>
                 </div>
@@ -703,7 +694,7 @@
                   <InputNumber v-model="project.internalHybridEventsAverageHoursPerDays" mode="decimal" :maxFractionDigits="3"
                   showButtons decrementButtonClass="p-button-info" :step="0.25" @keypress.enter="$event.target.blur()" :inputClass="project.internalHybridEventsAverageHoursPerDays == 0 ? 'defaultValue' : ''"
                   incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
-                  :allowEmpty="false" :min="0" @focus="onFocusValue=project.internalHybridEventsAverageHoursPerDays; $event.target.select()" 
+                  :allowEmpty="false" :min="0" :max="24" @focus="onFocusValue=project.internalHybridEventsAverageHoursPerDays; $event.target.select()" 
                   @focusout="onCellEditComplete('internalHybridEventsAverageHoursPerDays', project.internalHybridEventsAverageHoursPerDays)"
                   id ="internalHybridEventsAverageHoursPerDays"/>
                 </div>
@@ -760,8 +751,8 @@
                 </div>
                 <div class="field col-12 md:col-4">
                   <label for="participatedOnSiteEventsAverageParticipants">Average number of participants of the project</label>
-                  <InputNumber v-model="project.participatedOnSiteEventsAverageParticipants" mode="decimal" :maxFractionDigits="3"
-                  showButtons decrementButtonClass="p-button-info" :step="0.25" @keypress.enter="$event.target.blur()" :inputClass="project.participatedOnSiteEventsAverageParticipants == 0 ? 'defaultValue' : ''"
+                  <InputNumber v-model="project.participatedOnSiteEventsAverageParticipants" mode="decimal"
+                  showButtons decrementButtonClass="p-button-info" @keypress.enter="$event.target.blur()" :inputClass="project.participatedOnSiteEventsAverageParticipants == 0 ? 'defaultValue' : ''"
                   incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
                   :allowEmpty="false" :min="0" @focus="onFocusValue=project.participatedOnSiteEventsAverageParticipants; $event.target.select()" 
                   @focusout="onCellEditComplete('participatedOnSiteEventsAverageParticipants', project.participatedOnSiteEventsAverageParticipants)"
@@ -810,7 +801,7 @@
                   <Button class="ml-2" label="Save" icon="pi pi-check" @click="savePrintableDeliverables" />
                 </div>
                 
-                <Button type="button" icon="pi pi-filter-slash" label="Clear" class="p-button-warning" @click="clearPrintableDeliverableFilter()"/>
+                <Button type="button" icon="pi pi-filter-slash" label="Clear filters" class="p-button-warning" @click="clearPrintableDeliverableFilter()"/>
               </div>
           </template>
 
@@ -885,6 +876,11 @@
         <div>
           <h2 class="mb-2">Equivalent carbon dioxide emitted:
             <Badge :value="project.initialCF  + ' t CO2e'" class="ml-2 currentCF" size="xlarge" :severity="getTextColorFromCFIndex(project.initialCF)" />
+          </h2>
+        </div>
+        <div>
+          <h2 class="mt-2">Price of the ton of CO2 equivalent:
+            <Badge :value="co2PermitsPrice + ' €'" class="ml-2 currentCF" size="xlarge" />
           </h2>
         </div>
         <div>
@@ -1048,7 +1044,7 @@ export default {
       project: {},
       initialProject: {},
       object: {},
-      countriesForDropdown: ["Albania", "Bosnia & Herzegovina", "Croatia", "Cyprus", "France", "Greece", "Italy", "Malta", "Montenegro", "Portugal", "Slovenia", "Spain", "Bulgaria", "North Macedonia"],
+      countriesForDropdown: ["Albania", "Bosnia & Herzegovina", "Bulgaria", "Croatia", "Cyprus", "Europe", "France", "Greece", "Italy", "Malta", "Montenegro", "North Macedonia", "Portugal", "Slovenia", "Spain"],
       paperSizes: ["A0", "A1", "A2", "A3", "A4", "A5", "A6"],
       deliverableOptions: [
         {value: "Report type*", avgPagesPerCopy: 50, size: "A4"},
@@ -1299,7 +1295,6 @@ export default {
         flatScreensBoughtDuringProject: 0,
         printersBoughtDuringProject: 0,
         copyMachinesBoughtDuringProject: 0,
-        faxMachinesBoughtDuringProject: 0,
 
         totalWeightOtherElectricalEquipment: 0,
 
