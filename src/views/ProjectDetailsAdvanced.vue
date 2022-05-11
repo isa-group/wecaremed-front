@@ -345,7 +345,7 @@
                   </template>
                 </Column>
 
-                <Column field="twoWayTravels" header="Number two-way travels" :sortable="true">
+                <Column field="twoWayTravels" header="Number of two-way travels*" :sortable="true">
                   <template #editor="slotProps">
                     <InputNumber v-model="slotProps.data[slotProps.field]" mode="decimal" showButtons decrementButtonClass="p-button-info"
                     incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
@@ -360,6 +360,7 @@
                 </Column>
               
               </DataTable>
+              *The values of this field are referred only to staff members concerning the whole project duration
             </div>
 
             <div class="card">
@@ -419,7 +420,7 @@
                   </template>
                 </Column>
 
-                <Column field="twoWayTravels" header="Number of two-way travels" :sortable="true">
+                <Column field="twoWayTravels" header="Number of two-way travels*" :sortable="true">
                   <template #editor="slotProps">
                     <InputNumber v-model="slotProps.data[slotProps.field]" mode="decimal" showButtons decrementButtonClass="p-button-info"
                     incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
@@ -434,6 +435,7 @@
                 </Column>
               
               </DataTable>
+              *The values of this field are referred only to external experts concerning the whole project duration
             </div>
 
 
@@ -614,7 +616,7 @@
                         </template>
                       </Column>
 
-                      <Column field="durationHoursPerDay" header="Duration (hours/day)" :sortable="true">
+                      <Column field="durationHoursPerDay" header="Duration (hours per day)" :sortable="true">
                         <template #body="slotProps">
                           <td :class="slotProps.data[slotProps.field] == 0 && slotProps.data['type'] !== 'In presence' ? 'defaultValue' : ''"
                           style="display:block;" @click="slotProps.data['type'] !== 'In presence' ? '' : slotProps.data[slotProps.field] = 0"
@@ -624,7 +626,7 @@
                           <InputNumber v-model="slotProps.data[slotProps.field]" mode="decimal" :maxFractionDigits="3"
                           showButtons :step="0.25" decrementButtonClass="p-button-info"
                           incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
-                          :allowEmpty="false" :min="0" @focus="$event.target.select()" :disabled="slotProps.data['type'] !== 'In presence' ? false : true" />
+                          :allowEmpty="false" :min="0" :max="24" @focus="$event.target.select()" :disabled="slotProps.data['type'] !== 'In presence' ? false : true" />
                         </template>
                       </Column>
 
