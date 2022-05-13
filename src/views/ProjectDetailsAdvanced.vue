@@ -2058,7 +2058,7 @@ export default {
     },
     calculateCF() {
       this.checkEventsNotFilled()
-
+      this.checkEventsOrganizationHoursPerDayGreaterThan24()
       for (let partner of this.project.partners) {
         if (partner.country === "Select a country") {
           this.partnersWithoutCountry.push(partner)
@@ -2764,7 +2764,7 @@ export default {
       if(field === "durationHoursPerDay" && newValue > 24) {
         this.durationHoursPerDayFlag = true;
         this.$toast.add({severity:'error', summary: 'Caution', detail: 'The value of Duration (hours per day) should be lower than 24', life: 8000});
-      } else {
+      } else if (field === "durationHoursPerDay" && newValue <= 24) {
         this.durationHoursPerDayFlag = false;
       }
       const paramsData = {}
@@ -3155,6 +3155,14 @@ export default {
       this.chartDataExecution.datasets[2].data[5] = eventsExecutionKPI3;
       this.chartDataExecution.datasets[2].data[6] = materialsExecutionKPI3;
       this.chartDataExecution.datasets[2].data[7] = heatExecutionKPI3;
+    },
+
+    checkEventsOrganizationHoursPerDayGreaterThan24() {
+      for( let event of this.project.events.organization) {
+        if(event.durationHoursPerDay > 24) {
+          this.durationHoursPerDayFlag = true;
+        }
+      }
     }
 
   },
