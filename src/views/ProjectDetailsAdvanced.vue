@@ -626,7 +626,7 @@
                           <InputNumber v-model="slotProps.data[slotProps.field]" mode="decimal" :maxFractionDigits="3"
                           showButtons :step="0.25" decrementButtonClass="p-button-info"
                           incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
-                          :allowEmpty="false" :min="0" :max="24" @focus="$event.target.select()" :disabled="slotProps.data['type'] !== 'In presence' ? false : true" />
+                          :allowEmpty="false" :min="0" @focus="$event.target.select()" :disabled="slotProps.data['type'] !== 'In presence' ? false : true" />
                         </template>
                       </Column>
 
@@ -1986,7 +1986,8 @@ export default {
       eventsParticipationNotDefined: [],
       displayPartnersError: false,
       eventsLoaded: false,
-      displayUpdateInitialValues: false
+      displayUpdateInitialValues: false,
+      durationHoursPerDayFlag: false
     }
   },
   created() {
@@ -2085,7 +2086,12 @@ export default {
 
       if (this.displayPartnersWithoutCountryDialog || this.displayPartnersWithDefaultValues > 0) {
         this.displayPartnersErrorDialog();
-      } else if (!this.checkHoursNotGreaterThan24() && !this.checkNonLocalPhysicalGreaterThanPhysicalParticipants()) {
+      } 
+
+      if (this.durationHoursPerDayFlag){
+        this.$toast.add({severity:'error', summary: 'Caution', detail: 'The value of Duration (hours per day) should be lower than 24', life: 8000});
+      }
+      else if (!this.checkHoursNotGreaterThan24() && !this.checkNonLocalPhysicalGreaterThanPhysicalParticipants() && !this.durationHoursPerDayFlag) {
         axios.put(`/projects/${this.$route.params.id}`, this.project)
         .catch((error) => {
           console.log(error);
@@ -2755,6 +2761,12 @@ export default {
 
       if (newValue === data[field]) return;
 
+      if(field === "durationHoursPerDay" && newValue > 24) {
+        this.durationHoursPerDayFlag = true;
+        this.$toast.add({severity:'error', summary: 'Caution', detail: 'The value of Duration (hours per day) should be lower than 24', life: 8000});
+      } else {
+        this.durationHoursPerDayFlag = false;
+      }
       const paramsData = {}
 
       newData[field] = newValue;
