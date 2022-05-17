@@ -20,11 +20,11 @@
             <th>Coordinator</th>
             <th>Name</th>
             <th>Country</th>
-            <th>Number full time employees</th>
-            <th>Number part time employees</th>
-            <th>Sum person months (full time + part time)</th>
+            <th>Number of full time staff members</th>
+            <th>Number of part time staff members</th>
+            <th>Sum of the staff person months (full time + part time)</th>
             <th>Number of external experts</th>
-            <th>Sum person months for the external experts</th>
+            <th>Sum of the external experts person months</th>
           </tr>
         </thead>
         <tbody>
@@ -244,9 +244,9 @@
       <h2>Price of the ton of CO2 equivalent: {{co2PermitsPrice + ' €'}}</h2>
       <h2 style="margin-bottom: 40px">CO2 permits cost: {{round(project.initialCF * co2PermitsPrice) + ' €'}}</h2>
 
-      <h3 style="margin-bottom: 10px">CF Breakdown (Tons):</h3>
+      <h3 style="margin-bottom: 10px">Carbon Footprint breakdown (Tons):</h3>
       <ul>
-        <li style="margin-bottom: 10px; font-size: 20px">Fuels heat: {{project.fuelsHeatSimpleCF}}</li>
+        <li style="margin-bottom: 10px; font-size: 20px">Fuels (Heating): {{project.fuelsHeatSimpleCF}}</li>
         <li style="margin-bottom: 10px; font-size: 20px">Electricity: {{project.electricitySimpleCF}}</li>
         <li style="margin-bottom: 10px; font-size: 20px">Water: {{project.waterSimpleCF}}</li>
         <li style="margin-bottom: 10px; font-size: 20px">Transportation: {{project.transportationSimpleCF}}</li>
@@ -329,7 +329,7 @@
           </template>
         </Column>
 
-        <Column field="employeesWorkingWPP" header="Number full time employees" :sortable="true">
+        <Column field="employeesWorkingWPP" header="Number of full time staff members" :sortable="true">
           <template #editor="slotProps">
             <InputNumber v-model="slotProps.data[slotProps.field]" mode="decimal" showButtons decrementButtonClass="p-button-info"
             incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
@@ -337,7 +337,7 @@
           </template>
         </Column>
 
-        <Column field="seasonalEmployees" header="Number part time employees" :sortable="true">
+        <Column field="seasonalEmployees" header="Number of part time staff members" :sortable="true">
           <template #editor="slotProps">
             <InputNumber v-model="slotProps.data[slotProps.field]" mode="decimal" showButtons decrementButtonClass="p-button-info"
             incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
@@ -346,7 +346,7 @@
         </Column>
 
 
-        <Column field="employeesPersonMonths" header="Sum person months (full time + part time)" :sortable="true">
+        <Column field="employeesPersonMonths" header="Sum of the staff person months (full time + part time)" :sortable="true">
           <template #editor="slotProps" class="p-field">
             <InputNumber v-model="slotProps.data[slotProps.field]" mode="decimal" :maxFractionDigits="3"
             showButtons :step="0.25" decrementButtonClass="p-button-info"
@@ -363,7 +363,7 @@
           </template>
         </Column>
 
-        <Column field="externalExpertsPersonMonths" header="Sum person months for the external experts" :sortable="true">
+        <Column field="externalExpertsPersonMonths" header="Sum of the external experts person months" :sortable="true">
           <template #editor="slotProps">
             <InputNumber v-model="slotProps.data[slotProps.field]" mode="decimal" :maxFractionDigits="3"
             showButtons :step="0.25" decrementButtonClass="p-button-info"
@@ -552,7 +552,7 @@
                   id ="publicHybridEventsAverageDuration "/>
                 </div>
                 <div class="field col-12 md:col-4">
-                  <label for="publicHybridEventsAverageHoursPerDays">Average duration (hours/day)</label>
+                  <label for="publicHybridEventsAverageHoursPerDays">Average duration (hours per day)</label>
                   <InputNumber v-model="project.publicHybridEventsAverageHoursPerDays" mode="decimal" :maxFractionDigits="3"
                   showButtons decrementButtonClass="p-button-info" :step="0.25" @keypress.enter="$event.target.blur()" :inputClass="project.publicHybridEventsAverageHoursPerDays == 0 ? 'defaultValue' : ''"
                   incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
@@ -772,7 +772,7 @@
 					</TabPanel>
 				</TabView>
         <div style="text-align: left; margin-top: 10px">
-          * The values of this section are referred to the whole project partnership
+          * The values of this section refer to the whole project partnership
         </div>
 
         <div style="text-align: left; margin-top: 10px">
@@ -874,7 +874,7 @@
     <div class="col-12">
       <div class="card p-fluid" style="display: flex; flex-direction: column; align-items: center; justify-content: space-around;">
         <div>
-          <h2 class="mb-2">Equivalent carbon dioxide emitted:
+          <h2 class="mb-2">CO2 equivalent emitted:
             <Badge :value="project.initialCF  + ' t CO2e'" class="ml-2 currentCF" size="xlarge" :severity="getTextColorFromCFIndex(project.initialCF)" />
           </h2>
         </div>
@@ -921,10 +921,10 @@
 
     <div class="col-12">
       <div class="card p-fluid" style="display: flex; flex-direction: column; align-items: center; justify-content: space-around;">
-        <h2>CF Breakdown (Tons)</h2>
+        <h2>Carbon Footprint breakdown (Tons)</h2>
         <div class="col-12" style="display: flex; justify-content: space-evenly;">
           <div class="card p-fluid col-2" style="display: flex; flex-direction: column; align-items: center; justify-content: space-around;">
-            <h2 class="font-medium text-3xl">Fuels Heat</h2>
+            <h2 class="font-medium text-3xl">Fuels (Heating)</h2>
             <div class="flex align-items-center py-3 px-2 border-top-1 surface-border">
               <Badge :value="project.fuelsHeatSimpleCF" size="xlarge" class="currentCF" />
             </div>
