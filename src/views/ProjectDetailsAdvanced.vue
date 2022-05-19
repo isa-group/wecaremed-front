@@ -437,6 +437,7 @@
                 </Column>
               
               </DataTable>
+              *The values of this field are referred only to external experts concerning the whole project duration
             </div>
 
 
@@ -617,7 +618,7 @@
                         </template>
                       </Column>
 
-                      <Column field="durationHoursPerDay" header="Duration (hours/day)" :sortable="true">
+                      <Column field="durationHoursPerDay" header="Duration (hours per day)" :sortable="true">
                         <template #body="slotProps">
                           <td :class="slotProps.data[slotProps.field] == 0 && slotProps.data['type'] !== 'In presence' ? 'defaultValue' : ''"
                           style="display:block;" @click="slotProps.data['type'] !== 'In presence' ? '' : slotProps.data[slotProps.field] = 0"
@@ -1996,7 +1997,8 @@ export default {
       eventsParticipationNotDefined: [],
       displayPartnersError: false,
       eventsLoaded: false,
-      displayUpdateInitialValues: false
+      displayUpdateInitialValues: false,
+      durationHoursPerDayFlag: false
     }
   },
   created() {
@@ -2067,7 +2069,7 @@ export default {
     },
     calculateCF() {
       this.checkEventsNotFilled()
-
+      this.checkEventsOrganizationHoursPerDayGreaterThan24()
       for (let partner of this.project.partners) {
         if (partner.country === "Select a country") {
           this.partnersWithoutCountry.push(partner)
@@ -2095,7 +2097,12 @@ export default {
 
       if (this.displayPartnersWithoutCountryDialog || this.displayPartnersWithDefaultValues > 0) {
         this.displayPartnersErrorDialog();
-      } else if (!this.checkHoursNotGreaterThan24() && !this.checkNonLocalPhysicalGreaterThanPhysicalParticipants()) {
+      } 
+
+      if (this.durationHoursPerDayFlag){
+        this.$toast.add({severity:'error', summary: 'Caution', detail: 'The value of Duration (hours per day) should be lower than 24', life: 8000});
+      }
+      else if (!this.checkHoursNotGreaterThan24() && !this.checkNonLocalPhysicalGreaterThanPhysicalParticipants() && !this.durationHoursPerDayFlag) {
         axios.put(`/projects/${this.$route.params.id}`, this.project)
         .catch((error) => {
           console.log(error);
@@ -2766,6 +2773,12 @@ export default {
 
       if (newValue === data[field]) return;
 
+      if(field === "durationHoursPerDay" && newValue > 24) {
+        this.durationHoursPerDayFlag = true;
+        this.$toast.add({severity:'error', summary: 'Caution', detail: 'The value of Duration (hours per day) should be lower than 24', life: 8000});
+      } else if (field === "durationHoursPerDay" && newValue <= 24) {
+        this.durationHoursPerDayFlag = false;
+      }
       const paramsData = {}
 
       newData[field] = newValue;
@@ -3154,6 +3167,17 @@ export default {
       this.chartDataExecution.datasets[2].data[5] = eventsExecutionKPI3;
       this.chartDataExecution.datasets[2].data[6] = materialsExecutionKPI3;
       this.chartDataExecution.datasets[2].data[7] = heatExecutionKPI3;
+    },
+
+    checkEventsOrganizationHoursPerDayGreaterThan24() {
+      for( let event of this.project.events.organization) {
+        if(event.durationHoursPerDay > 24) {
+          this.durationHoursPerDayFlag = true;
+          break;
+        } else {
+          this.durationHoursPerDayFlag = false;
+        }
+      }
     }
 
   },
