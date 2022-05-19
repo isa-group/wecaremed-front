@@ -33,9 +33,9 @@
                 [{{project.initialCF}} / {{project.currentCF}}] t CO2e&nbsp;
               </h1>   
 
-              <h3>Partners</h3>
+              <h3>Partners*</h3>
                         
-              <table class="table table-bordered" style="margin-bottom: 35px">
+              <table class="table table-bordered">
                 <thead>
                   <tr>
                     <th>Coordinator</th>
@@ -43,7 +43,7 @@
                     <th>Country</th>
                     <th>Number full time employees</th>
                     <th>Number part time employees</th>
-                    <th>Sum person months (full time + part time)</th>
+                    <th>Person months</th>
                     <th>Number of external experts</th>
                     <th>Sum person months for the external experts</th>
                   </tr>
@@ -61,8 +61,9 @@
                   </tr>
                 </tbody>
               </table>
+              * The values of this section refer to staff members (full time + part time) concerning the whole project duration
 
-              <h3>Equipment</h3>
+              <h3 style="margin-top: 35px">Equipment</h3>
 
               <p>Number of IT electrical equipment that will be purchased during the project</p>
               <div v-for="partner in project.partners" :key="partner._id">
@@ -103,7 +104,7 @@
                     <tr>
                       <th>Number of in presence public events</th>
                       <th>Average number of physical participants</th>
-                      <th>Average number of non-local physical participants</th>
+                      <th>Average number of non-local** physical participants</th>
                       <th>Average duration (days)</th>
                     </tr>
                   </thead>
@@ -123,7 +124,7 @@
                     <tr>
                       <th>Number of mixed public events</th>
                       <th>Average number of physical participants</th>
-                      <th>Average number of non-local physical participants</th>
+                      <th>Average number of non-local** physical participants</th>
                       <th>Average number of on-line participants</th>
                       <th>Average duration (days)</th>
                       <th>Average duration (hours/day)</th>
@@ -167,7 +168,7 @@
                     <tr>
                       <th>Number of in presence internal events/meetings</th>
                       <th>Average number of physical participants</th>
-                      <th>Average number of non-local physical participants</th>
+                      <th>Average number of non-local** physical participants</th>
                       <th>Average duration (days)</th>
                     </tr>
                   </thead>
@@ -187,7 +188,7 @@
                     <tr>
                       <th>Number of mixed internal events/meetings</th>
                       <th>Average number of physical participants</th>
-                      <th>Average number of non-local physical participants</th>
+                      <th>Average number of non-local** physical participants</th>
                       <th>Average number of on-line participants</th>
                       <th>Average duration (days)</th>
                       <th>Average duration (hours/day)</th>
@@ -222,6 +223,7 @@
                     </tr>
                   </tbody>
                 </table>
+              ** Participants travelling to the hosting city (national/international travel) only for the participation to the even
 
               <h5 style="margin-top: 20px">Events participated by the project</h5>
 
@@ -261,13 +263,13 @@
                 </tbody>
               </table>
 
-              <h2>Tons of equivalent carbon dioxide emitted: {{project.currentCF}}</h2>
+              <h2>Tons of CO₂ equivalent emitted: {{project.currentCF}}</h2>
               <h2>Price of the ton of CO2 equivalent: {{co2PermitsPrice + ' €'}}</h2>
               <h2 style="margin-bottom: 40px">CO2 permits cost: {{round(project.currentCF * co2PermitsPrice) + ' €'}}</h2>
               
-              <h3 style="margin-bottom: 10px">CF Breakdown (Tons):</h3>
+              <h3 style="margin-bottom: 10px">Carbon Footprint breakdown (Tons):</h3>
               <ul>
-                <li style="margin-bottom: 10px; font-size: 20px">Fuels heat: {{project.fuelsHeatAdvancedCF}}</li>
+                <li style="margin-bottom: 10px; font-size: 20px">Fuels (Heating): {{project.fuelsHeatAdvancedCF}}</li>
                 <li style="margin-bottom: 10px; font-size: 20px">Electricity: {{project.electricityAdvancedCF}}</li>
                 <li style="margin-bottom: 10px; font-size: 20px">Water: {{project.waterAdvancedCF}}</li>
                 <li style="margin-bottom: 10px; font-size: 20px">Transportation: {{project.transportationAdvancedCF}}</li>
@@ -281,7 +283,7 @@
 
             <div class="card col-12">
 
-              <h4>Partners</h4>
+              <h4>Partners*</h4>
 
               <DataTable :value="project.partners" editMode="cell" :paginator="true" class="p-datatable-gridlines" dataKey="_id"
               :rowHover="true" @cell-edit-complete="onCellEditCompletePartner" sortMode="multiple" :rows="10" v-model:filters="partnerFilters"
@@ -336,7 +338,7 @@
                   </template>
                 </Column>
 
-                <Column field="employeesPersonMonths" header="Sum person months (full time + part time)" :sortable="true">
+                <Column field="employeesPersonMonths" header="Person months" :sortable="true">
                   <template #editor="slotProps" class="p-field">
                     <InputNumber v-model="slotProps.data[slotProps.field]" mode="decimal" :maxFractionDigits="3"
                     showButtons :step="0.25" decrementButtonClass="p-button-info"
@@ -345,7 +347,7 @@
                   </template>
                 </Column>
 
-                <Column field="twoWayTravels" header="Number two-way travels" :sortable="true">
+                <Column field="twoWayTravels" header="Number of two-way travels for work commuting" :sortable="true">
                   <template #editor="slotProps">
                     <InputNumber v-model="slotProps.data[slotProps.field]" mode="decimal" showButtons decrementButtonClass="p-button-info"
                     incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
@@ -360,6 +362,7 @@
                 </Column>
               
               </DataTable>
+              <p>* The values of this section refer to staff members (full time + part time) concerning the whole project duration</p>
             </div>
 
             <div class="card">
@@ -419,7 +422,7 @@
                   </template>
                 </Column>
 
-                <Column field="twoWayTravels" header="Number of two-way travels" :sortable="true">
+                <Column field="twoWayTravels" header="Number of two-way travels for work commuting" :sortable="true">
                   <template #editor="slotProps">
                     <InputNumber v-model="slotProps.data[slotProps.field]" mode="decimal" showButtons decrementButtonClass="p-button-info"
                     incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
@@ -576,7 +579,7 @@
                         </template>
                       </Column>
 
-                      <Column field="nonLocalPhysicalParticipants" header="Non-local physical participants" :sortable="true">
+                      <Column field="nonLocalPhysicalParticipants" header="Non-local** physical participants" :sortable="true">
                         <template #body="slotProps">
                           <td :class="slotProps.data[slotProps.field] == 0 && slotProps.data['type'] !== 'On-line' ? 'defaultValue' : ''"
                           style="display:block;" @click="slotProps.data['type'] !== 'On-line' ? '' : slotProps.data[slotProps.field] = 0"
@@ -646,7 +649,7 @@
                     </DataTable>
                   </TabPanel>
 
-                  <TabPanel header="Project participation in events" v-if="project.events && project.events.participation">
+                  <TabPanel header="Project participation in in-presence events" v-if="project.events && project.events.participation">
 
                     <DataTable :value="project.events.participation" editMode="cell" :paginator="true" class="p-datatable-gridlines" dataKey="_id"
                     :rowHover="true" @cell-edit-complete="onCellEditCompleteEvents" sortMode="multiple" :rows="5" v-model:filters="participationEventsFilters"
@@ -681,8 +684,7 @@
                       <ColumnGroup type="header">
                         <Row>
                             <Column header="Name" :sortable="true" :rowspan="2" field="name" />
-                            <Column header="Type" :sortable="true" :rowspan="2" field="type" />
-                            <Column header="Non-local physical participants" :sortable="true" :rowspan="2" field="nonLocalPhysicalParticipants" />
+                            <Column header="Number of project participants" :sortable="true" :rowspan="2" field="nonLocalPhysicalParticipants" />
                             <Column header="Duration (in days)" :sortable="true" :rowspan="2" field="durationDays" />
                             <Column header="Hosting country" :sortable="true" :rowspan="2" field="hostingCountry" />
                             <Column header="Arrive at hosting city" :colspan="3" />
@@ -708,14 +710,14 @@
                           </template>
                         </Column>
 
-                      <Column field="type">
+                      <!-- <Column field="type">
                         <template #body="slotProps">
                           <td :class="slotProps.data[slotProps.field] == 'Select a type' ? 'defaultValue' : ''" style="display:block;">{{slotProps.data[slotProps.field]}}</td>
                         </template>
                         <template #editor="slotProps">
                           <Dropdown :options="eventTypesForDropdown" v-model="slotProps.data[slotProps.field]" disabled />
                         </template>
-                      </Column>
+                      </Column> -->
 
                       <Column field="nonLocalPhysicalParticipants">
                         <template #editor="slotProps">
@@ -809,6 +811,7 @@
 
                   </TabPanel>
                 </TabView>
+                <p>** Participants travelling to the hosting city (national/international travel) only for the participation to the event</p>
               </div>
             </div>
 
@@ -845,6 +848,15 @@
                       Loading printable deliverables. Please wait.
                   </template>
 
+                  <Column field="name" header="Name" :sortable="true">
+                    <template #body="slotProps">
+                      <td :class="slotProps.data[slotProps.field] == 'New printable deliverable' ? 'defaultValue' : ''" style="display:block;">{{slotProps.data[slotProps.field]}}</td>
+                    </template>
+                    <template #editor="slotProps">
+                        <InputText v-model="slotProps.data[slotProps.field]" @focus="$event.target.select()"/>
+                    </template>
+                  </Column>
+
                   <Column field="deliverableType" header="Deliverable type" :sortable="true">
                     <template #body="slotProps">
                       <td :class="slotProps.data[slotProps.field] == 'Select a deliverable type' ? 'defaultValue' : ''" style="display:block;">{{slotProps.data[slotProps.field]}}</td>
@@ -861,7 +873,7 @@
                           </span>
                         </template>
                         <template #option="slotProps">
-                            <span>{{slotProps.option.value}} ({{slotProps.option.avgPagesPerCopy}} pages, {{slotProps.option.size}})</span>
+                            <span>{{slotProps.option.value}}</span>
                         </template>
                       </Dropdown>
                     </template>
@@ -879,7 +891,7 @@
                     </template>
                   </Column>
 
-                  <Column field="avgPagesPerCopy" header="Average pages per copy" :sortable="true">
+                  <Column field="avgPagesPerCopy" header="Number of pages per copy" :sortable="true">
                     <template #body="slotProps">
                       <td style="display:block;"
                       :class="deliverableOptions.find(d => {return d.value == slotProps.data.deliverableType}) && slotProps.data[slotProps.field] == deliverableOptions.find(d => {return d.value == slotProps.data.deliverableType}).avgPagesPerCopy ? 'defaultValue' : ''"
@@ -922,7 +934,7 @@
 
                 </DataTable>
                 <div style="text-align: left; margin-top: 10px">
-                  * Report type includes the following deliverables: Report/Plan/Analysis/Study/Methodology/Manual/Guidance/Roadmap/Strategy/Proceedings
+                  <p>* Report type includes the following deliverables: Report/Plan/Analysis/Study/Methodology/Manual/Guidance/Roadmap/Strategy/Proceedings</p>
                 </div>
               </div>
             </div>
@@ -1425,7 +1437,7 @@
             <div class="col-12">
               <div class="card p-fluid" style="display: flex; flex-direction: column; align-items: center; justify-content: space-around;">
                 <div>
-                  <h2 class="mb-2">Equivalent carbon dioxide emitted:
+                  <h2 class="mb-2">CO₂ equivalent emitted:
                     <Badge :value="project.currentCF  + ' t CO2e'" class="ml-2 currentCF" size="xlarge" :severity="getTextColorFromCFIndex(project.currentCF)" />
                   </h2>
                 </div>
@@ -1492,10 +1504,10 @@
 
             <div class="col-12">
               <div class="card p-fluid" style="display: flex; flex-direction: column; align-items: center; justify-content: space-around;">
-                <h2>CF Breakdown (Tons)</h2>
+                <h2>Carbon Footprint breakdown (Tons)</h2>
                 <div class="col-12" style="display: flex; justify-content: space-evenly;">
                   <div class="card p-fluid col-2" style="display: flex; flex-direction: column; align-items: center; justify-content: space-around;">
-                    <h2 class="font-medium text-3xl">Fuels Heat</h2>
+                    <h2 class="font-medium text-3xl">Fuels (Heating)</h2>
                     <div class="flex align-items-center py-3 px-2 border-top-1 surface-border">
                       <Badge :value="project.fuelsHeatAdvancedCF" size="xlarge" class="currentCF"/>
                     </div>
@@ -2399,6 +2411,7 @@ export default {
     },
     addPrintableDeliverable() {
       let newPrintableDeliverable = {
+        name: "New printable deliverable",
         deliverableType: "Select a deliverable type",
         deliverableName: "Select a deliverable name",
         copies: 1,
