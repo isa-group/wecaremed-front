@@ -30,7 +30,7 @@
               <h1>{{project.name}}&nbsp;
                 ({{ (new Date(project.from).getMonth() + 1).toString().padStart(2, "0") + '/' + new Date(project.from).getFullYear()}} -&nbsp;
                 {{(new Date(project.to).getMonth() + 1).toString().padStart(2, "0") + '/' + new Date(project.to).getFullYear()}})
-                [{{project.initialCF}} / {{project.currentCF}}] t CO2e&nbsp;
+                [{{project.initialCF}} / {{project.currentCF}}] t CO₂e&nbsp;
               </h1>   
 
               <h3>Partners*</h3>
@@ -264,8 +264,8 @@
               </table>
 
               <h2>Tons of CO₂ equivalent emitted: {{project.currentCF}}</h2>
-              <h2>Price of the ton of CO2 equivalent: {{co2PermitsPrice + ' €'}}</h2>
-              <h2 style="margin-bottom: 40px">CO2 permits cost: {{round(project.currentCF * co2PermitsPrice) + ' €'}}</h2>
+              <h2>Price of the ton of CO₂ equivalent: {{co2PermitsPrice + ' €'}}</h2>
+              <h2 style="margin-bottom: 40px">CO₂ permits cost: {{round(project.currentCF * co2PermitsPrice) + ' €'}}</h2>
               
               <h3 style="margin-bottom: 10px">Carbon Footprint breakdown (Tons):</h3>
               <ul>
@@ -593,7 +593,7 @@
                         </template>
                       </Column>
 
-                      <Column field="virtualParticipants" header="Virtual participants" :sortable="true">
+                      <Column field="virtualParticipants" header="On-line participants" :sortable="true">
                         <template #body="slotProps">
                           <td :class="slotProps.data[slotProps.field] == 0 && slotProps.data['type'] !== 'In presence' ? 'defaultValue' : ''"
                           style="display:block;" @click="slotProps.data['type'] !== 'In presence' ? '' : slotProps.data[slotProps.field] = 0"
@@ -985,7 +985,7 @@
                       </template>
                     </Column>
 
-                    <Column field="value" header="Value (t CO2e)" :sortable="true">
+                    <Column field="value" header="Value (t CO₂e)" :sortable="true">
                       <template #editor="slotProps" class="p-field">
                         <InputNumber v-model="slotProps.data[slotProps.field]" mode="decimal" :maxFractionDigits="3"
                         showButtons :step="0.25" decrementButtonClass="p-button-info"
@@ -1043,7 +1043,7 @@
                     </template>
                   </Column>
 
-                  <Column field="value" header="Value (t CO2e)" :sortable="true">
+                  <Column field="value" header="Value (t CO₂e)" :sortable="true">
                     <template #editor="slotProps" class="p-field">
                       <InputNumber v-model="slotProps.data[slotProps.field]" mode="decimal" :maxFractionDigits="3"
                       showButtons :step="0.25" decrementButtonClass="p-button-info"
@@ -1102,7 +1102,7 @@
                     </template>
                   </Column>
 
-                  <Column field="value" header="Value (t CO2e)" :sortable="true">
+                  <Column field="value" header="Value (t CO₂e)" :sortable="true">
                     <template #editor="slotProps" class="p-field">
                       <InputNumber v-model="slotProps.data[slotProps.field]" mode="decimal" :maxFractionDigits="3"
                       showButtons :step="0.25" decrementButtonClass="p-button-info"
@@ -1162,7 +1162,7 @@
                       </template>
                     </Column>
 
-                    <Column field="value" header="Value (t CO2e)" :sortable="true">
+                    <Column field="value" header="Value (t CO₂e)" :sortable="true">
                       <template #editor="slotProps" class="p-field">
                         <InputNumber v-model="slotProps.data[slotProps.field]" mode="decimal" :maxFractionDigits="3"
                         showButtons :step="0.25" decrementButtonClass="p-button-info"
@@ -1222,7 +1222,7 @@
                       </template>
                     </Column>
 
-                    <Column field="value" header="Value (t CO2e)" :sortable="true">
+                    <Column field="value" header="Value (t CO₂e)" :sortable="true">
                       <template #editor="slotProps" class="p-field">
                         <InputNumber v-model="slotProps.data[slotProps.field]" mode="decimal" :maxFractionDigits="3"
                         showButtons :step="0.25" decrementButtonClass="p-button-info"
@@ -1282,7 +1282,7 @@
                     </template>
                   </Column>
 
-                  <Column field="value" header="Value (t CO2e)" :sortable="true">
+                  <Column field="value" header="Value (t CO₂e)" :sortable="true">
                     <template #editor="slotProps" class="p-field">
                       <InputNumber v-model="slotProps.data[slotProps.field]" mode="decimal" :maxFractionDigits="3"
                       showButtons :step="0.25" decrementButtonClass="p-button-info"
@@ -1344,7 +1344,7 @@
                         </template>
                       </Column>
 
-                      <Column field="value" header="Value (t CO2e)" :sortable="true">
+                      <Column field="value" header="Value (t CO₂e)" :sortable="true">
                         <template #editor="slotProps" class="p-field">
                           <InputNumber v-model="slotProps.data[slotProps.field]" mode="decimal" :maxFractionDigits="3"
                           showButtons :step="0.25" decrementButtonClass="p-button-info"
@@ -1439,16 +1439,16 @@
               <div class="card p-fluid" style="display: flex; flex-direction: column; align-items: center; justify-content: space-around;">
                 <div>
                   <h2 class="mb-2">CO₂ equivalent emitted:
-                    <Badge :value="project.currentCF  + ' t CO2e'" class="ml-2 currentCF" size="xlarge" :severity="getTextColorFromCFIndex(project.currentCF)" />
+                    <Badge :value="project.currentCF  + ' t CO₂e'" class="ml-2 currentCF" size="xlarge" :severity="getTextColorFromCFIndex(project.currentCF)" />
                   </h2>
                 </div>
                 <div>
-                  <h2 class="mt-2">Price of the ton of CO2 equivalent:
+                  <h2 class="mt-2">Price of the ton of CO₂ equivalent:
                     <Badge :value="co2PermitsPrice + ' €'" class="ml-2 currentCF" size="xlarge" />
                   </h2>
                 </div>
                 <div>
-                  <h2 class="mt-2">CO2 permits cost:
+                  <h2 class="mt-2">CO₂ permits cost:
                     <Badge :value="round(project.currentCF * co2PermitsPrice) + ' €'" class="ml-2 currentCF" size="xlarge" />
                   </h2>
                 </div>
