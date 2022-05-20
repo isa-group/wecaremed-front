@@ -874,17 +874,17 @@
     <div class="col-12">
       <div class="card p-fluid" style="display: flex; flex-direction: column; align-items: center; justify-content: space-around;">
         <div>
-          <h2 class="mb-2">CO2 equivalent emitted:
+          <h2 class="mb-2">CO₂ equivalent emitted:
             <Badge :value="project.initialCF  + ' t CO2e'" class="ml-2 currentCF" size="xlarge" :severity="getTextColorFromCFIndex(project.initialCF)" />
           </h2>
         </div>
         <div>
-          <h2 class="mt-2">Price of the ton of CO2 equivalent:
+          <h2 class="mt-2">Price of the ton of CO₂ equivalent:
             <Badge :value="co2PermitsPrice + ' €'" class="ml-2 currentCF" size="xlarge" />
           </h2>
         </div>
         <div>
-          <h2 class="mt-2">CO2 permits cost:
+          <h2 class="mt-2">CO₂ permits cost:
             <Badge :value="round(project.initialCF * co2PermitsPrice) + ' €'" class="ml-2 currentCF" size="xlarge" />
           </h2>
         </div>
