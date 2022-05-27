@@ -223,6 +223,7 @@
                     </tr>
                   </tbody>
                 </table>
+              * The values of this section refer to the whole project partnership
               ** Participants travelling to the hosting city (national/international travel) only for the participation to the even
 
               <h5 style="margin-top: 20px">Events participated by the project</h5>
@@ -695,10 +696,10 @@
                         <Row>
                             <Column header="Distance travelled (km)" :sortable="true" field="distanceTravelledArrive"/>
                             <Column header="Travel mode" :sortable="true" field="travelModeArrive"/>
-                            <Column header="Fuel type*" :sortable="true" field="fuelTypeArrive"/>
+                            <Column header="Fuel type***" :sortable="true" field="fuelTypeArrive"/>
                             <Column header="Distance travelled (km)" :sortable="true" field="distanceTravelledDepart"/>
                             <Column header="Travel mode" :sortable="true" field="travelModeDepart"/>
-                            <Column header="Fuel type*" :sortable="true" field="fuelTypeDepart"/>
+                            <Column header="Fuel type***" :sortable="true" field="fuelTypeDepart"/>
                         </Row>
                       </ColumnGroup>
 
@@ -807,11 +808,13 @@
                         </template>
                       </Column>
                       
-                      <p>* Fuel type may only be chosen when "Car" is the selected Travel mode</p>
                     </DataTable>
+
+                    <p class="mt-2">*** Fuel type may only be chosen when "Car" is the selected Travel mode</p>
 
                   </TabPanel>
                 </TabView>
+                <p>* The values of this section refer to the whole project partnership</p>
                 <p>** Participants travelling to the hosting city (national/international travel) only for the participation to the event</p>
               </div>
             </div>
