@@ -1129,11 +1129,12 @@ export default {
     },
     confirmUpdateInitialValuesDialog() {
       this.displayUpdateInitialValues = false;
-      if(this.project.isInitialProject) {
-        this.saveCurrentProject();
-      } else {
-        this.updateInitialValues();
-      }
+      this.saveCurrentProject();
+      // if(this.project.isInitialProject) {
+      //   this.saveCurrentProject();
+      // } else {
+      //   this.updateInitialValues();
+      // }
     },
     declineUpdateInitialValuesDialog() {
       this.displayUpdateInitialValues = false;
@@ -1583,115 +1584,115 @@ export default {
           console.log(error)
        })
     },
-    updateInitialValues(){
-      if(this.project.isInitialProject){
-        this.saveCurrentProject();
-      } else {
-        axios.delete('/projects/' + this.project.initialProject)
-        .then(() => {
-          let newInitialProject = Object.assign({}, this.project);
-          newInitialProject.isInitialProject = new Boolean(true);
-          newInitialProject._id = this.project.initialProject;
-          newInitialProject.initialProject = this.project._id;
+    // updateInitialValues(){
+    //   if(this.project.isInitialProject){
+    //     this.saveCurrentProject();
+    //   } else {
+    //     axios.delete('/projects/' + this.project.initialProject)
+    //     .then(() => {
+    //       let newInitialProject = Object.assign({}, this.project);
+    //       newInitialProject.isInitialProject = new Boolean(true);
+    //       newInitialProject._id = this.project.initialProject;
+    //       newInitialProject.initialProject = this.project._id;
 
-          for(let partner of newInitialProject.partners){
-            partner.project = this.project.initialProject;
-          }
+    //       for(let partner of newInitialProject.partners){
+    //         partner.project = this.project.initialProject;
+    //       }
 
-          for(let pd of newInitialProject.printableDeliverables) {
-            pd.project = this.project.initialProject;
-          }
+    //       for(let pd of newInitialProject.printableDeliverables) {
+    //         pd.project = this.project.initialProject;
+    //       }
 
-          axios.post('/projects', newInitialProject,{
-          auth: {
-              username: this.$store.state.username,
-              password: this.$store.state.password
-            }
-          })
-          .then( () => {
-            for (let pd of newInitialProject.printableDeliverables){
-              pd._id = new Mongoose.Types.ObjectId();
-              this.axios.post('/printableDeliverables', pd)
-              .catch((e)=>{
-                console.log('error' + e);
-              })
-            }
+    //       axios.post('/projects', newInitialProject,{
+    //       auth: {
+    //           username: this.$store.state.username,
+    //           password: this.$store.state.password
+    //         }
+    //       })
+    //       .then( () => {
+    //         for (let pd of newInitialProject.printableDeliverables){
+    //           pd._id = new Mongoose.Types.ObjectId();
+    //           this.axios.post('/printableDeliverables', pd)
+    //           .catch((e)=>{
+    //             console.log('error' + e);
+    //           })
+    //         }
 
-            for(let partner of newInitialProject.partners) {
-              partner._id = new Mongoose.Types.ObjectId();
-              this.axios.post('/partners', partner)
-              .catch((e)=>{
-                console.log('error' + e);
-              })
-            }
-            this.$toast.add({severity:'success', summary: 'Successful', detail: 'All Printable deliverables saved', life: 3000});
-            this.$toast.add({severity:'success', summary: 'Successful', detail: 'All Partners saved', life: 3000});
+    //         for(let partner of newInitialProject.partners) {
+    //           partner._id = new Mongoose.Types.ObjectId();
+    //           this.axios.post('/partners', partner)
+    //           .catch((e)=>{
+    //             console.log('error' + e);
+    //           })
+    //         }
+    //         this.$toast.add({severity:'success', summary: 'Successful', detail: 'All Printable deliverables saved', life: 3000});
+    //         this.$toast.add({severity:'success', summary: 'Successful', detail: 'All Partners saved', life: 3000});
             
-          })
-          .catch( (error) => {
-            console.log('error', error);
-          })
-          axios.get('/customs?projectId=' + this.project._id, { params: {
-              projectId: this.project._id
-            }
-          })
-          .then( (response) => {
-            this.project.customs = response.data;
-            for(let custom of this.project.customs) {
-              custom._id = new Mongoose.Types.ObjectId();
-              custom.project = this.project.initialProject;
+    //       })
+    //       .catch( (error) => {
+    //         console.log('error', error);
+    //       })
+    //       axios.get('/customs?projectId=' + this.project._id, { params: {
+    //           projectId: this.project._id
+    //         }
+    //       })
+    //       .then( (response) => {
+    //         this.project.customs = response.data;
+    //         for(let custom of this.project.customs) {
+    //           custom._id = new Mongoose.Types.ObjectId();
+    //           custom.project = this.project.initialProject;
 
-              this.axios.post('/customs', custom)
-              .catch((e)=>{
-                console.log('error' + e);
-              })
-            }
-            this.$toast.add({severity:'success', summary: 'Successful', detail: 'All Customs saved', life: 3000});
-          })
-          .catch((e)=>{
-            console.log('error' + e);
-          })
+    //           this.axios.post('/customs', custom)
+    //           .catch((e)=>{
+    //             console.log('error' + e);
+    //           })
+    //         }
+    //         this.$toast.add({severity:'success', summary: 'Successful', detail: 'All Customs saved', life: 3000});
+    //       })
+    //       .catch((e)=>{
+    //         console.log('error' + e);
+    //       })
 
-          this.axios.get(`/externalExperts?projectId=` + this.project._id)
-          .then((response) => {
-            this.project.externalExperts = response.data;
-            for(let externalExpert of response.data) {
-              externalExpert._id = new Mongoose.Types.ObjectId();
-              externalExpert.project = this.project.initialProject;
-              axios.post('/externalExperts', externalExpert)
-              .catch((e)=>{
-                console.log('error' + e);
-              })
-            }
-            this.$toast.add({severity:'success', summary: 'Successful', detail: 'All external experts saved', life: 3000});
-          })
-          .catch((e)=>{
-            console.log('error' + e);
-          })
+    //       this.axios.get(`/externalExperts?projectId=` + this.project._id)
+    //       .then((response) => {
+    //         this.project.externalExperts = response.data;
+    //         for(let externalExpert of response.data) {
+    //           externalExpert._id = new Mongoose.Types.ObjectId();
+    //           externalExpert.project = this.project.initialProject;
+    //           axios.post('/externalExperts', externalExpert)
+    //           .catch((e)=>{
+    //             console.log('error' + e);
+    //           })
+    //         }
+    //         this.$toast.add({severity:'success', summary: 'Successful', detail: 'All external experts saved', life: 3000});
+    //       })
+    //       .catch((e)=>{
+    //         console.log('error' + e);
+    //       })
 
-          this.axios.get(`/events?projectId=` + this.project._id)
-          .then((response) => {
+    //       this.axios.get(`/events?projectId=` + this.project._id)
+    //       .then((response) => {
             
-          for(let event of response.data) {
-              event._id = new Mongoose.Types.ObjectId();
-              event.project = this.project.initialProject;
+    //       for(let event of response.data) {
+    //           event._id = new Mongoose.Types.ObjectId();
+    //           event.project = this.project.initialProject;
 
-              axios.post('/events', event)
-              .catch((e)=>{
-                console.log('error' + e);
-              })
-            }
-          this.$toast.add({severity:'success', summary: 'Successful', detail: 'All events saved', life: 3000});
-          })
-          .catch((e)=>{
-            console.log('error' + e);
-          })
-        })
-        .catch((e)=>{
-          console.log('error' + e);
-        })
-      }
-    },
+    //           axios.post('/events', event)
+    //           .catch((e)=>{
+    //             console.log('error' + e);
+    //           })
+    //         }
+    //       this.$toast.add({severity:'success', summary: 'Successful', detail: 'All events saved', life: 3000});
+    //       })
+    //       .catch((e)=>{
+    //         console.log('error' + e);
+    //       })
+    //     })
+    //     .catch((e)=>{
+    //       console.log('error' + e);
+    //     })
+    //   }
+    // },
     toggleProjectView() {
       this.$store.commit("toggleProject");
       location.href = '/projects/' + this.project.initialProject

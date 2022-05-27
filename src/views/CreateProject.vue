@@ -181,6 +181,7 @@ export default {
       .then(() => {
         let updateInitialProject = Object.assign({}, this.newProject);
         updateInitialProject._id = this.newProject.initialProject;
+        updateInitialProject.initialProject = this.newProject._id;
         updateInitialProject.isInitialProject = new Boolean(true);
         axios.put('/projects/' + this.newProject.initialProject, updateInitialProject).then( () => {
           this.$router.push({ path: `/projects/${this.newProject._id}` });
