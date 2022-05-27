@@ -13,12 +13,12 @@
                         <h2>({{ (new Date(projectInfo.from).getMonth() + 1).toString().padStart(2, "0") + '/' + new Date(projectInfo.from).getFullYear()}} -&nbsp;</h2>
                         <h2>{{(new Date(projectInfo.to).getMonth() + 1).toString().padStart(2, "0") + '/' + new Date(projectInfo.to).getFullYear()}})&nbsp;</h2> 
                         
-                        <Badge :value="initialCF + ' t CO2e'" size="large" :class="toggleValue == true ? 'initialCF' : 'currentCF'" :severity="getTextColorFromCFIndex(initialCF)"
+                        <Badge :value="initialCF + ' t CO₂e'" size="large" :class="toggleValue == true ? 'initialCF' : 'currentCF'" :severity="getTextColorFromCFIndex(initialCF)"
                         v-tooltip.bottom="'Preparation Phase CF'" />
                         
                         <span v-if="$store.state.toggleValue">
                             &nbsp;<span style="font-size: 16px">--></span>&nbsp;
-                            <Badge :value="currentCF + ' t CO2e'" size="large" class="currentCF" :severity="getTextColorFromCFIndex(currentCF)"
+                            <Badge :value="currentCF + ' t CO₂e'" size="large" class="currentCF" :severity="getTextColorFromCFIndex(currentCF)"
                             v-tooltip.bottom="'Execution Phase CF'"/>
                         </span>
                         

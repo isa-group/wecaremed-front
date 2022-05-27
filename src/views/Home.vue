@@ -49,7 +49,7 @@
         </Column>
 
         <template v-if="!this.$store.state.toggleValue">
-          <Column field="initialCF" header="CF Estimation (t CO2e)" :sortable="true">
+          <Column field="initialCF" header="CF Estimation (t CO₂e)" :sortable="true">
             <template #body="slotProps">
               <span :class="getTextColorFromCFIndex(slotProps.data.initialCF)">{{slotProps.data.initialCF}}</span>
             </template>
@@ -57,13 +57,13 @@
         </template>
 
         <template v-else>
-          <Column field="initialCF" header="Preparation Phase CF (t CO2e)" :sortable="true">
+          <Column field="initialCF" header="Preparation Phase CF (t CO₂e)" :sortable="true">
             <template #body="slotProps">
               <span :class="getTextColorFromCFIndex(slotProps.data.initialCF)">{{slotProps.data.initialCF}}</span>
             </template>
           </Column>
 
-          <Column field="currentCF" header="Execution Phase CF (t CO2e)" :sortable="true">
+          <Column field="currentCF" header="Execution Phase CF (t CO₂e)" :sortable="true">
             <template #body="slotProps">
               <span :class="getTextColorFromCFIndex(slotProps.data.currentCF)">{{slotProps.data.currentCF}}</span>
             </template>
