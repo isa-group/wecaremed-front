@@ -417,7 +417,8 @@
 
                 <Column field="personMonthsWPP" header="Person months" :sortable="true">
                   <template #editor="slotProps">
-                    <InputNumber v-model="slotProps.data[slotProps.field]" mode="decimal" showButtons decrementButtonClass="p-button-info"
+                    <InputNumber v-model="slotProps.data[slotProps.field]" mode="decimal" :maxFractionDigits="3"
+                    showButtons :step="0.25" decrementButtonClass="p-button-info"
                     incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
                     :allowEmpty="false" :min="0" @focus="$event.target.select()" />
                   </template>
