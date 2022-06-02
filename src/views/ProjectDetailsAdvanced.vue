@@ -573,7 +573,7 @@
                         <template #body="slotProps">
                           <td :class="slotProps.data[slotProps.field] == 0 && slotProps.data['type'] !== 'On-line' ? 'defaultValue' : ''"
                           style="display:block;" @click="slotProps.data['type'] !== 'On-line' ? '' : slotProps.data[slotProps.field] = 0"
-                          >{{slotProps.data['type'] !== 'On-line' ? slotProps.data[slotProps.field] : 0}}</td>
+                          >{{slotProps.data['type'] !== 'On-line' ? slotProps.data[slotProps.field] : ''}}</td>
                         </template>
                         <template #editor="slotProps">
                           <InputNumber v-model="slotProps.data[slotProps.field]" mode="decimal" showButtons decrementButtonClass="p-button-info"
@@ -586,7 +586,7 @@
                         <template #body="slotProps">
                           <td :class="slotProps.data[slotProps.field] == 0 && slotProps.data['type'] !== 'On-line' ? 'defaultValue' : ''"
                           style="display:block;" @click="slotProps.data['type'] !== 'On-line' ? '' : slotProps.data[slotProps.field] = 0"
-                          >{{slotProps.data['type'] !== 'On-line' ? slotProps.data[slotProps.field] : 0}}</td>
+                          >{{slotProps.data['type'] !== 'On-line' ? slotProps.data[slotProps.field] : ''}}</td>
                         </template>
                         <template #editor="slotProps">
                           <InputNumber v-model="slotProps.data[slotProps.field]"  mode="decimal" showButtons decrementButtonClass="p-button-info"
@@ -599,7 +599,7 @@
                         <template #body="slotProps">
                           <td :class="slotProps.data[slotProps.field] == 0 && slotProps.data['type'] !== 'In presence' ? 'defaultValue' : ''"
                           style="display:block;" @click="slotProps.data['type'] !== 'In presence' ? '' : slotProps.data[slotProps.field] = 0"
-                          >{{slotProps.data['type'] !== 'In presence' ? slotProps.data[slotProps.field] : 0}}</td>
+                          >{{slotProps.data['type'] !== 'In presence' ? slotProps.data[slotProps.field] : ''}}</td>
                         </template>
                         <template #editor="slotProps" class="p-field">
                           <InputNumber v-model="slotProps.data[slotProps.field]" mode="decimal" showButtons decrementButtonClass="p-button-info"
@@ -610,12 +610,13 @@
 
                       <Column field="durationDays" header="Duration (in days)" :sortable="true">
                         <template #body="slotProps">
-                          <td :class="slotProps.data[slotProps.field] == 0 && slotProps.data['type'] !== 'On-line' ? 'defaultValue' : ''"
+                          <td :class="slotProps.data[slotProps.field] == 0 ? 'defaultValue' : ''"
                           style="display:block;">{{slotProps.data[slotProps.field]}}</td>
                         </template>
                         <template #editor="slotProps">
-                          <InputNumber v-model="slotProps.data[slotProps.field]" mode="decimal" showButtons decrementButtonClass="p-button-info"
-                          incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
+                          <InputNumber v-model="slotProps.data[slotProps.field]" mode="decimal" :maxFractionDigits="3"
+                          showButtons :step="0.25" decrementButtonClass="p-button-info" incrementButtonClass="p-button-info"
+                          incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
                           :allowEmpty="false" :min="0" @focus="$event.target.select()"/>
                         </template>
                       </Column>
@@ -624,7 +625,7 @@
                         <template #body="slotProps">
                           <td :class="slotProps.data[slotProps.field] == 0 && slotProps.data['type'] !== 'In presence' ? 'defaultValue' : ''"
                           style="display:block;" @click="slotProps.data['type'] !== 'In presence' ? '' : slotProps.data[slotProps.field] = 0"
-                          >{{slotProps.data['type'] !== 'In presence' ? slotProps.data[slotProps.field] : 0}}</td>
+                          >{{slotProps.data['type'] !== 'In presence' ? slotProps.data[slotProps.field] : ''}}</td>
                         </template>
                         <template #editor="slotProps">
                           <InputNumber v-model="slotProps.data[slotProps.field]" mode="decimal" :maxFractionDigits="3"
@@ -732,8 +733,9 @@
 
                       <Column field="durationDays">
                         <template #editor="slotProps">
-                          <InputNumber v-model="slotProps.data[slotProps.field]" mode="decimal" showButtons decrementButtonClass="p-button-info"
-                          incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
+                          <InputNumber v-model="slotProps.data[slotProps.field]" mode="decimal" :maxFractionDigits="3"
+                          showButtons :step="0.25" decrementButtonClass="p-button-info" incrementButtonClass="p-button-info"
+                          incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
                           :allowEmpty="false" :min="0" @focus="$event.target.select()" />
                         </template>
                       </Column>
