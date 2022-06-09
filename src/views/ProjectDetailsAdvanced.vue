@@ -1764,192 +1764,202 @@
 
                   <div class="p-fluid formgrid grid">
 
-                    <div class="field col-12 md:col-4" v-if="project.dataTables">
-                      <div class="mb-5" v-if="project.dataTables.transportationData.percentageDistributionTravelDistance[countryTransform]" >
-                        <label>Transportation data tables: </label>
-                        <Dropdown class="ml-2" :options="countriesForDropdown" v-model="selectedCountryForTransportationData"/>
-              
-                        <label for="carTransportationData">Car</label>
-                        <InputNumber id="carTransportationData" v-model="project.dataTables.transportationData.percentageDistributionTravelDistance[countryTransform].car" mode="decimal" :maxFractionDigits="4"
-                          showButtons :step="0.0001" decrementButtonClass="p-button-info"
-                          incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
-                          :allowEmpty="false" :min="0.0000" class="mb-3"
-                          @focus="onFocusValue=project.dataTables.transportationData.percentageDistributionTravelDistance[countryTransform].car; $event.target.select()"
-                          @keypress.enter="$event.target.blur()"
-                          @focusout="onCellEditCompleteTransportationData(project.dataTables.transportationData.percentageDistributionTravelDistance[countryTransform].car, countryTransform, 'car')"/>
+                    <div class="field col-12" v-if="project.dataTables">
+                      
+                      <div class="mb-5 col-12" v-if="project.dataTables.transportationData.percentageDistributionTravelDistance[countryTransform]" >
+                        <h3>Percentage distribution of travel distance per person per day by main travel mode for urban mobility on all days (%)</h3>
+                        <div class="flex align-items-baseline">
+                          <label class="mr-2">Transportation data for the country:</label>
+                          <Dropdown class="mb-2" :options="countriesForDropdown" v-model="selectedCountryForTransportationData"/>
+                        </div>
 
-                        <label for="motorbikesTransportationData">Motorbikes</label>
-                        <InputNumber id="motorbikesTransportationData" v-model="project.dataTables.transportationData.percentageDistributionTravelDistance[countryTransform].motorbikes" mode="decimal" :maxFractionDigits="4"
-                          showButtons :step="0.0001" decrementButtonClass="p-button-info"
-                          incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
-                          :allowEmpty="false" :min="0.0000" class="mb-3"
-                          @focus="onFocusValue=project.dataTables.transportationData.percentageDistributionTravelDistance[countryTransform].motorbikes; $event.target.select()"
-                          @keypress.enter="$event.target.blur()"
-                          @focusout="onCellEditCompleteTransportationData(project.dataTables.transportationData.percentageDistributionTravelDistance[countryTransform].motorbikes, countryTransform, 'motorbikes')"/>
+                        <div class="flex justify-content-around">
+                          <div class="col-5">
+                            <label for="carTransportationData">Car</label>
+                            <InputNumber id="carTransportationData" v-model="project.dataTables.transportationData.percentageDistributionTravelDistance[countryTransform].car" mode="decimal" :maxFractionDigits="4"
+                            showButtons :step="0.0001" decrementButtonClass="p-button-info"
+                            incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
+                            :allowEmpty="false" :min="0.0000" class="mb-3"
+                            @focus="onFocusValue=project.dataTables.transportationData.percentageDistributionTravelDistance[countryTransform].car; $event.target.select()"
+                            @keypress.enter="$event.target.blur()"
+                            @focusout="onCellEditCompleteTransportationData(project.dataTables.transportationData.percentageDistributionTravelDistance[countryTransform].car, countryTransform, 'car')"/>
 
-                        <label for="busTransportationData">Bus</label>
-                        <InputNumber id="busTransportationData" v-model="project.dataTables.transportationData.percentageDistributionTravelDistance[countryTransform].bus" mode="decimal" :maxFractionDigits="4"
-                          showButtons :step="0.0001" decrementButtonClass="p-button-info"
-                          incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
-                          :allowEmpty="false" :min="0.0000" class="mb-3"
-                          @focus="onFocusValue=project.dataTables.transportationData.percentageDistributionTravelDistance[countryTransform].bus; $event.target.select()"
-                          @keypress.enter="$event.target.blur()"
-                          @focusout="onCellEditCompleteTransportationData(project.dataTables.transportationData.percentageDistributionTravelDistance[countryTransform].bus, countryTransform,'bus')"/>
+                            <label for="motorbikesTransportationData">Motorbikes</label>
+                            <InputNumber id="motorbikesTransportationData" v-model="project.dataTables.transportationData.percentageDistributionTravelDistance[countryTransform].motorbikes" mode="decimal" :maxFractionDigits="4"
+                            showButtons :step="0.0001" decrementButtonClass="p-button-info"
+                            incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
+                            :allowEmpty="false" :min="0.0000" class="mb-3"
+                            @focus="onFocusValue=project.dataTables.transportationData.percentageDistributionTravelDistance[countryTransform].motorbikes; $event.target.select()"
+                            @keypress.enter="$event.target.blur()"
+                            @focusout="onCellEditCompleteTransportationData(project.dataTables.transportationData.percentageDistributionTravelDistance[countryTransform].motorbikes, countryTransform, 'motorbikes')"/>
 
-                        <label for="taxiTransportationData">Taxi</label>
-                        <InputNumber id="taxiTransportationData" v-model="project.dataTables.transportationData.percentageDistributionTravelDistance[countryTransform].taxi" mode="decimal" :maxFractionDigits="4"
-                          showButtons :step="0.0001" decrementButtonClass="p-button-info"
-                          incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
-                          :allowEmpty="false" :min="0.0000" class="mb-3"
-                          @focus="onFocusValue=project.dataTables.transportationData.percentageDistributionTravelDistance[countryTransform].taxi; $event.target.select()"
-                          @keypress.enter="$event.target.blur()"
-                          @focusout="onCellEditCompleteTransportationData(project.dataTables.transportationData.percentageDistributionTravelDistance[countryTransform].taxi, countryTransform,'taxi')"/>
+                            <label for="busTransportationData">Bus</label>
+                            <InputNumber id="busTransportationData" v-model="project.dataTables.transportationData.percentageDistributionTravelDistance[countryTransform].bus" mode="decimal" :maxFractionDigits="4"
+                            showButtons :step="0.0001" decrementButtonClass="p-button-info"
+                            incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
+                            :allowEmpty="false" :min="0.0000" class="mb-3"
+                            @focus="onFocusValue=project.dataTables.transportationData.percentageDistributionTravelDistance[countryTransform].bus; $event.target.select()"
+                            @keypress.enter="$event.target.blur()"
+                            @focusout="onCellEditCompleteTransportationData(project.dataTables.transportationData.percentageDistributionTravelDistance[countryTransform].bus, countryTransform,'bus')"/>
 
-                          <label for="nationalRailTransportationData">National Rail</label>
-                        <InputNumber id="nationalRailTransportationData" v-model="project.dataTables.transportationData.percentageDistributionTravelDistance[countryTransform].nationalRail" mode="decimal" :maxFractionDigits="4"
-                          showButtons :step="0.0001" decrementButtonClass="p-button-info"
-                          incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
-                          :allowEmpty="false" :min="0.0000" class="mb-3"
-                          @focus="onFocusValue=project.dataTables.transportationData.percentageDistributionTravelDistance[countryTransform].nationalRail; $event.target.select()"
-                          @keypress.enter="$event.target.blur()"
-                          @focusout="onCellEditCompleteTransportationData(project.dataTables.transportationData.percentageDistributionTravelDistance[countryTransform].nationalRail, countryTransform, 'nationalRail')"/>
+                            <label for="taxiTransportationData">Taxi</label>
+                            <InputNumber id="taxiTransportationData" v-model="project.dataTables.transportationData.percentageDistributionTravelDistance[countryTransform].taxi" mode="decimal" :maxFractionDigits="4"
+                            showButtons :step="0.0001" decrementButtonClass="p-button-info"
+                            incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
+                            :allowEmpty="false" :min="0.0000" class="mb-3"
+                            @focus="onFocusValue=project.dataTables.transportationData.percentageDistributionTravelDistance[countryTransform].taxi; $event.target.select()"
+                            @keypress.enter="$event.target.blur()"
+                            @focusout="onCellEditCompleteTransportationData(project.dataTables.transportationData.percentageDistributionTravelDistance[countryTransform].taxi, countryTransform,'taxi')"/>
 
-                        <label for="lightRailTramUndergroundTransportationData">Light Rail/Tram/Underground </label>
-                        <InputNumber id="lightRailTramUndergroundTransportationData" v-model="project.dataTables.transportationData.percentageDistributionTravelDistance[countryTransform].lightRailTramUnderground" mode="decimal" :maxFractionDigits="4"
-                          showButtons :step="0.0001" decrementButtonClass="p-button-info"
-                          incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
-                          :allowEmpty="false" :min="0.0000" class="mb-3"
-                          @focus="onFocusValue=project.dataTables.transportationData.percentageDistributionTravelDistance[countryTransform].lightRailTramUnderground; $event.target.select()"
-                          @keypress.enter="$event.target.blur()"
-                          @focusout="onCellEditCompleteTransportationData(project.dataTables.transportationData.percentageDistributionTravelDistance[countryTransform].lightRailTramUnderground, countryTransform,'lightRailTramUnderground')"/>
+                              <label for="nationalRailTransportationData">National Rail</label>
+                            <InputNumber id="nationalRailTransportationData" v-model="project.dataTables.transportationData.percentageDistributionTravelDistance[countryTransform].nationalRail" mode="decimal" :maxFractionDigits="4"
+                            showButtons :step="0.0001" decrementButtonClass="p-button-info"
+                            incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
+                            :allowEmpty="false" :min="0.0000" class="mb-3"
+                            @focus="onFocusValue=project.dataTables.transportationData.percentageDistributionTravelDistance[countryTransform].nationalRail; $event.target.select()"
+                            @keypress.enter="$event.target.blur()"
+                            @focusout="onCellEditCompleteTransportationData(project.dataTables.transportationData.percentageDistributionTravelDistance[countryTransform].nationalRail, countryTransform, 'nationalRail')"/>
+                          </div>
 
-                        <label for="ferriesTransportationData">Ferries</label>
-                        <InputNumber id="ferriesTransportationData" v-model="project.dataTables.transportationData.percentageDistributionTravelDistance[countryTransform].ferries" mode="decimal" :maxFractionDigits="4"
-                          showButtons :step="0.0001" decrementButtonClass="p-button-info"
-                          incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
-                          :allowEmpty="false" :min="0.0000" class="mb-3"
-                          @focus="onFocusValue=project.dataTables.transportationData.percentageDistributionTravelDistance[countryTransform].ferries; $event.target.select()"
-                          @keypress.enter="$event.target.blur()"
-                          @focusout="onCellEditCompleteTransportationData(project.dataTables.transportationData.percentageDistributionTravelDistance[countryTransform].ferries, countryTransform,'ferries')"/>
+                          <div class="col-5">
+                            <label for="lightRailTramUndergroundTransportationData">Light Rail/Tram/Underground </label>
+                            <InputNumber id="lightRailTramUndergroundTransportationData" v-model="project.dataTables.transportationData.percentageDistributionTravelDistance[countryTransform].lightRailTramUnderground" mode="decimal" :maxFractionDigits="4"
+                            showButtons :step="0.0001" decrementButtonClass="p-button-info"
+                            incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
+                            :allowEmpty="false" :min="0.0000" class="mb-3"
+                            @focus="onFocusValue=project.dataTables.transportationData.percentageDistributionTravelDistance[countryTransform].lightRailTramUnderground; $event.target.select()"
+                            @keypress.enter="$event.target.blur()"
+                            @focusout="onCellEditCompleteTransportationData(project.dataTables.transportationData.percentageDistributionTravelDistance[countryTransform].lightRailTramUnderground, countryTransform,'lightRailTramUnderground')"/>
 
-                        <label for="cyclingTransportationData">Cycling</label>
-                        <InputNumber id="cyclingTransportationData" v-model="project.dataTables.transportationData.percentageDistributionTravelDistance[countryTransform].cycling" mode="decimal" :maxFractionDigits="4"
-                          showButtons :step="0.0001" decrementButtonClass="p-button-info"
-                          incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
-                          :allowEmpty="false" :min="0.0000" class="mb-3"
-                          @focus="onFocusValue=project.dataTables.transportationData.percentageDistributionTravelDistance[countryTransform].cycling; $event.target.select()"
-                          @keypress.enter="$event.target.blur()"
-                          @focusout="onCellEditCompleteTransportationData(project.dataTables.transportationData.percentageDistributionTravelDistance[countryTransform].cycling, countryTransform,'cycling')"/>
+                            <label for="ferriesTransportationData">Ferries</label>
+                            <InputNumber id="ferriesTransportationData" v-model="project.dataTables.transportationData.percentageDistributionTravelDistance[countryTransform].ferries" mode="decimal" :maxFractionDigits="4"
+                            showButtons :step="0.0001" decrementButtonClass="p-button-info"
+                            incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
+                            :allowEmpty="false" :min="0.0000" class="mb-3"
+                            @focus="onFocusValue=project.dataTables.transportationData.percentageDistributionTravelDistance[countryTransform].ferries; $event.target.select()"
+                            @keypress.enter="$event.target.blur()"
+                            @focusout="onCellEditCompleteTransportationData(project.dataTables.transportationData.percentageDistributionTravelDistance[countryTransform].ferries, countryTransform,'ferries')"/>
 
-                        <label for="walkingTransportationData">Walking</label>
-                        <InputNumber id="walkingTransportationData" v-model="project.dataTables.transportationData.percentageDistributionTravelDistance[countryTransform].walking" mode="decimal" :maxFractionDigits="4"
-                          showButtons :step="0.0001" decrementButtonClass="p-button-info"
-                          incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
-                          :allowEmpty="false" :min="0.0000" class="mb-3"
-                          @focus="onFocusValue=project.dataTables.transportationData.percentageDistributionTravelDistance[countryTransform].walking; $event.target.select()"
-                          @keypress.enter="$event.target.blur()"
-                          @focusout="onCellEditCompleteTransportationData(project.dataTables.transportationData.percentageDistributionTravelDistance[countryTransform].walking, countryTransform,'walking')"/>
+                            <label for="cyclingTransportationData">Cycling</label>
+                            <InputNumber id="cyclingTransportationData" v-model="project.dataTables.transportationData.percentageDistributionTravelDistance[countryTransform].cycling" mode="decimal" :maxFractionDigits="4"
+                            showButtons :step="0.0001" decrementButtonClass="p-button-info"
+                            incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
+                            :allowEmpty="false" :min="0.0000" class="mb-3"
+                            @focus="onFocusValue=project.dataTables.transportationData.percentageDistributionTravelDistance[countryTransform].cycling; $event.target.select()"
+                            @keypress.enter="$event.target.blur()"
+                            @focusout="onCellEditCompleteTransportationData(project.dataTables.transportationData.percentageDistributionTravelDistance[countryTransform].cycling, countryTransform,'cycling')"/>
 
-                        <label for="otherTransportationData">Other</label>
-                        <InputNumber id="otherTransportationData" v-model="project.dataTables.transportationData.percentageDistributionTravelDistance[countryTransform].other" mode="decimal" :maxFractionDigits="4"
-                          showButtons :step="0.0001" decrementButtonClass="p-button-info"
-                          incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
-                          :allowEmpty="false" :min="0.0000" class="mb-3"
-                          @focus="onFocusValue=project.dataTables.transportationData.percentageDistributionTravelDistance[countryTransform].other; $event.target.select()"
-                          @keypress.enter="$event.target.blur()"
-                          @focusout="onCellEditCompleteTransportationData(project.dataTables.transportationData.percentageDistributionTravelDistance[countryTransform].other, countryTransform,'other')"/>
+                            <label for="walkingTransportationData">Walking</label>
+                            <InputNumber id="walkingTransportationData" v-model="project.dataTables.transportationData.percentageDistributionTravelDistance[countryTransform].walking" mode="decimal" :maxFractionDigits="4"
+                            showButtons :step="0.0001" decrementButtonClass="p-button-info"
+                            incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
+                            :allowEmpty="false" :min="0.0000" class="mb-3"
+                            @focus="onFocusValue=project.dataTables.transportationData.percentageDistributionTravelDistance[countryTransform].walking; $event.target.select()"
+                            @keypress.enter="$event.target.blur()"
+                            @focusout="onCellEditCompleteTransportationData(project.dataTables.transportationData.percentageDistributionTravelDistance[countryTransform].walking, countryTransform,'walking')"/>
+
+                            <label for="otherTransportationData">Other</label>
+                            <InputNumber id="otherTransportationData" v-model="project.dataTables.transportationData.percentageDistributionTravelDistance[countryTransform].other" mode="decimal" :maxFractionDigits="4"
+                            showButtons :step="0.0001" decrementButtonClass="p-button-info"
+                            incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
+                            :allowEmpty="false" :min="0.0000" class="mb-3"
+                            @focus="onFocusValue=project.dataTables.transportationData.percentageDistributionTravelDistance[countryTransform].other; $event.target.select()"
+                            @keypress.enter="$event.target.blur()"
+                            @focusout="onCellEditCompleteTransportationData(project.dataTables.transportationData.percentageDistributionTravelDistance[countryTransform].other, countryTransform,'other')"/>
+                          </div>
+                        </div>
+
                       </div>
                     </div>
                   </div>
                 </div>
 
                 <div class="card">
-
                   <div class="p-fluid formgrid grid">
-
-                    <div class="field col-12 md:col-4" v-if="project.dataTables">
+                    <div class="field col-12" v-if="project.dataTables">
                       <div class="mb-5" v-if="project.dataTables.transportationData.percentageDistributionCarsFleet" >
-                        <h2>Percentaje Distribution Cars Fleet table data</h2>
+                        <h3>Percentage distribution (%) of cars fleet by technology (fuel) for EU</h3>
 
-                        <label for="dieselTransportationData">Diesel</label>
-                        <InputNumber id="dieselTransportationData" v-model="project.dataTables.transportationData.percentageDistributionCarsFleet.diesel" mode="decimal" :maxFractionDigits="4"
-                          showButtons :step="0.0001" decrementButtonClass="p-button-info"
-                          incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
-                          :allowEmpty="false" :min="0.0000" class="mb-3"
-                          @focus="onFocusValue=project.dataTables.transportationData.percentageDistributionCarsFleet.diesel; $event.target.select()"
-                          @keypress.enter="$event.target.blur()"
-                          @focusout="onCellEditCompleteTransportationData2(project.dataTables.transportationData.percentageDistributionCarsFleet.diesel, 'diesel')"/>
+                        <div class="flex justify-content-around">
+                          <div class="col-5">
+                            <label for="dieselTransportationData">Diesel</label>
+                            <InputNumber id="dieselTransportationData" v-model="project.dataTables.transportationData.percentageDistributionCarsFleet.diesel" mode="decimal" :maxFractionDigits="4"
+                            showButtons :step="0.0001" decrementButtonClass="p-button-info"
+                            incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
+                            :allowEmpty="false" :min="0.0000" class="mb-3"
+                            @focus="onFocusValue=project.dataTables.transportationData.percentageDistributionCarsFleet.diesel; $event.target.select()"
+                            @keypress.enter="$event.target.blur()"
+                            @focusout="onCellEditCompleteTransportationData2(project.dataTables.transportationData.percentageDistributionCarsFleet.diesel, 'diesel')"/>
 
-                        <label for="petrolTransportationData">Petrol</label>
-                        <InputNumber id="petrolTransportationData" v-model="project.dataTables.transportationData.percentageDistributionCarsFleet.petrol" mode="decimal" :maxFractionDigits="4"
-                          showButtons :step="0.0001" decrementButtonClass="p-button-info"
-                          incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
-                          :allowEmpty="false" :min="0.0000" class="mb-3"
-                          @focus="onFocusValue=project.dataTables.transportationData.percentageDistributionCarsFleet.petrol; $event.target.select()"
-                          @keypress.enter="$event.target.blur()"
-                          @focusout="onCellEditCompleteTransportationData2(project.dataTables.transportationData.percentageDistributionCarsFleet.petrol, 'petrol')"/>
-                        
-                        <label for="hybridTransportationData">Hybrid</label>
-                        <InputNumber id="hybridTransportationData" v-model="project.dataTables.transportationData.percentageDistributionCarsFleet.hybrid" mode="decimal" :maxFractionDigits="4"
-                          showButtons :step="0.0001" decrementButtonClass="p-button-info"
-                          incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
-                          :allowEmpty="false" :min="0.0000" class="mb-3"
-                          @focus="onFocusValue=project.dataTables.transportationData.percentageDistributionCarsFleet.hybrid; $event.target.select()"
-                          @keypress.enter="$event.target.blur()"
-                          @focusout="onCellEditCompleteTransportationData2(project.dataTables.transportationData.percentageDistributionCarsFleet.hybrid, 'hybrid')"/>
+                            <label for="petrolTransportationData">Petrol</label>
+                            <InputNumber id="petrolTransportationData" v-model="project.dataTables.transportationData.percentageDistributionCarsFleet.petrol" mode="decimal" :maxFractionDigits="4"
+                            showButtons :step="0.0001" decrementButtonClass="p-button-info"
+                            incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
+                            :allowEmpty="false" :min="0.0000" class="mb-3"
+                            @focus="onFocusValue=project.dataTables.transportationData.percentageDistributionCarsFleet.petrol; $event.target.select()"
+                            @keypress.enter="$event.target.blur()"
+                            @focusout="onCellEditCompleteTransportationData2(project.dataTables.transportationData.percentageDistributionCarsFleet.petrol, 'petrol')"/>
+                            
+                            <label for="hybridTransportationData">Hybrid</label>
+                            <InputNumber id="hybridTransportationData" v-model="project.dataTables.transportationData.percentageDistributionCarsFleet.hybrid" mode="decimal" :maxFractionDigits="4"
+                            showButtons :step="0.0001" decrementButtonClass="p-button-info"
+                            incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
+                            :allowEmpty="false" :min="0.0000" class="mb-3"
+                            @focus="onFocusValue=project.dataTables.transportationData.percentageDistributionCarsFleet.hybrid; $event.target.select()"
+                            @keypress.enter="$event.target.blur()"
+                            @focusout="onCellEditCompleteTransportationData2(project.dataTables.transportationData.percentageDistributionCarsFleet.hybrid, 'hybrid')"/>
 
-                        <label for="batteryElectricVehicleTransportationData">Battery Electric Vehicle</label>
-                        <InputNumber id="dieselTransportationData" v-model="project.dataTables.transportationData.percentageDistributionCarsFleet.batteryElectricVehicle" mode="decimal" :maxFractionDigits="4"
-                          showButtons :step="0.0001" decrementButtonClass="p-button-info"
-                          incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
-                          :allowEmpty="false" :min="0.0000" class="mb-3"
-                          @focus="onFocusValue=project.dataTables.transportationData.percentageDistributionCarsFleet.batteryElectricVehicle; $event.target.select()"
-                          @keypress.enter="$event.target.blur()"
-                          @focusout="onCellEditCompleteTransportationData2(project.dataTables.transportationData.percentageDistributionCarsFleet.batteryElectricVehicle, 'batteryElectricVehicle')"/>
+                            <label for="batteryElectricVehicleTransportationData">Battery Electric Vehicle</label>
+                            <InputNumber id="dieselTransportationData" v-model="project.dataTables.transportationData.percentageDistributionCarsFleet.batteryElectricVehicle" mode="decimal" :maxFractionDigits="4"
+                            showButtons :step="0.0001" decrementButtonClass="p-button-info"
+                            incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
+                            :allowEmpty="false" :min="0.0000" class="mb-3"
+                            @focus="onFocusValue=project.dataTables.transportationData.percentageDistributionCarsFleet.batteryElectricVehicle; $event.target.select()"
+                            @keypress.enter="$event.target.blur()"
+                            @focusout="onCellEditCompleteTransportationData2(project.dataTables.transportationData.percentageDistributionCarsFleet.batteryElectricVehicle, 'batteryElectricVehicle')"/>
+                          </div>
 
-                        <label for="pluginHybridElectricVehicleTransportationData">Plugin Hybrid Electric Vehicle</label>
-                        <InputNumber id="pluginHybridElectricVehicleTransportationData" v-model="project.dataTables.transportationData.percentageDistributionCarsFleet.pluginHybridElectricVehicle" mode="decimal" :maxFractionDigits="4"
-                          showButtons :step="0.0001" decrementButtonClass="p-button-info"
-                          incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
-                          :allowEmpty="false" :min="0.0000" class="mb-3"
-                          @focus="onFocusValue=project.dataTables.transportationData.percentageDistributionCarsFleet.pluginHybridElectricVehicle; $event.target.select()"
-                          @keypress.enter="$event.target.blur()"
-                          @focusout="onCellEditCompleteTransportationData2(project.dataTables.transportationData.percentageDistributionCarsFleet.pluginHybridElectricVehicle, 'pluginHybridElectricVehicle')"/>
+                          <div class="col-5">
+                            <label for="pluginHybridElectricVehicleTransportationData">Plugin Hybrid Electric Vehicle</label>
+                            <InputNumber id="pluginHybridElectricVehicleTransportationData" v-model="project.dataTables.transportationData.percentageDistributionCarsFleet.pluginHybridElectricVehicle" mode="decimal" :maxFractionDigits="4"
+                            showButtons :step="0.0001" decrementButtonClass="p-button-info"
+                            incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
+                            :allowEmpty="false" :min="0.0000" class="mb-3"
+                            @focus="onFocusValue=project.dataTables.transportationData.percentageDistributionCarsFleet.pluginHybridElectricVehicle; $event.target.select()"
+                            @keypress.enter="$event.target.blur()"
+                            @focusout="onCellEditCompleteTransportationData2(project.dataTables.transportationData.percentageDistributionCarsFleet.pluginHybridElectricVehicle, 'pluginHybridElectricVehicle')"/>
 
-                        <label for="cngTransportationData">CNG</label>
-                        <InputNumber id="cngTransportationData" v-model="project.dataTables.transportationData.percentageDistributionCarsFleet.cng" mode="decimal" :maxFractionDigits="4"
-                          showButtons :step="0.0001" decrementButtonClass="p-button-info"
-                          incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
-                          :allowEmpty="false" :min="0.0000" class="mb-3"
-                          @focus="onFocusValue=project.dataTables.transportationData.percentageDistributionCarsFleet.cng; $event.target.select()"
-                          @keypress.enter="$event.target.blur()"
-                          @focusout="onCellEditCompleteTransportationData2(project.dataTables.transportationData.percentageDistributionCarsFleet.cng, 'cng')"/>
+                            <label for="cngTransportationData">CNG</label>
+                            <InputNumber id="cngTransportationData" v-model="project.dataTables.transportationData.percentageDistributionCarsFleet.cng" mode="decimal" :maxFractionDigits="4"
+                            showButtons :step="0.0001" decrementButtonClass="p-button-info"
+                            incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
+                            :allowEmpty="false" :min="0.0000" class="mb-3"
+                            @focus="onFocusValue=project.dataTables.transportationData.percentageDistributionCarsFleet.cng; $event.target.select()"
+                            @keypress.enter="$event.target.blur()"
+                            @focusout="onCellEditCompleteTransportationData2(project.dataTables.transportationData.percentageDistributionCarsFleet.cng, 'cng')"/>
 
-                        <label for="lpgTransportationData">LPG</label>
-                        <InputNumber id="lpgTransportationData" v-model="project.dataTables.transportationData.percentageDistributionCarsFleet.lpg" mode="decimal" :maxFractionDigits="4"
-                          showButtons :step="0.0001" decrementButtonClass="p-button-info"
-                          incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
-                          :allowEmpty="false" :min="0.0000" class="mb-3"
-                          @focus="onFocusValue=project.dataTables.transportationData.percentageDistributionCarsFleet.lpg; $event.target.select()"
-                          @keypress.enter="$event.target.blur()"
-                          @focusout="onCellEditCompleteTransportationData2(project.dataTables.transportationData.percentageDistributionCarsFleet.lpg, 'lpg')"/>
-                        
-                        <label for="otherTransportationData">Other</label>
-                        <InputNumber id="otherTransportationData" v-model="project.dataTables.transportationData.percentageDistributionCarsFleet.other" mode="decimal" :maxFractionDigits="4"
-                          showButtons :step="0.0001" decrementButtonClass="p-button-info"
-                          incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
-                          :allowEmpty="false" :min="0.0000" class="mb-3"
-                          @focus="onFocusValue=project.dataTables.transportationData.percentageDistributionCarsFleet.other; $event.target.select()"
-                          @keypress.enter="$event.target.blur()"
-                          @focusout="onCellEditCompleteTransportationData2(project.dataTables.transportationData.percentageDistributionCarsFleet.other, 'other')"/>
-
+                            <label for="lpgTransportationData">LPG</label>
+                            <InputNumber id="lpgTransportationData" v-model="project.dataTables.transportationData.percentageDistributionCarsFleet.lpg" mode="decimal" :maxFractionDigits="4"
+                            showButtons :step="0.0001" decrementButtonClass="p-button-info"
+                            incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
+                            :allowEmpty="false" :min="0.0000" class="mb-3"
+                            @focus="onFocusValue=project.dataTables.transportationData.percentageDistributionCarsFleet.lpg; $event.target.select()"
+                            @keypress.enter="$event.target.blur()"
+                            @focusout="onCellEditCompleteTransportationData2(project.dataTables.transportationData.percentageDistributionCarsFleet.lpg, 'lpg')"/>
+                            
+                            <label for="otherTransportationData">Other</label>
+                            <InputNumber id="otherTransportationData" v-model="project.dataTables.transportationData.percentageDistributionCarsFleet.other" mode="decimal" :maxFractionDigits="4"
+                            showButtons :step="0.0001" decrementButtonClass="p-button-info"
+                            incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
+                            :allowEmpty="false" :min="0.0000" class="mb-3"
+                            @focus="onFocusValue=project.dataTables.transportationData.percentageDistributionCarsFleet.other; $event.target.select()"
+                            @keypress.enter="$event.target.blur()"
+                            @focusout="onCellEditCompleteTransportationData2(project.dataTables.transportationData.percentageDistributionCarsFleet.other, 'other')"/>
+                          </div>
+                        </div>
+                      </div>
                     </div>
-
-
                   </div>
-
-                </div>
-
                 </div>
                 
               </TabPanel>
@@ -1960,48 +1970,51 @@
                 <div class="card">
 
                   <div class="p-fluid formgrid grid">
-                    <div class="field col-12 md:col-4" v-if="project.dataTables">
+                    <div class="field col-12" v-if="project.dataTables">
                       <div class="mb-5" v-if="project.dataTables.materialData.percentageDistributionMaterialsUse[materialTransform]" >
-                        <h2>Percentage Distribution Materials Use</h2>
+                        <h3>Percentage distribution of materials use</h3>
 
-                        <label>Material for data tables: </label>
-                        <Dropdown class="ml-2" :options="materialsForDropdown" v-model="selectedMaterialForMaterialsData"/>
+                        <div class="flex align-items-baseline">
+                          <label class="mr-2">Data for the material:</label>
+                          <Dropdown class="mb-3" :options="materialsForDropdown" v-model="selectedMaterialForMaterialsData"/>
+                        </div>
 
-                        <label for="primaryMaterialData">Primary</label>
-                        <InputNumber id="primaryMaterialData" v-model="project.dataTables.materialData.percentageDistributionMaterialsUse[materialTransform].primary" mode="decimal" :maxFractionDigits="4"
-                          showButtons :step="0.0001" decrementButtonClass="p-button-info"
-                          incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
-                          :allowEmpty="false" :min="0.0000" class="mb-3"
-                          @focus="onFocusValue=project.dataTables.materialData.percentageDistributionMaterialsUse[materialTransform].primary; $event.target.select()"
-                          @keypress.enter="$event.target.blur()"
-                          @focusout="onCellEditCompleteMaterialsData(project.dataTables.materialData.percentageDistributionMaterialsUse[materialTransform].primary, materialTransform,'primary')"/>
-
-
-                        <label for="reusedMaterialData">Reused</label>
-                        <InputNumber id="reusedMaterialData" v-model="project.dataTables.materialData.percentageDistributionMaterialsUse[materialTransform].reused" mode="decimal" :maxFractionDigits="4"
-                          showButtons :step="0.0001" decrementButtonClass="p-button-info"
-                          incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
-                          :allowEmpty="false" :min="0.0000" class="mb-3"
-                          @focus="onFocusValue=project.dataTables.materialData.percentageDistributionMaterialsUse[materialTransform].reused; $event.target.select()"
-                          @keypress.enter="$event.target.blur()"
-                          @focusout="onCellEditCompleteMaterialsData(project.dataTables.materialData.percentageDistributionMaterialsUse[materialTransform].reused, materialTransform,'reused')"/>
-
-                        <label for="recycledMaterialData">Recycled</label>
-                        <InputNumber id="recycledMaterialData" v-model="project.dataTables.materialData.percentageDistributionMaterialsUse[materialTransform].recycled" mode="decimal" :maxFractionDigits="4"
-                          showButtons :step="0.0001" decrementButtonClass="p-button-info"
-                          incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
-                          :allowEmpty="false" :min="0.0000" class="mb-3"
-                          @focus="onFocusValue=project.dataTables.materialData.percentageDistributionMaterialsUse[materialTransform].recycled; $event.target.select()"
-                          @keypress.enter="$event.target.blur()"
-                          @focusout="onCellEditCompleteMaterialsData(project.dataTables.materialData.percentageDistributionMaterialsUse[materialTransform].recycled, materialTransform,'recycled')"/>
+                        <div class="flex justify-content-around">
+                          <div class="col-3">
+                            <label for="primaryMaterialData">Primary</label>
+                            <InputNumber id="primaryMaterialData" v-model="project.dataTables.materialData.percentageDistributionMaterialsUse[materialTransform].primary" mode="decimal" :maxFractionDigits="4"
+                            showButtons :step="0.0001" decrementButtonClass="p-button-info"
+                            incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
+                            :allowEmpty="false" :min="0.0000" class="mb-3"
+                            @focus="onFocusValue=project.dataTables.materialData.percentageDistributionMaterialsUse[materialTransform].primary; $event.target.select()"
+                            @keypress.enter="$event.target.blur()"
+                            @focusout="onCellEditCompleteMaterialsData(project.dataTables.materialData.percentageDistributionMaterialsUse[materialTransform].primary, materialTransform,'primary')"/>
+                          </div>
+                          <div class="col-3">
+                            <label for="reusedMaterialData">Reused</label>
+                            <InputNumber id="reusedMaterialData" v-model="project.dataTables.materialData.percentageDistributionMaterialsUse[materialTransform].reused" mode="decimal" :maxFractionDigits="4"
+                            showButtons :step="0.0001" decrementButtonClass="p-button-info"
+                            incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
+                            :allowEmpty="false" :min="0.0000" class="mb-3"
+                            @focus="onFocusValue=project.dataTables.materialData.percentageDistributionMaterialsUse[materialTransform].reused; $event.target.select()"
+                            @keypress.enter="$event.target.blur()"
+                            @focusout="onCellEditCompleteMaterialsData(project.dataTables.materialData.percentageDistributionMaterialsUse[materialTransform].reused, materialTransform,'reused')"/>
+                          </div>
+                          <div class="col-3">
+                            <label for="recycledMaterialData">Recycled</label>
+                            <InputNumber id="recycledMaterialData" v-model="project.dataTables.materialData.percentageDistributionMaterialsUse[materialTransform].recycled" mode="decimal" :maxFractionDigits="4"
+                            showButtons :step="0.0001" decrementButtonClass="p-button-info"
+                            incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
+                            :allowEmpty="false" :min="0.0000" class="mb-3"
+                            @focus="onFocusValue=project.dataTables.materialData.percentageDistributionMaterialsUse[materialTransform].recycled; $event.target.select()"
+                            @keypress.enter="$event.target.blur()"
+                            @focusout="onCellEditCompleteMaterialsData(project.dataTables.materialData.percentageDistributionMaterialsUse[materialTransform].recycled, materialTransform,'recycled')"/>
+                          </div>
+                        </div>
                       </div>
-
                     </div>
-
                   </div>
-
                 </div>
-                
               </TabPanel>
 
                 <!-- Pestaña de Events -->
