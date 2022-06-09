@@ -1858,12 +1858,9 @@
                           @focus="onFocusValue=project.dataTables.transportationData.percentageDistributionTravelDistance[countryTransform].other; $event.target.select()"
                           @keypress.enter="$event.target.blur()"
                           @focusout="onCellEditCompleteTransportationData(project.dataTables.transportationData.percentageDistributionTravelDistance[countryTransform].other, countryTransform,'other')"/>
-
-
+                      </div>
                     </div>
-
                   </div>
-                </div>
                 </div>
 
                 <div class="card">
@@ -1959,6 +1956,51 @@
 
               <!-- Pestaña de Materials -->
               <TabPanel header="Materials">
+
+                <div class="card">
+
+                  <div class="p-fluid formgrid grid">
+                    <div class="field col-12 md:col-4" v-if="project.dataTables">
+                      <div class="mb-5" v-if="project.dataTables.materialData.percentageDistributionMaterialsUse[materialTransform]" >
+                        <h2>Percentage Distribution Materials Use</h2>
+
+                        <label>Material for data tables: </label>
+                        <Dropdown class="ml-2" :options="materialsForDropdown" v-model="selectedMaterialForMaterialsData"/>
+
+                        <label for="primaryMaterialData">Primary</label>
+                        <InputNumber id="primaryMaterialData" v-model="project.dataTables.materialData.percentageDistributionMaterialsUse[materialTransform].primary" mode="decimal" :maxFractionDigits="4"
+                          showButtons :step="0.0001" decrementButtonClass="p-button-info"
+                          incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
+                          :allowEmpty="false" :min="0.0000" class="mb-3"
+                          @focus="onFocusValue=project.dataTables.materialData.percentageDistributionMaterialsUse[materialTransform].primary; $event.target.select()"
+                          @keypress.enter="$event.target.blur()"
+                          @focusout="onCellEditCompleteMaterialsData(project.dataTables.materialData.percentageDistributionMaterialsUse[materialTransform].primary, materialTransform,'primary')"/>
+
+
+                        <label for="reusedMaterialData">Reused</label>
+                        <InputNumber id="reusedMaterialData" v-model="project.dataTables.materialData.percentageDistributionMaterialsUse[materialTransform].reused" mode="decimal" :maxFractionDigits="4"
+                          showButtons :step="0.0001" decrementButtonClass="p-button-info"
+                          incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
+                          :allowEmpty="false" :min="0.0000" class="mb-3"
+                          @focus="onFocusValue=project.dataTables.materialData.percentageDistributionMaterialsUse[materialTransform].reused; $event.target.select()"
+                          @keypress.enter="$event.target.blur()"
+                          @focusout="onCellEditCompleteMaterialsData(project.dataTables.materialData.percentageDistributionMaterialsUse[materialTransform].reused, materialTransform,'reused')"/>
+
+                        <label for="recycledMaterialData">Recycled</label>
+                        <InputNumber id="recycledMaterialData" v-model="project.dataTables.materialData.percentageDistributionMaterialsUse[materialTransform].recycled" mode="decimal" :maxFractionDigits="4"
+                          showButtons :step="0.0001" decrementButtonClass="p-button-info"
+                          incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
+                          :allowEmpty="false" :min="0.0000" class="mb-3"
+                          @focus="onFocusValue=project.dataTables.materialData.percentageDistributionMaterialsUse[materialTransform].recycled; $event.target.select()"
+                          @keypress.enter="$event.target.blur()"
+                          @focusout="onCellEditCompleteMaterialsData(project.dataTables.materialData.percentageDistributionMaterialsUse[materialTransform].recycled, materialTransform,'recycled')"/>
+                      </div>
+
+                    </div>
+
+                  </div>
+
+                </div>
                 
               </TabPanel>
 
@@ -2064,6 +2106,8 @@ export default {
       KPI3ParamsExecution: {},
       countriesForDropdown: ["Albania", "Bosnia & Herzegovina", "Bulgaria", "Croatia", "Cyprus", "Europe", "France", "Greece", "Italy", "Malta", "Montenegro", "North Macedonia", "Portugal", "Slovenia", "Spain"],
       selectedCountryForTransportationData: "Albania",
+      materialsForDropdown: ["Glass", "Food & Drink", "Aluminium Cans", "Plastics", "Paper"],
+      selectedMaterialForMaterialsData: "Glass",
       eventTypesForDropdown: ["In presence", "Mixed", "On-line"],
       travelModesForDropdown: ["Airplane", "Bus", "Car", "Ferries", "International Rail", "Light rail and tram/Underground", "Motorbikes", "National Rail", "Taxi"],
       fuelTypesForDropdown: ["Battery electric vehicle", "CNG", "Diesel", "Hybrid", "LPG", "Other", "Petrol", "Plug-in hybrid electric vehicle"],
@@ -3448,7 +3492,26 @@ export default {
       .catch( (error) => {
         console.log("Error: ", error);
       })
-    }
+    },
+
+    onCellEditCompleteMaterialsData(newValue, material, fieldTable) {
+      // La variable isInitial la vamos a usar para saber si el valor del campo
+      // es para el proyecto en la fase inicial o si es de la fase de ejecución
+      if(newValue == this.onFocusValue) return;
+      this.project.dataTables.materialData.percentageDistributionMaterialsUse[material][fieldTable] = newValue;
+
+      axios.put('/dataTables/' + this.project._id, this.project.dataTables.materialData, {params: {
+        projectId: this.project._id,
+        dataTableName: 'material'
+      }})
+      .then( () => {
+        this.$toast.add({severity:'success', summary: 'Successful', detail: fieldTable + ' of materials data updated', life: 3000});
+      })
+      .catch( (error) => {
+        console.log("Error: ", error);
+      })
+    },
+
   },
   
   computed: {
@@ -3464,6 +3527,10 @@ export default {
     },
     countryTransform(){
       return this.selectedCountryForTransportationData.replace("&", "").toLowerCase().replace(/[^a-zA-Z0-9]+(.)/g, (m, chr) => chr.toUpperCase());
+    },
+
+    materialTransform(){
+      return this.selectedMaterialForMaterialsData.replace("&", "").toLowerCase().replace(/[^a-zA-Z0-9]+(.)/g, (m, chr) => chr.toUpperCase());
     }
   }
 }
