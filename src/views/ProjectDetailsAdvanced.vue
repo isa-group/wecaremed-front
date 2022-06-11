@@ -8,15 +8,15 @@
       <div class="card">
 
         <div style="display: flex; align-items: center; justify-content: space-between;">
-          <h2 v-if="project.isInitialProject">Project's initial data</h2>
-          <h2 v-else-if="!project.isInitialProject">Project's current data</h2>
+          <h2 v-if="project.isInitialProject">Project's base data</h2>
+          <h2 v-else-if="!project.isInitialProject">Project's monitoring period data</h2>
 
           <div style="margin: 1.5rem 0 1rem 0;">
             <div style="text-align: center">
               <h5 class="m-0 mb-2">Project data</h5>
-              <label id="app-mode-label" class="initialDataLabel">Initial</label>
+              <label id="app-mode-label" class="initialDataLabel">Base</label>
               <InputSwitch id="projectData" v-model="toggleProject" @click="toggleProjectView()" />    
-              <label id="app-mode-label" class="currentDataLabel" style="margin-left: 0.75rem; margin-right: auto;">Current</label>
+              <label id="app-mode-label" class="currentDataLabel" style="margin-left: 0.75rem; margin-right: auto;">Monitoring period</label>
             </div>
           </div>
         </div>
@@ -1571,11 +1571,11 @@
           <TabPanel v-if="!this.project.isInitialProject" header="Analysis">
             <div class="card">
 
-              <h3>Analysis of the project in preparation and execution phase</h3>
+              <h3>Analysis of the project's base and monitoring period data</h3>
 
               <div class="flex justify-content-around text-center">
                 <div class="col-6">
-                  <h4>Project in preparation phase</h4>
+                  <h4>Project base data</h4>
                   <Chart type="radar" :data="chartDataInitial" :options="chartOptions" />
 
                   <h4>Reference values for KPI-3</h4>
@@ -1665,7 +1665,7 @@
                 </div>
 
                 <div class="col-6">
-                  <h4>Project in execution phase</h4>
+                  <h4>Project monitoring period data</h4>
                   <Chart type="radar" :data="chartDataExecution" :options="chartOptions" />
                   
                   <h4>Reference values for KPI-3</h4>
