@@ -3671,7 +3671,7 @@ export default {
     },
 
     materialTransform(){
-      return this.selectedMaterialForMaterialsData.replace("&", "").toLowerCase().replace(/[^a-zA-Z0-9]+(.)/g, (m, chr) => chr.toUpperCase());
+      return this.selectedMaterialForMaterialsData.replace("&", "And").toLowerCase().replace(/[^a-zA-Z0-9]+(.)/g, (m, chr) => chr.toUpperCase());
     },
 
      eventTransform(){
