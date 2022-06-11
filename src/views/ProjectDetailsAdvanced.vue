@@ -2028,7 +2028,7 @@
                         <h3>Percentage distribution of international and national travels for events</h3>
 
                         <div class="flex align-items-baseline">
-                          <label class="mr-2">Data for the event:</label>
+                          <label class="mr-2">Data for the event type:</label>
                           <Dropdown class="mb-3" :options="eventsForDropdown" v-model="selectedEventForEventsData"/>
                         </div>
 
