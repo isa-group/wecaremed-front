@@ -1767,7 +1767,7 @@
                     <div class="field col-12" v-if="project.dataTables">
                       
                       <div class="mb-5 col-12" v-if="project.dataTables.transportationData.percentageDistributionTravelDistance[countryTransform]" >
-                        <h3>Percentage distribution of travel distance per person per day by main travel mode for urban mobility on all days (%)</h3>
+                        <h3>Percentage distribution of travels by main travel mode (%)</h3>
                         <div class="flex align-items-baseline">
                           <label class="mr-2">Transportation data for the country:</label>
                           <Dropdown class="mb-2" :options="countriesForDropdown" v-model="selectedCountryForTransportationData"/>
