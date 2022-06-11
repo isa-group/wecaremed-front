@@ -261,15 +261,15 @@
     <div class="card col-12">
 
       <div style="display: flex; align-items: center; justify-content: space-between;">
-        <h2 v-if="project.isInitialProject">Project's initial data</h2>
-        <h2 v-else-if="!project.isInitialProject">Project's current data</h2>
+        <h2 v-if="project.isInitialProject">Project's base data</h2>
+        <h2 v-else-if="!project.isInitialProject">Project's scenario data</h2>
 
         <div style="margin: 1.5rem 0 1rem 0;">
           <div style="text-align: center">
             <h5 class="m-0 mb-2">Project data</h5>
-            <label id="app-mode-label" class="initialDataLabel">Initial</label>
+            <label id="app-mode-label" class="initialDataLabel">Base</label>
             <InputSwitch id="projectData" v-model="toggleProject" @click="toggleProjectView()" />    
-            <label id="app-mode-label" class="currentDataLabel" style="margin-left: 0.75rem; margin-right: auto;">Current</label>
+            <label id="app-mode-label" class="currentDataLabel" style="margin-left: 0.75rem; margin-right: auto;">Scenario</label>
           </div>
         </div>
       </div>

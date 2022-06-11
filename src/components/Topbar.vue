@@ -33,7 +33,7 @@
                 <ul class="layout-topbar-menu lg:flex origin-top">
                     <div class="layout-topbar-menu">
                         <li>
-                            <label id="app-mode-label" for="appMode">{{appModeText}} use mode</label>
+                            <label id="app-mode-label" for="appMode">{{appModeText}} mode</label>
                             <InputSwitch id="appMode" v-model="toggleValue" @click="toggleView" />
                         </li>
                     </div>
@@ -69,7 +69,7 @@
                 
                 <div class="layout-topbar-menu">
                     <li>
-                        <label id="app-mode-label" for="appMode">{{appModeText}} use mode</label>
+                        <label id="app-mode-label" for="appMode">{{appModeText}} mode</label>
                         <InputSwitch id="appMode" v-model="toggleValue" @click="toggleView" />
                     </li>
                 </div>

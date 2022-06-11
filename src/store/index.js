@@ -6,7 +6,7 @@ export default createStore({
   state: {
     toggleValue: false,
     toggleProject: false,
-    appModeText: "Simple",
+    appModeText: "CF Design",
     selectedPartnerForEquipmentSimple: "",
     username: '',
     password: '',
@@ -35,7 +35,7 @@ export default createStore({
   mutations: {
     toggleView(state) {
       state.toggleValue = !state.toggleValue;
-      state.appModeText = state.toggleValue ? "Advanced" : "Simple"
+      state.appModeText = state.toggleValue ? "CF Monitoring" : "CF Design"
     },
     toggleValue(state){
       if (state.toggleValue) {
