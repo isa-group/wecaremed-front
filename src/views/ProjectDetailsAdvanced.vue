@@ -946,11 +946,12 @@
               </div>
             </div>
 
-            <div class="card">
+            
+            <!-- <div class="card">
               <h4>Customs</h4>
               <TabView>
                 <TabPanel header="Heat">
-                        <!-- Tabla Custom Heat emissions -->
+                        Tabla Custom Heat emissions
 
                   <h5>Additional custom defined Heat emission</h5>
 
@@ -1430,7 +1431,7 @@
                 </TabPanel>
 
               </TabView>
-            </div>
+            </div> -->
 
             <div class="card" style="display:flex; justify-content:space-around">
               <template v-if="!project.isInitialProject">
@@ -1754,7 +1755,7 @@
           </TabPanel>
 
           <!-- Pestaña de Mitigation Scenarios -->
-          <TabPanel header="Mitigation Scenarios">
+          <TabPanel header="Additional Data">
 
             <TabView>
               <!-- Pestaña de Transportation -->
@@ -1779,7 +1780,7 @@
                             <InputNumber id="carTransportationData" v-model="project.dataTables.transportationData.percentageDistributionTravelDistance[countryTransform].car" mode="decimal" :maxFractionDigits="4"
                             showButtons :step="0.0001" decrementButtonClass="p-button-info"
                             incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
-                            :allowEmpty="false" :min="0.0000" class="mb-3"
+                            :allowEmpty="false" :min="0.0000"  :max="1" class="mb-3"
                             @focus="onFocusValue=project.dataTables.transportationData.percentageDistributionTravelDistance[countryTransform].car; $event.target.select()"
                             @keypress.enter="$event.target.blur()"
                             @focusout="onCellEditCompleteTransportationData(project.dataTables.transportationData.percentageDistributionTravelDistance[countryTransform].car, countryTransform, 'car')"/>
@@ -1788,7 +1789,7 @@
                             <InputNumber id="motorbikesTransportationData" v-model="project.dataTables.transportationData.percentageDistributionTravelDistance[countryTransform].motorbikes" mode="decimal" :maxFractionDigits="4"
                             showButtons :step="0.0001" decrementButtonClass="p-button-info"
                             incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
-                            :allowEmpty="false" :min="0.0000" class="mb-3"
+                            :allowEmpty="false" :min="0.0000" :max="1" class="mb-3"
                             @focus="onFocusValue=project.dataTables.transportationData.percentageDistributionTravelDistance[countryTransform].motorbikes; $event.target.select()"
                             @keypress.enter="$event.target.blur()"
                             @focusout="onCellEditCompleteTransportationData(project.dataTables.transportationData.percentageDistributionTravelDistance[countryTransform].motorbikes, countryTransform, 'motorbikes')"/>
@@ -1797,7 +1798,7 @@
                             <InputNumber id="busTransportationData" v-model="project.dataTables.transportationData.percentageDistributionTravelDistance[countryTransform].bus" mode="decimal" :maxFractionDigits="4"
                             showButtons :step="0.0001" decrementButtonClass="p-button-info"
                             incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
-                            :allowEmpty="false" :min="0.0000" class="mb-3"
+                            :allowEmpty="false" :min="0.0000" :max="1" class="mb-3"
                             @focus="onFocusValue=project.dataTables.transportationData.percentageDistributionTravelDistance[countryTransform].bus; $event.target.select()"
                             @keypress.enter="$event.target.blur()"
                             @focusout="onCellEditCompleteTransportationData(project.dataTables.transportationData.percentageDistributionTravelDistance[countryTransform].bus, countryTransform,'bus')"/>
@@ -1806,7 +1807,7 @@
                             <InputNumber id="taxiTransportationData" v-model="project.dataTables.transportationData.percentageDistributionTravelDistance[countryTransform].taxi" mode="decimal" :maxFractionDigits="4"
                             showButtons :step="0.0001" decrementButtonClass="p-button-info"
                             incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
-                            :allowEmpty="false" :min="0.0000" class="mb-3"
+                            :allowEmpty="false" :min="0.0000" :max="1" class="mb-3"
                             @focus="onFocusValue=project.dataTables.transportationData.percentageDistributionTravelDistance[countryTransform].taxi; $event.target.select()"
                             @keypress.enter="$event.target.blur()"
                             @focusout="onCellEditCompleteTransportationData(project.dataTables.transportationData.percentageDistributionTravelDistance[countryTransform].taxi, countryTransform,'taxi')"/>
@@ -1815,7 +1816,7 @@
                             <InputNumber id="nationalRailTransportationData" v-model="project.dataTables.transportationData.percentageDistributionTravelDistance[countryTransform].nationalRail" mode="decimal" :maxFractionDigits="4"
                             showButtons :step="0.0001" decrementButtonClass="p-button-info"
                             incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
-                            :allowEmpty="false" :min="0.0000" class="mb-3"
+                            :allowEmpty="false" :min="0.0000" :max="1" class="mb-3"
                             @focus="onFocusValue=project.dataTables.transportationData.percentageDistributionTravelDistance[countryTransform].nationalRail; $event.target.select()"
                             @keypress.enter="$event.target.blur()"
                             @focusout="onCellEditCompleteTransportationData(project.dataTables.transportationData.percentageDistributionTravelDistance[countryTransform].nationalRail, countryTransform, 'nationalRail')"/>
@@ -1826,7 +1827,7 @@
                             <InputNumber id="lightRailTramUndergroundTransportationData" v-model="project.dataTables.transportationData.percentageDistributionTravelDistance[countryTransform].lightRailTramUnderground" mode="decimal" :maxFractionDigits="4"
                             showButtons :step="0.0001" decrementButtonClass="p-button-info"
                             incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
-                            :allowEmpty="false" :min="0.0000" class="mb-3"
+                            :allowEmpty="false" :min="0.0000" :max="1" class="mb-3"
                             @focus="onFocusValue=project.dataTables.transportationData.percentageDistributionTravelDistance[countryTransform].lightRailTramUnderground; $event.target.select()"
                             @keypress.enter="$event.target.blur()"
                             @focusout="onCellEditCompleteTransportationData(project.dataTables.transportationData.percentageDistributionTravelDistance[countryTransform].lightRailTramUnderground, countryTransform,'lightRailTramUnderground')"/>
@@ -1835,7 +1836,7 @@
                             <InputNumber id="ferriesTransportationData" v-model="project.dataTables.transportationData.percentageDistributionTravelDistance[countryTransform].ferries" mode="decimal" :maxFractionDigits="4"
                             showButtons :step="0.0001" decrementButtonClass="p-button-info"
                             incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
-                            :allowEmpty="false" :min="0.0000" class="mb-3"
+                            :allowEmpty="false" :min="0.0000" :max="1" class="mb-3"
                             @focus="onFocusValue=project.dataTables.transportationData.percentageDistributionTravelDistance[countryTransform].ferries; $event.target.select()"
                             @keypress.enter="$event.target.blur()"
                             @focusout="onCellEditCompleteTransportationData(project.dataTables.transportationData.percentageDistributionTravelDistance[countryTransform].ferries, countryTransform,'ferries')"/>
@@ -1844,7 +1845,7 @@
                             <InputNumber id="cyclingTransportationData" v-model="project.dataTables.transportationData.percentageDistributionTravelDistance[countryTransform].cycling" mode="decimal" :maxFractionDigits="4"
                             showButtons :step="0.0001" decrementButtonClass="p-button-info"
                             incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
-                            :allowEmpty="false" :min="0.0000" class="mb-3"
+                            :allowEmpty="false" :min="0.0000" :max="1" class="mb-3"
                             @focus="onFocusValue=project.dataTables.transportationData.percentageDistributionTravelDistance[countryTransform].cycling; $event.target.select()"
                             @keypress.enter="$event.target.blur()"
                             @focusout="onCellEditCompleteTransportationData(project.dataTables.transportationData.percentageDistributionTravelDistance[countryTransform].cycling, countryTransform,'cycling')"/>
@@ -1853,7 +1854,7 @@
                             <InputNumber id="walkingTransportationData" v-model="project.dataTables.transportationData.percentageDistributionTravelDistance[countryTransform].walking" mode="decimal" :maxFractionDigits="4"
                             showButtons :step="0.0001" decrementButtonClass="p-button-info"
                             incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
-                            :allowEmpty="false" :min="0.0000" class="mb-3"
+                            :allowEmpty="false" :min="0.0000" :max="1" class="mb-3"
                             @focus="onFocusValue=project.dataTables.transportationData.percentageDistributionTravelDistance[countryTransform].walking; $event.target.select()"
                             @keypress.enter="$event.target.blur()"
                             @focusout="onCellEditCompleteTransportationData(project.dataTables.transportationData.percentageDistributionTravelDistance[countryTransform].walking, countryTransform,'walking')"/>
@@ -1862,7 +1863,7 @@
                             <InputNumber id="otherTransportationData" v-model="project.dataTables.transportationData.percentageDistributionTravelDistance[countryTransform].other" mode="decimal" :maxFractionDigits="4"
                             showButtons :step="0.0001" decrementButtonClass="p-button-info"
                             incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
-                            :allowEmpty="false" :min="0.0000" class="mb-3"
+                            :allowEmpty="false" :min="0.0000" :max="1" class="mb-3"
                             @focus="onFocusValue=project.dataTables.transportationData.percentageDistributionTravelDistance[countryTransform].other; $event.target.select()"
                             @keypress.enter="$event.target.blur()"
                             @focusout="onCellEditCompleteTransportationData(project.dataTables.transportationData.percentageDistributionTravelDistance[countryTransform].other, countryTransform,'other')"/>
@@ -1886,7 +1887,7 @@
                             <InputNumber id="dieselTransportationData" v-model="project.dataTables.transportationData.percentageDistributionCarsFleet.diesel" mode="decimal" :maxFractionDigits="4"
                             showButtons :step="0.0001" decrementButtonClass="p-button-info"
                             incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
-                            :allowEmpty="false" :min="0.0000" class="mb-3"
+                            :allowEmpty="false" :min="0.0000" :max="1" class="mb-3"
                             @focus="onFocusValue=project.dataTables.transportationData.percentageDistributionCarsFleet.diesel; $event.target.select()"
                             @keypress.enter="$event.target.blur()"
                             @focusout="onCellEditCompleteTransportationData2(project.dataTables.transportationData.percentageDistributionCarsFleet.diesel, 'diesel')"/>
@@ -1895,7 +1896,7 @@
                             <InputNumber id="petrolTransportationData" v-model="project.dataTables.transportationData.percentageDistributionCarsFleet.petrol" mode="decimal" :maxFractionDigits="4"
                             showButtons :step="0.0001" decrementButtonClass="p-button-info"
                             incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
-                            :allowEmpty="false" :min="0.0000" class="mb-3"
+                            :allowEmpty="false" :min="0.0000" :max="1" class="mb-3"
                             @focus="onFocusValue=project.dataTables.transportationData.percentageDistributionCarsFleet.petrol; $event.target.select()"
                             @keypress.enter="$event.target.blur()"
                             @focusout="onCellEditCompleteTransportationData2(project.dataTables.transportationData.percentageDistributionCarsFleet.petrol, 'petrol')"/>
@@ -1904,7 +1905,7 @@
                             <InputNumber id="hybridTransportationData" v-model="project.dataTables.transportationData.percentageDistributionCarsFleet.hybrid" mode="decimal" :maxFractionDigits="4"
                             showButtons :step="0.0001" decrementButtonClass="p-button-info"
                             incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
-                            :allowEmpty="false" :min="0.0000" class="mb-3"
+                            :allowEmpty="false" :min="0.0000" :max="1" class="mb-3"
                             @focus="onFocusValue=project.dataTables.transportationData.percentageDistributionCarsFleet.hybrid; $event.target.select()"
                             @keypress.enter="$event.target.blur()"
                             @focusout="onCellEditCompleteTransportationData2(project.dataTables.transportationData.percentageDistributionCarsFleet.hybrid, 'hybrid')"/>
@@ -1913,7 +1914,7 @@
                             <InputNumber id="dieselTransportationData" v-model="project.dataTables.transportationData.percentageDistributionCarsFleet.batteryElectricVehicle" mode="decimal" :maxFractionDigits="4"
                             showButtons :step="0.0001" decrementButtonClass="p-button-info"
                             incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
-                            :allowEmpty="false" :min="0.0000" class="mb-3"
+                            :allowEmpty="false" :min="0.0000" :max="1" class="mb-3"
                             @focus="onFocusValue=project.dataTables.transportationData.percentageDistributionCarsFleet.batteryElectricVehicle; $event.target.select()"
                             @keypress.enter="$event.target.blur()"
                             @focusout="onCellEditCompleteTransportationData2(project.dataTables.transportationData.percentageDistributionCarsFleet.batteryElectricVehicle, 'batteryElectricVehicle')"/>
@@ -1924,7 +1925,7 @@
                             <InputNumber id="pluginHybridElectricVehicleTransportationData" v-model="project.dataTables.transportationData.percentageDistributionCarsFleet.pluginHybridElectricVehicle" mode="decimal" :maxFractionDigits="4"
                             showButtons :step="0.0001" decrementButtonClass="p-button-info"
                             incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
-                            :allowEmpty="false" :min="0.0000" class="mb-3"
+                            :allowEmpty="false" :min="0.0000" :max="1" class="mb-3"
                             @focus="onFocusValue=project.dataTables.transportationData.percentageDistributionCarsFleet.pluginHybridElectricVehicle; $event.target.select()"
                             @keypress.enter="$event.target.blur()"
                             @focusout="onCellEditCompleteTransportationData2(project.dataTables.transportationData.percentageDistributionCarsFleet.pluginHybridElectricVehicle, 'pluginHybridElectricVehicle')"/>
@@ -1933,7 +1934,7 @@
                             <InputNumber id="cngTransportationData" v-model="project.dataTables.transportationData.percentageDistributionCarsFleet.cng" mode="decimal" :maxFractionDigits="4"
                             showButtons :step="0.0001" decrementButtonClass="p-button-info"
                             incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
-                            :allowEmpty="false" :min="0.0000" class="mb-3"
+                            :allowEmpty="false" :min="0.0000" :max="1" class="mb-3"
                             @focus="onFocusValue=project.dataTables.transportationData.percentageDistributionCarsFleet.cng; $event.target.select()"
                             @keypress.enter="$event.target.blur()"
                             @focusout="onCellEditCompleteTransportationData2(project.dataTables.transportationData.percentageDistributionCarsFleet.cng, 'cng')"/>
@@ -1942,7 +1943,7 @@
                             <InputNumber id="lpgTransportationData" v-model="project.dataTables.transportationData.percentageDistributionCarsFleet.lpg" mode="decimal" :maxFractionDigits="4"
                             showButtons :step="0.0001" decrementButtonClass="p-button-info"
                             incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
-                            :allowEmpty="false" :min="0.0000" class="mb-3"
+                            :allowEmpty="false" :min="0.0000" :max="1" class="mb-3"
                             @focus="onFocusValue=project.dataTables.transportationData.percentageDistributionCarsFleet.lpg; $event.target.select()"
                             @keypress.enter="$event.target.blur()"
                             @focusout="onCellEditCompleteTransportationData2(project.dataTables.transportationData.percentageDistributionCarsFleet.lpg, 'lpg')"/>
@@ -1951,7 +1952,7 @@
                             <InputNumber id="otherTransportationData" v-model="project.dataTables.transportationData.percentageDistributionCarsFleet.other" mode="decimal" :maxFractionDigits="4"
                             showButtons :step="0.0001" decrementButtonClass="p-button-info"
                             incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
-                            :allowEmpty="false" :min="0.0000" class="mb-3"
+                            :allowEmpty="false" :min="0.0000" :max="1" class="mb-3"
                             @focus="onFocusValue=project.dataTables.transportationData.percentageDistributionCarsFleet.other; $event.target.select()"
                             @keypress.enter="$event.target.blur()"
                             @focusout="onCellEditCompleteTransportationData2(project.dataTables.transportationData.percentageDistributionCarsFleet.other, 'other')"/>
@@ -1985,7 +1986,7 @@
                             <InputNumber id="primaryMaterialData" v-model="project.dataTables.materialData.percentageDistributionMaterialsUse[materialTransform].primary" mode="decimal" :maxFractionDigits="4"
                             showButtons :step="0.0001" decrementButtonClass="p-button-info"
                             incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
-                            :allowEmpty="false" :min="0.0000" class="mb-3"
+                            :allowEmpty="false" :min="0.0000" :max="1" class="mb-3"
                             @focus="onFocusValue=project.dataTables.materialData.percentageDistributionMaterialsUse[materialTransform].primary; $event.target.select()"
                             @keypress.enter="$event.target.blur()"
                             @focusout="onCellEditCompleteMaterialsData(project.dataTables.materialData.percentageDistributionMaterialsUse[materialTransform].primary, materialTransform,'primary')"/>
@@ -1995,7 +1996,7 @@
                             <InputNumber id="reusedMaterialData" v-model="project.dataTables.materialData.percentageDistributionMaterialsUse[materialTransform].reused" mode="decimal" :maxFractionDigits="4"
                             showButtons :step="0.0001" decrementButtonClass="p-button-info"
                             incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
-                            :allowEmpty="false" :min="0.0000" class="mb-3"
+                            :allowEmpty="false" :min="0.0000" :max="1" class="mb-3"
                             @focus="onFocusValue=project.dataTables.materialData.percentageDistributionMaterialsUse[materialTransform].reused; $event.target.select()"
                             @keypress.enter="$event.target.blur()"
                             @focusout="onCellEditCompleteMaterialsData(project.dataTables.materialData.percentageDistributionMaterialsUse[materialTransform].reused, materialTransform,'reused')"/>
@@ -2005,7 +2006,7 @@
                             <InputNumber id="recycledMaterialData" v-model="project.dataTables.materialData.percentageDistributionMaterialsUse[materialTransform].recycled" mode="decimal" :maxFractionDigits="4"
                             showButtons :step="0.0001" decrementButtonClass="p-button-info"
                             incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
-                            :allowEmpty="false" :min="0.0000" class="mb-3"
+                            :allowEmpty="false" :min="0.0000" :max="1" class="mb-3"
                             @focus="onFocusValue=project.dataTables.materialData.percentageDistributionMaterialsUse[materialTransform].recycled; $event.target.select()"
                             @keypress.enter="$event.target.blur()"
                             @focusout="onCellEditCompleteMaterialsData(project.dataTables.materialData.percentageDistributionMaterialsUse[materialTransform].recycled, materialTransform,'recycled')"/>
@@ -2038,7 +2039,7 @@
                             <InputNumber id="carEventData" v-model="project.dataTables.eventsData.percentageDistributionInternationalNationalTravels[eventTransform].car" mode="decimal" :maxFractionDigits="4"
                             showButtons :step="0.0001" decrementButtonClass="p-button-info"
                             incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
-                            :allowEmpty="false" :min="0.0000" class="mb-3"
+                            :allowEmpty="false" :min="0.0000" :max="1" class="mb-3"
                             @focus="onFocusValue=project.dataTables.eventsData.percentageDistributionInternationalNationalTravels[eventTransform].car; $event.target.select()"
                             @keypress.enter="$event.target.blur()"
                             @focusout="onCellEditCompleteEventsData(project.dataTables.eventsData.percentageDistributionInternationalNationalTravels[eventTransform].car, eventTransform,'car')"/>
@@ -2048,7 +2049,7 @@
                             <InputNumber id="motorbikesEventData" v-model="project.dataTables.eventsData.percentageDistributionInternationalNationalTravels[eventTransform].motorbikes" mode="decimal" :maxFractionDigits="4"
                             showButtons :step="0.0001" decrementButtonClass="p-button-info"
                             incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
-                            :allowEmpty="false" :min="0.0000" class="mb-3"
+                            :allowEmpty="false" :min="0.0000" :max="1" class="mb-3"
                             @focus="onFocusValue=project.dataTables.eventsData.percentageDistributionInternationalNationalTravels[eventTransform].motorbikes; $event.target.select()"
                             @keypress.enter="$event.target.blur()"
                             @focusout="onCellEditCompleteEventsData(project.dataTables.eventsData.percentageDistributionInternationalNationalTravels[eventTransform].motorbikes, eventTransform,'motorbikes')"/>                          </div>
@@ -2057,7 +2058,7 @@
                             <InputNumber id="busEventData" v-model="project.dataTables.eventsData.percentageDistributionInternationalNationalTravels[eventTransform].bus" mode="decimal" :maxFractionDigits="4"
                             showButtons :step="0.0001" decrementButtonClass="p-button-info"
                             incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
-                            :allowEmpty="false" :min="0.0000" class="mb-3"
+                            :allowEmpty="false" :min="0.0000" :max="1" class="mb-3"
                             @focus="onFocusValue=project.dataTables.eventsData.percentageDistributionInternationalNationalTravels[eventTransform].bus; $event.target.select()"
                             @keypress.enter="$event.target.blur()"
                             @focusout="onCellEditCompleteEventsData(project.dataTables.eventsData.percentageDistributionInternationalNationalTravels[eventTransform].bus, eventTransform,'bus')"/>
@@ -2068,7 +2069,7 @@
                             <InputNumber id="nationalRailEventData" v-model="project.dataTables.eventsData.percentageDistributionInternationalNationalTravels[eventTransform].nationalRail" mode="decimal" :maxFractionDigits="4"
                             showButtons :step="0.0001" decrementButtonClass="p-button-info"
                             incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
-                            :allowEmpty="false" :min="0.0000" class="mb-3"
+                            :allowEmpty="false" :min="0.0000" :max="1" class="mb-3"
                             @focus="onFocusValue=project.dataTables.eventsData.percentageDistributionInternationalNationalTravels[eventTransform].nationalRail; $event.target.select()"
                             @keypress.enter="$event.target.blur()"
                             @focusout="onCellEditCompleteEventsData(project.dataTables.eventsData.percentageDistributionInternationalNationalTravels[eventTransform].nationalRail, eventTransform,'nationalRail')"/>
@@ -2082,7 +2083,7 @@
                             <InputNumber id="internationalRailEventData" v-model="project.dataTables.eventsData.percentageDistributionInternationalNationalTravels[eventTransform].internationalRail" mode="decimal" :maxFractionDigits="4"
                             showButtons :step="0.0001" decrementButtonClass="p-button-info"
                             incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
-                            :allowEmpty="false" :min="0.0000" class="mb-3"
+                            :allowEmpty="false" :min="0.0000" :max="1" class="mb-3"
                             @focus="onFocusValue=project.dataTables.eventsData.percentageDistributionInternationalNationalTravels[eventTransform].internationalRail; $event.target.select()"
                             @keypress.enter="$event.target.blur()"
                             @focusout="onCellEditCompleteEventsData(project.dataTables.eventsData.percentageDistributionInternationalNationalTravels[eventTransform].internationalRail, eventTransform,'internationalRail')"/>
@@ -2093,7 +2094,7 @@
                             <InputNumber id="ferriesEventData" v-model="project.dataTables.eventsData.percentageDistributionInternationalNationalTravels[eventTransform].ferries" mode="decimal" :maxFractionDigits="4"
                             showButtons :step="0.0001" decrementButtonClass="p-button-info"
                             incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
-                            :allowEmpty="false" :min="0.0000" class="mb-3"
+                            :allowEmpty="false" :min="0.0000" :max="1" class="mb-3"
                             @focus="onFocusValue=project.dataTables.eventsData.percentageDistributionInternationalNationalTravels[eventTransform].ferries; $event.target.select()"
                             @keypress.enter="$event.target.blur()"
                             @focusout="onCellEditCompleteEventsData(project.dataTables.eventsData.percentageDistributionInternationalNationalTravels[eventTransform].ferries, eventTransform,'ferries')"/>
@@ -2104,7 +2105,7 @@
                             <InputNumber id="busEventData" v-model="project.dataTables.eventsData.percentageDistributionInternationalNationalTravels[eventTransform].airplanes" mode="decimal" :maxFractionDigits="4"
                             showButtons :step="0.0001" decrementButtonClass="p-button-info"
                             incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
-                            :allowEmpty="false" :min="0.0000" class="mb-3"
+                            :allowEmpty="false" :min="0.0000" :max="1" class="mb-3"
                             @focus="onFocusValue=project.dataTables.eventsData.percentageDistributionInternationalNationalTravels[eventTransform].airplanes; $event.target.select()"
                             @keypress.enter="$event.target.blur()"
                             @focusout="onCellEditCompleteEventsData(project.dataTables.eventsData.percentageDistributionInternationalNationalTravels[eventTransform].airplanes, eventTransform,'airplanes')"/>
@@ -2115,7 +2116,7 @@
                             <InputNumber id="otherEventData" v-model="project.dataTables.eventsData.percentageDistributionInternationalNationalTravels[eventTransform].other" mode="decimal" :maxFractionDigits="4"
                             showButtons :step="0.0001" decrementButtonClass="p-button-info"
                             incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
-                            :allowEmpty="false" :min="0.0000" class="mb-3"
+                            :allowEmpty="false" :min="0.0000" :max="1" class="mb-3"
                             @focus="onFocusValue=project.dataTables.eventsData.percentageDistributionInternationalNationalTravels[eventTransform].other; $event.target.select()"
                             @keypress.enter="$event.target.blur()"
                             @focusout="onCellEditCompleteEventsData(project.dataTables.eventsData.percentageDistributionInternationalNationalTravels[eventTransform].other, eventTransform,'other')"/>
@@ -2413,6 +2414,11 @@ export default {
     round(num) {
       return Math.round((num + Number.EPSILON) * 100) / 100
     },
+
+    round4Decimals(num) {
+      return Math.round((num + Number.EPSILON) * 10000) / 10000
+    },
+
     generatePDF() {
       var html = htmlToPdfmake(document.getElementById('pdfPrintDiv').innerHTML);
       const documentDefinition = { content: html, pageOrientation: 'landscape' };
@@ -3587,12 +3593,23 @@ export default {
       if(newValue == this.onFocusValue) return;
       this.project.dataTables.transportationData.percentageDistributionTravelDistance[country][fieldTable] = newValue;
 
+      let sum = 0;
+
+      for(let field of Object.values(this.project.dataTables.transportationData.percentageDistributionTravelDistance[country])){
+        sum += field;
+      }
+
+
+      if(this.round4Decimals(sum) != 1) {
+        this.$toast.add({severity:'warn', summary: 'Warning', detail: 'Sum of the values of the table is not equal to 1, it is: ' + this.round4Decimals(sum), life: 3000});
+      }
+
       axios.put('/dataTables/' + this.project._id, this.project.dataTables.transportationData, {params: {
         projectId: this.project._id,
         dataTableName: 'transportation'
       }})
       .then( () => {
-        this.$toast.add({severity:'success', summary: 'Successful', detail: fieldTable + ' of transportation data updated', life: 3000});
+        this.$toast.add({severity:'success', summary: 'Successful', detail: 'Percentage distribution of travels updated', life: 3000});
       })
       .catch( (error) => {
         console.log("Error: ", error);
@@ -3605,12 +3622,23 @@ export default {
       if(newValue == this.onFocusValue) return;
       this.project.dataTables.transportationData.percentageDistributionCarsFleet[fieldTable] = newValue;
 
+           let sum = 0;
+
+      for(let field of  Object.values(this.project.dataTables.transportationData.percentageDistributionCarsFleet)){
+        sum += field;
+      }
+
+      if(this.round4Decimals(sum) != 1) {
+        this.$toast.add({severity:'warn', summary: 'Warning', detail: 'Sum of the values of the table is not equal to 1, it is: ' + this.round4Decimals(sum), life: 3000});
+      }
+
+
       axios.put('/dataTables/' + this.project._id, this.project.dataTables.transportationData, {params: {
         projectId: this.project._id,
         dataTableName: 'transportation'
       }})
       .then( () => {
-        this.$toast.add({severity:'success', summary: 'Successful', detail: fieldTable + ' of transportation data updated', life: 3000});
+        this.$toast.add({severity:'success', summary: 'Successful', detail: 'Percentage distribution of cars fleet updated', life: 3000});
       })
       .catch( (error) => {
         console.log("Error: ", error);
@@ -3623,12 +3651,23 @@ export default {
       if(newValue == this.onFocusValue) return;
       this.project.dataTables.materialData.percentageDistributionMaterialsUse[material][fieldTable] = newValue;
 
+           let sum = 0;
+
+      for(let field of  Object.values(this.project.dataTables.materialData.percentageDistributionMaterialsUse[material])){
+        sum += field;
+      }
+
+      if(this.round4Decimals(sum) != 1) {
+        this.$toast.add({severity:'warn', summary: 'Warning', detail: 'Sum of the values of the table is not equal to 1, it is: ' + this.round4Decimals(sum), life: 3000});
+      }
+
+
       axios.put('/dataTables/' + this.project._id, this.project.dataTables.materialData, {params: {
         projectId: this.project._id,
         dataTableName: 'material'
       }})
       .then( () => {
-        this.$toast.add({severity:'success', summary: 'Successful', detail: fieldTable + ' of materials data updated', life: 3000});
+        this.$toast.add({severity:'success', summary: 'Successful', detail: 'Percentage distribution of materials use updated', life: 3000});
       })
       .catch( (error) => {
         console.log("Error: ", error);
@@ -3641,12 +3680,23 @@ export default {
       if(newValue == this.onFocusValue) return;
       this.project.dataTables.eventsData.percentageDistributionInternationalNationalTravels[event][fieldTable] = newValue;
 
+      let sum = 0;
+
+      for(let field of Object.values(this.project.dataTables.eventsData.percentageDistributionInternationalNationalTravels[event])){
+        sum += field;
+      }
+
+      if(this.round4Decimals(sum) != 1) {
+        this.$toast.add({severity:'warn', summary: 'Warning', detail: 'Sum of the values of the table is not equal to 1, it is: ' + this.round4Decimals(sum), life: 3000});
+      }
+
+
       axios.put('/dataTables/' + this.project._id, this.project.dataTables.eventsData, {params: {
         projectId: this.project._id,
         dataTableName: 'events'
       }})
       .then( () => {
-        this.$toast.add({severity:'success', summary: 'Successful', detail: fieldTable + ' of materials data updated', life: 3000});
+        this.$toast.add({severity:'success', summary: 'Successful', detail: 'Percentage distribution of travels updated', life: 3000});
       })
       .catch( (error) => {
         console.log("Error: ", error);
