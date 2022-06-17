@@ -867,10 +867,10 @@
           <div class="card col-12" style="display:flex; justify-content:space-around">
             <template v-if="!this.project.isInitialProject" >
               <Button  label="Save all" @click="saveCurrentProject" />
-              <!-- <Button  label="Update current values as initial values" @click="displayUpdateInitialValuesDialog" /> -->      
             </template>
             <template v-else-if="this.project.isInitialProject">
-              <Button label="Save all" @click="displayUpdateInitialValuesDialog" />
+              <Button label="Save all" @click="saveCurrentProject" />
+              <Button  label="Save Base data as scenario data" @click="displayUpdateScenarioValuesDialog" />    
             </template>
           </div>
           
@@ -980,16 +980,16 @@
             </div>
           </div>
 
-          <Dialog header="Warning" v-model:visible="displayUpdateInitialValues" class="col-4" :modal="true">
+          <Dialog header="Warning" v-model:visible="displayUpdateScenarioValues" class="col-4" :modal="true">
               <div class="flex align-items-center  pb-5">
                   <i class="pi pi-exclamation-triangle mr-3" style="font-size: 2rem" />
                   <div>
-                    <p>The values of the project will be updated in it's initial phase, are you sure?</p>
+                    <p>The values of the project in base phase will be updated in the scenario phase, are you sure?</p>
                   </div>
               </div>
               <template #footer>
-                  <Button label="Cancel" @click="declineUpdateInitialValuesDialog" class="p-button-text p-button-info" />
-                  <Button label="Ok" @click="confirmUpdateInitialValuesDialog" class="p-button-text p-button-info" /> 
+                  <Button label="Cancel" @click="declineUpdateScenarioValuesDialog" class="p-button-text p-button-info" />
+                  <Button label="Ok" @click="confirmUpdateScenarioValuesDialog" class="p-button-text p-button-info" /> 
               </template>
           </Dialog>
 
@@ -1479,7 +1479,7 @@ export default {
       partnersWithDefaultValues: [],
       displayPartnersError: false,
       isInitialProject: false,
-      displayUpdateInitialValues: false
+      displayUpdateScenarioValues: false
     }
   },
   created() {
@@ -1516,8 +1516,8 @@ export default {
     displayPartnersErrorDialog() {
       this.displayPartnersError = true;
     },
-    displayUpdateInitialValuesDialog() {
-      this.displayUpdateInitialValues = true;
+    displayUpdateScenarioValuesDialog() {
+      this.displayUpdateScenarioValues = true;
     },
     closePartnersWithoutCountryErrorDialog() {
       this.displayPartnersError = false;
@@ -1526,17 +1526,18 @@ export default {
       this.partnersWithoutCountry = []
       this.partnersWithDefaultValues = [];
     },
-    confirmUpdateInitialValuesDialog() {
-      this.displayUpdateInitialValues = false;
-      this.saveCurrentProject();
+    confirmUpdateScenarioValuesDialog() {
+      this.displayUpdateScenarioValues = false;
+      this.updateScenarioValues();
+      // this.saveCurrentProject();
       // if(this.project.isInitialProject) {
-      //   this.saveCurrentProject();
+      //   this.updateScenarioValues();
       // } else {
-      //   this.updateInitialValues();
+      //   this.saveCurrentProject();
       // }
     },
-    declineUpdateInitialValuesDialog() {
-      this.displayUpdateInitialValues = false;
+    declineUpdateScenarioValuesDialog() {
+      this.displayUpdateScenarioValues = false;
     },
     calculateCF() {
       
@@ -1991,115 +1992,131 @@ export default {
           console.log(error)
        })
     },
-    // updateInitialValues(){
-    //   if(this.project.isInitialProject){
-    //     this.saveCurrentProject();
-    //   } else {
-    //     axios.delete('/projects/' + this.project.initialProject)
-    //     .then(() => {
-    //       let newInitialProject = Object.assign({}, this.project);
-    //       newInitialProject.isInitialProject = new Boolean(true);
-    //       newInitialProject._id = this.project.initialProject;
-    //       newInitialProject.initialProject = this.project._id;
+    updateScenarioValues(){
 
-    //       for(let partner of newInitialProject.partners){
-    //         partner.project = this.project.initialProject;
-    //       }
+      // Para entender bien la lógicq debemos recordar que initialProject es el proyecto en fase Base
 
-    //       for(let pd of newInitialProject.printableDeliverables) {
-    //         pd.project = this.project.initialProject;
-    //       }
+      // Eliminamos el proyecto en etapa Scenario
+      axios.delete('/projects/' + this.project.initialProject)
+        .then(() => {
+          
+          // Aquí, creamos una copia del proyecto en la etapa Base para la fase Scenario
+          let newScenarioProject = Object.assign({}, this.project);
+          // Aquí ponemos que no es initial, ya que la propiedad isInitial es true si es el proyecto en fase Base
+          newScenarioProject.isInitialProject = new Boolean(false);
+          newScenarioProject._id = this.project.initialProject;
+          newScenarioProject.initialProject = this.project._id;
 
-    //       axios.post('/projects', newInitialProject,{
-    //       auth: {
-    //           username: this.$store.state.username,
-    //           password: this.$store.state.password
-    //         }
-    //       })
-    //       .then( () => {
-    //         for (let pd of newInitialProject.printableDeliverables){
-    //           pd._id = new Mongoose.Types.ObjectId();
-    //           this.axios.post('/printableDeliverables', pd)
-    //           .catch((e)=>{
-    //             console.log('error' + e);
-    //           })
-    //         }
+          // A cada partner que tiene la copia de Base, ahora le asignamos el ID del proyecto Scenario
+          for(let partner of newScenarioProject.partners){
+            partner.project = this.project.initialProject;
+          }
 
-    //         for(let partner of newInitialProject.partners) {
-    //           partner._id = new Mongoose.Types.ObjectId();
-    //           this.axios.post('/partners', partner)
-    //           .catch((e)=>{
-    //             console.log('error' + e);
-    //           })
-    //         }
-    //         this.$toast.add({severity:'success', summary: 'Successful', detail: 'All Printable deliverables saved', life: 3000});
-    //         this.$toast.add({severity:'success', summary: 'Successful', detail: 'All Partners saved', life: 3000});
+          // Ídem para los Printable Deliverables
+          for(let pd of newScenarioProject.printableDeliverables) {
+            pd.project = this.project.initialProject;
+          }
+
+          // Guardamos el nuevo proyecto en fase Scenario, que tendrá los mismos valores que el proyecto en Base
+          axios.post('/projects', newScenarioProject,{
+          auth: {
+              username: this.$store.state.username,
+              password: this.$store.state.password
+            }
+          })
+          .then( () => {
+
+            // Aquí, lo que hacemos es guardar cada nuevo Printable Deliverable copia del Base con un ID nuevo propio, pero
+            // que ya tiene asociado el ID del proyecto en fase Scenario
+            for (let pd of newScenarioProject.printableDeliverables){
+              pd._id = new Mongoose.Types.ObjectId();
+              this.axios.post('/printableDeliverables', pd)
+              .catch((e)=>{
+                console.log('error' + e);
+              })
+            }
+
+            // Ídem para Partners
+            for(let partner of newScenarioProject.partners) {
+              partner._id = new Mongoose.Types.ObjectId();
+              this.axios.post('/partners', partner)
+              .catch((e)=>{
+                console.log('error' + e);
+              })
+            }
+            this.$toast.add({severity:'success', summary: 'Successful', detail: 'All Printable deliverables saved', life: 3000});
+            this.$toast.add({severity:'success', summary: 'Successful', detail: 'All Partners saved', life: 3000});
             
-    //       })
-    //       .catch( (error) => {
-    //         console.log('error', error);
-    //       })
-    //       axios.get('/customs?projectId=' + this.project._id, { params: {
-    //           projectId: this.project._id
-    //         }
-    //       })
-    //       .then( (response) => {
-    //         this.project.customs = response.data;
-    //         for(let custom of this.project.customs) {
-    //           custom._id = new Mongoose.Types.ObjectId();
-    //           custom.project = this.project.initialProject;
+          })
+          .catch( (error) => {
+            console.log('error', error);
+          })
 
-    //           this.axios.post('/customs', custom)
-    //           .catch((e)=>{
-    //             console.log('error' + e);
-    //           })
-    //         }
-    //         this.$toast.add({severity:'success', summary: 'Successful', detail: 'All Customs saved', life: 3000});
-    //       })
-    //       .catch((e)=>{
-    //         console.log('error' + e);
-    //       })
+          // Nos traemos de la BD todos los customs aosicados al proyecto en fase Base
+          axios.get('/customs?projectId=' + this.project._id, { params: {
+              projectId: this.project._id
+            }
+          })
+          .then( (response) => {
+            this.project.customs = response.data;
 
-    //       this.axios.get(`/externalExperts?projectId=` + this.project._id)
-    //       .then((response) => {
-    //         this.project.externalExperts = response.data;
-    //         for(let externalExpert of response.data) {
-    //           externalExpert._id = new Mongoose.Types.ObjectId();
-    //           externalExpert.project = this.project.initialProject;
-    //           axios.post('/externalExperts', externalExpert)
-    //           .catch((e)=>{
-    //             console.log('error' + e);
-    //           })
-    //         }
-    //         this.$toast.add({severity:'success', summary: 'Successful', detail: 'All external experts saved', life: 3000});
-    //       })
-    //       .catch((e)=>{
-    //         console.log('error' + e);
-    //       })
+            // Asociamos a cada custom un nuevo ID y les asociamos el ID del proyecto nuevo Scenario
+            for(let custom of this.project.customs) {
+              custom._id = new Mongoose.Types.ObjectId();
+              custom.project = this.project.initialProject;
 
-    //       this.axios.get(`/events?projectId=` + this.project._id)
-    //       .then((response) => {
+              this.axios.post('/customs', custom)
+              .catch((e)=>{
+                console.log('error' + e);
+              })
+            }
+            this.$toast.add({severity:'success', summary: 'Successful', detail: 'All Customs saved', life: 3000});
+          })
+          .catch((e)=>{
+            console.log('error' + e);
+          })
+
+          // Ídem para los external experts
+          this.axios.get(`/externalExperts?projectId=` + this.project._id)
+          .then((response) => {
+            this.project.externalExperts = response.data;
+            for(let externalExpert of response.data) {
+              externalExpert._id = new Mongoose.Types.ObjectId();
+              externalExpert.project = this.project.initialProject;
+              axios.post('/externalExperts', externalExpert)
+              .catch((e)=>{
+                console.log('error' + e);
+              })
+            }
+            this.$toast.add({severity:'success', summary: 'Successful', detail: 'All external experts saved', life: 3000});
+          })
+          .catch((e)=>{
+            console.log('error' + e);
+          })
+
+          // Ídem para los events
+          this.axios.get(`/events?projectId=` + this.project._id)
+          .then((response) => {
             
-    //       for(let event of response.data) {
-    //           event._id = new Mongoose.Types.ObjectId();
-    //           event.project = this.project.initialProject;
+          for(let event of response.data) {
+              event._id = new Mongoose.Types.ObjectId();
+              event.project = this.project.initialProject;
 
-    //           axios.post('/events', event)
-    //           .catch((e)=>{
-    //             console.log('error' + e);
-    //           })
-    //         }
-    //       this.$toast.add({severity:'success', summary: 'Successful', detail: 'All events saved', life: 3000});
-    //       })
-    //       .catch((e)=>{
-    //         console.log('error' + e);
-    //       })
-    //     })
-    //     .catch((e)=>{
-    //       console.log('error' + e);
-    //     })
-    //   }
-    // },
+              axios.post('/events', event)
+              .catch((e)=>{
+                console.log('error' + e);
+              })
+            }
+          this.$toast.add({severity:'success', summary: 'Successful', detail: 'All events saved', life: 3000});
+          })
+          .catch((e)=>{
+            console.log('error' + e);
+          })
+        })
+        .catch((e)=>{
+          console.log('error' + e);
+        })
+    },
     toggleProjectView() {
       this.$store.commit("toggleProject");
       location.href = '/projects/' + this.project.initialProject
