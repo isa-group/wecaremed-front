@@ -326,7 +326,7 @@
                     <td :class="slotProps.data[slotProps.field] == 'New partner' ? 'defaultValue' : ''" style="display:block;">{{slotProps.data[slotProps.field]}}</td>
                   </template>
                   <template #editor="slotProps">
-                      <InputText v-model="slotProps.data[slotProps.field]" @focus="$event.target.select()"/>
+                      <InputText v-model="slotProps.data[slotProps.field]" @focus="$event.target.select()" @focusout="savePartners"/>
                   </template>
                 </Column>
 
@@ -335,7 +335,7 @@
                     <td :class="slotProps.data[slotProps.field] == 'Select a country' ? 'defaultValue' : ''" style="display:block;">{{slotProps.data[slotProps.field]}}</td>
                   </template>
                   <template #editor="slotProps">
-                    <Dropdown :options="countriesForDropdown" v-model="slotProps.data[slotProps.field]" />
+                    <Dropdown :options="countriesForDropdown" v-model="slotProps.data[slotProps.field]" @focusout="savePartners"/>
                   </template>
                 </Column>
 
@@ -344,7 +344,7 @@
                     <InputNumber v-model="slotProps.data[slotProps.field]" mode="decimal" :maxFractionDigits="3"
                     showButtons :step="0.25" decrementButtonClass="p-button-info"
                     incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
-                    :allowEmpty="false" :min="0" @focus="$event.target.select()" />
+                    :allowEmpty="false" :min="0" @focus="$event.target.select()" @focusout="savePartners"/>
                   </template>
                 </Column>
 
@@ -352,7 +352,7 @@
                   <template #editor="slotProps">
                     <InputNumber v-model="slotProps.data[slotProps.field]" mode="decimal" showButtons decrementButtonClass="p-button-info"
                     incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
-                    :allowEmpty="false" :min="0" @focus="$event.target.select()" />
+                    :allowEmpty="false" :min="0" @focus="$event.target.select()" @focusout="savePartners"/>
                   </template>
                 </Column>
 
@@ -402,7 +402,7 @@
                     <td :class="slotProps.data[slotProps.field] == 'New external expert' ? 'defaultValue' : ''" style="display:block;">{{slotProps.data[slotProps.field]}}</td>
                   </template>
                   <template #editor="slotProps">
-                      <InputText v-model="slotProps.data[slotProps.field]" @focus="$event.target.select()"/>
+                      <InputText v-model="slotProps.data[slotProps.field]" @focus="$event.target.select()" @focusout="saveExternalExperts"/>
                   </template>
                 </Column>
 
@@ -411,7 +411,7 @@
                     <td :class="slotProps.data[slotProps.field] == 'Select a country' ? 'defaultValue' : ''" style="display:block;">{{slotProps.data[slotProps.field]}}</td>
                   </template>
                   <template #editor="slotProps">
-                    <Dropdown :options="countriesForDropdown" v-model="slotProps.data[slotProps.field]" />
+                    <Dropdown :options="countriesForDropdown" v-model="slotProps.data[slotProps.field]" @focusout="saveExternalExperts"/>
                   </template>
                 </Column>
 
@@ -420,7 +420,7 @@
                     <InputNumber v-model="slotProps.data[slotProps.field]" mode="decimal" :maxFractionDigits="3"
                     showButtons :step="0.25" decrementButtonClass="p-button-info"
                     incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
-                    :allowEmpty="false" :min="0" @focus="$event.target.select()" />
+                    :allowEmpty="false" :min="0" @focus="$event.target.select()" @focusout="saveExternalExperts"/>
                   </template>
                 </Column>
 
@@ -428,7 +428,7 @@
                   <template #editor="slotProps">
                     <InputNumber v-model="slotProps.data[slotProps.field]" mode="decimal" showButtons decrementButtonClass="p-button-info"
                     incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
-                    :allowEmpty="false" :min="0" @focus="$event.target.select()" />
+                    :allowEmpty="false" :min="0" @focus="$event.target.select()" @focusout="saveExternalExperts"/>
                   </template>
                 </Column>
 
@@ -556,7 +556,7 @@
                           <td :class="slotProps.data[slotProps.field] == 'New event' ? 'defaultValue' : ''" style="display:block;">{{slotProps.data[slotProps.field]}}</td>
                         </template>
                         <template #editor="slotProps">
-                            <InputText v-model="slotProps.data[slotProps.field]" @focus="$event.target.select()"/>
+                            <InputText v-model="slotProps.data[slotProps.field]" @focus="$event.target.select()" @focusout="saveEvents"/>
                         </template>
                       </Column>
 
@@ -565,7 +565,7 @@
                           <td :class="slotProps.data[slotProps.field] == 'Select a type' ? 'defaultValue' : ''" style="display:block;">{{slotProps.data[slotProps.field]}}</td>
                         </template>
                         <template #editor="slotProps">
-                          <Dropdown :options="eventTypesForDropdown" v-model="slotProps.data[slotProps.field]" />
+                          <Dropdown :options="eventTypesForDropdown" v-model="slotProps.data[slotProps.field]" @focusout="saveEvents"/>
                         </template>
                       </Column>
 
@@ -578,7 +578,8 @@
                         <template #editor="slotProps">
                           <InputNumber v-model="slotProps.data[slotProps.field]" mode="decimal" showButtons decrementButtonClass="p-button-info"
                           incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
-                          :allowEmpty="false" :min="0" @focus="$event.target.select()" :disabled="slotProps.data['type'] !== 'On-line' ? false : true" />
+                          :allowEmpty="false" :min="0" @focus="$event.target.select()" :disabled="slotProps.data['type'] !== 'On-line' ? false : true" 
+                          @focusout="saveEvents"/>
                         </template>
                       </Column>
 
@@ -591,7 +592,8 @@
                         <template #editor="slotProps">
                           <InputNumber v-model="slotProps.data[slotProps.field]"  mode="decimal" showButtons decrementButtonClass="p-button-info"
                           incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
-                          :allowEmpty="false" :min="0" @focus="$event.target.select()" :disabled="slotProps.data['type'] !== 'On-line' ? false : true"  />
+                          :allowEmpty="false" :min="0" @focus="$event.target.select()" :disabled="slotProps.data['type'] !== 'On-line' ? false : true"  
+                          @focusout="saveEvents"/>
                         </template>
                       </Column>
 
@@ -604,7 +606,8 @@
                         <template #editor="slotProps" class="p-field">
                           <InputNumber v-model="slotProps.data[slotProps.field]" mode="decimal" showButtons decrementButtonClass="p-button-info"
                           incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
-                          :allowEmpty="false" :min="0" @focus="$event.target.select()" :disabled="slotProps.data['type'] !== 'In presence' ? false : true"/>
+                          :allowEmpty="false" :min="0" @focus="$event.target.select()" :disabled="slotProps.data['type'] !== 'In presence' ? false : true"
+                          @focusout="saveEvents"/>
                         </template>
                       </Column>
 
@@ -617,7 +620,7 @@
                           <InputNumber v-model="slotProps.data[slotProps.field]" mode="decimal" :maxFractionDigits="3"
                           showButtons :step="0.25" decrementButtonClass="p-button-info" incrementButtonClass="p-button-info"
                           incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
-                          :allowEmpty="false" :min="0" @focus="$event.target.select()"/>
+                          :allowEmpty="false" :min="0" @focus="$event.target.select()" @focusout="saveEvents"/>
                         </template>
                       </Column>
 
@@ -631,7 +634,8 @@
                           <InputNumber v-model="slotProps.data[slotProps.field]" mode="decimal" :maxFractionDigits="3"
                           showButtons :step="0.25" decrementButtonClass="p-button-info"
                           incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
-                          :allowEmpty="false" :min="0" @focus="$event.target.select()" :disabled="slotProps.data['type'] !== 'In presence' ? false : true" />
+                          :allowEmpty="false" :min="0" @focus="$event.target.select()" :disabled="slotProps.data['type'] !== 'In presence' ? false : true" 
+                          @focusout="saveEvents"/>
                         </template>
                       </Column>
 
@@ -640,7 +644,7 @@
                           <td :class="slotProps.data[slotProps.field] == 'Select a country' ? 'defaultValue' : ''" style="display:block;">{{slotProps.data[slotProps.field]}}</td>
                         </template>
                         <template #editor="slotProps">
-                          <Dropdown :options="countriesForDropdown" v-model="slotProps.data[slotProps.field]" />
+                          <Dropdown :options="countriesForDropdown" v-model="slotProps.data[slotProps.field]" @focusout="saveEvents"/>
                         </template>
                       </Column>
 
@@ -710,7 +714,7 @@
                             <td :class="slotProps.data[slotProps.field] == 'New event' ? 'defaultValue' : ''" style="display:block;">{{slotProps.data[slotProps.field]}}</td>
                           </template>
                           <template #editor="slotProps">
-                              <InputText v-model="slotProps.data[slotProps.field]" @focus="$event.target.select()"/>
+                              <InputText v-model="slotProps.data[slotProps.field]" @focus="$event.target.select()" @focusout="saveEvents"/>
                           </template>
                         </Column>
 
@@ -727,7 +731,7 @@
                         <template #editor="slotProps">
                           <InputNumber v-model="slotProps.data[slotProps.field]" mode="decimal" showButtons decrementButtonClass="p-button-info"
                           incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
-                          :allowEmpty="false" :min="0" @focus="$event.target.select()" />
+                          :allowEmpty="false" :min="0" @focus="$event.target.select()" @focusout="saveEvents"/>
                         </template>
                       </Column>
 
@@ -736,7 +740,7 @@
                           <InputNumber v-model="slotProps.data[slotProps.field]" mode="decimal" :maxFractionDigits="3"
                           showButtons :step="0.25" decrementButtonClass="p-button-info" incrementButtonClass="p-button-info"
                           incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
-                          :allowEmpty="false" :min="0" @focus="$event.target.select()" />
+                          :allowEmpty="false" :min="0" @focus="$event.target.select()" @focusout="saveEvents"/>
                         </template>
                       </Column>
 
@@ -745,7 +749,7 @@
                           <td :class="slotProps.data[slotProps.field] == 'Select a country' ? 'defaultValue' : ''" style="display:block;">{{slotProps.data[slotProps.field]}}</td>
                         </template>
                         <template #editor="slotProps">
-                          <Dropdown :options="countriesForDropdown" v-model="slotProps.data[slotProps.field]" />
+                          <Dropdown :options="countriesForDropdown" v-model="slotProps.data[slotProps.field]" @focusout="saveEvents"/>
                         </template>
                       </Column>
 
@@ -753,7 +757,7 @@
                         <template #editor="slotProps">
                           <InputNumber v-model="slotProps.data[slotProps.field]" mode="decimal" showButtons decrementButtonClass="p-button-info"
                           incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
-                          :allowEmpty="false" :min="0" @focus="$event.target.select()" />
+                          :allowEmpty="false" :min="0" @focus="$event.target.select()" @focusout="saveEvents"/>
                         </template>
                       </Column>
 
@@ -762,7 +766,7 @@
                           <td :class="slotProps.data[slotProps.field] == 'Select a travel mode' ? 'defaultValue' : ''" style="display:block;">{{slotProps.data[slotProps.field]}}</td>
                         </template>
                         <template #editor="slotProps">
-                          <Dropdown :options="travelModesForDropdown" v-model="slotProps.data[slotProps.field]" />
+                          <Dropdown :options="travelModesForDropdown" v-model="slotProps.data[slotProps.field]" @focusout="saveEvents"/>
                         </template>
                       </Column>
 
@@ -773,7 +777,8 @@
                           >{{slotProps.data['travelModeArrive'] === 'Car' ? slotProps.data[slotProps.field] : '-'}}</td>
                         </template>
                         <template #editor="slotProps">
-                          <Dropdown :options="fuelTypesForDropdown" v-model="slotProps.data[slotProps.field]" :disabled="slotProps.data['travelModeArrive'] === 'Car' ? false : true" />
+                          <Dropdown :options="fuelTypesForDropdown" v-model="slotProps.data[slotProps.field]" :disabled="slotProps.data['travelModeArrive'] === 'Car' ? false : true" 
+                          @focusout="saveEvents"/>
                         </template>
                       </Column>
 
@@ -781,7 +786,7 @@
                         <template #editor="slotProps">
                           <InputNumber v-model="slotProps.data[slotProps.field]" mode="decimal" showButtons decrementButtonClass="p-button-info"
                           incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
-                          :allowEmpty="false" :min="0" @focus="$event.target.select()" />
+                          :allowEmpty="false" :min="0" @focus="$event.target.select()" @focusout="saveEvents"/>
                         </template>
                       </Column>
 
@@ -790,7 +795,7 @@
                           <td :class="slotProps.data[slotProps.field] == 'Select a travel mode' ? 'defaultValue' : ''" style="display:block;">{{slotProps.data[slotProps.field]}}</td>
                         </template>
                         <template #editor="slotProps">
-                          <Dropdown :options="travelModesForDropdown" v-model="slotProps.data[slotProps.field]" />
+                          <Dropdown :options="travelModesForDropdown" v-model="slotProps.data[slotProps.field]" @focusout="saveEvents"/>
                         </template>
                       </Column>
 
@@ -801,7 +806,8 @@
                           >{{slotProps.data['travelModeDepart'] === 'Car' ? slotProps.data[slotProps.field] : '-'}}</td>
                         </template>
                         <template #editor="slotProps">
-                          <Dropdown :options="fuelTypesForDropdown" v-model="slotProps.data[slotProps.field]" :disabled="slotProps.data['travelModeDepart'] === 'Car' ? false : true" />
+                          <Dropdown :options="fuelTypesForDropdown" v-model="slotProps.data[slotProps.field]" :disabled="slotProps.data['travelModeDepart'] === 'Car' ? false : true" 
+                          @focusout="saveEvents"/>
                         </template>
                       </Column>
 
@@ -860,7 +866,7 @@
                       <td :class="slotProps.data[slotProps.field] == 'New printable deliverable' ? 'defaultValue' : ''" style="display:block;">{{slotProps.data[slotProps.field]}}</td>
                     </template>
                     <template #editor="slotProps">
-                        <InputText v-model="slotProps.data[slotProps.field]" @focus="$event.target.select()"/>
+                        <InputText v-model="slotProps.data[slotProps.field]" @focus="$event.target.select()" @focusout="savePrintableDeliverables"/>
                     </template>
                   </Column>
 
@@ -870,7 +876,7 @@
                     </template>
                     <template #editor="slotProps">
                       <Dropdown :options="deliverableOptions" v-model="slotProps.data[slotProps.field]" optionLabel="value" optionValue="value"
-                                placeholder="Select a deliverable type">
+                                placeholder="Select a deliverable type" @focusout="savePrintableDeliverables">
                         <template #value="slotProps">
                           <div v-if="slotProps.value">
                             <span>{{slotProps.value}}</span>
@@ -894,7 +900,8 @@
                         <InputNumber v-model="slotProps.data[slotProps.field]" mode="decimal"
                         showButtons decrementButtonClass="p-button-info"
                         incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
-                        :allowEmpty="false" :min="0" @focus="$event.target.select()" :class="slotProps.data[slotProps.field] == 1 ? 'defaultValue' : ''" />
+                        :allowEmpty="false" :min="0" @focus="$event.target.select()" :class="slotProps.data[slotProps.field] == 1 ? 'defaultValue' : ''" 
+                        @focusout="savePrintableDeliverables"/>
                     </template>
                   </Column>
 
@@ -908,7 +915,7 @@
                       <InputNumber v-model="slotProps.data[slotProps.field]" mode="decimal"
                       showButtons decrementButtonClass="p-button-info"
                       incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
-                      :allowEmpty="false" :min="0" @focus="$event.target.select()" />
+                      :allowEmpty="false" :min="0" @focus="$event.target.select()" @focusout="savePrintableDeliverables"/>
                     </template>
                   </Column>
 
@@ -917,7 +924,8 @@
                       <td :class="slotProps.data[slotProps.field] == 'Select a paper size' ? 'defaultValue' : ''" style="display:block;">{{slotProps.data[slotProps.field]}}</td>
                     </template>
                     <template #editor="slotProps">
-                      <Dropdown :options="paperSizes" v-model="slotProps.data[slotProps.field]" placeholder="Select a paper size">
+                      <Dropdown :options="paperSizes" v-model="slotProps.data[slotProps.field]" placeholder="Select a paper size"
+                      @focusout="savePrintableDeliverables">
                         <template #value="slotProps">
                           <div v-if="slotProps.value">
                             <span>{{slotProps.value}}</span>
@@ -1435,11 +1443,11 @@
 
             <div class="card" style="display:flex; justify-content:space-around">
               <template v-if="!project.isInitialProject">
-                <Button  label="Save all" @click="saveCurrentProject" />
+                <Button  label="Save project" @click="saveCurrentProject" />
               </template>
               <template v-else-if="project.isInitialProject">
-                <Button label="Save all" @click="saveCurrentProject" />
-                <Button  label="Save Base data as scenario data" @click="displayUpdateScenarioValuesDialog" />
+                <Button label="Save project" @click="saveCurrentProject" />
+                <Button  label="Export base data to monitoring period data" @click="displayUpdateScenarioValuesDialog" />
               </template>
             </div>
             <div class="col-12">
@@ -2140,7 +2148,7 @@
       <div class="flex align-items-center  pb-5">
           <i class="pi pi-exclamation-triangle mr-3" style="font-size: 2rem" />
           <div>
-            <p>The values of the project will be updated in it's initial phase, are you sure?</p>
+            <p>The base data will be exported to the monitoring period data, do you want to proceed?</p>
           </div>
       </div>
       <template #footer>
@@ -3024,7 +3032,7 @@ export default {
     savePrintableDeliverables() {
       this.axios.put('/printableDeliverables/updateAll', this.project.printableDeliverables)
       .then(() => {
-        this.$toast.add({severity:'success', summary: 'Successful', detail: 'All Printable Deliverables updated', life: 3000});
+        this.$toast.add({severity:'success', summary: 'Successful', detail: 'All Printable Deliverables updated', life: 2000});
       }).catch((error) =>{
         console.log(error)
       })
@@ -3032,7 +3040,7 @@ export default {
     savePartners() {
       this.axios.put('/partners/updateAll', this.project.partners)
       .then(() => {
-        this.$toast.add({severity:'success', summary: 'Successful', detail: 'All Partners updated', life: 3000});
+        this.$toast.add({severity:'success', summary: 'Successful', detail: 'All Partners updated', life: 2000});
       }).catch((error) =>{
         console.log(error)
       })
@@ -3051,7 +3059,7 @@ export default {
 
         this.axios.put('/events/updateAll', allEvents)
         .then(() => {
-          this.$toast.add({severity:'success', summary: 'Successful', detail: 'All Events updated', life: 3000});
+          this.$toast.add({severity:'success', summary: 'Successful', detail: 'All Events updated', life: 2000});
         }).catch((error) =>{
           console.log(error)
         })
@@ -3060,7 +3068,7 @@ export default {
     saveExternalExperts() {
       this.axios.put('/externalExperts/updateAll', this.project.externalExperts)
       .then(() => {
-        this.$toast.add({severity:'success', summary: 'Successful', detail: 'All External experts updated', life: 3000});
+        this.$toast.add({severity:'success', summary: 'Successful', detail: 'All External experts updated', life: 2000});
       }).catch((error) =>{
         console.log(error)
       })
@@ -3120,7 +3128,7 @@ export default {
       
       axios.put("/partners/" + data._id, paramsData).then(() => {
         this.project.partners.splice(this.project.partners.indexOf(data), 1, newData)
-        this.$toast.add({severity:'success', summary: 'Successful', detail: 'Partner updated', life: 3000});
+        // this.$toast.add({severity:'success', summary: 'Successful', detail: 'Partner updated', life: 3000});
       }).catch(error =>{
         console.log(error)
       })
@@ -3222,7 +3230,7 @@ export default {
       
       axios.put("/printableDeliverables/" + data._id, paramsData).then(() => {
         this.project.printableDeliverables.splice(this.project.printableDeliverables.indexOf(data), 1, newData)
-        this.$toast.add({severity:'success', summary: 'Successful', detail: 'Printable deliverables updated', life: 3000});
+        // this.$toast.add({severity:'success', summary: 'Successful', detail: 'Printable deliverables updated', life: 3000});
       }).catch(error =>{
         console.log(error)
       })

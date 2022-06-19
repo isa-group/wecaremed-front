@@ -319,7 +319,7 @@
                   <td :class="slotProps.data[slotProps.field] == 'New partner' ? 'defaultValue' : ''" style="display:block;">{{slotProps.data[slotProps.field]}}</td>
                 </template>
                 <template #editor="slotProps">
-                    <InputText v-model="slotProps.data[slotProps.field]" @focus="$event.target.select()"/>
+                    <InputText v-model="slotProps.data[slotProps.field]" @focus="$event.target.select()" @focusout="savePartners"/>
                 </template>
               </Column>
 
@@ -328,7 +328,7 @@
                   <td :class="slotProps.data[slotProps.field] == 'Select a country' ? 'defaultValue' : ''" style="display:block;">{{slotProps.data[slotProps.field]}}</td>
                 </template>
                 <template #editor="slotProps">
-                  <Dropdown :options="countriesForDropdown" v-model="slotProps.data[slotProps.field]" />
+                  <Dropdown :options="countriesForDropdown" v-model="slotProps.data[slotProps.field]" @focusout="savePartners" />
                 </template>
               </Column>
 
@@ -336,7 +336,7 @@
                 <template #editor="slotProps">
                   <InputNumber v-model="slotProps.data[slotProps.field]" mode="decimal" showButtons decrementButtonClass="p-button-info"
                   incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
-                  :allowEmpty="false" :min="0" @focus="$event.target.select()" />
+                  :allowEmpty="false" :min="0" @focus="$event.target.select()" @focusout="savePartners"/>
                 </template>
               </Column>
 
@@ -344,7 +344,7 @@
                 <template #editor="slotProps">
                   <InputNumber v-model="slotProps.data[slotProps.field]" mode="decimal" showButtons decrementButtonClass="p-button-info"
                   incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
-                  :allowEmpty="false" :min="0" @focus="$event.target.select()" />
+                  :allowEmpty="false" :min="0" @focus="$event.target.select()" @focusout="savePartners"/>
                 </template>
               </Column>
 
@@ -354,7 +354,7 @@
                   <InputNumber v-model="slotProps.data[slotProps.field]" mode="decimal" :maxFractionDigits="3"
                   showButtons :step="0.25" decrementButtonClass="p-button-info"
                   incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
-                  :allowEmpty="false" :min="0" @focus="$event.target.select()" />
+                  :allowEmpty="false" :min="0" @focus="$event.target.select()" @focusout="savePartners"/>
                 </template>
               </Column>
 
@@ -362,7 +362,7 @@
                 <template #editor="slotProps">
                   <InputNumber v-model="slotProps.data[slotProps.field]" mode="decimal" showButtons decrementButtonClass="p-button-info"
                   incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
-                  :allowEmpty="false" :min="0" @focus="$event.target.select()" />
+                  :allowEmpty="false" :min="0" @focus="$event.target.select()" @focusout="savePartners"/>
                 </template>
               </Column>
 
@@ -371,7 +371,7 @@
                   <InputNumber v-model="slotProps.data[slotProps.field]" mode="decimal" :maxFractionDigits="3"
                   showButtons :step="0.25" decrementButtonClass="p-button-info"
                   incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
-                  :allowEmpty="false" :min="0" @focus="$event.target.select()" />
+                  :allowEmpty="false" :min="0" @focus="$event.target.select()" @focusout="savePartners"/>
                 </template>
               </Column>
 
@@ -822,7 +822,7 @@
                   </template>
                   <template #editor="slotProps">
                     <Dropdown :options="deliverableOptions" v-model="slotProps.data[slotProps.field]" optionLabel="value" optionValue="value"
-                              placeholder="Select a deliverable type">
+                              placeholder="Select a deliverable type" @focusout="savePrintableDeliverables">
                       <template #value="slotProps">
                         <div v-if="slotProps.value">
                           <span>{{slotProps.value}}</span>
@@ -846,7 +846,8 @@
                       <InputNumber v-model="slotProps.data[slotProps.field]" mode="decimal"
                             showButtons decrementButtonClass="p-button-info"
                             incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
-                            :allowEmpty="false" :min="0" @focus="$event.target.select()" :class="slotProps.data[slotProps.field] == 1 ? 'defaultValue' : ''" />
+                            :allowEmpty="false" :min="0" @focus="$event.target.select()" :class="slotProps.data[slotProps.field] == 1 ? 'defaultValue' : ''"
+                            @focusout="savePrintableDeliverables" />
                   </template>
                 </Column>
 
@@ -866,11 +867,11 @@
 
           <div class="card col-12" style="display:flex; justify-content:space-around">
             <template v-if="!this.project.isInitialProject" >
-              <Button  label="Save all" @click="saveCurrentProject" />
+              <Button  label="Save project" @click="saveCurrentProject" />
             </template>
             <template v-else-if="this.project.isInitialProject">
-              <Button label="Save all" @click="saveCurrentProject" />
-              <Button  label="Save Base data as scenario data" @click="displayUpdateScenarioValuesDialog" />    
+              <Button label="Save project" @click="saveCurrentProject" />
+              <Button  label="Export base data to scenario data" @click="displayUpdateScenarioValuesDialog" />    
             </template>
           </div>
           
@@ -984,7 +985,7 @@
               <div class="flex align-items-center  pb-5">
                   <i class="pi pi-exclamation-triangle mr-3" style="font-size: 2rem" />
                   <div>
-                    <p>The values of the project in base phase will be updated in the scenario phase, are you sure?</p>
+                    <p>The base data will be exported to the scenario data, do you want to proceed?</p>
                   </div>
               </div>
               <template #footer>
@@ -1771,7 +1772,7 @@ export default {
     savePrintableDeliverables() {
       this.axios.put('/printableDeliverables/updateAll', this.project.printableDeliverables)
       .then(() => {
-        this.$toast.add({severity:'success', summary: 'Successful', detail: 'All Printable Deliverables updated', life: 3000});
+        this.$toast.add({severity:'success', summary: 'Successful', detail: 'All Printable Deliverables updated', life: 2000});
       }).catch((error) =>{
         console.log(error)
       })
@@ -1779,7 +1780,7 @@ export default {
     savePartners() {
       this.axios.put('/partners/updateAll', this.project.partners)
       .then(() => {
-        this.$toast.add({severity:'success', summary: 'Successful', detail: 'All Partners updated', life: 3000});
+        this.$toast.add({severity:'success', summary: 'Successful', detail: 'All Partners updated', life: 2000});
       }).catch((error) =>{
         console.log(error)
       })
@@ -1839,7 +1840,7 @@ export default {
       
       axios.put("/partners/" + data._id, paramsData).then(() => {
         this.project.partners.splice(this.project.partners.indexOf(data), 1, newData)
-        this.$toast.add({severity:'success', summary: 'Successful', detail: 'Partner updated', life: 3000});
+        // this.$toast.add({severity:'success', summary: 'Successful', detail: 'Partner updated', life: 3000});
       }).catch(error =>{
         console.log(error)
       })
@@ -1901,7 +1902,7 @@ export default {
       
       axios.put("/printableDeliverables/" + data._id, paramsData).then(() => {
         this.project.printableDeliverables.splice(this.project.printableDeliverables.indexOf(data), 1, newData)
-        this.$toast.add({severity:'success', summary: 'Successful', detail: 'Printable deliverables updated', life: 3000});
+        // this.$toast.add({severity:'success', summary: 'Successful', detail: 'Printable deliverables updated', life: 3000});
       }).catch(error =>{
         console.log(error)
       })
