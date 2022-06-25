@@ -1587,7 +1587,7 @@
                   <h4>Project base data</h4>
                   <Chart type="radar" :data="chartDataInitial" :options="chartOptions" />
 
-                  <h4>Reference values for KPI-3</h4>
+                  <!-- <h4>Reference values for KPI-3</h4>
                   <div class="p-fluid formgrid grid">
                     <div class="field col-12 md:col-6">
                       <label for="heatInputInitial">Heat</label>
@@ -1665,7 +1665,7 @@
                         @keypress.enter="$event.target.blur()"
                         @focusout="onCellEditCompleteAnalysis('equipmentInputInitial', analysisInitial.equipmentInputInitial, true)"/>
                     </div>  
-                  </div>
+                  </div> -->
                 </div>
 
                 <div>
@@ -1677,7 +1677,7 @@
                   <h4>Project monitoring period data</h4>
                   <Chart type="radar" :data="chartDataExecution" :options="chartOptions" />
                   
-                  <h4>Reference values for KPI-3</h4>
+                  <!-- <h4>Reference values for KPI-3</h4>
                   <div class="p-fluid formgrid grid">
                     <div class="field col-12 md:col-6">
                       <label for="heatInputExecution">Heat</label>
@@ -1755,7 +1755,7 @@
                         @keypress.enter="$event.target.blur()"
                         @focusout="onCellEditCompleteAnalysis('equimentInputExecution', analysisExecution.equimentInputExecution, false)"/>
                     </div>  
-                  </div>
+                  </div> -->
 
                 </div>
               </div>
@@ -2288,16 +2288,6 @@ export default {
 				datasets: [
 					{
 						label: 'KPI-1',
-						backgroundColor: 'rgba(179,181,198,0.2)',
-						borderColor: 'rgba(179,181,198,1)',
-						pointBackgroundColor: 'rgba(179,181,198,1)',
-						pointBorderColor: '#fff',
-						pointHoverBackgroundColor: '#fff',
-						pointHoverBorderColor: 'rgba(179,181,198,1)',
-						data: [0, 0, 0, 0, 0, 0, 0, 0]
-					},
-					{
-						label: 'KPI-2',
 						backgroundColor: 'rgba(255,99,132,0.2)',
 						borderColor: 'rgba(255,99,132,1)',
 						pointBackgroundColor: 'rgba(255,99,132,1)',
@@ -2305,17 +2295,27 @@ export default {
 						pointHoverBackgroundColor: '#fff',
 						pointHoverBorderColor: 'rgba(255,99,132,1)',
 						data: [0, 0, 0, 0, 0, 0, 0, 0]
-					},
-          {
-						label: 'KPI-3',
-						backgroundColor: 'rgba(50,168,82,0.2)',
-						borderColor: 'rgba(50,168,82,1)',
-						pointBackgroundColor: 'rgba(50,168,82,1)',
-						pointBorderColor: '##fff',
-						pointHoverBackgroundColor: '#fff',
-						pointHoverBorderColor: 'rgba(50,168,82,1)',
-						data: [0, 0, 0, 0, 0, 0, 0, 0]
 					}
+					// {
+					// 	label: 'KPI-2',
+					// 	backgroundColor: 'rgba(255,99,132,0.2)',
+					// 	borderColor: 'rgba(255,99,132,1)',
+					// 	pointBackgroundColor: 'rgba(255,99,132,1)',
+					// 	pointBorderColor: '#fff',
+					// 	pointHoverBackgroundColor: '#fff',
+					// 	pointHoverBorderColor: 'rgba(255,99,132,1)',
+					// 	data: [0, 0, 0, 0, 0, 0, 0, 0]
+					// },
+          // {
+					// 	label: 'KPI-3',
+					// 	backgroundColor: 'rgba(50,168,82,0.2)',
+					// 	borderColor: 'rgba(50,168,82,1)',
+					// 	pointBackgroundColor: 'rgba(50,168,82,1)',
+					// 	pointBorderColor: '##fff',
+					// 	pointHoverBackgroundColor: '#fff',
+					// 	pointHoverBorderColor: 'rgba(50,168,82,1)',
+					// 	data: [0, 0, 0, 0, 0, 0, 0, 0]
+					// }
 				]
 			},
       chartDataExecution: {
@@ -2323,16 +2323,6 @@ export default {
 				datasets: [
 					{
 						label: 'KPI-1',
-						backgroundColor: 'rgba(179,181,198,0.2)',
-						borderColor: 'rgba(179,181,198,1)',
-						pointBackgroundColor: 'rgba(179,181,198,1)',
-						pointBorderColor: '#fff',
-						pointHoverBackgroundColor: '#fff',
-						pointHoverBorderColor: 'rgba(179,181,198,1)',
-						data: [0, 0, 0, 0, 0, 0, 0, 0]
-					},
-					{
-						label: 'KPI-2',
 						backgroundColor: 'rgba(255,99,132,0.2)',
 						borderColor: 'rgba(255,99,132,1)',
 						pointBackgroundColor: 'rgba(255,99,132,1)',
@@ -2340,17 +2330,27 @@ export default {
 						pointHoverBackgroundColor: '#fff',
 						pointHoverBorderColor: 'rgba(255,99,132,1)',
 						data: [0, 0, 0, 0, 0, 0, 0, 0]
-					},
-          {
-						label: 'KPI-3',
-						backgroundColor: 'rgba(50,168,82,0.2)',
-						borderColor: 'rgba(50,168,82,1)',
-						pointBackgroundColor: 'rgba(50,168,82,1)',
-						pointBorderColor: '##fff',
-						pointHoverBackgroundColor: '#fff',
-						pointHoverBorderColor: 'rgba(50,168,82,1)',
-						data: [0, 0, 0, 0, 0, 0, 0, 0]
 					}
+					// {
+					// 	label: 'KPI-2',
+					// 	backgroundColor: 'rgba(255,99,132,0.2)',
+					// 	borderColor: 'rgba(255,99,132,1)',
+					// 	pointBackgroundColor: 'rgba(255,99,132,1)',
+					// 	pointBorderColor: '#fff',
+					// 	pointHoverBackgroundColor: '#fff',
+					// 	pointHoverBorderColor: 'rgba(255,99,132,1)',
+					// 	data: [0, 0, 0, 0, 0, 0, 0, 0]
+					// },
+          // {
+					// 	label: 'KPI-3',
+					// 	backgroundColor: 'rgba(50,168,82,0.2)',
+					// 	borderColor: 'rgba(50,168,82,1)',
+					// 	pointBackgroundColor: 'rgba(50,168,82,1)',
+					// 	pointBorderColor: '##fff',
+					// 	pointHoverBackgroundColor: '#fff',
+					// 	pointHoverBorderColor: 'rgba(50,168,82,1)',
+					// 	data: [0, 0, 0, 0, 0, 0, 0, 0]
+					// }
 				]
 			},
 			chartOptions: {
@@ -2707,30 +2707,51 @@ export default {
         if (this.project.isInitialProject == this.$store.state.toggleProject) {
           location.href = '/projects/' + this.project.initialProject
         } else {
-          this.chartDataExecution.datasets[0].data[0] = this.project.printableDeliverablesAdvancedCF,
-          this.chartDataExecution.datasets[0].data[1] = this.project.equipmentAdvancedCF,
-          this.chartDataExecution.datasets[0].data[2] = this.project.electricityAdvancedCF,
-          this.chartDataExecution.datasets[0].data[3] = this.project.waterAdvancedCF,
-          this.chartDataExecution.datasets[0].data[4] = this.project.transportationAdvancedCF,
-          this.chartDataExecution.datasets[0].data[5] = this.project.eventsAdvancedCF,
-          this.chartDataExecution.datasets[0].data[6] = this.project.materialsAdvancedC,
-          this.chartDataExecution.datasets[0].data[7] = this.project.fuelsHeatAdvancedCF
+
+          // Implementación del antiguo KPI-1
+          // this.chartDataExecution.datasets[0].data[0] = this.project.printableDeliverablesAdvancedCF,
+          // this.chartDataExecution.datasets[0].data[1] = this.project.equipmentAdvancedCF,
+          // this.chartDataExecution.datasets[0].data[2] = this.project.electricityAdvancedCF,
+          // this.chartDataExecution.datasets[0].data[3] = this.project.waterAdvancedCF,
+          // this.chartDataExecution.datasets[0].data[4] = this.project.transportationAdvancedCF,
+          // this.chartDataExecution.datasets[0].data[5] = this.project.eventsAdvancedCF,
+          // this.chartDataExecution.datasets[0].data[6] = this.project.materialsAdvancedC,
+          // this.chartDataExecution.datasets[0].data[7] = this.project.fuelsHeatAdvancedCF
+
+          this.chartDataExecution.datasets[0].data[0] = (this.project.printableDeliverablesAdvancedCF / this.project.initialCF) * 100;
+          this.chartDataExecution.datasets[0].data[1] = (this.project.equipmentAdvancedCF / this.project.initialCF) * 100;
+          this.chartDataExecution.datasets[0].data[2] = (this.project.electricityAdvancedCF / this.project.initialCF) * 100;
+          this.chartDataExecution.datasets[0].data[3] = (this.project.waterAdvancedCF / this.project.initialCF) * 100;
+          this.chartDataExecution.datasets[0].data[4] = (this.project.transportationAdvancedCF / this.project.initialCF) * 100;
+          this.chartDataExecution.datasets[0].data[5] = (this.project.eventsAdvancedCF / this.project.initialCF) * 100;
+          this.chartDataExecution.datasets[0].data[6] = (this.project.materialsAdvancedC / this.project.initialCF) * 100;
+          this.chartDataExecution.datasets[0].data[7] = (this.project.fuelsHeatAdvancedCF / this.project.initialCF) * 100;
 
           this.axios.get(`/projects/` + this.project.initialProject)
           .then( (res) => {
             this.projectInitial = res.data;
 
-            this.chartDataInitial.datasets[0].data[0] = this.projectInitial.printableDeliverablesAdvancedCF,
-            this.chartDataInitial.datasets[0].data[1] = this.projectInitial.equipmentAdvancedCF,
-            this.chartDataInitial.datasets[0].data[2] = this.projectInitial.electricityAdvancedCF,
-            this.chartDataInitial.datasets[0].data[3] = this.projectInitial.waterAdvancedCF,
-            this.chartDataInitial.datasets[0].data[4] = this.projectInitial.transportationAdvancedCF,
-            this.chartDataInitial.datasets[0].data[5] = this.projectInitial.eventsAdvancedCF,
-            this.chartDataInitial.datasets[0].data[6] = this.projectInitial.materialsAdvancedC,
-            this.chartDataInitial.datasets[0].data[7] = this.projectInitial.fuelsHeatAdvancedCF
+            // this.chartDataInitial.datasets[0].data[0] = this.projectInitial.printableDeliverablesAdvancedCF,
+            // this.chartDataInitial.datasets[0].data[1] = this.projectInitial.equipmentAdvancedCF,
+            // this.chartDataInitial.datasets[0].data[2] = this.projectInitial.electricityAdvancedCF,
+            // this.chartDataInitial.datasets[0].data[3] = this.projectInitial.waterAdvancedCF,
+            // this.chartDataInitial.datasets[0].data[4] = this.projectInitial.transportationAdvancedCF,
+            // this.chartDataInitial.datasets[0].data[5] = this.projectInitial.eventsAdvancedCF,
+            // this.chartDataInitial.datasets[0].data[6] = this.projectInitial.materialsAdvancedC,
+            // this.chartDataInitial.datasets[0].data[7] = this.projectInitial.fuelsHeatAdvancedCF
 
-            this.calculateKPI2();
-            this.calculateKPI3();
+            this.chartDataInitial.datasets[0].data[0] = (this.projectInitial.printableDeliverablesAdvancedCF / this.projectInitial.initialCF) * 100;
+            this.chartDataInitial.datasets[0].data[1] = (this.projectInitial.equipmentAdvancedCF / this.projectInitial.initialCF) * 100;
+            this.chartDataInitial.datasets[0].data[2] = (this.projectInitial.electricityAdvancedCF / this.projectInitial.initialCF) * 100;
+            this.chartDataInitial.datasets[0].data[3] = (this.projectInitial.waterAdvancedCF / this.projectInitial.initialCF) * 100;
+            this.chartDataInitial.datasets[0].data[4] = (this.projectInitial.transportationAdvancedCF / this.projectInitial.initialCF) * 100;
+            this.chartDataInitial.datasets[0].data[5] = (this.projectInitial.eventsAdvancedCF / this.projectInitial.initialCF) * 100;
+            this.chartDataInitial.datasets[0].data[6] = (this.projectInitial.materialsAdvancedC / this.projectInitial.initialCF) * 100;
+            this.chartDataInitial.datasets[0].data[7] = (this.projectInitial.fuelsHeatAdvancedCF / this.projectInitial.initialCF) * 100;
+
+            // Ya no son necesarios
+            // this.calculateKPI2();
+            // this.calculateKPI3();
 
           })
           .catch((error) => {
