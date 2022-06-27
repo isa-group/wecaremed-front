@@ -1,6 +1,6 @@
 <template>
   <Toast position="bottom-right" />
-  <Topbar v-model:projectInfo="project" />
+  <Topbar v-model:projectInfo="projectAdvancedAndInitialInfo" />
 
   <div class="projectDetailsElectrictyGrid">
 
@@ -10,15 +10,6 @@
         <div style="display: flex; align-items: center; justify-content: space-between;">
           <h2 v-if="project.isInitialProject">Project's base data</h2>
           <h2 v-else-if="!project.isInitialProject">Project's monitoring period data</h2>
-
-          <div style="margin: 1.5rem 0 1rem 0;">
-            <div style="text-align: center">
-              <h5 class="m-0 mb-2">Project data</h5>
-              <label id="app-mode-label" class="initialDataLabel">Base</label>
-              <InputSwitch id="projectData" v-model="toggleProject" @click="toggleProjectView()" />    
-              <label id="app-mode-label" class="currentDataLabel" style="margin-left: 0.75rem; margin-right: auto;">Monitoring period</label>
-            </div>
-          </div>
         </div>
 
         <!-- Data -->
@@ -955,500 +946,9 @@
             </div>
 
             
-            <!-- <div class="card">
-              <h4>Customs</h4>
-              <TabView>
-                <TabPanel header="Heat">
-                        Tabla Custom Heat emissions
-
-                  <h5>Additional custom defined Heat emission</h5>
-
-                  <DataTable :value="project.customHeat" editMode="cell" :paginator="true" class="p-datatable-gridlines" dataKey="_id"
-                  :rowHover="true" @cell-edit-complete="onCellEditCompleteCustom($event, 'customHeat', 'heat')" sortMode="multiple" :rows="5" v-model:filters="customFilters"
-                  filterDisplay="menu" :loading="loading" :filters="customFilters" responsiveLayout="scroll"
-                  :globalFilterFields="['nameCustom','valueCustom']" removableSort>
-                    
-                    <template #header>
-                        <div class="flex justify-content-between flex-column sm:flex-row">
-                          <div>
-                            <Button class="p-button-info mr-2" @click="addCustom(this.customTypes[0].value, 'customHeat', 'Heat')"><i class="pi pi-plus mr-2" />New additional custom Heat emission</Button>
-                            <span class="p-input-icon-left">
-                              <i class="pi pi-search" />
-                              <InputText v-model="customFilters['global'].value" placeholder="Keyword Search" style="width: 100%"/>
-                            </span>
-                            <Button class="ml-2" label="Save" icon="pi pi-check" @click="saveCustoms" />
-                          </div>
-                          
-                          <Button type="button" icon="pi pi-filter-slash" label="Clear filters" class="p-button-warning" @click="clearCustomFilter()"/>
-                        </div>
-                    </template>
-
-                    <template #empty>
-                        No additional custom heat emission found.
-                    </template>
-
-                    <template #loading>
-                        Loading custom heat emission. Please wait.
-                    </template>
-
-                    <Column field="name" header="Item" :sortable="true">
-                      <template #editor="slotProps">
-                          <InputText v-model="slotProps.data[slotProps.field]" @focus="$event.target.select()"/>
-                      </template>
-                      <template #filter="{filterModel, field}">
-                          <InputText type="text" v-model="filterModel.value" class="p-column-filter" :placeholder="'Filter by ' + field" />
-                      </template>
-                    </Column>
-
-                    <Column field="value" header="Value (t CO₂e)" :sortable="true">
-                      <template #editor="slotProps" class="p-field">
-                        <InputNumber v-model="slotProps.data[slotProps.field]" mode="decimal" :maxFractionDigits="3"
-                        showButtons :step="0.25" decrementButtonClass="p-button-info"
-                        incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
-                        :allowEmpty="false" :min="0" @focus="$event.target.select()" />
-                      </template>
-                    </Column>
-
-                    
-                    <Column field="actions" header="Actions">
-                      <template #body="slotProps">
-                        <i class="pi pi-trash" @click="deleteCustom(project.customHeat.indexOf(slotProps.data), 'customHeat', 'heat')" v-tooltip.top="'Delete heat custom'" />
-                      </template>
-                    </Column>
-                  
-                  </DataTable>
-                </TabPanel>
-
-                <TabPanel header="Electricity">
-                  <h5>Aditional custom defined electricity emission</h5>
-                  <DataTable :value="project.customElectricity" editMode="cell" :paginator="true" class="p-datatable-gridlines" dataKey="_id"
-                  :rowHover="true" @cell-edit-complete="onCellEditCompleteCustom($event, 'customElectricity', 'electricity')" sortMode="multiple" :rows="5" v-model:filters="customFilters"
-                  filterDisplay="menu" :loading="loading" :filters="customFilters" responsiveLayout="scroll"
-                  :globalFilterFields="['nameCustom','valueCustom']" removableSort>
-                  
-                  <template #header>
-                      <div class="flex justify-content-between flex-column sm:flex-row">
-                        <div>
-                          <Button class="p-button-info mr-2" @click="addCustom(this.customTypes[1].value, 'customElectricity', 'electricity')"><i class="pi pi-plus mr-2" />New additional custom Electricity</Button>
-                          <span class="p-input-icon-left">
-                            <i class="pi pi-search" />
-                            <InputText v-model="customFilters['global'].value" placeholder="Keyword Search" style="width: 100%"/>
-                          </span>
-                          <Button class="ml-2" label="Save" icon="pi pi-check" @click="saveCustoms" />
-                        </div>
-                        
-                        <Button type="button" icon="pi pi-filter-slash" label="Clear filters" class="p-button-warning" @click="clearPartnerFilter()"/>
-                      </div>
-                  </template>
-
-                  <template #empty>
-                      No additional custom electricity found.
-                  </template>
-
-                  <template #loading>
-                      Loading custom electricity. Please wait.
-                  </template>
-
-                  <Column field="name" header="Item" :sortable="true">
-                    <template #editor="slotProps">
-                        <InputText v-model="slotProps.data[slotProps.field]" @focus="$event.target.select()"/>
-                    </template>
-                    <template #filter="{filterModel, field}">
-                        <InputText type="text" v-model="filterModel.value" class="p-column-filter" :placeholder="'Filter by ' + field"/>
-                    </template>
-                  </Column>
-
-                  <Column field="value" header="Value (t CO₂e)" :sortable="true">
-                    <template #editor="slotProps" class="p-field">
-                      <InputNumber v-model="slotProps.data[slotProps.field]" mode="decimal" :maxFractionDigits="3"
-                      showButtons :step="0.25" decrementButtonClass="p-button-info"
-                      incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
-                      :allowEmpty="false" :min="0" @focus="$event.target.select()"/>
-                    </template>
-                  </Column>
-
-                  
-                  <Column field="actions" header="Actions">
-                    <template #body="slotProps">
-                      <i class="pi pi-trash" @click="deleteCustom(project.customElectricity.indexOf(slotProps.data), 'customElectricity', 'electricity')" v-tooltip.top="'Delete electricity custom'" />
-                    </template>
-                  </Column>
-                
-                </DataTable>
-                </TabPanel>
-
-                <TabPanel header="Water">
-
-                  <h5>Aditional custom defined water emission</h5>
-                  <DataTable :value="project.customWater" editMode="cell" :paginator="true" class="p-datatable-gridlines" dataKey="_id"
-                  :rowHover="true" @cell-edit-complete="onCellEditCompleteCustom($event, 'customWater', 'water')" sortMode="multiple" :rows="5" v-model:filters="customFilters"
-                  filterDisplay="menu" :loading="loading" :filters="customFilters" responsiveLayout="scroll"
-                  :globalFilterFields="['nameCustom','valueCustom']" removableSort>
-                  
-                  <template #header>
-                      <div class="flex justify-content-between flex-column sm:flex-row">
-                        <div>
-                          <Button class="p-button-info mr-2" @click="addCustom(this.customTypes[2].value,'customWater', 'water')"><i class="pi pi-plus mr-2" />New additional custom water emission</Button>
-                          <span class="p-input-icon-left">
-                            <i class="pi pi-search" />
-                            <InputText v-model="customFilters['global'].value" placeholder="Keyword Search" style="width: 100%"/>
-                          </span>
-                          <Button class="ml-2" label="Save" icon="pi pi-check" @click="saveCustoms" />
-                        </div>
-                        
-                        <Button type="button" icon="pi pi-filter-slash" label="Clear filters" class="p-button-warning" @click="clearCustomFilter()"/>
-                      </div>
-                  </template>
-
-                  <template #empty>
-                      No additional custom water emission found.
-                  </template>
-
-                  <template #loading>
-                      Loading custom water emissions. Please wait.
-                  </template>
-
-                  <Column field="name" header="Item" :sortable="true">
-                    <template #editor="slotProps">
-                        <InputText v-model="slotProps.data[slotProps.field]" @focus="$event.target.select()"/>
-                    </template>
-                    <template #filter="{filterModel, field}">
-                        <InputText type="text" v-model="filterModel.value" class="p-column-filter" :placeholder="'Filter by ' + field"/>
-                    </template>
-                  </Column>
-
-                  <Column field="value" header="Value (t CO₂e)" :sortable="true">
-                    <template #editor="slotProps" class="p-field">
-                      <InputNumber v-model="slotProps.data[slotProps.field]" mode="decimal" :maxFractionDigits="3"
-                      showButtons :step="0.25" decrementButtonClass="p-button-info"
-                      incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
-                      :allowEmpty="false" :min="0" @focus="$event.target.select()"/>
-                    </template>
-                  </Column>
-
-                  
-                  <Column field="actions" header="Actions">
-                    <template #body="slotProps">
-                      <i class="pi pi-trash" @click="deleteCustom(project.customWater.indexOf(slotProps.data), 'customWater', 'water')" v-tooltip.top="'Delete water custom'" />
-                    </template>
-                  </Column>
-                
-                </DataTable>
-
-                </TabPanel>
-
-                <TabPanel header="Transportation">
-
-                    <h5>Aditional custom defined transportation emission</h5>
-                    <DataTable :value="project.customTransportation" editMode="cell" :paginator="true" class="p-datatable-gridlines" dataKey="_id"
-                    :rowHover="true" @cell-edit-complete="onCellEditCompleteCustom($event, 'customTransportation', 'transportation')" sortMode="multiple" :rows="5" v-model:filters="customFilters"
-                    filterDisplay="menu" :loading="loading" :filters="customFilters" responsiveLayout="scroll"
-                    :globalFilterFields="['nameCustom','valueCustom']" removableSort>
-                    
-                    <template #header>
-                        <div class="flex justify-content-between flex-column sm:flex-row">
-                          <div>
-                            <Button class="p-button-info mr-2" @click="addCustom(this.customTypes[3].value, 'customTransportation', 'transportation')"><i class="pi pi-plus mr-2" />New additional custom transportation emission</Button>
-                            <span class="p-input-icon-left">
-                              <i class="pi pi-search" />
-                              <InputText v-model="customFilters['global'].value" placeholder="Keyword Search" style="width: 100%"/>
-                            </span>
-                            <Button class="ml-2" label="Save" icon="pi pi-check" @click="saveCustoms" />
-                          </div>
-                          
-                          <Button type="button" icon="pi pi-filter-slash" label="Clear filters" class="p-button-warning" @click="clearCustomFilter()"/>
-                        </div>
-                    </template>
-
-                    <template #empty>
-                        No additional custom transportation emission found.
-                    </template>
-
-                    <template #loading>
-                        Loading custom transportation emissions. Please wait.
-                    </template>
-
-                    <Column field="name" header="Item" :sortable="true">
-                      <template #editor="slotProps">
-                          <InputText v-model="slotProps.data[slotProps.field]" @focus="$event.target.select()"/>
-                      </template>
-                      <template #filter="{filterModel, field}">
-                          <InputText type="text" v-model="filterModel.value" class="p-column-filter" :placeholder="'Filter by ' + field"/>
-                      </template>
-                    </Column>
-
-                    <Column field="value" header="Value (t CO₂e)" :sortable="true">
-                      <template #editor="slotProps" class="p-field">
-                        <InputNumber v-model="slotProps.data[slotProps.field]" mode="decimal" :maxFractionDigits="3"
-                        showButtons :step="0.25" decrementButtonClass="p-button-info"
-                        incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
-                        :allowEmpty="false" :min="0" @focus="$event.target.select()"/>
-                      </template>
-                    </Column>
-
-                    
-                    <Column field="actions" header="Actions">
-                      <template #body="slotProps">
-                        <i class="pi pi-trash" @click="deleteCustom(project.customTransportation.indexOf(slotProps.data), 'customTransportation', 'transportation')" v-tooltip.top="'Delete transportation custom'" />
-                      </template>
-                    </Column>
-                  
-                  </DataTable>
-
-                </TabPanel>
-
-                <TabPanel header="Materials">
-
-                    <h5>Aditional custom defined material emission</h5>
-                    <DataTable :value="project.customMaterials" editMode="cell" :paginator="true" class="p-datatable-gridlines" dataKey="_id"
-                    :rowHover="true" @cell-edit-complete="onCellEditCompleteCustom($event, 'customMaterials', 'materials')" sortMode="multiple" :rows="5" v-model:filters="customFilters"
-                    filterDisplay="menu" :loading="loading" :filters="customFilters" responsiveLayout="scroll"
-                    :globalFilterFields="['nameCustom','valueCustom']" removableSort>
-                    
-                    <template #header>
-                        <div class="flex justify-content-between flex-column sm:flex-row">
-                          <div>
-                            <Button class="p-button-info mr-2" @click="addCustom(this.customTypes[4].value, 'customMaterials', 'materials')"><i class="pi pi-plus mr-2" />New additional custom material emission</Button>
-                            <span class="p-input-icon-left">
-                              <i class="pi pi-search" />
-                              <InputText v-model="customFilters['global'].value" placeholder="Keyword Search" style="width: 100%"/>
-                            </span>
-                            <Button class="ml-2" label="Save" icon="pi pi-check" @click="saveCustoms" />
-                          </div>
-                          
-                          <Button type="button" icon="pi pi-filter-slash" label="Clear filters" class="p-button-warning" @click="clearCustomFilter()"/>
-                        </div>
-                    </template>
-
-                    <template #empty>
-                        No additional custom materials emission found.
-                    </template>
-
-                    <template #loading>
-                        Loading custom materials emissions. Please wait.
-                    </template>
-
-                    <Column field="name" header="Item" :sortable="true">
-                      <template #editor="slotProps">
-                          <InputText v-model="slotProps.data[slotProps.field]" @focus="$event.target.select()"/>
-                      </template>
-                      <template #filter="{filterModel, field}">
-                          <InputText type="text" v-model="filterModel.value" class="p-column-filter" :placeholder="'Filter by ' + field"/>
-                      </template>
-                    </Column>
-
-                    <Column field="value" header="Value (t CO₂e)" :sortable="true">
-                      <template #editor="slotProps" class="p-field">
-                        <InputNumber v-model="slotProps.data[slotProps.field]" mode="decimal" :maxFractionDigits="3"
-                        showButtons :step="0.25" decrementButtonClass="p-button-info"
-                        incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
-                        :allowEmpty="false" :min="0" @focus="$event.target.select()"/>
-                      </template>
-                    </Column>
-
-                    
-                    <Column field="actions" header="Actions">
-                      <template #body="slotProps">
-                        <i class="pi pi-trash" @click="deleteCustom(project.customMaterials.indexOf(slotProps.data), 'customMaterials', 'materials')" v-tooltip.top="'Delete materials custom'" />
-                      </template>
-                    </Column>
-                  
-                  </DataTable>
-
-                </TabPanel>
-
-                <TabPanel header="Events">
-
-                  <h5>Aditional custom defined events emission</h5>
-                  <DataTable :value="project.customEvents" editMode="cell" :paginator="true" class="p-datatable-gridlines" dataKey="_id"
-                  :rowHover="true" @cell-edit-complete="onCellEditCompleteCustom($event, 'customEvents', 'event')" sortMode="multiple" :rows="5" v-model:filters="customFilters"
-                  filterDisplay="menu" :loading="loading" :filters="customFilters" responsiveLayout="scroll"
-                  :globalFilterFields="['nameCustom','valueCustom']" removableSort>
-                  
-                  <template #header>
-                      <div class="flex justify-content-between flex-column sm:flex-row">
-                        <div>
-                          <Button class="p-button-info mr-2" @click="addCustom(this.customTypes[5].value,'customEvents', 'event')"><i class="pi pi-plus mr-2" />New additional custom event emission</Button>
-                          <span class="p-input-icon-left">
-                            <i class="pi pi-search" />
-                            <InputText v-model="customFilters['global'].value" placeholder="Keyword Search" style="width: 100%"/>
-                          </span>
-                          <Button class="ml-2" label="Save" icon="pi pi-check" @click="saveCustoms" />
-                        </div>
-                        
-                        <Button type="button" icon="pi pi-filter-slash" label="Clear filters" class="p-button-warning" @click="clearCustomFilter()"/>
-                      </div>
-                  </template>
-
-                  <template #empty>
-                      No additional custom event emission found.
-                  </template>
-
-                  <template #loading>
-                      Loading custom events emissions. Please wait.
-                  </template>
-
-                  <Column field="name" header="Item" :sortable="true">
-                    <template #editor="slotProps">
-                        <InputText v-model="slotProps.data[slotProps.field]" @focus="$event.target.select()"/>
-                    </template>
-                    <template #filter="{filterModel, field}">
-                        <InputText type="text" v-model="filterModel.value" class="p-column-filter" :placeholder="'Filter by ' + field"/>
-                    </template>
-                  </Column>
-
-                  <Column field="value" header="Value (t CO₂e)" :sortable="true">
-                    <template #editor="slotProps" class="p-field">
-                      <InputNumber v-model="slotProps.data[slotProps.field]" mode="decimal" :maxFractionDigits="3"
-                      showButtons :step="0.25" decrementButtonClass="p-button-info"
-                      incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
-                      :allowEmpty="false" :min="0" @focus="$event.target.select()"/>
-                    </template>
-                  </Column>
-
-                  
-                  <Column field="actions" header="Actions">
-                    <template #body="slotProps">
-                      <i class="pi pi-trash" @click="deleteCustom(project.customEvents.indexOf(slotProps.data) * 5, 'customEvents', 'event')" v-tooltip.top="'Delete events custom'" />
-                    </template>
-                  </Column>
-                
-                </DataTable>
-
-                </TabPanel>
-
-
-                <TabPanel header="Printable Deliverables">
-
-                    <h5>Additional custom defined printable deliverable emission</h5>
-
-                    <DataTable :value="project.customPrintableDeliverables" editMode="cell" :paginator="true" class="p-datatable-gridlines" dataKey="_id"
-                    :rowHover="true" @cell-edit-complete="onCellEditCompleteCustom($event, 'customPrintableDeliverables', 'Printable Deliverables')" sortMode="multiple" :rows="5" v-model:filters="customFilters"
-                    filterDisplay="menu" :loading="loading" :filters="customFilters" responsiveLayout="scroll"
-                    :globalFilterFields="['nameCustom','valueCustom']" removableSort>
-                      
-                      <template #header>
-                          <div class="flex justify-content-between flex-column sm:flex-row">
-                            <div>
-                              <Button class="p-button-info mr-2" @click="addCustom(this.customTypes[6].value, 'customPrintableDeliverables', 'Printable Deliverables')"><i class="pi pi-plus mr-2" />New additional custom printable deliverable</Button>
-                              <span class="p-input-icon-left">
-                                <i class="pi pi-search" />
-                                <InputText v-model="customFilters['global'].value" placeholder="Keyword Search" style="width: 100%"/>
-                              </span>
-                              <Button class="ml-2" label="Save" icon="pi pi-check" @click="saveCustoms" />
-                            </div>
-                            
-                            <Button type="button" icon="pi pi-filter-slash" label="Clear filters" class="p-button-warning" @click="clearCustomFilter()"/>
-                          </div>
-                      </template>
-
-                      <template #empty>
-                          No additional custom printable deliverables found.
-                      </template>
-
-                      <template #loading>
-                          Loading custom printable deliverables. Please wait.
-                      </template>
-
-                      <Column field="name" header="Item" :sortable="true">
-                        <template #editor="slotProps">
-                            <InputText v-model="slotProps.data[slotProps.field]" @focus="$event.target.select()"/>
-                        </template>
-                        <template #filter="{filterModel, field}">
-                            <InputText type="text" v-model="filterModel.value" class="p-column-filter" :placeholder="'Filter by ' + field"/>
-                        </template>
-                      </Column>
-
-                      <Column field="value" header="Value (t CO₂e)" :sortable="true">
-                        <template #editor="slotProps" class="p-field">
-                          <InputNumber v-model="slotProps.data[slotProps.field]" mode="decimal" :maxFractionDigits="3"
-                          showButtons :step="0.25" decrementButtonClass="p-button-info"
-                          incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
-                          :allowEmpty="false" :min="0" @focus="$event.target.select()"/>
-                        </template>
-                      </Column>
-
-                      <Column field="actions" header="Actions">
-                        <template #body="slotProps">
-                          <i class="pi pi-trash" @click="deleteCustom(project.customPrintableDeliverables.indexOf(slotProps.data), 'customPrintableDeliverables', 'Printable Deliverables')" v-tooltip.top="'Delete printable deliverables custom'" />
-                        </template>
-                      </Column>
-                    
-                    </DataTable>
-
-                </TabPanel>
-
-                <TabPanel header="Equipment">
-
-                    <h5>Additional custom defined equipment emission</h5>
-
-                    <DataTable :value="project.customEquipment" editMode="cell" :paginator="true" class="p-datatable-gridlines" dataKey="_id"
-                    :rowHover="true" @cell-edit-complete="onCellEditCompleteCustom($event, 'customEquipment', 'Equipment')" sortMode="multiple" :rows="5" v-model:filters="customFilters"
-                    filterDisplay="menu" :loading="loading" :filters="customFilters" responsiveLayout="scroll"
-                    :globalFilterFields="['nameCustom','valueCustom']" removableSort>
-                      
-                      <template #header>
-                          <div class="flex justify-content-between flex-column sm:flex-row">
-                            <div>
-                              <Button class="p-button-info mr-2" @click="addCustom(this.customTypes[7].value, 'customEquipment', 'Equipment')"><i class="pi pi-plus mr-2" />New additional custom equipment</Button>
-                              <span class="p-input-icon-left">
-                                <i class="pi pi-search" />
-                                <InputText v-model="customFilters['global'].value" placeholder="Keyword Search" style="width: 100%"/>
-                              </span>
-                              <Button class="ml-2" label="Save" icon="pi pi-check" @click="saveCustoms" />
-                            </div>
-                            
-                            <Button type="button" icon="pi pi-filter-slash" label="Clear filters" class="p-button-warning" @click="clearCustomFilter()"/>
-                          </div>
-                      </template>
-
-                      <template #empty>
-                          No additional custom equipment found.
-                      </template>
-
-                      <template #loading>
-                          Loading custom equipment. Please wait.
-                      </template>
-
-                      <Column field="name" header="Item" :sortable="true">
-                        <template #editor="slotProps">
-                            <InputText v-model="slotProps.data[slotProps.field]" @focus="$event.target.select()"/>
-                        </template>
-                        <template #filter="{filterModel, field}">
-                            <InputText type="text" v-model="filterModel.value" class="p-column-filter" :placeholder="'Filter by ' + field"/>
-                        </template>
-                      </Column>
-
-                      <Column field="value" header="Value" :sortable="true">
-                        <template #editor="slotProps" class="p-field">
-                          <InputNumber v-model="slotProps.data[slotProps.field]" mode="decimal" :maxFractionDigits="3"
-                          showButtons :step="0.25" decrementButtonClass="p-button-info"
-                          incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
-                          :allowEmpty="false" :min="0" @focus="$event.target.select()"/>
-                        </template>
-                      </Column>
-
-                      <Column field="actions" header="Actions">
-                        <template #body="slotProps">
-                          <i class="pi pi-trash" @click="deleteCustom(project.customEquipment.indexOf(slotProps.data), 'customEquipment', 'Equipment')" v-tooltip.top="'Delete equipment custom'" />
-                        </template>
-                      </Column>
-                    
-                    </DataTable>
-
-                </TabPanel>
-
-              </TabView>
-            </div> -->
 
             <div class="card" style="display:flex; justify-content:space-around">
-              <template v-if="!project.isInitialProject">
-                <Button  label="Save project" @click="saveCurrentProject" />
-              </template>
-              <template v-else-if="project.isInitialProject">
-                <Button label="Save project" @click="saveCurrentProject" />
-                <Button  label="Export base data to monitoring period data" @click="displayUpdateScenarioValuesDialog" />
-              </template>
+              <Button label="Save project" @click="saveCurrentProject" />
             </div>
             <div class="col-12">
               <div class="card p-fluid" style="display: flex; flex-direction: column; align-items: center; justify-content: space-around;">
@@ -1586,86 +1086,6 @@
                 <div class="col-6">
                   <h4>Project base data</h4>
                   <Chart type="radar" :data="chartDataInitial" :options="chartOptions" />
-
-                  <h4>Reference values for KPI-3</h4>
-                  <div class="p-fluid formgrid grid">
-                    <div class="field col-12 md:col-6">
-                      <label for="heatInputInitial">Heat</label>
-                      <InputNumber id="heatInputInitial" v-model="analysisInitial.heatInputInitial" mode="decimal" :maxFractionDigits="3"
-                        showButtons :step="0.25" decrementButtonClass="p-button-info"
-                        incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
-                        :allowEmpty="false" :min="0.001" class="mb-3"
-                        @focus="onFocusValue=analysisInitial.heatInputInitial; $event.target.select()"
-                        @keypress.enter="$event.target.blur()"
-                        @focusout="onCellEditCompleteAnalysis('heatInputInitial', analysisInitial.heatInputInitial, true)" />
-
-                      <label for="electricityInputInitial">Electricity</label>  
-                      <InputNumber id="electricityInputInitial" v-model="analysisInitial.electricityInputInitial" mode="decimal" :maxFractionDigits="3"
-                        showButtons :step="0.25" decrementButtonClass="p-button-info"
-                        incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
-                        :allowEmpty="false" :min="0.001" class="mb-3"
-                        @focus="onFocusValue=analysisInitial.electricityInputInitial; $event.target.select()"
-                        @keypress.enter="$event.target.blur()"
-                        @focusout="onCellEditCompleteAnalysis('electricityInputInitial', analysisInitial.electricityInputInitial, true)" />
-
-                      <label for="waterInputInitial">Water</label>  
-                      <InputNumber id="waterInputInitial" v-model="analysisInitial.waterInputInitial" mode="decimal" :maxFractionDigits="3"
-                        showButtons :step="0.25" decrementButtonClass="p-button-info"
-                        incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
-                        :allowEmpty="false" :min="0.001" class="mb-3"
-                        @focus="onFocusValue=analysisInitial.waterInputInitial; $event.target.select()"
-                        @keypress.enter="$event.target.blur()"
-                        @focusout="onCellEditCompleteAnalysis('waterInputInitial', analysisInitial.waterInputInitial, true)" />
-
-                      <label for="transportationInputInitial">Transportation</label>
-                      <InputNumber id="transportationInputInitial" v-model="analysisInitial.transportationInputInitial" mode="decimal" :maxFractionDigits="3"
-                        showButtons :step="0.25" decrementButtonClass="p-button-info"
-                        incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
-                        :allowEmpty="false" :min="0.001"
-                        @focus="onFocusValue=analysisInitial.transportationInputInitial; $event.target.select()"
-                        @keypress.enter="$event.target.blur()"
-                        @focusout="onCellEditCompleteAnalysis('transportationInputInitial', analysisInitial.transportationInputInitial, true)" />
-
-                    </div>
-
-                    <div class="field col-12 md:col-6">
-                      <label for="materialsInputInitial">Materials</label>  
-                      <InputNumber id="materialsInputInitial" v-model="analysisInitial.materialsInputInitial" mode="decimal" :maxFractionDigits="3"
-                        showButtons :step="0.25" decrementButtonClass="p-button-info"
-                        incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
-                        :allowEmpty="false" :min="0.001" class="mb-3"
-                        @focus="onFocusValue=analysisInitial.materialsInputInitial; $event.target.select()"
-                        @keypress.enter="$event.target.blur()"
-                        @focusout="onCellEditCompleteAnalysis('materialsInputInitial', analysisInitial.materialsInputInitial, true)"/>
-
-                      <label for="eventsInputInitial">Events</label>  
-                      <InputNumber id="eventsInputInitial" v-model="analysisInitial.eventsInputInitial" mode="decimal" :maxFractionDigits="3"
-                        showButtons :step="0.25" decrementButtonClass="p-button-info"
-                        incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
-                        :allowEmpty="false" :min="0.001" class="mb-3"
-                        @focus="onFocusValue=analysisInitial.eventsInputInitial; $event.target.select()"
-                        @keypress.enter="$event.target.blur()"
-                        @focusout="onCellEditCompleteAnalysis('eventsInputInitial', analysisInitial.eventsInputInitial, true)"/>
-
-                      <label for="printableDeliverablesInputInitial">Printable Deliverables</label>
-                      <InputNumber id="printableDeliverablesInputInitial" v-model="analysisInitial.printableDeliverablesInputInitial" mode="decimal" :maxFractionDigits="3"
-                        showButtons :step="0.25" decrementButtonClass="p-button-info"
-                        incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
-                        :allowEmpty="false" :min="0.001" class="mb-3"
-                        @focus="onFocusValue=analysisInitial.printableDeliverablesInputInitial; $event.target.select()"
-                        @keypress.enter="$event.target.blur()"
-                        @focusout="onCellEditCompleteAnalysis('printableDeliverablesInputInitial', analysisInitial.printableDeliverablesInputInitial, true)"/>
-
-                      <label for="equipmentInputInitial">Equipment</label>
-                      <InputNumber id="equimentInputInitial" v-model="analysisInitial.equipmentInputInitial" mode="decimal" :maxFractionDigits="3"
-                        showButtons :step="0.25" decrementButtonClass="p-button-info"
-                        incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
-                        :allowEmpty="false" :min="0.001"
-                        @focus="onFocusValue=analysisInitial.equimentInputInitial; $event.target.select()"
-                        @keypress.enter="$event.target.blur()"
-                        @focusout="onCellEditCompleteAnalysis('equipmentInputInitial', analysisInitial.equipmentInputInitial, true)"/>
-                    </div>  
-                  </div>
                 </div>
 
                 <div>
@@ -1676,111 +1096,29 @@
                 <div class="col-6">
                   <h4>Project monitoring period data</h4>
                   <Chart type="radar" :data="chartDataExecution" :options="chartOptions" />
-                  
-                  <h4>Reference values for KPI-3</h4>
-                  <div class="p-fluid formgrid grid">
-                    <div class="field col-12 md:col-6">
-                      <label for="heatInputExecution">Heat</label>
-                      <InputNumber id="heatInputExecution" v-model="analysisExecution.heatInputExecution" mode="decimal" :maxFractionDigits="3"
-                        showButtons :step="0.25" decrementButtonClass="p-button-info"
-                        incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
-                        :allowEmpty="false" :min="0.001" class="mb-3"
-                        @focus="onFocusValue=analysisExecution.heatInputExecution; $event.target.select()"
-                        @keypress.enter="$event.target.blur()"
-                        @focusout="onCellEditCompleteAnalysis('heatInputExecution', analysisExecution.heatInputExecution, false)"/>
-
-                      <label for="electricityInputExecution">Electricity</label>  
-                      <InputNumber id="electricityInputExecution" v-model="analysisExecution.electricityInputExecution" mode="decimal" :maxFractionDigits="3"
-                        showButtons :step="0.25" decrementButtonClass="p-button-info"
-                        incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
-                        :allowEmpty="false" :min="0.001" class="mb-3"
-                        @focus="onFocusValue=analysisExecution.electricityInputExecution; $event.target.select()"
-                        @keypress.enter="$event.target.blur()"
-                        @focusout="onCellEditCompleteAnalysis('electricityInputExecution', analysisExecution.electricityInputExecution, false)"/>
-
-                      <label for="waterInputExecution">Water</label>  
-                      <InputNumber id="waterInputExecution" v-model="analysisExecution.waterInputExecution" mode="decimal" :maxFractionDigits="3"
-                        showButtons :step="0.25" decrementButtonClass="p-button-info"
-                        incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
-                        :allowEmpty="false" :min="0.001" class="mb-3"
-                        @focus="onFocusValue=analysisExecution.waterInputExecution; $event.target.select()"
-                        @keypress.enter="$event.target.blur()"
-                        @focusout="onCellEditCompleteAnalysis('waterInputExecution', analysisExecution.waterInputExecution, false)"/>
-
-                      <label for="transportationInputExecution">Transportation</label>
-                      <InputNumber id="transportationInputExecution" v-model="analysisExecution.transportationInputExecution" mode="decimal" :maxFractionDigits="3"
-                        showButtons :step="0.25" decrementButtonClass="p-button-info"
-                        incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
-                        :allowEmpty="false" :min="0.001"
-                        @focus="onFocusValue=analysisExecution.transportationInputExecution; $event.target.select()"
-                        @keypress.enter="$event.target.blur()"
-                        @focusout="onCellEditCompleteAnalysis('transportationInputExecution', analysisExecution.transportationInputExecution, false)"/>
-
-                    </div>
-
-                    <div class="field col-12 md:col-6">
-                      <label for="materialsInputExecution">Materials</label>  
-                      <InputNumber id="materialsInputExecution" v-model="analysisExecution.materialsInputExecution" mode="decimal" :maxFractionDigits="3"
-                        showButtons :step="0.25" decrementButtonClass="p-button-info"
-                        incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
-                        :allowEmpty="false" :min="0.001" class="mb-3"
-                        @focus="onFocusValue=analysisExecution.materialsInputExecution; $event.target.select()"
-                        @keypress.enter="$event.target.blur()"
-                        @focusout="onCellEditCompleteAnalysis('materialsInputExecution', analysisExecution.materialsInputExecution, false)"/>
-
-                      <label for="eventsInputExecution">Events</label>  
-                      <InputNumber id="eventsInputExecution" v-model="analysisExecution.eventsInputExecution" mode="decimal" :maxFractionDigits="3"
-                        showButtons :step="0.25" decrementButtonClass="p-button-info"
-                        incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
-                        :allowEmpty="false" :min="0.001" class="mb-3"
-                        @focus="onFocusValue=analysisExecution.eventsInputExecution; $event.target.select()"
-                        @keypress.enter="$event.target.blur()"
-                        @focusout="onCellEditCompleteAnalysis('eventsInputExecution', analysisExecution.eventsInputExecution, false)"/>
-
-                      <label for="printableDeliverablesInputExecution">Printable Deliverables</label>
-                      <InputNumber id="printableDeliverablesInputExecution" v-model="analysisExecution.printableDeliverablesInputExecution" mode="decimal" :maxFractionDigits="3"
-                        showButtons :step="0.25" decrementButtonClass="p-button-info"
-                        incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
-                        :allowEmpty="false" :min="0.001" class="mb-3"
-                        @focus="onFocusValue=analysisExecution.printableDeliverablesInputExecution; $event.target.select()"
-                        @keypress.enter="$event.target.blur()"
-                        @focusout="onCellEditCompleteAnalysis('printableDeliverablesInputExecution', analysisExecution.printableDeliverablesInputExecution, false)"/>
-
-                      <label for="equipmentInputExecution">Equipment</label>
-                      <InputNumber id="equimentInputExecution" v-model="analysisExecution.equipmentInputExecution" mode="decimal" :maxFractionDigits="3"
-                        showButtons :step="0.25" decrementButtonClass="p-button-info"
-                        incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
-                        :allowEmpty="false" :min="0.001"
-                        @focus="onFocusValue=analysisExecution.equipmentInputExecution; $event.target.select()"
-                        @keypress.enter="$event.target.blur()"
-                        @focusout="onCellEditCompleteAnalysis('equimentInputExecution', analysisExecution.equimentInputExecution, false)"/>
-                    </div>  
-                  </div>
-
                 </div>
               </div>
             </div>
           </TabPanel>
 
           <!-- Pestaña de Mitigation Scenarios -->
-          <TabPanel header="Additional Data">
+          <TabPanel header="Variables of scenario analysis">
 
             <TabView>
               <!-- Pestaña de Transportation -->
-              <TabPanel header="Transportation">
+              <TabPanel header="Transportation for commuting">
 
                 <div class="card">
-
                   <div class="p-fluid formgrid grid">
-
                     <div class="field col-12" v-if="project.dataTables">
-                      
                       <div class="mb-5 col-12" v-if="project.dataTables.transportationData.percentageDistributionTravelDistance[countryTransform]" >
                         <h3>Percentage distribution of travels by main travel mode (%)</h3>
                         <div class="flex align-items-baseline">
                           <label class="mr-2">Transportation data for the country:</label>
                           <Dropdown class="mb-2" :options="countriesForDropdown" v-model="selectedCountryForTransportationData"/>
                         </div>
+
+
 
                         <div class="flex justify-content-around">
                           <div class="col-5">
@@ -1820,7 +1158,7 @@
                             @keypress.enter="$event.target.blur()"
                             @focusout="onCellEditCompleteTransportationData(project.dataTables.transportationData.percentageDistributionTravelDistance[countryTransform].taxi, countryTransform,'taxi')"/>
 
-                              <label for="nationalRailTransportationData">National Rail</label>
+                            <label for="nationalRailTransportationData">National Rail</label>
                             <InputNumber id="nationalRailTransportationData" v-model="project.dataTables.transportationData.percentageDistributionTravelDistance[countryTransform].nationalRail" mode="decimal" :maxFractionDigits="4"
                             showButtons :step="0.0001" decrementButtonClass="p-button-info"
                             incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
@@ -1882,95 +1220,6 @@
                     </div>
                   </div>
                 </div>
-
-                <div class="card">
-                  <div class="p-fluid formgrid grid">
-                    <div class="field col-12" v-if="project.dataTables">
-                      <div class="mb-5" v-if="project.dataTables.transportationData.percentageDistributionCarsFleet" >
-                        <h3>Percentage distribution (%) of cars fleet by technology (fuel) for EU</h3>
-
-                        <div class="flex justify-content-around">
-                          <div class="col-5">
-                            <label for="dieselTransportationData">Diesel</label>
-                            <InputNumber id="dieselTransportationData" v-model="project.dataTables.transportationData.percentageDistributionCarsFleet.diesel" mode="decimal" :maxFractionDigits="4"
-                            showButtons :step="0.0001" decrementButtonClass="p-button-info"
-                            incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
-                            :allowEmpty="false" :min="0.0000" :max="1" class="mb-3"
-                            @focus="onFocusValue=project.dataTables.transportationData.percentageDistributionCarsFleet.diesel; $event.target.select()"
-                            @keypress.enter="$event.target.blur()"
-                            @focusout="onCellEditCompleteTransportationData2(project.dataTables.transportationData.percentageDistributionCarsFleet.diesel, 'diesel')"/>
-
-                            <label for="petrolTransportationData">Petrol</label>
-                            <InputNumber id="petrolTransportationData" v-model="project.dataTables.transportationData.percentageDistributionCarsFleet.petrol" mode="decimal" :maxFractionDigits="4"
-                            showButtons :step="0.0001" decrementButtonClass="p-button-info"
-                            incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
-                            :allowEmpty="false" :min="0.0000" :max="1" class="mb-3"
-                            @focus="onFocusValue=project.dataTables.transportationData.percentageDistributionCarsFleet.petrol; $event.target.select()"
-                            @keypress.enter="$event.target.blur()"
-                            @focusout="onCellEditCompleteTransportationData2(project.dataTables.transportationData.percentageDistributionCarsFleet.petrol, 'petrol')"/>
-                            
-                            <label for="hybridTransportationData">Hybrid</label>
-                            <InputNumber id="hybridTransportationData" v-model="project.dataTables.transportationData.percentageDistributionCarsFleet.hybrid" mode="decimal" :maxFractionDigits="4"
-                            showButtons :step="0.0001" decrementButtonClass="p-button-info"
-                            incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
-                            :allowEmpty="false" :min="0.0000" :max="1" class="mb-3"
-                            @focus="onFocusValue=project.dataTables.transportationData.percentageDistributionCarsFleet.hybrid; $event.target.select()"
-                            @keypress.enter="$event.target.blur()"
-                            @focusout="onCellEditCompleteTransportationData2(project.dataTables.transportationData.percentageDistributionCarsFleet.hybrid, 'hybrid')"/>
-
-                            <label for="batteryElectricVehicleTransportationData">Battery Electric Vehicle</label>
-                            <InputNumber id="dieselTransportationData" v-model="project.dataTables.transportationData.percentageDistributionCarsFleet.batteryElectricVehicle" mode="decimal" :maxFractionDigits="4"
-                            showButtons :step="0.0001" decrementButtonClass="p-button-info"
-                            incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
-                            :allowEmpty="false" :min="0.0000" :max="1" class="mb-3"
-                            @focus="onFocusValue=project.dataTables.transportationData.percentageDistributionCarsFleet.batteryElectricVehicle; $event.target.select()"
-                            @keypress.enter="$event.target.blur()"
-                            @focusout="onCellEditCompleteTransportationData2(project.dataTables.transportationData.percentageDistributionCarsFleet.batteryElectricVehicle, 'batteryElectricVehicle')"/>
-                          </div>
-
-                          <div class="col-5">
-                            <label for="pluginHybridElectricVehicleTransportationData">Plugin Hybrid Electric Vehicle</label>
-                            <InputNumber id="pluginHybridElectricVehicleTransportationData" v-model="project.dataTables.transportationData.percentageDistributionCarsFleet.pluginHybridElectricVehicle" mode="decimal" :maxFractionDigits="4"
-                            showButtons :step="0.0001" decrementButtonClass="p-button-info"
-                            incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
-                            :allowEmpty="false" :min="0.0000" :max="1" class="mb-3"
-                            @focus="onFocusValue=project.dataTables.transportationData.percentageDistributionCarsFleet.pluginHybridElectricVehicle; $event.target.select()"
-                            @keypress.enter="$event.target.blur()"
-                            @focusout="onCellEditCompleteTransportationData2(project.dataTables.transportationData.percentageDistributionCarsFleet.pluginHybridElectricVehicle, 'pluginHybridElectricVehicle')"/>
-
-                            <label for="cngTransportationData">CNG</label>
-                            <InputNumber id="cngTransportationData" v-model="project.dataTables.transportationData.percentageDistributionCarsFleet.cng" mode="decimal" :maxFractionDigits="4"
-                            showButtons :step="0.0001" decrementButtonClass="p-button-info"
-                            incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
-                            :allowEmpty="false" :min="0.0000" :max="1" class="mb-3"
-                            @focus="onFocusValue=project.dataTables.transportationData.percentageDistributionCarsFleet.cng; $event.target.select()"
-                            @keypress.enter="$event.target.blur()"
-                            @focusout="onCellEditCompleteTransportationData2(project.dataTables.transportationData.percentageDistributionCarsFleet.cng, 'cng')"/>
-
-                            <label for="lpgTransportationData">LPG</label>
-                            <InputNumber id="lpgTransportationData" v-model="project.dataTables.transportationData.percentageDistributionCarsFleet.lpg" mode="decimal" :maxFractionDigits="4"
-                            showButtons :step="0.0001" decrementButtonClass="p-button-info"
-                            incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
-                            :allowEmpty="false" :min="0.0000" :max="1" class="mb-3"
-                            @focus="onFocusValue=project.dataTables.transportationData.percentageDistributionCarsFleet.lpg; $event.target.select()"
-                            @keypress.enter="$event.target.blur()"
-                            @focusout="onCellEditCompleteTransportationData2(project.dataTables.transportationData.percentageDistributionCarsFleet.lpg, 'lpg')"/>
-                            
-                            <label for="otherTransportationData">Other</label>
-                            <InputNumber id="otherTransportationData" v-model="project.dataTables.transportationData.percentageDistributionCarsFleet.other" mode="decimal" :maxFractionDigits="4"
-                            showButtons :step="0.0001" decrementButtonClass="p-button-info"
-                            incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
-                            :allowEmpty="false" :min="0.0000" :max="1" class="mb-3"
-                            @focus="onFocusValue=project.dataTables.transportationData.percentageDistributionCarsFleet.other; $event.target.select()"
-                            @keypress.enter="$event.target.blur()"
-                            @focusout="onCellEditCompleteTransportationData2(project.dataTables.transportationData.percentageDistributionCarsFleet.other, 'other')"/>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                
               </TabPanel>
 
               <!-- Pestaña de Materials -->
@@ -2185,7 +1434,6 @@ import 'primeicons/primeicons.css';
 import pdfMake from 'pdfmake';
 import pdfFonts from 'pdfmake/build/vfs_fonts';
 import htmlToPdfmake from 'html-to-pdfmake';
-import InputSwitch from 'primevue/inputswitch';
 import Divider from 'primevue/divider';
 
 export default {
@@ -2207,7 +1455,6 @@ export default {
     Dialog,
     ColumnGroup,
     Row,
-    InputSwitch,
     Divider
   },
   data() {
@@ -2288,32 +1535,12 @@ export default {
 				datasets: [
 					{
 						label: 'KPI-1',
-						backgroundColor: 'rgba(179,181,198,0.2)',
-						borderColor: 'rgba(179,181,198,1)',
-						pointBackgroundColor: 'rgba(179,181,198,1)',
-						pointBorderColor: '#fff',
-						pointHoverBackgroundColor: '#fff',
-						pointHoverBorderColor: 'rgba(179,181,198,1)',
-						data: [0, 0, 0, 0, 0, 0, 0, 0]
-					},
-					{
-						label: 'KPI-2',
 						backgroundColor: 'rgba(255,99,132,0.2)',
 						borderColor: 'rgba(255,99,132,1)',
 						pointBackgroundColor: 'rgba(255,99,132,1)',
 						pointBorderColor: '#fff',
 						pointHoverBackgroundColor: '#fff',
 						pointHoverBorderColor: 'rgba(255,99,132,1)',
-						data: [0, 0, 0, 0, 0, 0, 0, 0]
-					},
-          {
-						label: 'KPI-3',
-						backgroundColor: 'rgba(50,168,82,0.2)',
-						borderColor: 'rgba(50,168,82,1)',
-						pointBackgroundColor: 'rgba(50,168,82,1)',
-						pointBorderColor: '##fff',
-						pointHoverBackgroundColor: '#fff',
-						pointHoverBorderColor: 'rgba(50,168,82,1)',
 						data: [0, 0, 0, 0, 0, 0, 0, 0]
 					}
 				]
@@ -2323,32 +1550,12 @@ export default {
 				datasets: [
 					{
 						label: 'KPI-1',
-						backgroundColor: 'rgba(179,181,198,0.2)',
-						borderColor: 'rgba(179,181,198,1)',
-						pointBackgroundColor: 'rgba(179,181,198,1)',
-						pointBorderColor: '#fff',
-						pointHoverBackgroundColor: '#fff',
-						pointHoverBorderColor: 'rgba(179,181,198,1)',
-						data: [0, 0, 0, 0, 0, 0, 0, 0]
-					},
-					{
-						label: 'KPI-2',
 						backgroundColor: 'rgba(255,99,132,0.2)',
 						borderColor: 'rgba(255,99,132,1)',
 						pointBackgroundColor: 'rgba(255,99,132,1)',
 						pointBorderColor: '#fff',
 						pointHoverBackgroundColor: '#fff',
 						pointHoverBorderColor: 'rgba(255,99,132,1)',
-						data: [0, 0, 0, 0, 0, 0, 0, 0]
-					},
-          {
-						label: 'KPI-3',
-						backgroundColor: 'rgba(50,168,82,0.2)',
-						borderColor: 'rgba(50,168,82,1)',
-						pointBackgroundColor: 'rgba(50,168,82,1)',
-						pointBorderColor: '##fff',
-						pointHoverBackgroundColor: '#fff',
-						pointHoverBorderColor: 'rgba(50,168,82,1)',
 						data: [0, 0, 0, 0, 0, 0, 0, 0]
 					}
 				]
@@ -2397,7 +1604,8 @@ export default {
       displayPartnersError: false,
       eventsLoaded: false,
       displayUpdateScenarioValues: false,
-      durationHoursPerDayFlag: false
+      durationHoursPerDayFlag: false,
+      projectAdvancedAndInitialInfo: []
     }
   },
   created() {
@@ -2695,6 +1903,33 @@ export default {
 
         this.project = response.data;
 
+        axios.get(`/projects/${response.data.initialProject}`)
+        .then((response) => {
+            this.projectInitial = response.data;
+            this.projectAdvancedAndInitialInfo = [this.project, this.projectInitial]
+
+            this.chartDataInitial.datasets[0].data[0] = (this.projectInitial.printableDeliverablesSimpleCF / this.projectInitial.initialCF) * 100;
+            this.chartDataInitial.datasets[0].data[1] = (this.projectInitial.equipmentSimpleCF / this.projectInitial.initialCF) * 100;
+            this.chartDataInitial.datasets[0].data[2] = (this.projectInitial.electricitySimpleCF / this.projectInitial.initialCF) * 100;
+            this.chartDataInitial.datasets[0].data[3] = (this.projectInitial.waterSimpleCF / this.projectInitial.initialCF) * 100;
+            this.chartDataInitial.datasets[0].data[4] = (this.projectInitial.transportationSimpleCF / this.projectInitial.initialCF) * 100;
+            this.chartDataInitial.datasets[0].data[5] = (this.projectInitial.eventsSimpleCF / this.projectInitial.initialCF) * 100;
+            this.chartDataInitial.datasets[0].data[6] = (this.projectInitial.materialsSimpleCF / this.projectInitial.initialCF) * 100;
+            this.chartDataInitial.datasets[0].data[7] = (this.projectInitial.fuelsHeatSimpleCF / this.projectInitial.initialCF) * 100;
+
+            this.chartDataExecution.datasets[0].data[0] = (this.project.printableDeliverablesAdvancedCF / this.projectInitial.initialCF) * 100;
+            this.chartDataExecution.datasets[0].data[1] = (this.project.equipmentAdvancedCF / this.projectInitial.initialCF) * 100;
+            this.chartDataExecution.datasets[0].data[2] = (this.project.electricityAdvancedCF / this.projectInitial.initialCF) * 100;
+            this.chartDataExecution.datasets[0].data[3] = (this.project.waterAdvancedCF / this.projectInitial.initialCF) * 100;
+            this.chartDataExecution.datasets[0].data[4] = (this.project.transportationAdvancedCF / this.projectInitial.initialCF) * 100;
+            this.chartDataExecution.datasets[0].data[5] = (this.project.eventsAdvancedCF / this.projectInitial.initialCF) * 100;
+            this.chartDataExecution.datasets[0].data[6] = (this.project.materialsAdvancedCF / this.projectInitial.initialCF) * 100;
+            this.chartDataExecution.datasets[0].data[7] = (this.project.fuelsHeatAdvancedCF / this.projectInitial.initialCF) * 100;
+        })
+        .catch(error => {
+            console.log("Error: ", error)
+        })
+
         // Nos traemos las tablas de datos para los cálculos de CF para este proyecto
         axios.get(`/dataTables/${this.$route.params.id}`)
         .then( (responseDataTables) => {
@@ -2704,38 +1939,9 @@ export default {
           console.log('error' + errorDT);
         })
 
-        if (this.project.isInitialProject == this.$store.state.toggleProject) {
-          location.href = '/projects/' + this.project.initialProject
+        if (this.project.isInitialProject == true) {
+          location.href = '/projects/' + this.project.initialProject + "/advanced"
         } else {
-          this.chartDataExecution.datasets[0].data[0] = this.project.printableDeliverablesAdvancedCF,
-          this.chartDataExecution.datasets[0].data[1] = this.project.equipmentAdvancedCF,
-          this.chartDataExecution.datasets[0].data[2] = this.project.electricityAdvancedCF,
-          this.chartDataExecution.datasets[0].data[3] = this.project.waterAdvancedCF,
-          this.chartDataExecution.datasets[0].data[4] = this.project.transportationAdvancedCF,
-          this.chartDataExecution.datasets[0].data[5] = this.project.eventsAdvancedCF,
-          this.chartDataExecution.datasets[0].data[6] = this.project.materialsAdvancedC,
-          this.chartDataExecution.datasets[0].data[7] = this.project.fuelsHeatAdvancedCF
-
-          this.axios.get(`/projects/` + this.project.initialProject)
-          .then( (res) => {
-            this.projectInitial = res.data;
-
-            this.chartDataInitial.datasets[0].data[0] = this.projectInitial.printableDeliverablesAdvancedCF,
-            this.chartDataInitial.datasets[0].data[1] = this.projectInitial.equipmentAdvancedCF,
-            this.chartDataInitial.datasets[0].data[2] = this.projectInitial.electricityAdvancedCF,
-            this.chartDataInitial.datasets[0].data[3] = this.projectInitial.waterAdvancedCF,
-            this.chartDataInitial.datasets[0].data[4] = this.projectInitial.transportationAdvancedCF,
-            this.chartDataInitial.datasets[0].data[5] = this.projectInitial.eventsAdvancedCF,
-            this.chartDataInitial.datasets[0].data[6] = this.projectInitial.materialsAdvancedC,
-            this.chartDataInitial.datasets[0].data[7] = this.projectInitial.fuelsHeatAdvancedCF
-
-            this.calculateKPI2();
-            this.calculateKPI3();
-
-          })
-          .catch((error) => {
-            console.log('error' + error);
-          })
 
           this.axios.get(`/partners?projectId=${this.$route.params.id}`)
           .then((response) => {
@@ -3473,10 +2679,6 @@ export default {
 
       return res;
     },
-    toggleProjectView() {
-      this.$store.commit("toggleProject");
-      location.href = '/projects/' + this.project.initialProject
-    },
     onCellEditCompleteAnalysis(analysisField, newValue, isInitial) {
       // La variable isInitial la vamos a usar para saber si el valor del campo
       // es para el proyecto en la fase inicial o si es de la fase de ejecución
@@ -3489,117 +2691,8 @@ export default {
         this.analysisExecution[analysisField] = newValue;
         this.$store.commit("analysisParamsExecution", this.analysisExecution);
       }
-      this.calculateKPI3();
+      // this.calculateKPI3();
     },
-    calculateKPI2(){
-      
-      // Dataset para el proyecto en fase inicial para los KPI2
-      let advancedCFInitial = this.projectInitial.currentCF;
-
-      let printableDeliverablesInitialKPI2 = (this.projectInitial.printableDeliverablesAdvancedCF / advancedCFInitial) * 100;
-      let equipmentInitialKPI2 = (this.projectInitial.equipmentAdvancedCF / advancedCFInitial) * 100;
-      let electricityInitialKPI2 = (this.projectInitial.electricityAdvancedCF / advancedCFInitial) * 100;
-      let waterInitialKPI2 = (this.projectInitial.waterAdvancedCF / advancedCFInitial) * 100;
-      let transportationInitialKPI2 = (this.projectInitial.transportationAdvancedCF / advancedCFInitial) * 100;
-      let eventsInitialKPI2 = (this.projectInitial.eventsAdvancedCF / advancedCFInitial) * 100;
-      let materialsInitialKPI2 = (this.projectInitial.materialsAdvancedCF / advancedCFInitial) * 100;
-      let heatInitialKPI2 = (this.projectInitial.fuelsHeatAdvancedCF / advancedCFInitial) * 100;
-
-      // Dataset para el proyecto en fase execution para los KPI2
-      let advancedCFExecution = this.project.currentCF;
-
-      let printableDeliverablesExecutionKPI2 = (this.project.printableDeliverablesAdvancedCF / advancedCFExecution) * 100;
-      let equipmentExecutionKPI2 = (this.project.equipmentAdvancedCF / advancedCFExecution) * 100;
-      let electricityExecutionKPI2 = (this.project.electricityAdvancedCF / advancedCFExecution) * 100;
-      let waterExecutionKPI2 = (this.project.waterAdvancedCF / advancedCFExecution) * 100;
-      let transportationExecutionKPI2 = (this.project.transportationAdvancedCF / advancedCFExecution) * 100;
-      let eventsExecutionKPI2 = (this.project.eventsAdvancedCF / advancedCFExecution) * 100;
-      let materialsExecutionKPI2 = (this.project.materialsAdvancedCF / advancedCFExecution) * 100;
-      let heatExecutionKPI2 = (this.project.fuelsHeatAdvancedCF / advancedCFExecution) * 100;
-
-      // Asignamos los valores al dataset de los KPI2
-
-      this.chartDataInitial.datasets[1].data[0] = printableDeliverablesInitialKPI2;
-      this.chartDataInitial.datasets[1].data[1] = equipmentInitialKPI2;
-      this.chartDataInitial.datasets[1].data[2] = electricityInitialKPI2;
-      this.chartDataInitial.datasets[1].data[3] = waterInitialKPI2;
-      this.chartDataInitial.datasets[1].data[4] = transportationInitialKPI2;
-      this.chartDataInitial.datasets[1].data[5] = eventsInitialKPI2;
-      this.chartDataInitial.datasets[1].data[6] = materialsInitialKPI2;
-      this.chartDataInitial.datasets[1].data[7] = heatInitialKPI2;
-
-      this.chartDataExecution.datasets[1].data[0] = printableDeliverablesExecutionKPI2;
-      this.chartDataExecution.datasets[1].data[1] = equipmentExecutionKPI2;
-      this.chartDataExecution.datasets[1].data[2] = electricityExecutionKPI2;
-      this.chartDataExecution.datasets[1].data[3] = waterExecutionKPI2;
-      this.chartDataExecution.datasets[1].data[4] = transportationExecutionKPI2;
-      this.chartDataExecution.datasets[1].data[5] = eventsExecutionKPI2;
-      this.chartDataExecution.datasets[1].data[6] = materialsExecutionKPI2;
-      this.chartDataExecution.datasets[1].data[7] = heatExecutionKPI2;
-    },
-    calculateKPI3(){
-      
-      // Dataset para el proyecto en fase inicial para los KPI3
-      let initialParams = this.$store.state.analysisParamsInitial;
-      let printableDeliverablesReferenceValueInitial = initialParams.printableDeliverablesInputInitial;
-      let equipmentReferenceValueInitial = initialParams.equipmentInputInitial;
-      let electricityReferenceValueInitial = initialParams.electricityInputInitial;
-      let waterReferenceValueInitial = initialParams.waterInputInitial;
-      let transportationReferenceValueInitial = initialParams.transportationInputInitial;
-      let eventsReferenceValueInitial = initialParams.eventsInputInitial;
-      let materialsReferenceValueInitial = initialParams.materialsInputInitial;
-      let heatReferenceValueInitial = initialParams.heatInputInitial;
-
-      let printableDeliverablesInitialKPI3 = (this.projectInitial.printableDeliverablesAdvancedCF / printableDeliverablesReferenceValueInitial)
-      let equipmentInitialKPI3 = (this.projectInitial.equipmentAdvancedCF / equipmentReferenceValueInitial)
-      let electricityInitialKPI3 = (this.projectInitial.electricityAdvancedCF / electricityReferenceValueInitial)
-      let waterInitialKPI3 = (this.projectInitial.waterAdvancedCF / waterReferenceValueInitial)
-      let transportationInitialKPI3 = (this.projectInitial.transportationAdvancedCF / transportationReferenceValueInitial)
-      let eventsInitialKPI3 = (this.projectInitial.eventsAdvancedCF / eventsReferenceValueInitial)
-      let materialsInitialKPI3 = (this.projectInitial.materialsAdvancedCF / materialsReferenceValueInitial)
-      let heatInitialKPI3 = (this.projectInitial.fuelsHeatAdvancedCF / heatReferenceValueInitial)
-
-      // Dataset para el proyecto en fase execution para los KPI3
-      let executionParams = this.$store.state.analysisParamsExecution;
-      let printableDeliverablesReferenceValueExecution = executionParams.printableDeliverablesInputExecution;
-      let equipmentReferenceValueExecution = executionParams.equipmentInputExecution;
-      let electricityReferenceValueExecution = executionParams.electricityInputExecution;
-      let waterReferenceValueExecution = executionParams.waterInputExecution;
-      let transportationReferenceValueExecution = executionParams.transportationInputExecution;
-      let eventsReferenceValueExecution = executionParams.eventsInputExecution;
-      let materialsReferenceValueExecution = executionParams.materialsInputExecution;
-      let heatReferenceValueExecution = executionParams.heatInputExecution;
-
-      let printableDeliverablesExecutionKPI3 = (this.project.printableDeliverablesAdvancedCF / printableDeliverablesReferenceValueExecution)
-      let equipmentExecutionKPI3 = (this.project.equipmentAdvancedCF / equipmentReferenceValueExecution)
-      let electricityExecutionKPI3 = (this.project.electricityAdvancedCF / electricityReferenceValueExecution)
-      let waterExecutionKPI3 = (this.project.waterAdvancedCF / waterReferenceValueExecution)
-      let transportationExecutionKPI3 = (this.project.transportationAdvancedCF / transportationReferenceValueExecution)
-      let eventsExecutionKPI3 = (this.project.eventsAdvancedCF / eventsReferenceValueExecution)
-      let materialsExecutionKPI3 = (this.project.materialsAdvancedCF / materialsReferenceValueExecution)
-      let heatExecutionKPI3 = (this.project.fuelsHeatAdvancedCF / heatReferenceValueExecution)
-
-      // Asignamos los valores al dataset de los KPI3
-
-      this.chartDataInitial.datasets[2].data[0] = printableDeliverablesInitialKPI3;
-      this.chartDataInitial.datasets[2].data[1] = equipmentInitialKPI3;
-      this.chartDataInitial.datasets[2].data[2] = electricityInitialKPI3;
-      this.chartDataInitial.datasets[2].data[3] = waterInitialKPI3;
-      this.chartDataInitial.datasets[2].data[4] = transportationInitialKPI3;
-      this.chartDataInitial.datasets[2].data[5] = eventsInitialKPI3;
-      this.chartDataInitial.datasets[2].data[6] = materialsInitialKPI3;
-      this.chartDataInitial.datasets[2].data[7] = heatInitialKPI3;
-
-      this.chartDataExecution.datasets[2].data[0] = printableDeliverablesExecutionKPI3;
-      this.chartDataExecution.datasets[2].data[1] = equipmentExecutionKPI3;
-      this.chartDataExecution.datasets[2].data[2] = electricityExecutionKPI3;
-      this.chartDataExecution.datasets[2].data[3] = waterExecutionKPI3;
-      this.chartDataExecution.datasets[2].data[4] = transportationExecutionKPI3;
-      this.chartDataExecution.datasets[2].data[5] = eventsExecutionKPI3;
-      this.chartDataExecution.datasets[2].data[6] = materialsExecutionKPI3;
-      this.chartDataExecution.datasets[2].data[7] = heatExecutionKPI3;
-    },
-
     checkEventsOrganizationHoursPerDayGreaterThan24() {
       for( let event of this.project.events.organization) {
         if(event.durationHoursPerDay > 24) {
@@ -3610,6 +2703,19 @@ export default {
         }
       }
     },
+
+    // resetTableValuesToDefault() {
+    //   axios.put('/dataTables/' + this.project._id, this.project.dataTables.transportationData, {params: {
+    //     projectId: this.project._id,
+    //     dataTableName: 'transportation'
+    //   }})
+    //   .then( () => {
+    //     this.$toast.add({severity:'success', summary: 'Successful', detail: 'Percentage distribution of travels updated', life: 3000});
+    //   })
+    //   .catch( (error) => {
+    //     console.log("Error: ", error);
+    //   })
+    // },
 
     onCellEditCompleteTransportationData(newValue, country, fieldTable) {
       // La variable isInitial la vamos a usar para saber si el valor del campo
@@ -3731,7 +2837,7 @@ export default {
   
   computed: {
     ...mapState([
-      'selectedPartnerForEquipmentSimple', 'toggleProject'
+      'selectedPartnerForEquipmentSimple',
     ]),
     selectedPartner() {
       if (!this.project.partners) return {}

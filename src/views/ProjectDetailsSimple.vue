@@ -1,6 +1,6 @@
 <template>
   
-  <Topbar v-model:projectInfo="project" />
+  <Topbar v-model:projectInfo="projectInfo" />
 
   <div class="projectDetailsSimpleGrid">
 
@@ -263,15 +263,6 @@
       <div style="display: flex; align-items: center; justify-content: space-between;">
         <h2 v-if="project.isInitialProject">Project's base data</h2>
         <h2 v-else-if="!project.isInitialProject">Project's scenario data</h2>
-
-        <div style="margin: 1.5rem 0 1rem 0;">
-          <div style="text-align: center">
-            <h5 class="m-0 mb-2">Project data</h5>
-            <label id="app-mode-label" class="initialDataLabel">Base</label>
-            <InputSwitch id="projectData" v-model="toggleProject" @click="toggleProjectView()" />    
-            <label id="app-mode-label" class="currentDataLabel" style="margin-left: 0.75rem; margin-right: auto;">Scenario</label>
-          </div>
-        </div>
       </div>
 
       <TabView>
@@ -866,13 +857,8 @@
           </div>
 
           <div class="card col-12" style="display:flex; justify-content:space-around">
-            <template v-if="!this.project.isInitialProject" >
-              <Button  label="Save project" @click="saveCurrentProject" />
-            </template>
-            <template v-else-if="this.project.isInitialProject">
-              <Button label="Save project" @click="saveCurrentProject" />
-              <Button  label="Export base data to scenario data" @click="displayUpdateScenarioValuesDialog" />    
-            </template>
+            <Button label="Save project" @click="saveCurrentProject" />
+            <Button  label="Export design phase data to monitoring phase" @click="displayUpdateScenarioValuesDialog" />    
           </div>
           
           <div class="col-12">
@@ -985,7 +971,7 @@
               <div class="flex align-items-center  pb-5">
                   <i class="pi pi-exclamation-triangle mr-3" style="font-size: 2rem" />
                   <div>
-                    <p>The base data will be exported to the scenario data, do you want to proceed?</p>
+                    <p>The design phase data will be exported to the monitoring phase for this project, do you want to proceed?</p>
                   </div>
               </div>
               <template #footer>
@@ -996,11 +982,11 @@
 
         </TabPanel>
 
-        <TabPanel header="Additional data">
+        <TabPanel header="Variables of scenario analysis">
 
           <TabView>
               <!-- Pestaña de Transportation -->
-              <TabPanel header="Transportation">
+              <TabPanel header="Transportation for commuting">
 
                 <div class="card">
 
@@ -1009,8 +995,8 @@
                     <div class="field col-12" v-if="project.dataTables">
                       
                       <div class="mb-5 col-12" v-if="project.dataTables.transportationData.percentageDistributionTravelDistance[countryTransform]" >
-                        <h3>Percentage distribution of travels by main travel mode (%)</h3>
-                        <div class="flex align-items-baseline">
+                        <h3>Percentage distribution of travels by main travel mode (%) <span v-if="project.isInitialProject">(Europe)</span></h3>
+                        <div class="flex align-items-baseline" v-if="!project.isInitialProject">
                           <label class="mr-2">Transportation data for the country:</label>
                           <Dropdown class="mb-2" :options="countriesForDropdown" v-model="selectedCountryForTransportationData"/>
                         </div>
@@ -1115,95 +1101,6 @@
                     </div>
                   </div>
                 </div>
-
-                <div class="card">
-                  <div class="p-fluid formgrid grid">
-                    <div class="field col-12" v-if="project.dataTables">
-                      <div class="mb-5" v-if="project.dataTables.transportationData.percentageDistributionCarsFleet" >
-                        <h3>Percentage distribution (%) of cars fleet by technology (fuel) for EU</h3>
-
-                        <div class="flex justify-content-around">
-                          <div class="col-5">
-                            <label for="dieselTransportationData">Diesel</label>
-                            <InputNumber id="dieselTransportationData" v-model="project.dataTables.transportationData.percentageDistributionCarsFleet.diesel" mode="decimal" :maxFractionDigits="4"
-                            showButtons :step="0.0001" decrementButtonClass="p-button-info"
-                            incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
-                            :allowEmpty="false" :min="0.0000" :max="1" class="mb-3"
-                            @focus="onFocusValue=project.dataTables.transportationData.percentageDistributionCarsFleet.diesel; $event.target.select()"
-                            @keypress.enter="$event.target.blur()"
-                            @focusout="onCellEditCompleteTransportationData2(project.dataTables.transportationData.percentageDistributionCarsFleet.diesel, 'diesel')"/>
-
-                            <label for="petrolTransportationData">Petrol</label>
-                            <InputNumber id="petrolTransportationData" v-model="project.dataTables.transportationData.percentageDistributionCarsFleet.petrol" mode="decimal" :maxFractionDigits="4"
-                            showButtons :step="0.0001" decrementButtonClass="p-button-info"
-                            incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
-                            :allowEmpty="false" :min="0.0000" :max="1" class="mb-3"
-                            @focus="onFocusValue=project.dataTables.transportationData.percentageDistributionCarsFleet.petrol; $event.target.select()"
-                            @keypress.enter="$event.target.blur()"
-                            @focusout="onCellEditCompleteTransportationData2(project.dataTables.transportationData.percentageDistributionCarsFleet.petrol, 'petrol')"/>
-                            
-                            <label for="hybridTransportationData">Hybrid</label>
-                            <InputNumber id="hybridTransportationData" v-model="project.dataTables.transportationData.percentageDistributionCarsFleet.hybrid" mode="decimal" :maxFractionDigits="4"
-                            showButtons :step="0.0001" decrementButtonClass="p-button-info"
-                            incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
-                            :allowEmpty="false" :min="0.0000" :max="1" class="mb-3"
-                            @focus="onFocusValue=project.dataTables.transportationData.percentageDistributionCarsFleet.hybrid; $event.target.select()"
-                            @keypress.enter="$event.target.blur()"
-                            @focusout="onCellEditCompleteTransportationData2(project.dataTables.transportationData.percentageDistributionCarsFleet.hybrid, 'hybrid')"/>
-
-                            <label for="batteryElectricVehicleTransportationData">Battery Electric Vehicle</label>
-                            <InputNumber id="dieselTransportationData" v-model="project.dataTables.transportationData.percentageDistributionCarsFleet.batteryElectricVehicle" mode="decimal" :maxFractionDigits="4"
-                            showButtons :step="0.0001" decrementButtonClass="p-button-info"
-                            incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
-                            :allowEmpty="false" :min="0.0000" :max="1" class="mb-3"
-                            @focus="onFocusValue=project.dataTables.transportationData.percentageDistributionCarsFleet.batteryElectricVehicle; $event.target.select()"
-                            @keypress.enter="$event.target.blur()"
-                            @focusout="onCellEditCompleteTransportationData2(project.dataTables.transportationData.percentageDistributionCarsFleet.batteryElectricVehicle, 'batteryElectricVehicle')"/>
-                          </div>
-
-                          <div class="col-5">
-                            <label for="pluginHybridElectricVehicleTransportationData">Plugin Hybrid Electric Vehicle</label>
-                            <InputNumber id="pluginHybridElectricVehicleTransportationData" v-model="project.dataTables.transportationData.percentageDistributionCarsFleet.pluginHybridElectricVehicle" mode="decimal" :maxFractionDigits="4"
-                            showButtons :step="0.0001" decrementButtonClass="p-button-info"
-                            incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
-                            :allowEmpty="false" :min="0.0000" :max="1" class="mb-3"
-                            @focus="onFocusValue=project.dataTables.transportationData.percentageDistributionCarsFleet.pluginHybridElectricVehicle; $event.target.select()"
-                            @keypress.enter="$event.target.blur()"
-                            @focusout="onCellEditCompleteTransportationData2(project.dataTables.transportationData.percentageDistributionCarsFleet.pluginHybridElectricVehicle, 'pluginHybridElectricVehicle')"/>
-
-                            <label for="cngTransportationData">CNG</label>
-                            <InputNumber id="cngTransportationData" v-model="project.dataTables.transportationData.percentageDistributionCarsFleet.cng" mode="decimal" :maxFractionDigits="4"
-                            showButtons :step="0.0001" decrementButtonClass="p-button-info"
-                            incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
-                            :allowEmpty="false" :min="0.0000" :max="1" class="mb-3"
-                            @focus="onFocusValue=project.dataTables.transportationData.percentageDistributionCarsFleet.cng; $event.target.select()"
-                            @keypress.enter="$event.target.blur()"
-                            @focusout="onCellEditCompleteTransportationData2(project.dataTables.transportationData.percentageDistributionCarsFleet.cng, 'cng')"/>
-
-                            <label for="lpgTransportationData">LPG</label>
-                            <InputNumber id="lpgTransportationData" v-model="project.dataTables.transportationData.percentageDistributionCarsFleet.lpg" mode="decimal" :maxFractionDigits="4"
-                            showButtons :step="0.0001" decrementButtonClass="p-button-info"
-                            incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
-                            :allowEmpty="false" :min="0.0000" :max="1" class="mb-3"
-                            @focus="onFocusValue=project.dataTables.transportationData.percentageDistributionCarsFleet.lpg; $event.target.select()"
-                            @keypress.enter="$event.target.blur()"
-                            @focusout="onCellEditCompleteTransportationData2(project.dataTables.transportationData.percentageDistributionCarsFleet.lpg, 'lpg')"/>
-                            
-                            <label for="otherTransportationData">Other</label>
-                            <InputNumber id="otherTransportationData" v-model="project.dataTables.transportationData.percentageDistributionCarsFleet.other" mode="decimal" :maxFractionDigits="4"
-                            showButtons :step="0.0001" decrementButtonClass="p-button-info"
-                            incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
-                            :allowEmpty="false" :min="0.0000" :max="1" class="mb-3"
-                            @focus="onFocusValue=project.dataTables.transportationData.percentageDistributionCarsFleet.other; $event.target.select()"
-                            @keypress.enter="$event.target.blur()"
-                            @focusout="onCellEditCompleteTransportationData2(project.dataTables.transportationData.percentageDistributionCarsFleet.other, 'other')"/>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                
               </TabPanel>
 
               <!-- Pestaña de Materials -->
@@ -1405,7 +1302,6 @@ import Dialog from 'primevue/dialog';
 import pdfMake from 'pdfmake';
 import pdfFonts from 'pdfmake/build/vfs_fonts';
 import htmlToPdfmake from 'html-to-pdfmake';
-import InputSwitch from 'primevue/inputswitch';
 
 import 'primeicons/primeicons.css';
 
@@ -1425,7 +1321,6 @@ export default {
     Topbar,
     Toast,
     Badge,
-    InputSwitch
   },
   data() {
     return {
@@ -1434,8 +1329,9 @@ export default {
       project: {},
       initialProject: {},
       object: {},
+      projectInfo: [],
       countriesForDropdown: ["Albania", "Bosnia & Herzegovina", "Bulgaria", "Croatia", "Cyprus", "Europe", "France", "Greece", "Italy", "Malta", "Montenegro", "North Macedonia", "Portugal", "Slovenia", "Spain"],
-      selectedCountryForTransportationData: "Albania",
+      selectedCountryForTransportationData: "Europe",
       materialsForDropdown: ["Glass", "Food & Drink", "Aluminium Cans", "Plastics", "Paper"],
       selectedMaterialForMaterialsData: "Glass",
       eventsForDropdown: ["International", "National"],
@@ -1630,6 +1526,7 @@ export default {
       this.axios.get(`/projects/${this.$route.params.id}`)
       .then((response) => {
         this.project = response.data;
+        this.projectInfo = [response.data, response.data];
         this.isInitialProject = this.project.isInitialProject;
 
         axios.get(`/dataTables/${this.$route.params.id}`)
@@ -1640,7 +1537,7 @@ export default {
           console.log('error' + errorDT);
         })
 
-        if (this.project.isInitialProject == this.$store.state.toggleProject) {
+        if (this.project.isInitialProject == false) {
           location.href = '/projects/' + this.project.initialProject
         } else {
           this.axios.get(`/partners?projectId=${this.$route.params.id}`)
@@ -2118,10 +2015,6 @@ export default {
           console.log('error' + e);
         })
     },
-    toggleProjectView() {
-      this.$store.commit("toggleProject");
-      location.href = '/projects/' + this.project.initialProject
-    },
 
     onCellEditCompleteTransportationData(newValue, country, fieldTable) {
       // La variable isInitial la vamos a usar para saber si el valor del campo
@@ -2241,7 +2134,7 @@ export default {
     },
   computed: {
     ...mapState([
-      'selectedPartnerForEquipmentSimple', 'toggleProject'
+      'selectedPartnerForEquipmentSimple',
     ]),
     selectedPartner() {
       if (!this.project.partners) return {}
