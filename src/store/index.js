@@ -5,7 +5,6 @@ export default createStore({
   plugins: [createPersistedState()],
   state: {
     toggleValue: false,
-    toggleProject: false,
     appModeText: "CF Design",
     selectedPartnerForEquipmentSimple: "",
     username: '',
@@ -44,13 +43,6 @@ export default createStore({
         state.toggleValue = true;
       }
     },
-    toggleProject(state){
-      if (state.toggleProject) {
-        state.toggleProject = false;
-      } else {
-        state.toggleProject = true;
-      }
-    },
     updateSelectedPartner(state, selectedOption) {
       state.selectedPartnerForEquipmentSimple = selectedOption;
     },
@@ -80,9 +72,6 @@ export default createStore({
     },
     toggleValue({commit}){
       commit("toggleValue");
-    },
-    toggleProject({commit}){
-      commit("toggleProject");
     },
     updateSelectedPartner({commit}, selectedOption) {
       commit("updateSelectedPartner", selectedOption)

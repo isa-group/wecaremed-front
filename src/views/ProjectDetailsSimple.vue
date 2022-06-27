@@ -263,15 +263,6 @@
       <div style="display: flex; align-items: center; justify-content: space-between;">
         <h2 v-if="project.isInitialProject">Project's base data</h2>
         <h2 v-else-if="!project.isInitialProject">Project's scenario data</h2>
-
-        <div style="margin: 1.5rem 0 1rem 0;">
-          <div style="text-align: center">
-            <h5 class="m-0 mb-2">Project data</h5>
-            <label id="app-mode-label" class="initialDataLabel">Base</label>
-            <InputSwitch id="projectData" v-model="toggleProject" @click="toggleProjectView()" />    
-            <label id="app-mode-label" class="currentDataLabel" style="margin-left: 0.75rem; margin-right: auto;">Scenario</label>
-          </div>
-        </div>
       </div>
 
       <TabView>
@@ -1405,7 +1396,6 @@ import Dialog from 'primevue/dialog';
 import pdfMake from 'pdfmake';
 import pdfFonts from 'pdfmake/build/vfs_fonts';
 import htmlToPdfmake from 'html-to-pdfmake';
-import InputSwitch from 'primevue/inputswitch';
 
 import 'primeicons/primeicons.css';
 
@@ -1425,7 +1415,6 @@ export default {
     Topbar,
     Toast,
     Badge,
-    InputSwitch
   },
   data() {
     return {
@@ -1640,7 +1629,7 @@ export default {
           console.log('error' + errorDT);
         })
 
-        if (this.project.isInitialProject == this.$store.state.toggleProject) {
+        if (this.project.isInitialProject == false) {
           location.href = '/projects/' + this.project.initialProject
         } else {
           this.axios.get(`/partners?projectId=${this.$route.params.id}`)
@@ -2118,10 +2107,6 @@ export default {
           console.log('error' + e);
         })
     },
-    toggleProjectView() {
-      this.$store.commit("toggleProject");
-      location.href = '/projects/' + this.project.initialProject
-    },
 
     onCellEditCompleteTransportationData(newValue, country, fieldTable) {
       // La variable isInitial la vamos a usar para saber si el valor del campo
@@ -2241,7 +2226,7 @@ export default {
     },
   computed: {
     ...mapState([
-      'selectedPartnerForEquipmentSimple', 'toggleProject'
+      'selectedPartnerForEquipmentSimple',
     ]),
     selectedPartner() {
       if (!this.project.partners) return {}

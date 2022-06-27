@@ -10,15 +10,6 @@
         <div style="display: flex; align-items: center; justify-content: space-between;">
           <h2 v-if="project.isInitialProject">Project's base data</h2>
           <h2 v-else-if="!project.isInitialProject">Project's monitoring period data</h2>
-
-          <div style="margin: 1.5rem 0 1rem 0;">
-            <div style="text-align: center">
-              <h5 class="m-0 mb-2">Project data</h5>
-              <label id="app-mode-label" class="initialDataLabel">Base</label>
-              <InputSwitch id="projectData" v-model="toggleProject" @click="toggleProjectView()" />    
-              <label id="app-mode-label" class="currentDataLabel" style="margin-left: 0.75rem; margin-right: auto;">Monitoring period</label>
-            </div>
-          </div>
         </div>
 
         <!-- Data -->
@@ -2185,7 +2176,6 @@ import 'primeicons/primeicons.css';
 import pdfMake from 'pdfmake';
 import pdfFonts from 'pdfmake/build/vfs_fonts';
 import htmlToPdfmake from 'html-to-pdfmake';
-import InputSwitch from 'primevue/inputswitch';
 import Divider from 'primevue/divider';
 
 export default {
@@ -2207,7 +2197,6 @@ export default {
     Dialog,
     ColumnGroup,
     Row,
-    InputSwitch,
     Divider
   },
   data() {
@@ -2704,8 +2693,8 @@ export default {
           console.log('error' + errorDT);
         })
 
-        if (this.project.isInitialProject == this.$store.state.toggleProject) {
-          location.href = '/projects/' + this.project.initialProject
+        if (this.project.isInitialProject == true) {
+          location.href = '/projects/' + this.project.initialProject + "/advanced"
         } else {
 
           // Implementación del antiguo KPI-1
@@ -3494,10 +3483,6 @@ export default {
 
       return res;
     },
-    toggleProjectView() {
-      this.$store.commit("toggleProject");
-      location.href = '/projects/' + this.project.initialProject
-    },
     onCellEditCompleteAnalysis(analysisField, newValue, isInitial) {
       // La variable isInitial la vamos a usar para saber si el valor del campo
       // es para el proyecto en la fase inicial o si es de la fase de ejecución
@@ -3752,7 +3737,7 @@ export default {
   
   computed: {
     ...mapState([
-      'selectedPartnerForEquipmentSimple', 'toggleProject'
+      'selectedPartnerForEquipmentSimple',
     ]),
     selectedPartner() {
       if (!this.project.partners) return {}

@@ -34,7 +34,7 @@
                     <div class="layout-topbar-menu">
                         <li>
                             <label id="app-mode-label" for="appMode">{{appModeText}} mode</label>
-                            <InputSwitch id="appMode" v-model="toggleValue" @click="toggleView" />
+                            <InputSwitch id="appMode" v-model="toggleValue" @click="toggleViewProjectDetails" />
                         </li>
                     </div>
                     <li>
@@ -70,7 +70,7 @@
                 <div class="layout-topbar-menu">
                     <li>
                         <label id="app-mode-label" for="appMode">{{appModeText}} mode</label>
-                        <InputSwitch id="appMode" v-model="toggleValue" @click="toggleView" />
+                        <InputSwitch id="appMode" v-model="toggleValue" @click="toggleViewHome" />
                     </li>
                 </div>
                 <li>
@@ -140,13 +140,16 @@ export default {
         closeConfirmation() {
             this.displayConfirmation = false;
         },
-        toggleView() {
+        toggleViewHome() {
             this.$store.commit("toggleView")
-            if (this.$route.name === "Project Details Simple" && this.$store.state.toggleValue === true) {
-                window.location = ("/projects/" + this.$route.params.id + "/advanced")
+        },
+        toggleViewProjectDetails() {
+            this.$store.dispatch("toggleView")
+            if (this.$store.state.toggleValue == true) {
+                window.location = ("/projects/" + this.projectInfo.initialProject + "/advanced")
             }
-            if (this.$route.name === "Project Details Advanced" && this.$store.state.toggleValue === false) {
-                window.location = ("/projects/" + this.$route.params.id)
+            if (this.$store.state.toggleValue == false) {
+                window.location = ("/projects/" + this.projectInfo.initialProject)
             }
         },
         getTextColorFromCFIndex(cfIndex) {

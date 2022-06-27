@@ -72,7 +72,7 @@
 
         <Column field="actions" header="Actions">
           <template #body="slotProps">
-            <router-link :to="'/projects/' + (this.$store.state.toggleProject == true ? slotProps.data._id : slotProps.data.initialProject)">
+            <router-link :to="'/projects/' + (this.$store.state.toggleValue == true ? slotProps.data._id : slotProps.data.initialProject)">
               <i class="pi pi-arrow-circle-right mr-3" v-tooltip.top="'Go to project'" />
             </router-link>
             <router-link :to="'/editProject/' + (slotProps.data._id)">
