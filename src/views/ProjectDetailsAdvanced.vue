@@ -1118,6 +1118,8 @@
                           <Dropdown class="mb-2" :options="countriesForDropdown" v-model="selectedCountryForTransportationData"/>
                         </div>
 
+
+
                         <div class="flex justify-content-around">
                           <div class="col-5">
                             <label for="carTransportationData">Car</label>
@@ -2701,6 +2703,19 @@ export default {
         }
       }
     },
+
+    // resetTableValuesToDefault() {
+    //   axios.put('/dataTables/' + this.project._id, this.project.dataTables.transportationData, {params: {
+    //     projectId: this.project._id,
+    //     dataTableName: 'transportation'
+    //   }})
+    //   .then( () => {
+    //     this.$toast.add({severity:'success', summary: 'Successful', detail: 'Percentage distribution of travels updated', life: 3000});
+    //   })
+    //   .catch( (error) => {
+    //     console.log("Error: ", error);
+    //   })
+    // },
 
     onCellEditCompleteTransportationData(newValue, country, fieldTable) {
       // La variable isInitial la vamos a usar para saber si el valor del campo
