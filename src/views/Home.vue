@@ -57,7 +57,7 @@
         </template>
 
         <template v-else>
-          <Column field="initialCF" header="Base Phase CF (t CO₂e)" :sortable="true">
+          <Column field="initialCF" header="Design Phase CF (t CO₂e)" :sortable="true">
             <template #body="slotProps">
               <span :class="getTextColorFromCFIndex(slotProps.data.initialCF)">{{slotProps.data.initialCF}}</span>
             </template>

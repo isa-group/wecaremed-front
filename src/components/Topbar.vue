@@ -14,7 +14,7 @@
                         <h2>{{(new Date(projectInfo.to).getMonth() + 1).toString().padStart(2, "0") + '/' + new Date(projectInfo.to).getFullYear()}})&nbsp;</h2> 
                         
                         <Badge :value="initialCF + ' t CO₂e'" size="large" :class="toggleValue == true ? 'initialCF' : 'currentCF'" :severity="getTextColorFromCFIndex(initialCF)"
-                        v-tooltip.bottom="'Base Phase CF'" />
+                        v-tooltip.bottom="'Design Phase CF'" />
                         
                         <span v-if="$store.state.toggleValue">
                             &nbsp;<span style="font-size: 16px">--></span>&nbsp;
