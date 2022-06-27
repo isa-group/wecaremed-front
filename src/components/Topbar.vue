@@ -1,7 +1,7 @@
 <template>
 	<div class="layout-topbar" :style="projectInfo ? 'display: inline-table !important;' : ''">
 
-        <template v-if="projectInfo">
+        <template v-if="projectInfo[0]">
             <div style="display: flex; align-items: center;">
                 <router-link to="/" class="layout-topbar-logo mr-3">
                     <img alt="Wecaremed Logo" :src="WecaremedLogo" class="ml-2" v-tooltip.bottom="'Go to home'" />
@@ -9,9 +9,9 @@
 
                     <div style="display: flex;align-items: center;width: 100%;place-content: center;">
                         
-                        <h2>{{projectInfo.name}}&nbsp;</h2>
-                        <h2>({{ (new Date(projectInfo.from).getMonth() + 1).toString().padStart(2, "0") + '/' + new Date(projectInfo.from).getFullYear()}} -&nbsp;</h2>
-                        <h2>{{(new Date(projectInfo.to).getMonth() + 1).toString().padStart(2, "0") + '/' + new Date(projectInfo.to).getFullYear()}})&nbsp;</h2> 
+                        <h2>{{projectInfo[0].name}}&nbsp;</h2>
+                        <h2>({{ (new Date(projectInfo[0].from).getMonth() + 1).toString().padStart(2, "0") + '/' + new Date(projectInfo[0].from).getFullYear()}} -&nbsp;</h2>
+                        <h2>{{(new Date(projectInfo[0].to).getMonth() + 1).toString().padStart(2, "0") + '/' + new Date(projectInfo[0].to).getFullYear()}})&nbsp;</h2> 
                         
                         <Badge :value="initialCF + ' t CO₂e'" size="large" :class="toggleValue == true ? 'initialCF' : 'currentCF'" :severity="getTextColorFromCFIndex(initialCF)"
                         v-tooltip.bottom="'Design Phase CF'" />
@@ -59,7 +59,7 @@
             </div>
         </template>
 
-        <template v-else-if="!projectInfo">
+        <template v-else-if="!projectInfo[0]">
             <router-link to="/" class="layout-topbar-logo mr-3">
                 <img alt="Wecaremed Logo" :src="WecaremedLogo" class="ml-2" v-tooltip.bottom="'Go to home'" />
 
@@ -146,10 +146,10 @@ export default {
         toggleViewProjectDetails() {
             this.$store.dispatch("toggleView")
             if (this.$store.state.toggleValue == true) {
-                window.location = ("/projects/" + this.projectInfo.initialProject + "/advanced")
+                window.location = ("/projects/" + this.projectInfo[0].initialProject + "/advanced")
             }
             if (this.$store.state.toggleValue == false) {
-                window.location = ("/projects/" + this.projectInfo.initialProject)
+                window.location = ("/projects/" + this.projectInfo[0].initialProject)
             }
         },
         getTextColorFromCFIndex(cfIndex) {
@@ -179,10 +179,10 @@ export default {
             'toggleValue', 'appModeText'
         ]),
         initialCF() {
-            return this.projectInfo ? this.projectInfo.initialCF : null
+            return this.projectInfo[1] ? this.projectInfo[1].initialCF : null
         },
         currentCF() {
-            return this.projectInfo ? this.projectInfo.currentCF : null
+            return this.projectInfo[0] ? this.projectInfo[0].currentCF : null
         }
     }
 }
