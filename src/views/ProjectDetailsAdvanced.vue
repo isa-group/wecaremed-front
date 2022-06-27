@@ -1433,13 +1433,7 @@
             </div> -->
 
             <div class="card" style="display:flex; justify-content:space-around">
-              <template v-if="!project.isInitialProject">
-                <Button  label="Save project" @click="saveCurrentProject" />
-              </template>
-              <template v-else-if="project.isInitialProject">
-                <Button label="Save project" @click="saveCurrentProject" />
-                <Button  label="Export base data to monitoring period data" @click="displayUpdateScenarioValuesDialog" />
-              </template>
+              <Button label="Save project" @click="saveCurrentProject" />
             </div>
             <div class="col-12">
               <div class="card p-fluid" style="display: flex; flex-direction: column; align-items: center; justify-content: space-around;">

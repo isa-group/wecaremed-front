@@ -857,13 +857,8 @@
           </div>
 
           <div class="card col-12" style="display:flex; justify-content:space-around">
-            <template v-if="!this.project.isInitialProject" >
-              <Button  label="Save project" @click="saveCurrentProject" />
-            </template>
-            <template v-else-if="this.project.isInitialProject">
-              <Button label="Save project" @click="saveCurrentProject" />
-              <Button  label="Export base data to scenario data" @click="displayUpdateScenarioValuesDialog" />    
-            </template>
+            <Button label="Save project" @click="saveCurrentProject" />
+            <Button  label="Export design phase data to monitoring phase" @click="displayUpdateScenarioValuesDialog" />    
           </div>
           
           <div class="col-12">
@@ -976,7 +971,7 @@
               <div class="flex align-items-center  pb-5">
                   <i class="pi pi-exclamation-triangle mr-3" style="font-size: 2rem" />
                   <div>
-                    <p>The base data will be exported to the scenario data, do you want to proceed?</p>
+                    <p>The design phase data will be exported to the monitoring phase for this project, do you want to proceed?</p>
                   </div>
               </div>
               <template #footer>

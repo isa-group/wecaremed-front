@@ -1,7 +1,7 @@
 <template>
 
   <Topbar />
-  
+
   <div style="display: flex;justify-content: space-evenly; align-items: center;">
 
     <Toast position="bottom-right"/>
@@ -9,7 +9,7 @@
     <div class="card col-8">
       <h1>My projects</h1>
 
-      <DataTable :value="projects" :paginator="true" class="p-datatable-gridlines" dataKey="id"
+      <DataTable :value="projects" :paginator="true" class="p-datatable-gridlines" dataKey="id" ref="dt" :exportFilename="$store.state.toggleValue == false ? 'WECAREMED - My projects in Design phase' : 'WECAREMED - My projects in Monitoring phase'"
       :rowHover="true" sortMode="multiple" :rows="10" :loading="loading" responsiveLayout="scroll">
         
         <template #header>
@@ -19,6 +19,8 @@
                   <Button class="p-button-info"><i class="pi pi-plus mr-2"/>Create a new project</Button>
                 </router-link>
               </div>
+              <Button icon="pi pi-external-link" :label="$store.state.toggleValue == false ? 'Export Design phase data to CSV' 
+              : 'Export Monitoring phase data to CSV'" @click="exportCSV($event)" />
             </div>
         </template>
 
@@ -70,7 +72,7 @@
           </Column>
         </template>
 
-        <Column field="actions" header="Actions">
+        <Column field="actions" header="Actions" :exportable="false">
           <template #body="slotProps">
             <router-link :to="'/projects/' + (this.$store.state.toggleValue == true ? slotProps.data._id : slotProps.data.initialProject)">
               <i class="pi pi-arrow-circle-right mr-3" v-tooltip.top="'Go to project'" />
@@ -169,6 +171,9 @@ export default {
       .catch((e)=>{
         console.log('error' + e);
       })
+    },
+    exportCSV() {
+      this.$refs.dt.exportCSV();
     },
     getTextColorFromCFIndex(cfIndex) {
       cfIndex
