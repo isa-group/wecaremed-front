@@ -325,7 +325,8 @@
 
               <Column field="employeesWorkingWPP" header="Number of full time staff members" :sortable="true">
                 <template #editor="slotProps">
-                  <InputNumber v-model="slotProps.data[slotProps.field]" mode="decimal" showButtons decrementButtonClass="p-button-info"
+                  <InputNumber v-model="slotProps.data[slotProps.field]" mode="decimal" :maxFractionDigits="3"
+                   showButtons :step="0.25" decrementButtonClass="p-button-info"
                   incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
                   :allowEmpty="false" :min="0" @focus="$event.target.select()" @focusout="savePartners"/>
                 </template>
@@ -333,7 +334,8 @@
 
               <Column field="seasonalEmployees" header="Number of part time staff members" :sortable="true">
                 <template #editor="slotProps">
-                  <InputNumber v-model="slotProps.data[slotProps.field]" mode="decimal" showButtons decrementButtonClass="p-button-info"
+                  <InputNumber v-model="slotProps.data[slotProps.field]" mode="decimal" :maxFractionDigits="3"
+                  showButtons :step="0.25" decrementButtonClass="p-button-info"
                   incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
                   :allowEmpty="false" :min="0" @focus="$event.target.select()" @focusout="savePartners"/>
                 </template>
@@ -982,7 +984,7 @@
 
         </TabPanel>
 
-        <TabPanel header="Variables of scenario analysis">
+        <TabPanel header="Additional data">
 
           <TabView>
               <!-- Pestaña de Transportation -->

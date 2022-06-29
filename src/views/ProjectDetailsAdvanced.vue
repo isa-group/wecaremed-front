@@ -1102,7 +1102,7 @@
           </TabPanel>
 
           <!-- Pestaña de Mitigation Scenarios -->
-          <TabPanel header="Variables of scenario analysis">
+          <TabPanel header="Additional data">
 
             <TabView>
               <!-- Pestaña de Transportation -->
