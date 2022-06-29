@@ -1077,30 +1077,6 @@
             </div>
           </TabPanel>
 
-          <TabPanel v-if="!this.project.isInitialProject" header="Analysis">
-            <div class="card">
-
-              <h3>Analysis of the project's base and monitoring period data</h3>
-
-              <div class="flex justify-content-around text-center">
-                <div class="col-6">
-                  <h4>Project base data</h4>
-                  <Chart type="radar" :data="chartDataInitial" :options="chartOptions" />
-                </div>
-
-                <div>
-                    <Divider layout="vertical">
-                    </Divider>
-                </div>
-
-                <div class="col-6">
-                  <h4>Project monitoring period data</h4>
-                  <Chart type="radar" :data="chartDataExecution" :options="chartOptions" />
-                </div>
-              </div>
-            </div>
-          </TabPanel>
-
           <!-- Pestaña de Mitigation Scenarios -->
           <TabPanel header="Additional data">
 
@@ -1399,6 +1375,50 @@
               </TabPanel>
             </TabView>
           </TabPanel>
+
+          <TabPanel v-if="!this.project.isInitialProject" header="Analysis">
+            <div class="card">
+
+              <h3>Analysis of the project's monitoring period data</h3>
+
+              <div class="flex justify-content-around text-center">
+                <!-- <div class="col-6">
+                  <h4>Project base data</h4>
+                  <Chart type="radar" :data="chartDataInitial" :options="chartOptions" />
+                </div>
+
+                <div>
+                    <Divider layout="vertical">
+                    </Divider>
+                </div> -->
+
+                <div class="col-12">
+                  <div class="col-6" style="position: relative; left: 50%; transform: translateX(-50%);">
+                  <!-- <h4>Project monitoring period data</h4> -->
+                  <Chart type="radar" :data="chartDataExecution" :options="chartOptions" />
+                  </div>
+
+                  <div class="col-12">
+                    <div class="col-12 flex justify-content-center">
+                      <h2 class="col-6 mb-2">Design phase CF:
+                        <Badge :value="projectInitial.initialCF  + ' t CO₂e'" class="ml-2 currentCF" size="xlarge" :severity="getTextColorFromCFIndex(projectInitial.initialCF)" />
+                      </h2>
+
+                      <h2 class="col-6 mb-2">Monitoring phase CF:
+                        <Badge :value="project.currentCF  + ' t CO₂e'" class="ml-2 currentCF" size="xlarge" :severity="getTextColorFromCFIndex(project.currentCF)" />
+                      </h2>
+                    </div>
+
+                    <h2 class="mb-2">Difference in the CF between the two phases:
+                      <Badge :value="projectInitial.initialCF - project.currentCF  + ' t CO₂e'" class="ml-2 currentCF" size="xlarge" :severity="getTextColorFromCFIndex(projectInitial.initialCF - project.currentCF)" />
+                    </h2>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+          </TabPanel>
+
 				</TabView>
       </div>
     </div>
@@ -1444,7 +1464,7 @@ import 'primeicons/primeicons.css';
 import pdfMake from 'pdfmake';
 import pdfFonts from 'pdfmake/build/vfs_fonts';
 import htmlToPdfmake from 'html-to-pdfmake';
-import Divider from 'primevue/divider';
+// import Divider from 'primevue/divider';
 
 export default {
   name: 'ProjectDetailsAdvanced',
@@ -1465,7 +1485,7 @@ export default {
     Dialog,
     ColumnGroup,
     Row,
-    Divider
+    // Divider
   },
   data() {
     return {
@@ -1540,26 +1560,26 @@ export default {
         {value: "Printable Deliverables"},
         {value: "Equipment"},
       ],
-      chartDataInitial: {
-				labels: ['Printable deliverables', 'Equipment', 'Electricity', 'Water', 'Transportation', 'Events', 'Materials', 'Heat'],
-				datasets: [
-					{
-						label: 'KPI-1',
-						backgroundColor: 'rgba(255,99,132,0.2)',
-						borderColor: 'rgba(255,99,132,1)',
-						pointBackgroundColor: 'rgba(255,99,132,1)',
-						pointBorderColor: '#fff',
-						pointHoverBackgroundColor: '#fff',
-						pointHoverBorderColor: 'rgba(255,99,132,1)',
-						data: [0, 0, 0, 0, 0, 0, 0, 0]
-					}
-				]
-			},
+      // chartDataInitial: {
+			// 	labels: ['Printable deliverables', 'Equipment', 'Electricity', 'Water', 'Transportation', 'Events', 'Materials', 'Heat'],
+			// 	datasets: [
+			// 		{
+			// 			label: 'KPI-1',
+			// 			backgroundColor: 'rgba(255,99,132,0.2)',
+			// 			borderColor: 'rgba(255,99,132,1)',
+			// 			pointBackgroundColor: 'rgba(255,99,132,1)',
+			// 			pointBorderColor: '#fff',
+			// 			pointHoverBackgroundColor: '#fff',
+			// 			pointHoverBorderColor: 'rgba(255,99,132,1)',
+			// 			data: [0, 0, 0, 0, 0, 0, 0, 0]
+			// 		}
+			// 	]
+			// },
       chartDataExecution: {
 				labels: ['Printable deliverables', 'Equipment', 'Electricity', 'Water', 'Transportation', 'Events', 'Materials', 'Heat'],
 				datasets: [
 					{
-						label: 'KPI-1',
+						// label: 'KPI-1',
 						backgroundColor: 'rgba(255,99,132,0.2)',
 						borderColor: 'rgba(255,99,132,1)',
 						pointBackgroundColor: 'rgba(255,99,132,1)',
@@ -1571,8 +1591,9 @@ export default {
 				]
 			},
 			chartOptions: {
-				plugins: {
+        plugins: {
           legend: {
+            display: false,
             labels: {
               color: '#495057'
             }
@@ -1918,23 +1939,23 @@ export default {
             this.projectInitial = response.data;
             this.projectAdvancedAndInitialInfo = [this.project, this.projectInitial]
 
-            this.chartDataInitial.datasets[0].data[0] = (this.projectInitial.printableDeliverablesSimpleCF / this.projectInitial.initialCF) * 100;
-            this.chartDataInitial.datasets[0].data[1] = (this.projectInitial.equipmentSimpleCF / this.projectInitial.initialCF) * 100;
-            this.chartDataInitial.datasets[0].data[2] = (this.projectInitial.electricitySimpleCF / this.projectInitial.initialCF) * 100;
-            this.chartDataInitial.datasets[0].data[3] = (this.projectInitial.waterSimpleCF / this.projectInitial.initialCF) * 100;
-            this.chartDataInitial.datasets[0].data[4] = (this.projectInitial.transportationSimpleCF / this.projectInitial.initialCF) * 100;
-            this.chartDataInitial.datasets[0].data[5] = (this.projectInitial.eventsSimpleCF / this.projectInitial.initialCF) * 100;
-            this.chartDataInitial.datasets[0].data[6] = (this.projectInitial.materialsSimpleCF / this.projectInitial.initialCF) * 100;
-            this.chartDataInitial.datasets[0].data[7] = (this.projectInitial.fuelsHeatSimpleCF / this.projectInitial.initialCF) * 100;
+            // this.chartDataInitial.datasets[0].data[0] = (this.projectInitial.printableDeliverablesSimpleCF / this.projectInitial.initialCF) * 100;
+            // this.chartDataInitial.datasets[0].data[1] = (this.projectInitial.equipmentSimpleCF / this.projectInitial.initialCF) * 100;
+            // this.chartDataInitial.datasets[0].data[2] = (this.projectInitial.electricitySimpleCF / this.projectInitial.initialCF) * 100;
+            // this.chartDataInitial.datasets[0].data[3] = (this.projectInitial.waterSimpleCF / this.projectInitial.initialCF) * 100;
+            // this.chartDataInitial.datasets[0].data[4] = (this.projectInitial.transportationSimpleCF / this.projectInitial.initialCF) * 100;
+            // this.chartDataInitial.datasets[0].data[5] = (this.projectInitial.eventsSimpleCF / this.projectInitial.initialCF) * 100;
+            // this.chartDataInitial.datasets[0].data[6] = (this.projectInitial.materialsSimpleCF / this.projectInitial.initialCF) * 100;
+            // this.chartDataInitial.datasets[0].data[7] = (this.projectInitial.fuelsHeatSimpleCF / this.projectInitial.initialCF) * 100;
 
-            this.chartDataExecution.datasets[0].data[0] = (this.project.printableDeliverablesAdvancedCF / this.projectInitial.initialCF) * 100;
-            this.chartDataExecution.datasets[0].data[1] = (this.project.equipmentAdvancedCF / this.projectInitial.initialCF) * 100;
-            this.chartDataExecution.datasets[0].data[2] = (this.project.electricityAdvancedCF / this.projectInitial.initialCF) * 100;
-            this.chartDataExecution.datasets[0].data[3] = (this.project.waterAdvancedCF / this.projectInitial.initialCF) * 100;
-            this.chartDataExecution.datasets[0].data[4] = (this.project.transportationAdvancedCF / this.projectInitial.initialCF) * 100;
-            this.chartDataExecution.datasets[0].data[5] = (this.project.eventsAdvancedCF / this.projectInitial.initialCF) * 100;
-            this.chartDataExecution.datasets[0].data[6] = (this.project.materialsAdvancedCF / this.projectInitial.initialCF) * 100;
-            this.chartDataExecution.datasets[0].data[7] = (this.project.fuelsHeatAdvancedCF / this.projectInitial.initialCF) * 100;
+            this.chartDataExecution.datasets[0].data[0] = (this.project.printableDeliverablesAdvancedCF / this.projectInitial.initialCF);
+            this.chartDataExecution.datasets[0].data[1] = (this.project.equipmentAdvancedCF / this.projectInitial.initialCF);
+            this.chartDataExecution.datasets[0].data[2] = (this.project.electricityAdvancedCF / this.projectInitial.initialCF);
+            this.chartDataExecution.datasets[0].data[3] = (this.project.waterAdvancedCF / this.projectInitial.initialCF);
+            this.chartDataExecution.datasets[0].data[4] = (this.project.transportationAdvancedCF / this.projectInitial.initialCF);
+            this.chartDataExecution.datasets[0].data[5] = (this.project.eventsAdvancedCF / this.projectInitial.initialCF);
+            this.chartDataExecution.datasets[0].data[6] = (this.project.materialsAdvancedCF / this.projectInitial.initialCF);
+            this.chartDataExecution.datasets[0].data[7] = (this.project.fuelsHeatAdvancedCF / this.projectInitial.initialCF);
         })
         .catch(error => {
             console.log("Error: ", error)
