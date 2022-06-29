@@ -1,7 +1,7 @@
 <template>
 	<div class="layout-topbar" :style="projectInfo ? 'display: inline-table !important;' : ''">
 
-        <template v-if="projectInfo[0]">
+        <template v-if="projectInfo && projectInfo[0]">
             <div style="display: flex; align-items: center;">
                 <router-link to="/" class="layout-topbar-logo mr-3">
                     <img alt="Wecaremed Logo" :src="WecaremedLogo" class="ml-2" v-tooltip.bottom="'Go to home'" />
@@ -21,13 +21,6 @@
                             <Badge :value="currentCF + ' t CO₂e'" size="large" class="currentCF" :severity="getTextColorFromCFIndex(currentCF)"
                             v-tooltip.bottom="'Monitoring Phase CF'"/>
                         </span>
-                        
-
-                        <!-- Al recalcular el CF, se devuelve el project con los nuevos datos, por tanto, es necesario actualizar
-                             la vista, y para ello hay que modificar informacion fuera de este componente, lo cual, complica las cosas -->
-                             
-                        <!-- <Button icon="pi pi-replay" class="p-button-rounded p-button-text p-button-plain ml-3" @click="calculateCF" /> -->
-
                     </div>
                 
                 <ul class="layout-topbar-menu lg:flex origin-top">
@@ -59,7 +52,7 @@
             </div>
         </template>
 
-        <template v-else-if="!projectInfo[0]">
+        <template v-else-if="!projectInfo">
             <router-link to="/" class="layout-topbar-logo mr-3">
                 <img alt="Wecaremed Logo" :src="WecaremedLogo" class="ml-2" v-tooltip.bottom="'Go to home'" />
 

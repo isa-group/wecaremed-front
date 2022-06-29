@@ -1102,7 +1102,7 @@
           </TabPanel>
 
           <!-- Pestaña de Mitigation Scenarios -->
-          <TabPanel header="Variables of scenario analysis">
+          <TabPanel header="Additional data">
 
             <TabView>
               <!-- Pestaña de Transportation -->
@@ -1116,9 +1116,9 @@
                         <div class="flex align-items-baseline">
                           <label class="mr-2">Transportation data for the country:</label>
                           <Dropdown class="mb-2" :options="countriesForDropdown" v-model="selectedCountryForTransportationData"/>
+
+                          
                         </div>
-
-
 
                         <div class="flex justify-content-around">
                           <div class="col-5">
@@ -1217,6 +1217,9 @@
                         </div>
 
                       </div>
+                      <div>
+                            <Button label="Reset values" @click="resetTableValuesToDefault('transportation')" class="p-button-info" />
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -1269,6 +1272,10 @@
                             @focusout="onCellEditCompleteMaterialsData(project.dataTables.materialData.percentageDistributionMaterialsUse[materialTransform].recycled, materialTransform,'recycled')"/>
                           </div>
                         </div>
+
+                        <div>
+                            <Button label="Reset values" @click="resetTableValuesToDefault('material')" class="p-button-info" />
+                      </div>
                       </div>
                     </div>
                   </div>
@@ -1381,6 +1388,9 @@
 
                         </div>
 
+                        <div>
+                            <Button label="Reset values" @click="resetTableValuesToDefault('events')" class="p-button-info" />
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -2704,18 +2714,25 @@ export default {
       }
     },
 
-    // resetTableValuesToDefault() {
-    //   axios.put('/dataTables/' + this.project._id, this.project.dataTables.transportationData, {params: {
-    //     projectId: this.project._id,
-    //     dataTableName: 'transportation'
-    //   }})
-    //   .then( () => {
-    //     this.$toast.add({severity:'success', summary: 'Successful', detail: 'Percentage distribution of travels updated', life: 3000});
-    //   })
-    //   .catch( (error) => {
-    //     console.log("Error: ", error);
-    //   })
-    // },
+    resetTableValuesToDefault(table) {
+      axios.put('/projects/resetDefaultValues/' + this.project._id,this.project.dataTables.transportationData, {params: {
+        projectId: this.project._id,
+        dataTableName: table
+      }})
+      .then( () => {
+        this.$toast.add({severity:'success', summary: 'Successful', detail: 'Percentage distribution of travels values has been reset to default', life: 3000});
+        axios.get(`/dataTables/${this.$route.params.id}`)
+        .then( (responseDataTables) => {
+          this.project.dataTables = responseDataTables.data;
+        })
+        .catch( (errorDT) => {
+          console.log('error' + errorDT);
+        })
+      })
+      .catch( (error) => {
+        console.log("Error: ", error);
+      })
+    },
 
     onCellEditCompleteTransportationData(newValue, country, fieldTable) {
       // La variable isInitial la vamos a usar para saber si el valor del campo
