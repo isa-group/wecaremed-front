@@ -7,6 +7,7 @@
     <Toast position="bottom-right"/>
 
     <div class="card col-8">
+
       <h1>My projects</h1>
 
       <DataTable :value="projects" :paginator="true" class="p-datatable-gridlines" dataKey="id" ref="dt" :exportFilename="$store.state.toggleValue == false ? 'WECAREMED - My projects in Design phase' : 'WECAREMED - My projects in Monitoring phase'"
@@ -53,7 +54,7 @@
         <template v-if="!this.$store.state.toggleValue">
           <Column field="initialCF" header="CF Estimation (t CO₂e)" :sortable="true">
             <template #body="slotProps">
-              <span :class="getTextColorFromCFIndex(slotProps.data.initialCF)">{{slotProps.data.initialCF}}</span>
+              <span :class="getTextColorFromCFIndex(slotProps.data.initialProjectData.initialCF)">{{slotProps.data.initialProjectData.initialCF}}</span>
             </template>
           </Column>
         </template>
@@ -61,7 +62,7 @@
         <template v-else>
           <Column field="initialCF" header="Design Phase CF (t CO₂e)" :sortable="true">
             <template #body="slotProps">
-              <span :class="getTextColorFromCFIndex(slotProps.data.initialCF)">{{slotProps.data.initialCF}}</span>
+              <span :class="getTextColorFromCFIndex(slotProps.data.initialProjectData.initialCF)">{{slotProps.data.initialProjectData.initialCF}}</span>
             </template>
           </Column>
 
@@ -151,7 +152,8 @@ export default {
       deleteProjectDialog: false,
       loading: true,
       projects: [],
-      cloneProjectDialog: false
+      initialProjects: [],
+      cloneProjectDialog: false,
     }
   },
   created() {
@@ -162,15 +164,40 @@ export default {
   },
   methods: {
     getProjects() {
-      this.axios.get('/projects', { params: {
+
+      this.axios.get('/projects/initialProjects', { params: {
         userId: this.$store.state.userId,
       }})
       .then((response) => {
-        this.projects = response.data;
+        this.initialProjects = response.data;
+
+        this.axios.get('/projects', { params: {
+        userId: this.$store.state.userId,
+        }})
+        .then((res) => {
+          for (let project of res.data) {
+            let result = {}
+            for (let initialProject of this.initialProjects) {
+              if (initialProject._id === project.initialProject) {
+                result = initialProject
+              }
+            }
+            project.initialProjectData = result
+            this.projects.push(project);
+          }
+        })
+        .catch((e)=>{
+          console.log('error' + e);
+        })
+
       })
       .catch((e)=>{
         console.log('error' + e);
       })
+
+      
+
+      
     },
     exportCSV() {
       this.$refs.dt.exportCSV();
