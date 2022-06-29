@@ -8,7 +8,6 @@
 
     <div class="card col-8">
 
-      {{initialProjects}}
       <h1>My projects</h1>
 
       <DataTable :value="projects" :paginator="true" class="p-datatable-gridlines" dataKey="id" ref="dt" :exportFilename="$store.state.toggleValue == false ? 'WECAREMED - My projects in Design phase' : 'WECAREMED - My projects in Monitoring phase'"
@@ -153,8 +152,8 @@ export default {
       deleteProjectDialog: false,
       loading: true,
       projects: [],
+      initialProjects: [],
       cloneProjectDialog: false,
-      initialProjects : []
     }
   },
   created() {
@@ -175,15 +174,17 @@ export default {
         this.axios.get('/projects', { params: {
         userId: this.$store.state.userId,
         }})
-        .then((response) => {
-          
-          for(let project of response.data) {
-            project.initialProjectData = this.initialProjects.find(p => {
-                p._id == project.initialProject
-              })
+        .then((res) => {
+          for (let project of res.data) {
+            let result = {}
+            for (let initialProject of this.initialProjects) {
+              if (initialProject._id === project.initialProject) {
+                result = initialProject
+              }
+            }
+            project.initialProjectData = result
+            this.projects.push(project);
           }
-          this.projects.push(response.data);
-    
         })
         .catch((e)=>{
           console.log('error' + e);
