@@ -179,16 +179,23 @@ export default {
       this.submitted = true
       axios.put('/projects/' + this.newProject._id, this.newProject)
       .then(() => {
-        let updateInitialProject = Object.assign({}, this.newProject);
-        updateInitialProject._id = this.newProject.initialProject;
-        updateInitialProject.initialProject = this.newProject._id;
-        updateInitialProject.isInitialProject = new Boolean(true);
-        axios.put('/projects/' + this.newProject.initialProject, updateInitialProject).then( () => {
+        this.axios.get(`/projects/` + this.newProject.initialProject)
+        .then((response) => {
+
+          let initialProjectToUpdate= response.data;
+          initialProjectToUpdate.name = this.newProject.name;
+          initialProjectToUpdate.from = this.newProject.from;
+          initialProjectToUpdate.to = this.newProject.to;
+          initialProjectToUpdate.callId = this.newProject.callId;
+          initialProjectToUpdate.proposalId = this.newProject.proposalId;
+
+          axios.put('/projects/' + this.newProject.initialProject, initialProjectToUpdate)
+          .catch((errorUpdateInitial) => {
+            this.errors = errorUpdateInitial.response.data;
+          })
+
           this.$router.push({ path: `/projects/${this.newProject._id}` });
-        }).catch( (e) => {
-          console.log('error ', e);
-        })
-        
+        })   
       })
       .catch((error)=>{
         this.errors = error.response.data
