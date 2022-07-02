@@ -1100,6 +1100,11 @@
                         </div>
 
                       </div>
+
+                      <div>
+                            <Button label="Reset values" @click="resetTableValuesToDefault('transportation')" class="p-button-info" />
+                      </div>
+
                     </div>
                   </div>
                 </div>
@@ -1152,6 +1157,11 @@
                             @focusout="onCellEditCompleteMaterialsData(project.dataTables.materialData.percentageDistributionMaterialsUse[materialTransform].recycled, materialTransform,'recycled')"/>
                           </div>
                         </div>
+
+                        <div>
+                            <Button label="Reset values" @click="resetTableValuesToDefault('material')" class="p-button-info" />
+                        </div>
+
                       </div>
                     </div>
                   </div>
@@ -1262,6 +1272,10 @@
                             @focusout="onCellEditCompleteEventsData(project.dataTables.eventsData.percentageDistributionInternationalNationalTravels[eventTransform].other, eventTransform,'other')"/>
                           </div>
 
+                        </div>
+
+                        <div>
+                            <Button label="Reset values" @click="resetTableValuesToDefault('events')" class="p-button-info" />
                         </div>
 
                       </div>
@@ -2132,7 +2146,27 @@ export default {
       .catch( (error) => {
         console.log("Error: ", error);
       })
-    }
+    },
+    resetTableValuesToDefault(table) {
+      axios.put('/projects/resetDefaultValues/' + this.project._id,this.project.dataTables.transportationData, {params: {
+        projectId: this.project._id,
+        dataTableName: table
+      }})
+      .then( () => {
+        this.$toast.add({severity:'success', summary: 'Successful', detail: 'Percentage distribution of travels values has been reset to default', life: 3000});
+        axios.get(`/dataTables/${this.$route.params.id}`)
+        .then( (responseDataTables) => {
+          this.project.dataTables = responseDataTables.data;
+        })
+        .catch( (errorDT) => {
+          console.log('error' + errorDT);
+        })
+      })
+      .catch( (error) => {
+        console.log("Error: ", error);
+      })
+    },
+
     },
   computed: {
     ...mapState([
