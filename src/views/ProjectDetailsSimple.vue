@@ -997,8 +997,8 @@
                     <div class="field col-12" v-if="project.dataTables">
                       
                       <div class="mb-5 col-12" v-if="project.dataTables.transportationData.percentageDistributionTravelDistance[countryTransform]" >
-                        <h3>Percentage distribution of travels by main travel mode (%) <span v-if="project.isInitialProject">(Europe)</span></h3>
-                        <div class="flex align-items-baseline" v-if="!project.isInitialProject">
+                        <h3>Percentage distribution of travels by main travel mode (%)</h3>
+                        <div class="flex align-items-baseline">
                           <label class="mr-2">Transportation data for the country:</label>
                           <Dropdown class="mb-2" :options="countriesForDropdown" v-model="selectedCountryForTransportationData"/>
                         </div>
@@ -1347,7 +1347,7 @@ export default {
       object: {},
       projectInfo: [],
       countriesForDropdown: ["Albania", "Bosnia & Herzegovina", "Bulgaria", "Croatia", "Cyprus", "Europe", "France", "Greece", "Italy", "Malta", "Montenegro", "North Macedonia", "Portugal", "Slovenia", "Spain"],
-      selectedCountryForTransportationData: "Europe",
+      selectedCountryForTransportationData: "Albania",
       materialsForDropdown: ["Glass", "Food & Drink", "Aluminium Cans", "Plastics", "Paper"],
       selectedMaterialForMaterialsData: "Glass",
       eventsForDropdown: ["International", "National"],
