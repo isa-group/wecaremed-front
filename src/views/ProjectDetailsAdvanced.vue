@@ -1410,7 +1410,7 @@
                     </div>
 
                     <h2 class="mb-2">Difference in the CF between the two phases:
-                      <Badge :value="projectInitial.initialCF - project.currentCF  + ' t CO₂e'" class="ml-2 currentCF" size="xlarge" :severity="getTextColorFromCFIndex(projectInitial.initialCF - project.currentCF)" />
+                      <Badge :value="round(projectInitial.initialCF - project.currentCF)  + ' t CO₂e'" class="ml-2 currentCF" size="xlarge" :severity="getTextColorFromCFIndex(projectInitial.initialCF - project.currentCF)" />
                     </h2>
                   </div>
                 </div>
