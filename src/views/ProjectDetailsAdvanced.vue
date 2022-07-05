@@ -52,7 +52,7 @@
                   </tr>
                 </tbody>
               </table>
-              * The values of this section refer to staff members (full time + part time) concerning the whole project duration
+              * The values of this section refer to staff members (full time + part time) concerning the project monitoring period
 
               <h3 style="margin-top: 35px">Equipment</h3>
 
@@ -354,7 +354,7 @@
                 </Column>
               
               </DataTable>
-              <p>* The values of this section refer to staff members (full time + part time) concerning the whole project duration</p>
+              <p>* The values of this section refer to staff members (full time + part time) concerning the project monitoring period</p>
             </div>
 
             <div class="card">
@@ -430,7 +430,7 @@
                 </Column>
               
               </DataTable>
-              *The values of this field are referred only to external experts concerning the whole project duration
+              *The values of this field are referred only to external experts concerning the project monitoring period
             </div>
 
 
