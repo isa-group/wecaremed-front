@@ -39,6 +39,12 @@
           </template>
         </Column>
 
+        <Column field="callId" header="Call ID" :sortable="true">
+          <template #body="slotProps">
+            {{slotProps.data.callId}}
+          </template>
+        </Column>
+
         <Column field="from" header="From" :sortable="true">
           <template #body="slotProps">
             {{(new Date(slotProps.data.from).getMonth() + 1).toString().padStart(2, "0") + '/' + new Date(slotProps.data.from).getFullYear()}}
