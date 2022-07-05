@@ -1602,6 +1602,8 @@ export default {
         },
         scales: {
           r: {
+            suggestedMin: 0,
+            suggestedMax: 1,
             pointLabels: {
               color: '#495057',
               font: {
@@ -1772,6 +1774,8 @@ export default {
           this.project.equipmentAdvancedCF = response.data.equipmentAdvancedCF
 
           this.$toast.add({severity:'success', summary: 'Successful', detail: 'Project CF calculated', life: 3000});
+
+          this.calculateKPI1();
         })
         .catch((e)=>{
           console.log('error' + e);
@@ -1949,14 +1953,7 @@ export default {
             // this.chartDataInitial.datasets[0].data[6] = (this.projectInitial.materialsSimpleCF / this.projectInitial.initialCF) * 100;
             // this.chartDataInitial.datasets[0].data[7] = (this.projectInitial.fuelsHeatSimpleCF / this.projectInitial.initialCF) * 100;
 
-            this.chartDataExecution.datasets[0].data[0] = (this.project.printableDeliverablesAdvancedCF / this.projectInitial.initialCF);
-            this.chartDataExecution.datasets[0].data[1] = (this.project.equipmentAdvancedCF / this.projectInitial.initialCF);
-            this.chartDataExecution.datasets[0].data[2] = (this.project.electricityAdvancedCF / this.projectInitial.initialCF);
-            this.chartDataExecution.datasets[0].data[3] = (this.project.waterAdvancedCF / this.projectInitial.initialCF);
-            this.chartDataExecution.datasets[0].data[4] = (this.project.transportationAdvancedCF / this.projectInitial.initialCF);
-            this.chartDataExecution.datasets[0].data[5] = (this.project.eventsAdvancedCF / this.projectInitial.initialCF);
-            this.chartDataExecution.datasets[0].data[6] = (this.project.materialsAdvancedCF / this.projectInitial.initialCF);
-            this.chartDataExecution.datasets[0].data[7] = (this.project.fuelsHeatAdvancedCF / this.projectInitial.initialCF);
+            this.calculateKPI1()
         })
         .catch(error => {
             console.log("Error: ", error)
@@ -2068,6 +2065,16 @@ export default {
       .catch((e)=>{
         console.log('error' + e);
       })
+    },
+    calculateKPI1() {
+      this.chartDataExecution.datasets[0].data[0] = (this.project.printableDeliverablesAdvancedCF / this.projectInitial.initialCF);
+      this.chartDataExecution.datasets[0].data[1] = (this.project.equipmentAdvancedCF / this.projectInitial.initialCF);
+      this.chartDataExecution.datasets[0].data[2] = (this.project.electricityAdvancedCF / this.projectInitial.initialCF);
+      this.chartDataExecution.datasets[0].data[3] = (this.project.waterAdvancedCF / this.projectInitial.initialCF);
+      this.chartDataExecution.datasets[0].data[4] = (this.project.transportationAdvancedCF / this.projectInitial.initialCF);
+      this.chartDataExecution.datasets[0].data[5] = (this.project.eventsAdvancedCF / this.projectInitial.initialCF);
+      this.chartDataExecution.datasets[0].data[6] = (this.project.materialsAdvancedCF / this.projectInitial.initialCF);
+      this.chartDataExecution.datasets[0].data[7] = (this.project.fuelsHeatAdvancedCF / this.projectInitial.initialCF);
     },
     addPrintableDeliverable() {
       let newPrintableDeliverable = {
