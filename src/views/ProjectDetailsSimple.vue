@@ -988,7 +988,7 @@
 
           <TabView>
               <!-- Pestaña de Transportation -->
-              <TabPanel header="Transportation for commuting">
+              <TabPanel header="Transportation for work commuting">
 
                 <div class="card">
 
@@ -1000,7 +1000,7 @@
                         <h3>Percentage distribution of travels by main travel mode (%)</h3>
                         <div class="flex align-items-baseline">
                           <label class="mr-2">Transportation data for the country:</label>
-                          <Dropdown class="mb-2" :options="countriesForDropdown" v-model="selectedCountryForTransportationData"/>
+                          <Dropdown class="mb-2" :options="countriesForDropdownWithoutEurope" v-model="selectedCountryForTransportationData"/>
                         </div>
 
                         <div class="flex justify-content-around">
@@ -1168,121 +1168,123 @@
                 </div>
               </TabPanel>
 
-                <!-- Pestaña de Events -->
+              <!-- Pestaña de Events -->
               <TabPanel header="Events">
-                
+
                 <div class="card">
 
                   <div class="p-fluid formgrid grid">
+
                     <div class="field col-12" v-if="project.dataTables">
-                      <div class="mb-5" v-if="project.dataTables.eventsData.percentageDistributionInternationalNationalTravels[eventTransform]" >
-                        <h3>Percentage distribution of international and national travels for events</h3>
+                      
+                      <div class="mb-5 col-12" v-if="project.dataTables.transportationData.percentageDistributionTravelDistance['europe']" >
+                        <h3>Percentage distribution of travels by main travel mode (%) for moving from/to the hosting place</h3>
 
-                        <div class="flex align-items-baseline">
-                          <label class="mr-2">Data for the event type:</label>
-                          <Dropdown class="mb-3" :options="eventsForDropdown" v-model="selectedEventForEventsData"/>
-                        </div>
-
-                        <div class="flex justify-content-around">
-                          <div class="col-3">
-                            <label for="carEventData">Car</label>
-                            <InputNumber id="carEventData" v-model="project.dataTables.eventsData.percentageDistributionInternationalNationalTravels[eventTransform].car" mode="decimal" :maxFractionDigits="4"
+                        <div class="flex justify-content-around mt-5">
+                          <div class="col-5">
+                            <label for="carTransportationData">Car</label>
+                            <InputNumber id="carTransportationData" v-model="project.dataTables.transportationData.percentageDistributionTravelDistance['europe'].car" mode="decimal" :maxFractionDigits="4"
                             showButtons :step="0.0001" decrementButtonClass="p-button-info"
                             incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
                             :allowEmpty="false" :min="0.0000" :max="1" class="mb-3"
-                            @focus="onFocusValue=project.dataTables.eventsData.percentageDistributionInternationalNationalTravels[eventTransform].car; $event.target.select()"
+                            @focus="onFocusValue=project.dataTables.transportationData.percentageDistributionTravelDistance['europe'].car; $event.target.select()"
                             @keypress.enter="$event.target.blur()"
-                            @focusout="onCellEditCompleteEventsData(project.dataTables.eventsData.percentageDistributionInternationalNationalTravels[eventTransform].car, eventTransform,'car')"/>
-                          </div>
-                          <div class="col-3">
-                            <label for="motorbikesEventData">Motorbikes</label>
-                            <InputNumber id="motorbikesEventData" v-model="project.dataTables.eventsData.percentageDistributionInternationalNationalTravels[eventTransform].motorbikes" mode="decimal" :maxFractionDigits="4"
-                            showButtons :step="0.0001" decrementButtonClass="p-button-info"
-                            incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
-                            :allowEmpty="false" :min="0.0000" :max="1" class="mb-3"
-                            @focus="onFocusValue=project.dataTables.eventsData.percentageDistributionInternationalNationalTravels[eventTransform].motorbikes; $event.target.select()"
-                            @keypress.enter="$event.target.blur()"
-                            @focusout="onCellEditCompleteEventsData(project.dataTables.eventsData.percentageDistributionInternationalNationalTravels[eventTransform].motorbikes, eventTransform,'motorbikes')"/>                          </div>
-                          <div class="col-3">
-                            <label for="busEventData">Bus</label>
-                            <InputNumber id="busEventData" v-model="project.dataTables.eventsData.percentageDistributionInternationalNationalTravels[eventTransform].bus" mode="decimal" :maxFractionDigits="4"
-                            showButtons :step="0.0001" decrementButtonClass="p-button-info"
-                            incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
-                            :allowEmpty="false" :min="0.0000" :max="1" class="mb-3"
-                            @focus="onFocusValue=project.dataTables.eventsData.percentageDistributionInternationalNationalTravels[eventTransform].bus; $event.target.select()"
-                            @keypress.enter="$event.target.blur()"
-                            @focusout="onCellEditCompleteEventsData(project.dataTables.eventsData.percentageDistributionInternationalNationalTravels[eventTransform].bus, eventTransform,'bus')"/>
-                          </div>
+                            @focusout="onCellEditCompleteTransportationData(project.dataTables.transportationData.percentageDistributionTravelDistance['europe'].car, 'europe', 'car')"/>
 
-                          <div class="col-3">
-                            <label for="nationalRailEventData">National Rail</label>
-                            <InputNumber id="nationalRailEventData" v-model="project.dataTables.eventsData.percentageDistributionInternationalNationalTravels[eventTransform].nationalRail" mode="decimal" :maxFractionDigits="4"
+                            <label for="motorbikesTransportationData">Motorbikes</label>
+                            <InputNumber id="motorbikesTransportationData" v-model="project.dataTables.transportationData.percentageDistributionTravelDistance['europe'].motorbikes" mode="decimal" :maxFractionDigits="4"
                             showButtons :step="0.0001" decrementButtonClass="p-button-info"
                             incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
                             :allowEmpty="false" :min="0.0000" :max="1" class="mb-3"
-                            @focus="onFocusValue=project.dataTables.eventsData.percentageDistributionInternationalNationalTravels[eventTransform].nationalRail; $event.target.select()"
+                            @focus="onFocusValue=project.dataTables.transportationData.percentageDistributionTravelDistance['europe'].motorbikes; $event.target.select()"
                             @keypress.enter="$event.target.blur()"
-                            @focusout="onCellEditCompleteEventsData(project.dataTables.eventsData.percentageDistributionInternationalNationalTravels[eventTransform].nationalRail, eventTransform,'nationalRail')"/>
-                          </div>
-                        </div>
+                            @focusout="onCellEditCompleteTransportationData(project.dataTables.transportationData.percentageDistributionTravelDistance['europe'].motorbikes, 'europe', 'motorbikes')"/>
 
-                        <div class="flex justify-content-around">
-
-                          <div class="col-3">
-                            <label for="internationalRailEventData">International Rail</label>
-                            <InputNumber id="internationalRailEventData" v-model="project.dataTables.eventsData.percentageDistributionInternationalNationalTravels[eventTransform].internationalRail" mode="decimal" :maxFractionDigits="4"
+                            <label for="busTransportationData">Bus</label>
+                            <InputNumber id="busTransportationData" v-model="project.dataTables.transportationData.percentageDistributionTravelDistance['europe'].bus" mode="decimal" :maxFractionDigits="4"
                             showButtons :step="0.0001" decrementButtonClass="p-button-info"
                             incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
                             :allowEmpty="false" :min="0.0000" :max="1" class="mb-3"
-                            @focus="onFocusValue=project.dataTables.eventsData.percentageDistributionInternationalNationalTravels[eventTransform].internationalRail; $event.target.select()"
+                            @focus="onFocusValue=project.dataTables.transportationData.percentageDistributionTravelDistance['europe'].bus; $event.target.select()"
                             @keypress.enter="$event.target.blur()"
-                            @focusout="onCellEditCompleteEventsData(project.dataTables.eventsData.percentageDistributionInternationalNationalTravels[eventTransform].internationalRail, eventTransform,'internationalRail')"/>
+                            @focusout="onCellEditCompleteTransportationData(project.dataTables.transportationData.percentageDistributionTravelDistance['europe'].bus, 'europe','bus')"/>
+
+                            <label for="taxiTransportationData">Taxi</label>
+                            <InputNumber id="taxiTransportationData" v-model="project.dataTables.transportationData.percentageDistributionTravelDistance['europe'].taxi" mode="decimal" :maxFractionDigits="4"
+                            showButtons :step="0.0001" decrementButtonClass="p-button-info"
+                            incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
+                            :allowEmpty="false" :min="0.0000" :max="1" class="mb-3"
+                            @focus="onFocusValue=project.dataTables.transportationData.percentageDistributionTravelDistance['europe'].taxi; $event.target.select()"
+                            @keypress.enter="$event.target.blur()"
+                            @focusout="onCellEditCompleteTransportationData(project.dataTables.transportationData.percentageDistributionTravelDistance['europe'].taxi, 'europe','taxi')"/>
+
+                              <label for="nationalRailTransportationData">National Rail</label>
+                            <InputNumber id="nationalRailTransportationData" v-model="project.dataTables.transportationData.percentageDistributionTravelDistance['europe'].nationalRail" mode="decimal" :maxFractionDigits="4"
+                            showButtons :step="0.0001" decrementButtonClass="p-button-info"
+                            incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
+                            :allowEmpty="false" :min="0.0000" :max="1" class="mb-3"
+                            @focus="onFocusValue=project.dataTables.transportationData.percentageDistributionTravelDistance['europe'].nationalRail; $event.target.select()"
+                            @keypress.enter="$event.target.blur()"
+                            @focusout="onCellEditCompleteTransportationData(project.dataTables.transportationData.percentageDistributionTravelDistance['europe'].nationalRail, 'europe', 'nationalRail')"/>
                           </div>
 
-                          <div class="col-3">
-                            <label for="ferriesEventData">Ferries</label>
-                            <InputNumber id="ferriesEventData" v-model="project.dataTables.eventsData.percentageDistributionInternationalNationalTravels[eventTransform].ferries" mode="decimal" :maxFractionDigits="4"
+                          <div class="col-5">
+                            <label for="lightRailTramUndergroundTransportationData">Light Rail/Tram/Underground </label>
+                            <InputNumber id="lightRailTramUndergroundTransportationData" v-model="project.dataTables.transportationData.percentageDistributionTravelDistance['europe'].lightRailTramUnderground" mode="decimal" :maxFractionDigits="4"
                             showButtons :step="0.0001" decrementButtonClass="p-button-info"
                             incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
                             :allowEmpty="false" :min="0.0000" :max="1" class="mb-3"
-                            @focus="onFocusValue=project.dataTables.eventsData.percentageDistributionInternationalNationalTravels[eventTransform].ferries; $event.target.select()"
+                            @focus="onFocusValue=project.dataTables.transportationData.percentageDistributionTravelDistance['europe'].lightRailTramUnderground; $event.target.select()"
                             @keypress.enter="$event.target.blur()"
-                            @focusout="onCellEditCompleteEventsData(project.dataTables.eventsData.percentageDistributionInternationalNationalTravels[eventTransform].ferries, eventTransform,'ferries')"/>
-                          </div>
+                            @focusout="onCellEditCompleteTransportationData(project.dataTables.transportationData.percentageDistributionTravelDistance['europe'].lightRailTramUnderground, 'europe','lightRailTramUnderground')"/>
 
-                          <div class="col-3">
-                            <label for="airplanesEventData">Airplanes</label>
-                            <InputNumber id="busEventData" v-model="project.dataTables.eventsData.percentageDistributionInternationalNationalTravels[eventTransform].airplanes" mode="decimal" :maxFractionDigits="4"
+                            <label for="ferriesTransportationData">Ferries</label>
+                            <InputNumber id="ferriesTransportationData" v-model="project.dataTables.transportationData.percentageDistributionTravelDistance['europe'].ferries" mode="decimal" :maxFractionDigits="4"
                             showButtons :step="0.0001" decrementButtonClass="p-button-info"
                             incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
                             :allowEmpty="false" :min="0.0000" :max="1" class="mb-3"
-                            @focus="onFocusValue=project.dataTables.eventsData.percentageDistributionInternationalNationalTravels[eventTransform].airplanes; $event.target.select()"
+                            @focus="onFocusValue=project.dataTables.transportationData.percentageDistributionTravelDistance['europe'].ferries; $event.target.select()"
                             @keypress.enter="$event.target.blur()"
-                            @focusout="onCellEditCompleteEventsData(project.dataTables.eventsData.percentageDistributionInternationalNationalTravels[eventTransform].airplanes, eventTransform,'airplanes')"/>
-                          </div>
+                            @focusout="onCellEditCompleteTransportationData(project.dataTables.transportationData.percentageDistributionTravelDistance['europe'].ferries, 'europe','ferries')"/>
 
-                          <div class="col-3">
-                            <label for="otherEventData">Other</label>
-                            <InputNumber id="otherEventData" v-model="project.dataTables.eventsData.percentageDistributionInternationalNationalTravels[eventTransform].other" mode="decimal" :maxFractionDigits="4"
+                            <label for="cyclingTransportationData">Cycling</label>
+                            <InputNumber id="cyclingTransportationData" v-model="project.dataTables.transportationData.percentageDistributionTravelDistance['europe'].cycling" mode="decimal" :maxFractionDigits="4"
                             showButtons :step="0.0001" decrementButtonClass="p-button-info"
                             incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
                             :allowEmpty="false" :min="0.0000" :max="1" class="mb-3"
-                            @focus="onFocusValue=project.dataTables.eventsData.percentageDistributionInternationalNationalTravels[eventTransform].other; $event.target.select()"
+                            @focus="onFocusValue=project.dataTables.transportationData.percentageDistributionTravelDistance['europe'].cycling; $event.target.select()"
                             @keypress.enter="$event.target.blur()"
-                            @focusout="onCellEditCompleteEventsData(project.dataTables.eventsData.percentageDistributionInternationalNationalTravels[eventTransform].other, eventTransform,'other')"/>
+                            @focusout="onCellEditCompleteTransportationData(project.dataTables.transportationData.percentageDistributionTravelDistance['europe'].cycling, 'europe','cycling')"/>
+
+                            <label for="walkingTransportationData">Walking</label>
+                            <InputNumber id="walkingTransportationData" v-model="project.dataTables.transportationData.percentageDistributionTravelDistance['europe'].walking" mode="decimal" :maxFractionDigits="4"
+                            showButtons :step="0.0001" decrementButtonClass="p-button-info"
+                            incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
+                            :allowEmpty="false" :min="0.0000" :max="1" class="mb-3"
+                            @focus="onFocusValue=project.dataTables.transportationData.percentageDistributionTravelDistance['europe'].walking; $event.target.select()"
+                            @keypress.enter="$event.target.blur()"
+                            @focusout="onCellEditCompleteTransportationData(project.dataTables.transportationData.percentageDistributionTravelDistance['europe'].walking, 'europe','walking')"/>
+
+                            <label for="otherTransportationData">Other</label>
+                            <InputNumber id="otherTransportationData" v-model="project.dataTables.transportationData.percentageDistributionTravelDistance['europe'].other" mode="decimal" :maxFractionDigits="4"
+                            showButtons :step="0.0001" decrementButtonClass="p-button-info"
+                            incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
+                            :allowEmpty="false" :min="0.0000" :max="1" class="mb-3"
+                            @focus="onFocusValue=project.dataTables.transportationData.percentageDistributionTravelDistance['europe'].other; $event.target.select()"
+                            @keypress.enter="$event.target.blur()"
+                            @focusout="onCellEditCompleteTransportationData(project.dataTables.transportationData.percentageDistributionTravelDistance['europe'].other, 'europe','other')"/>
                           </div>
-
-                        </div>
-
-                        <div>
-                            <Button label="Reset values" @click="resetTableValuesToDefault('events')" class="p-button-info" />
                         </div>
 
                       </div>
+
+                      <div>
+                            <Button label="Reset values" @click="resetTableValuesToDefault('transportation')" class="p-button-info" />
+                      </div>
+
                     </div>
                   </div>
                 </div>
-
               </TabPanel>
             </TabView>
 
@@ -1347,6 +1349,7 @@ export default {
       object: {},
       projectInfo: [],
       countriesForDropdown: ["Albania", "Bosnia & Herzegovina", "Bulgaria", "Croatia", "Cyprus", "Europe", "France", "Greece", "Italy", "Malta", "Montenegro", "North Macedonia", "Portugal", "Slovenia", "Spain"],
+      countriesForDropdownWithoutEurope: ["Albania", "Bosnia & Herzegovina", "Bulgaria", "Croatia", "Cyprus", "France", "Greece", "Italy", "Malta", "Montenegro", "North Macedonia", "Portugal", "Slovenia", "Spain"],
       selectedCountryForTransportationData: "Albania",
       materialsForDropdown: ["Glass", "Food & Drink", "Aluminium Cans", "Plastics", "Paper"],
       selectedMaterialForMaterialsData: "Glass",

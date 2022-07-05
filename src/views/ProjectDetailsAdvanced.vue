@@ -1082,7 +1082,7 @@
 
             <TabView>
               <!-- Pestaña de Transportation -->
-              <TabPanel header="Transportation for commuting">
+              <TabPanel header="Transportation for work commuting and moving from/to the hosting place (for events)">
 
                 <div class="card">
                   <div class="p-fluid formgrid grid">
@@ -1091,7 +1091,7 @@
                         <h3>Percentage distribution of travels by main travel mode (%)</h3>
                         <div class="flex align-items-baseline">
                           <label class="mr-2">Transportation data for the country:</label>
-                          <Dropdown class="mb-2" :options="countriesForDropdown" v-model="selectedCountryForTransportationData"/>
+                          <Dropdown class="mb-2" :options="countriesForDropdownWithoutEurope" v-model="selectedCountryForTransportationData"/>
 
                           
                         </div>
@@ -1259,7 +1259,7 @@
               </TabPanel>
 
                 <!-- Pestaña de Events -->
-              <TabPanel header="Events">
+              <!-- <TabPanel header="Events">
                 
                 <div class="card">
 
@@ -1372,7 +1372,7 @@
                   </div>
                 </div>
 
-              </TabPanel>
+              </TabPanel> -->
             </TabView>
           </TabPanel>
 
@@ -1512,6 +1512,7 @@ export default {
       KPI3ParamsInitial: {},
       KPI3ParamsExecution: {},
       countriesForDropdown: ["Albania", "Bosnia & Herzegovina", "Bulgaria", "Croatia", "Cyprus", "Europe", "France", "Greece", "Italy", "Malta", "Montenegro", "North Macedonia", "Portugal", "Slovenia", "Spain"],
+      countriesForDropdownWithoutEurope: ["Albania", "Bosnia & Herzegovina", "Bulgaria", "Croatia", "Cyprus", "France", "Greece", "Italy", "Malta", "Montenegro", "North Macedonia", "Portugal", "Slovenia", "Spain"],
       selectedCountryForTransportationData: "Albania",
       materialsForDropdown: ["Glass", "Food & Drink", "Aluminium Cans", "Plastics", "Paper"],
       selectedMaterialForMaterialsData: "Glass",
