@@ -1723,7 +1723,7 @@ export default {
         }
       }
 
-      for(let partner of this.project.partners) {
+      for (let partner of this.project.partners) {
         if(partner.twoWayTravels === null ||
             partner.employeesPersonMonths === null ) {
               this.partnersWithDefaultValues.push(partner);
@@ -1734,21 +1734,22 @@ export default {
         this.displayPartnersWithoutCountryErrorDialog();
       }
 
-      if (this.partnersWithDefaultValues.length > 0){
+      else if (this.partnersWithDefaultValues.length > 0){
         this.displayPartnersWithDefaultValuesErrorDialog();
       }
 
-      if(this.checkEventsOrganization() == true || this.checkEventsParticipation() == true) {
+      else if (this.checkEventsOrganization() == true || this.checkEventsParticipation() == true) {
         this.displayEventsErrorDialog();
       }
 
-      if (this.displayPartnersWithoutCountryDialog || this.displayPartnersWithDefaultValues > 0) {
+      else if (this.displayPartnersWithoutCountryDialog || this.displayPartnersWithDefaultValues > 0) {
         this.displayPartnersErrorDialog();
       } 
 
-      if (this.durationHoursPerDayFlag){
+      else if (this.durationHoursPerDayFlag) {
         this.$toast.add({severity:'error', summary: 'Caution', detail: 'The value of Duration (hours per day) should be lower than 24', life: 8000});
       }
+
       else if (!this.checkHoursNotGreaterThan24() && !this.checkNonLocalPhysicalGreaterThanPhysicalParticipants() && !this.durationHoursPerDayFlag) {
         axios.put(`/projects/${this.$route.params.id}`, this.project)
         .catch((error) => {
@@ -1758,7 +1759,7 @@ export default {
         this.savePrintableDeliverables()
         this.savePartners()
         this.saveEvents()
-        this.saveCustoms()
+        // this.saveCustoms()
         this.saveExternalExperts()
 
         axios.put(`/projects/calculateAdvancedCF/${this.$route.params.id}`)
@@ -1863,7 +1864,7 @@ export default {
         this.savePrintableDeliverables();
         this.savePartners();
         this.saveEvents()
-        this.saveCustoms()
+        // this.saveCustoms()
         this.saveExternalExperts()
         
         axios.put("/projects/" + this.project._id, this.project).then(() => {
@@ -2516,49 +2517,49 @@ export default {
       })
     },
     
-    saveCustoms() {
-      let allCustoms = [];
+    // saveCustoms() {
+    //   let allCustoms = [];
 
-      allCustoms.push(this.project.customHeat);
-      allCustoms.push(this.project.customElectricity);
-      allCustoms.push(this.project.customWater);
-      allCustoms.push(this.project.customTransportation);
-      allCustoms.push(this.project.customMaterials);
-      allCustoms.push(this.project.customEvents);
-      allCustoms.push(this.project.customPrintableDeliverables);
-      allCustoms.push(this.project.customEquipment);
+    //   allCustoms.push(this.project.customHeat);
+    //   allCustoms.push(this.project.customElectricity);
+    //   allCustoms.push(this.project.customWater);
+    //   allCustoms.push(this.project.customTransportation);
+    //   allCustoms.push(this.project.customMaterials);
+    //   allCustoms.push(this.project.customEvents);
+    //   allCustoms.push(this.project.customPrintableDeliverables);
+    //   allCustoms.push(this.project.customEquipment);
 
-      this.axios.put('/customs/updateAll', allCustoms)
-      .then(() => {
-        this.$toast.add({severity:'success', summary: 'Successful', detail: 'All customs updated', life: 3000});
-        this.allCustoms = [];
-      }).catch((error) =>{
-        console.log(error)
-      })
-    },
-    deleteCustom(index, custom, toastMessage) {
-      let customData = this.project[custom][index]
+    //   this.axios.put('/customs/updateAll', allCustoms)
+    //   .then(() => {
+    //     this.$toast.add({severity:'success', summary: 'Successful', detail: 'All customs updated', life: 3000});
+    //     this.allCustoms = [];
+    //   }).catch((error) =>{
+    //     console.log(error)
+    //   })
+    // },
+    // deleteCustom(index, custom, toastMessage) {
+    //   let customData = this.project[custom][index]
 
-      this.axios.delete('/customs/' + customData._id)
-      .then(() => {
-        this.project[custom].splice(index, 1);
-        let projectID = this.$route.params.id;
-        axios.get('/customs?projectId=' + projectID, { params: {
-          projectId: projectID
-        }})
-        .catch((e)=>{
-          console.log('error' + e);
-        })
+    //   this.axios.delete('/customs/' + customData._id)
+    //   .then(() => {
+    //     this.project[custom].splice(index, 1);
+    //     let projectID = this.$route.params.id;
+    //     axios.get('/customs?projectId=' + projectID, { params: {
+    //       projectId: projectID
+    //     }})
+    //     .catch((e)=>{
+    //       console.log('error' + e);
+    //     })
 
-        this.$toast.add({severity:'success', summary: 'Successful', detail: 'Custom ' + toastMessage + ' deleted', life: 3000});
-      })
-      .catch((e)=>{
-        console.log('error' + e);
-      })
-    },
+    //     this.$toast.add({severity:'success', summary: 'Successful', detail: 'Custom ' + toastMessage + ' deleted', life: 3000});
+    //   })
+    //   .catch((e)=>{
+    //     console.log('error' + e);
+    //   })
+    // },
     updateScenarioValues(){
 
-      // Para entender bien la lógicq debemos recordar que initialProject es el proyecto en fase Base
+      // Para entender bien la lógica debemos recordar que initialProject es el proyecto en fase Base
 
       // Eliminamos el proyecto en etapa Scenario
       axios.delete('/projects/' + this.project.initialProject)
@@ -2695,7 +2696,8 @@ export default {
       let res = false;
 
       for (let event of this.project.events.participation) {
-        if(event.type.endsWith('type') || event.hostingCountry.endsWith('country')) {
+        console.log("Event participated: ", event)
+        if(event.type.endsWith('type') || event.hostingCountry.endsWith('country') || event.travelModeArrive.endsWith('mode') || event.travelModeDepart.endsWith('mode')) {
           res = true;
           this.eventsParticipationNotDefined.push(Object.assign({}, event));
           break;
