@@ -2068,14 +2068,14 @@ export default {
       })
     },
     calculateKPI1() {
-      this.chartDataExecution.datasets[0].data[0] = (this.project.printableDeliverablesAdvancedCF / this.projectInitial.initialCF);
-      this.chartDataExecution.datasets[0].data[1] = (this.project.equipmentAdvancedCF / this.projectInitial.initialCF);
-      this.chartDataExecution.datasets[0].data[2] = (this.project.electricityAdvancedCF / this.projectInitial.initialCF);
-      this.chartDataExecution.datasets[0].data[3] = (this.project.waterAdvancedCF / this.projectInitial.initialCF);
-      this.chartDataExecution.datasets[0].data[4] = (this.project.transportationAdvancedCF / this.projectInitial.initialCF);
-      this.chartDataExecution.datasets[0].data[5] = (this.project.eventsAdvancedCF / this.projectInitial.initialCF);
-      this.chartDataExecution.datasets[0].data[6] = (this.project.materialsAdvancedCF / this.projectInitial.initialCF);
-      this.chartDataExecution.datasets[0].data[7] = (this.project.fuelsHeatAdvancedCF / this.projectInitial.initialCF);
+      this.chartDataExecution.datasets[0].data[0] = (this.project.printableDeliverablesAdvancedCF / this.projectInitial.printableDeliverablesSimpleCF);
+      this.chartDataExecution.datasets[0].data[1] = (this.project.equipmentAdvancedCF / this.projectInitial.equipmentSimpleCF);
+      this.chartDataExecution.datasets[0].data[2] = (this.project.electricityAdvancedCF / this.projectInitial.electricitySimpleCF);
+      this.chartDataExecution.datasets[0].data[3] = (this.project.waterAdvancedCF / this.projectInitial.waterSimpleCF);
+      this.chartDataExecution.datasets[0].data[4] = (this.project.transportationAdvancedCF / this.projectInitial.transportationSimpleCF);
+      this.chartDataExecution.datasets[0].data[5] = (this.project.eventsAdvancedCF / this.projectInitial.eventsSimpleCF);
+      this.chartDataExecution.datasets[0].data[6] = (this.project.materialsAdvancedCF / this.projectInitial.materialsSimpleCF);
+      this.chartDataExecution.datasets[0].data[7] = (this.project.fuelsHeatAdvancedCF / this.projectInitial.fuelsHeatSimpleCF);
     },
     addPrintableDeliverable() {
       let newPrintableDeliverable = {
