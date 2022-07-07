@@ -8,7 +8,7 @@
       <div class="card">
 
         <div style="display: flex; align-items: center; justify-content: space-between;">
-          <h2 v-if="project.isInitialProject">Project's base data</h2>
+          <h2 v-if="project.isInitialProject">Project's design phase data</h2>
           <h2 v-else-if="!project.isInitialProject">Project's monitoring period data</h2>
         </div>
 
@@ -21,7 +21,7 @@
               <h1>{{project.name}}&nbsp;
                 ({{ (new Date(project.from).getMonth() + 1).toString().padStart(2, "0") + '/' + new Date(project.from).getFullYear()}} -&nbsp;
                 {{(new Date(project.to).getMonth() + 1).toString().padStart(2, "0") + '/' + new Date(project.to).getFullYear()}})
-                [{{project.initialCF}} / {{project.currentCF}}] t CO₂e&nbsp;
+                <br>[{{projectInitial.initialCF}} --> {{project.currentCF}}] t CO<sub style="font-size: 22px">2</sub>e&nbsp;
               </h1>   
 
               <h3>Partners*</h3>
@@ -1670,9 +1670,9 @@ export default {
     },
 
     generatePDF() {
+      pdfMake.vfs = pdfFonts.pdfMake.vfs;
       var html = htmlToPdfmake(document.getElementById('pdfPrintDiv').innerHTML);
       const documentDefinition = { content: html, pageOrientation: 'landscape' };
-      pdfMake.vfs = pdfFonts.pdfMake.vfs;
       pdfMake.createPdf(documentDefinition).open();
     },
     displayPartnersWithoutCountryErrorDialog() {
