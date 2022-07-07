@@ -10,7 +10,7 @@
       <h1 style="margin-bottom: 20px">{{project.name}} 
       ({{(new Date(project.from).getMonth() + 1).toString().padStart(2, "0") + '/' + new Date(project.from).getFullYear()}}
       - {{(new Date(project.to).getMonth() + 1).toString().padStart(2, "0") + '/' + new Date(project.to).getFullYear()}})
-      <br>[{{project.currentCF}} / {{project.initialCF}}] t CO<sub style="font-size: 22px">2</sub>e</h1>
+      <br>[{{project.initialCF}}] t CO<sub style="font-size: 22px">2</sub>e</h1>
                         
       <h3>Partners</h3>
                 
