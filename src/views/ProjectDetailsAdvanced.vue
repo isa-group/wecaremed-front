@@ -255,9 +255,9 @@
                 </tbody>
               </table>
 
-              <h2>Tons of CO₂ equivalent emitted: {{project.currentCF}}</h2>
-              <h2>Price of the ton of CO₂ equivalent: {{co2PermitsPrice + ' €'}}</h2>
-              <h2 style="margin-bottom: 40px">CO₂ permits cost: {{round(project.currentCF * co2PermitsPrice) + ' €'}}</h2>
+              <h2>Tons of CO<sub style="font-size: 22px">2</sub> equivalent emitted: {{project.currentCF}}</h2>
+              <h2>Price of the ton of CO<sub style="font-size: 22px">2</sub> equivalent: {{co2PermitsPrice + ' €'}}</h2>
+              <h2 style="margin-bottom: 40px">CO<sub style="font-size: 22px">2</sub> permits cost: {{round(project.currentCF * co2PermitsPrice) + ' €'}}</h2>
               
               <h3 style="margin-bottom: 10px">Carbon Footprint breakdown (Tons):</h3>
               <ul>
