@@ -10,7 +10,7 @@
       <h1 style="margin-bottom: 20px">{{project.name}} 
       ({{(new Date(project.from).getMonth() + 1).toString().padStart(2, "0") + '/' + new Date(project.from).getFullYear()}}
       - {{(new Date(project.to).getMonth() + 1).toString().padStart(2, "0") + '/' + new Date(project.to).getFullYear()}})
-      [{{project.currentCF}} / {{project.initialCF}}] t CO₂e</h1>
+      <br>[{{project.currentCF}} / {{project.initialCF}}] t CO<sub style="font-size: 22px">2</sub>e</h1>
                         
       <h3>Partners</h3>
                 
@@ -241,8 +241,8 @@
       </table>
 
       <h2>Tons of equivalent carbon dioxide emitted: {{project.initialCF}}</h2> 
-      <h2>Price of the ton of CO₂ equivalent: {{co2PermitsPrice + ' €'}}</h2>
-      <h2 style="margin-bottom: 40px">CO₂ permits cost: {{round(project.initialCF * co2PermitsPrice) + ' €'}}</h2>
+      <h2>Price of the ton of CO<sub style="font-size: 22px">2</sub> equivalent: {{co2PermitsPrice + ' €'}}</h2>
+      <h2 style="margin-bottom: 40px">CO<sub style="font-size: 22px">2</sub> permits cost: {{round(project.initialCF * co2PermitsPrice) + ' €'}}</h2>
 
       <h3 style="margin-bottom: 10px">Carbon Footprint breakdown (Tons):</h3>
       <ul>
