@@ -319,7 +319,7 @@
                   <td :class="slotProps.data[slotProps.field] == 'Select a country' ? 'defaultValue' : ''" style="display:block;">{{slotProps.data[slotProps.field]}}</td>
                 </template>
                 <template #editor="slotProps">
-                  <Dropdown :options="countriesForDropdown" v-model="slotProps.data[slotProps.field]" @focusout="savePartners" />
+                  <Dropdown :options="countriesForDropdownWithoutEurope" v-model="slotProps.data[slotProps.field]" @focusout="savePartners" />
                 </template>
               </Column>
 
