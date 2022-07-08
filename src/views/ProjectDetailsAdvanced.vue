@@ -1577,7 +1577,7 @@ export default {
 			// 	]
 			// },
       chartDataExecution: {
-				labels: ['Printable deliverables', 'Equipment', 'Electricity', 'Water', 'Transportation', 'Events', 'Materials', 'Heat'],
+				labels: ['Printable deliverables', 'Equipment', 'Electricity', 'Water', 'Transportation', 'Events', 'Materials', 'Fuels (Heating)'],
 				datasets: [
 					{
 						// label: 'KPI-1',
