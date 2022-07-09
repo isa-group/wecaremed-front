@@ -1515,6 +1515,14 @@ export default {
           this.project.coordinator = coordinator
 
           this.$toast.add({severity:'success', summary: 'Successful', detail: 'Project CF calculated', life: 3000});
+
+          axios.get(`/dataTables/${this.$route.params.id}`)
+          .then( (responseDataTables) => {
+            this.project.dataTables = responseDataTables.data;
+          })
+          .catch( (errorDT) => {
+            console.log('error' + errorDT);
+          })
         })
         .catch((e)=>{
           console.log('error' + e);
