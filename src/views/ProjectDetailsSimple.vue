@@ -2065,7 +2065,9 @@ export default {
         dataTableName: 'transportation'
       }})
       .then( () => {
-        this.$toast.add({severity:'success', summary: 'Successful', detail: 'Percentage distribution of travels updated', life: 3000});
+        if(this.round4Decimals(sum) == 1){
+          this.$toast.add({severity:'success', summary: 'Successful', detail: 'Percentage distribution of travels updated', life: 3000});
+        }
       })
       .catch( (error) => {
         console.log("Error: ", error);
@@ -2094,7 +2096,9 @@ export default {
         dataTableName: 'transportation'
       }})
       .then( () => {
-        this.$toast.add({severity:'success', summary: 'Successful', detail: 'Percentage distribution of cars fleet updated', life: 3000});
+        if(this.round4Decimals(sum) == 1){
+          this.$toast.add({severity:'success', summary: 'Successful', detail: 'Percentage distribution of travels updated', life: 3000});
+        }
       })
       .catch( (error) => {
         console.log("Error: ", error);
@@ -2123,7 +2127,9 @@ export default {
         dataTableName: 'material'
       }})
       .then( () => {
-        this.$toast.add({severity:'success', summary: 'Successful', detail: 'Percentage distribution of materials use updated', life: 3000});
+        if(this.round4Decimals(sum) == 1){
+          this.$toast.add({severity:'success', summary: 'Successful', detail: 'Percentage distribution of travels updated', life: 3000});
+        }
       })
       .catch( (error) => {
         console.log("Error: ", error);
@@ -2153,7 +2159,9 @@ export default {
         dataTableName: 'events'
       }})
       .then( () => {
-        this.$toast.add({severity:'success', summary: 'Successful', detail: 'Percentage distribution of travels updated', life: 3000});
+        if(this.round4Decimals(sum) == 1){
+          this.$toast.add({severity:'success', summary: 'Successful', detail: 'Percentage distribution of travels updated', life: 3000});
+        }
       })
       .catch( (error) => {
         console.log("Error: ", error);
@@ -2165,7 +2173,7 @@ export default {
         dataTableName: table
       }})
       .then( () => {
-        this.$toast.add({severity:'success', summary: 'Successful', detail: 'Percentage distribution of travels values has been reset to default', life: 3000});
+        this.$toast.add({severity:'success', summary: 'Successful', detail: 'The values has been reset to default', life: 3000});
         axios.get(`/dataTables/${this.$route.params.id}`)
         .then( (responseDataTables) => {
           this.project.dataTables = responseDataTables.data;
