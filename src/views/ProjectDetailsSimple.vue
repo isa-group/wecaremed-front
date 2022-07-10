@@ -1218,14 +1218,14 @@
                             @keypress.enter="$event.target.blur()"
                             @focusout="onCellEditCompleteTransportationData(project.dataTables.transportationData.percentageDistributionTravelDistance['europe'].taxi, 'europe','taxi')"/>
 
-                             <label for="internationalRailTransportationData">International Rail</label>
+                            <!-- <label for="internationalRailTransportationData">International Rail</label>
                             <InputNumber id="internationalRailTransportationData" v-model="project.dataTables.transportationData.percentageDistributionTravelDistance['europe'].internationalRail" mode="decimal" :maxFractionDigits="4"
                             showButtons :step="0.0001" decrementButtonClass="p-button-info"
                             incrementButtonClass="p-button-info" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
                             :allowEmpty="false" :min="0.0000" :max="1" class="mb-3"
                             @focus="onFocusValue=project.dataTables.transportationData.percentageDistributionTravelDistance['europe'].internationalRail; $event.target.select()"
                             @keypress.enter="$event.target.blur()"
-                            @focusout="onCellEditCompleteTransportationData(project.dataTables.transportationData.percentageDistributionTravelDistance['europe'].internationalRail, 'europe', 'internationalRail')"/>
+                            @focusout="onCellEditCompleteTransportationData(project.dataTables.transportationData.percentageDistributionTravelDistance['europe'].internationalRail, 'europe', 'internationalRail')"/> -->
 
                             <label for="nationalRailTransportationData">National Rail</label>
                             <InputNumber id="nationalRailTransportationData" v-model="project.dataTables.transportationData.percentageDistributionTravelDistance['europe'].nationalRail" mode="decimal" :maxFractionDigits="4"
@@ -2060,11 +2060,15 @@ export default {
 
       let sum = 0;
 
-      for(let field of Object.values(this.project.dataTables.transportationData.percentageDistributionTravelDistance[country])){
+      for (let field of Object.values(this.project.dataTables.transportationData.percentageDistributionTravelDistance[country])){
         sum += field;
       }
 
-      if(this.round4Decimals(sum) != 1) {
+      if (country == "europe") {
+        sum -= this.project.dataTables.transportationData.percentageDistributionTravelDistance[country].internationalRail
+      }
+
+      if (this.round4Decimals(sum) != 1) {
         this.$toast.add({severity:'warn', summary: 'Warning', detail: 'Sum of the values of the table is not equal to 1, it is: ' + this.round4Decimals(sum), life: 3000});
       }
 
