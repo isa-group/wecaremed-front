@@ -1588,6 +1588,16 @@ export default {
 						pointHoverBackgroundColor: '#fff',
 						pointHoverBorderColor: 'rgba(255,99,132,1)',
 						data: [0, 0, 0, 0, 0, 0, 0, 0]
+					},
+          {
+						// label: 'Reference 100%',
+						backgroundColor: 'rgba(0,0,0,0.1)',
+						borderColor: 'rgba(0,0,0,1)',
+						pointBackgroundColor: 'rgba(0,0,0,1)',
+						pointBorderColor: '#fff',
+						pointHoverBackgroundColor: '#fff',
+						pointHoverBorderColor: 'rgba(0,0,0,1)',
+						data: [1, 1, 1, 1, 1, 1, 1, 1]
 					}
 				]
 			},
