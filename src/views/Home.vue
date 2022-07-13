@@ -45,6 +45,12 @@
           </template>
         </Column>
 
+        <Column field="proposalId" header="Proposal ID" :sortable="true">
+          <template #body="slotProps">
+            {{slotProps.data.proposalId}}
+          </template>
+        </Column>
+
         <Column field="from" header="From" :sortable="true">
           <template #body="slotProps">
             {{(new Date(slotProps.data.from).getMonth() + 1).toString().padStart(2, "0") + '/' + new Date(slotProps.data.from).getFullYear()}}
@@ -78,6 +84,12 @@
             </template>
           </Column>
         </template>
+
+        <Column field="differenceCF" header="Difference in the two phases CF" :sortable="true">
+          <template #body="slotProps">
+            {{round(slotProps.data.initialProjectData.initialCF - slotProps.data.currentCF)}}
+          </template>
+        </Column>
 
         <Column field="actions" header="Actions" :exportable="false">
           <template #body="slotProps">
@@ -473,6 +485,9 @@ export default {
           })
         })
       })
+    },
+    round(num) {
+      return Math.round((num + Number.EPSILON) * 100) / 100
     }
   }
 }
