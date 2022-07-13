@@ -6,12 +6,13 @@
 
     <Toast position="bottom-right"/>
 
-    <div class="card col-8">
+    <div class="card col-12">
 
       <h1>My projects</h1>
 
       <DataTable :value="projects" :paginator="true" class="p-datatable-gridlines" dataKey="id" ref="dt" :exportFilename="$store.state.toggleValue == false ? 'WECAREMED - My projects in Design phase' : 'WECAREMED - My projects in Monitoring phase'"
-      :rowHover="true" sortMode="multiple" :rows="10" :loading="loading" responsiveLayout="scroll">
+      :rowHover="true" sortMode="multiple" :rows="10" :loading="loading" responsiveLayout="scroll"  v-model:filters="filters"
+      filterDisplay="row">
         
         <template #header>
             <div class="flex justify-content-between flex-column sm:flex-row">
@@ -37,12 +38,29 @@
           <template #body="slotProps">
             {{slotProps.data.name}}
           </template>
+          <template #filter="{filterModel,filterCallback}">
+           <InputText type="text" v-model="filterModel.value" @input="filterCallback()" class="p-column-filter" placeholder="Search by name" v-tooltip.top.focus="'Filter as you type'"/>
+         </template>
         </Column>
 
         <Column field="callId" header="Call ID" :sortable="true">
           <template #body="slotProps">
             {{slotProps.data.callId}}
           </template>
+          <template #filter="{filterModel,filterCallback}">
+           <InputText type="text" v-model="filterModel.value" @input="filterCallback()" class="p-column-filter" placeholder="Search by Call ID" v-tooltip.top.focus="'Filter as you type'"/>
+         </template>
+        </Column>
+
+        <Column field="proposalId" header  ="Proposal ID" :sortable="true">
+          
+          <template #body="slotProps">
+            {{slotProps.data.proposalId}}
+          </template>
+
+         <template #filter="{filterModel,filterCallback}">
+           <InputText type="text" v-model="filterModel.value" @input="filterCallback()" class="p-column-filter" placeholder="Search by Proposal ID" v-tooltip.top.focus="'Filter as you type'"/>
+         </template>
         </Column>
 
         <Column field="from" header="From" :sortable="true">
@@ -66,18 +84,26 @@
         </template>
 
         <template v-else>
-          <Column field="initialCF" header="Design Phase CF (t CO₂e)" :sortable="true">
+          <Column style="width: 7%;" field="initialCF" header="Design Phase CF (t CO₂e)" :sortable="true">
             <template #body="slotProps">
               <span :class="getTextColorFromCFIndex(slotProps.data.initialProjectData.initialCF)">{{slotProps.data.initialProjectData.initialCF}}</span>
             </template>
           </Column>
 
-          <Column field="currentCF" header="Monitoring Phase CF (t CO₂e)" :sortable="true">
+          <Column style="width: 7%;" field="currentCF" header="Monitoring Phase CF (t CO₂e)" :sortable="true">
             <template #body="slotProps">
               <span :class="getTextColorFromCFIndex(slotProps.data.currentCF)">{{slotProps.data.currentCF}}</span>
             </template>
           </Column>
+
+          <Column style="width: 7%;" field="differenceCF" header="Difference in CF between the two phases" :sortable="true">
+            <template #body="slotProps">
+              {{round(slotProps.data.initialProjectData.initialCF - slotProps.data.currentCF)}}
+            </template>
+         </Column>
         </template>
+
+        
 
         <Column field="actions" header="Actions" :exportable="false">
           <template #body="slotProps">
@@ -142,6 +168,8 @@ import Dialog from 'primevue/dialog';
 import Toast from 'primevue/toast';
 import axios from 'axios'
 import mongoose from "mongoose"
+import {FilterMatchMode} from 'primevue/api';
+import InputText from 'primevue/inputtext';
 
 export default {
   name: 'Home',
@@ -151,6 +179,7 @@ export default {
     Column,
     Topbar,
     Dialog,
+    InputText,
     Toast
   },
   data() {
@@ -160,6 +189,11 @@ export default {
       projects: [],
       initialProjects: [],
       cloneProjectDialog: false,
+      filters: {
+        'name': {value: null, matchMode: FilterMatchMode.STARTS_WITH},
+        'callId': {value: null, matchMode: FilterMatchMode.STARTS_WITH},
+        'proposalId': {value: null, matchMode: FilterMatchMode.STARTS_WITH}
+      }
     }
   },
   created() {
@@ -473,6 +507,9 @@ export default {
           })
         })
       })
+    },
+    round(num) {
+      return Math.round((num + Number.EPSILON) * 100) / 100
     }
   }
 }
@@ -518,6 +555,10 @@ export default {
 
 .wrapper {
   display: flex;
+}
+
+.p-column-header-content {
+  justify-content: center;
 }
 
 </style>
