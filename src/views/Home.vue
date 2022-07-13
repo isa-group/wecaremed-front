@@ -34,49 +34,49 @@
             Loading projects. Please wait.
         </template>
 
-        <Column field="name" header="Name" :sortable="true">
+        <Column class="centered-cell" field="name" header="Name" :sortable="true">
           <template #body="slotProps">
             {{slotProps.data.name}}
           </template>
           <template #filter="{filterModel,filterCallback}">
-           <InputText type="text" v-model="filterModel.value" @input="filterCallback()" class="p-column-filter" placeholder="Search by name" v-tooltip.top.focus="'Filter as you type'"/>
+           <InputText type="text" v-model="filterModel.value" @input="filterCallback()" class="p-column-filter centered-cell" placeholder="Search by name" v-tooltip.top.focus="'Filter as you type'"/>
          </template>
         </Column>
 
-        <Column field="callId" header="Call ID" :sortable="true">
+        <Column class="centered-cell" field="callId" header="Call ID" :sortable="true">
           <template #body="slotProps">
             {{slotProps.data.callId}}
           </template>
           <template #filter="{filterModel,filterCallback}">
-           <InputText type="text" v-model="filterModel.value" @input="filterCallback()" class="p-column-filter" placeholder="Search by Call ID" v-tooltip.top.focus="'Filter as you type'"/>
+           <InputText type="text" v-model="filterModel.value" @input="filterCallback()" class="p-column-filter centered-cell" placeholder="Search by Call ID" v-tooltip.top.focus="'Filter as you type'"/>
          </template>
         </Column>
 
-        <Column field="proposalId" header  ="Proposal ID" :sortable="true">
+        <Column class="centered-cell" field="proposalId" header  ="Proposal ID" :sortable="true">
           
           <template #body="slotProps">
             {{slotProps.data.proposalId}}
           </template>
 
          <template #filter="{filterModel,filterCallback}">
-           <InputText type="text" v-model="filterModel.value" @input="filterCallback()" class="p-column-filter" placeholder="Search by Proposal ID" v-tooltip.top.focus="'Filter as you type'"/>
+           <InputText  type="text" v-model="filterModel.value" @input="filterCallback()" class="p-column-filter centered-cell" placeholder="Search by Proposal ID" v-tooltip.top.focus="'Filter as you type'"/>
          </template>
         </Column>
 
-        <Column field="from" header="From" :sortable="true">
+        <Column class="centered-cell" field="from" header="From" :sortable="true">
           <template #body="slotProps">
             {{(new Date(slotProps.data.from).getMonth() + 1).toString().padStart(2, "0") + '/' + new Date(slotProps.data.from).getFullYear()}}
           </template>
         </Column>
 
-        <Column field="to" header="To" :sortable="true">
+        <Column class="centered-cell" field="to" header="To" :sortable="true">
         <template #body="slotProps">
             {{(new Date(slotProps.data.to).getMonth() + 1).toString().padStart(2, "0") + '/' + new Date(slotProps.data.to).getFullYear()}}
           </template>
         </Column>
 
         <template v-if="!this.$store.state.toggleValue">
-          <Column field="initialCF" header="CF Estimation (t CO₂e)" :sortable="true">
+          <Column class="centered-cell" field="initialCF" header="CF Estimation (t CO₂e)" :sortable="true">
             <template #body="slotProps">
               <span :class="getTextColorFromCFIndex(slotProps.data.initialProjectData.initialCF)">{{slotProps.data.initialProjectData.initialCF}}</span>
             </template>
@@ -84,19 +84,19 @@
         </template>
 
         <template v-else>
-          <Column style="width: 7%;" field="initialCF" header="Design Phase CF (t CO₂e)" :sortable="true">
+          <Column class="centered-cell" style="width: 7%;" field="initialCF" header="Design Phase CF (t CO₂e)" :sortable="true">
             <template #body="slotProps">
               <span :class="getTextColorFromCFIndex(slotProps.data.initialProjectData.initialCF)">{{slotProps.data.initialProjectData.initialCF}}</span>
             </template>
           </Column>
 
-          <Column style="width: 7%;" field="currentCF" header="Monitoring Phase CF (t CO₂e)" :sortable="true">
+          <Column class="centered-cell" style="width: 7%;" field="currentCF" header="Monitoring Phase CF (t CO₂e)" :sortable="true">
             <template #body="slotProps">
               <span :class="getTextColorFromCFIndex(slotProps.data.currentCF)">{{slotProps.data.currentCF}}</span>
             </template>
           </Column>
 
-          <Column style="width: 7%;" field="differenceCF" header="Difference in CF between the two phases" :sortable="true">
+          <Column class="centered-cell" style="width: 7%;" field="differenceCF" header="Difference in CF between the two phases" :sortable="true">
             <template #body="slotProps">
               {{round(slotProps.data.initialProjectData.initialCF - slotProps.data.currentCF)}}
             </template>
@@ -105,7 +105,7 @@
 
         
 
-        <Column field="actions" header="Actions" :exportable="false">
+        <Column class="centered-cell" field="actions" header="Actions" :exportable="false">
           <template #body="slotProps">
             <router-link :to="'/projects/' + (this.$store.state.toggleValue == true ? slotProps.data._id : slotProps.data.initialProject)">
               <i class="pi pi-arrow-circle-right mr-3" v-tooltip.top="'Go to project'" />
@@ -559,6 +559,10 @@ export default {
 
 .p-column-header-content {
   justify-content: center;
+}
+
+.centered-cell {
+  text-align: center !important;
 }
 
 </style>
