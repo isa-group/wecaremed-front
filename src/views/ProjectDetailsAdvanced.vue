@@ -1401,16 +1401,16 @@
                   <div class="col-12">
                     <div class="col-12 flex justify-content-center">
                       <h2 class="col-6 mb-2">Design phase CF:
-                        <Badge :value="projectInitial.initialCF  + ' t CO₂e'" class="ml-2 currentCF" size="xlarge" :severity="getTextColorFromCFIndex(projectInitial.initialCF)" />
+                        <Badge :value="projectInitial.initialCF  + ' t CO₂e'" class="ml-2 designCF" size="xlarge" :severity="getTextColorFromCFIndex(projectInitial.initialCF)" />
                       </h2>
 
                       <h2 class="col-6 mb-2">Monitoring phase CF:
-                        <Badge :value="project.currentCF  + ' t CO₂e'" class="ml-2 currentCF" size="xlarge" :severity="getTextColorFromCFIndex(project.currentCF)" />
+                        <Badge :value="project.currentCF  + ' t CO₂e'" class="ml-2 monitoringCF" size="xlarge" :severity="getTextColorFromCFIndex(project.currentCF)" />
                       </h2>
                     </div>
 
                     <h2 class="mb-2">Difference in the CF between the two phases:
-                      <Badge :value="round(projectInitial.initialCF - project.currentCF)  + ' t CO₂e'" class="ml-2 currentCF" size="xlarge" :severity="getTextColorFromCFIndex(projectInitial.initialCF - project.currentCF)" />
+                      <Badge :value="round(projectInitial.initialCF - project.currentCF)  + ' t CO₂e'" class="ml-2 differenceCF" size="xlarge" :severity="getTextColorFromCFIndex(projectInitial.initialCF - project.currentCF)" />
                     </h2>
                   </div>
                 </div>
@@ -1579,8 +1579,18 @@ export default {
       chartDataExecution: {
 				labels: ['Printable deliverables', 'Equipment', 'Electricity', 'Water', 'Transportation', 'Events', 'Materials', 'Fuels (Heating)'],
 				datasets: [
+          {
+            label: 'Design phase CF',
+            backgroundColor: 'rgba(0,0,0,0.1)',
+            borderColor: 'rgba(0,0,0,1)',
+            pointBackgroundColor: 'rgba(0,0,0,1)',
+            pointBorderColor: '#fff',
+            pointHoverBackgroundColor: '#fff',
+            pointHoverBorderColor: 'rgba(0,0,0,1)',
+            data: [1, 1, 1, 1, 1, 1, 1, 1]
+          },
 					{
-						// label: 'KPI-1',
+						label: 'Monitoring phase CF',
 						backgroundColor: 'rgba(255,99,132,0.2)',
 						borderColor: 'rgba(255,99,132,1)',
 						pointBackgroundColor: 'rgba(255,99,132,1)',
@@ -1588,23 +1598,13 @@ export default {
 						pointHoverBackgroundColor: '#fff',
 						pointHoverBorderColor: 'rgba(255,99,132,1)',
 						data: [0, 0, 0, 0, 0, 0, 0, 0]
-					},
-          {
-						// label: 'Reference 100%',
-						backgroundColor: 'rgba(0,0,0,0.1)',
-						borderColor: 'rgba(0,0,0,1)',
-						pointBackgroundColor: 'rgba(0,0,0,1)',
-						pointBorderColor: '#fff',
-						pointHoverBackgroundColor: '#fff',
-						pointHoverBorderColor: 'rgba(0,0,0,1)',
-						data: [1, 1, 1, 1, 1, 1, 1, 1]
 					}
 				]
 			},
 			chartOptions: {
         plugins: {
           legend: {
-            display: false,
+            display: true,
             labels: {
               color: '#495057'
             }
@@ -2086,14 +2086,14 @@ export default {
       })
     },
     calculateKPI1() {
-      this.chartDataExecution.datasets[0].data[0] = (this.project.printableDeliverablesAdvancedCF / this.projectInitial.printableDeliverablesSimpleCF);
-      this.chartDataExecution.datasets[0].data[1] = (this.project.equipmentAdvancedCF / this.projectInitial.equipmentSimpleCF);
-      this.chartDataExecution.datasets[0].data[2] = (this.project.electricityAdvancedCF / this.projectInitial.electricitySimpleCF);
-      this.chartDataExecution.datasets[0].data[3] = (this.project.waterAdvancedCF / this.projectInitial.waterSimpleCF);
-      this.chartDataExecution.datasets[0].data[4] = (this.project.transportationAdvancedCF / this.projectInitial.transportationSimpleCF);
-      this.chartDataExecution.datasets[0].data[5] = (this.project.eventsAdvancedCF / this.projectInitial.eventsSimpleCF);
-      this.chartDataExecution.datasets[0].data[6] = (this.project.materialsAdvancedCF / this.projectInitial.materialsSimpleCF);
-      this.chartDataExecution.datasets[0].data[7] = (this.project.fuelsHeatAdvancedCF / this.projectInitial.fuelsHeatSimpleCF);
+      this.chartDataExecution.datasets[1].data[0] = (this.project.printableDeliverablesAdvancedCF / this.projectInitial.printableDeliverablesSimpleCF);
+      this.chartDataExecution.datasets[1].data[1] = (this.project.equipmentAdvancedCF / this.projectInitial.equipmentSimpleCF);
+      this.chartDataExecution.datasets[1].data[2] = (this.project.electricityAdvancedCF / this.projectInitial.electricitySimpleCF);
+      this.chartDataExecution.datasets[1].data[3] = (this.project.waterAdvancedCF / this.projectInitial.waterSimpleCF);
+      this.chartDataExecution.datasets[1].data[4] = (this.project.transportationAdvancedCF / this.projectInitial.transportationSimpleCF);
+      this.chartDataExecution.datasets[1].data[5] = (this.project.eventsAdvancedCF / this.projectInitial.eventsSimpleCF);
+      this.chartDataExecution.datasets[1].data[6] = (this.project.materialsAdvancedCF / this.projectInitial.materialsSimpleCF);
+      this.chartDataExecution.datasets[1].data[7] = (this.project.fuelsHeatAdvancedCF / this.projectInitial.fuelsHeatSimpleCF);
     },
     addPrintableDeliverable() {
       let newPrintableDeliverable = {
@@ -2971,5 +2971,18 @@ export default {
     align-items: center;
     width: max-content;
     margin-right: 0.75rem;
+}
+
+.designCF {
+  background-color: black;
+}
+
+.monitoringCF {
+  background-color: rgba(255,99,132,1);
+}
+
+.differenceCF {
+  background-color: white;
+  color: black;
 }
 </style>
