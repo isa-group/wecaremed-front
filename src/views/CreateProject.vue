@@ -5,7 +5,7 @@
   <div class="grid" style="justify-content: center;">
     <div class="col-5">
 			<div class="card">
-				<h2>Project general data</h2>
+				<h2>General data of the Project</h2>
 				<div class="p-fluid formgrid grid">
 
 					<div class="field col-12 md:col-12">
@@ -194,7 +194,7 @@ export default {
             this.errors = errorUpdateInitial.response.data;
           })
 
-          this.$router.push({ path: `/projects/${this.newProject._id}` });
+          this.$router.push({ path: `/` });
         })   
       })
       .catch((error)=>{
