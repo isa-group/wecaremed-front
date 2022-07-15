@@ -111,7 +111,7 @@
               <i class="pi pi-arrow-circle-right mr-3" v-tooltip.top="'Go to project'" />
             </router-link>
             <router-link :to="'/editProject/' + (slotProps.data._id)">
-              <i class="pi pi-pencil mr-3" v-tooltip.top="'Edit project'" />
+              <i class="pi pi-pencil mr-3" v-tooltip.top="'Edit project general data'" />
             </router-link>
             <router-link to="/">
               <i class="pi pi-clone mr-3" @click="confirmCloneProject(projects.indexOf(slotProps.data))" v-tooltip.top="'Clone project'" />
