@@ -505,6 +505,121 @@ export default {
           .catch((e)=>{
             console.log('error' + e);
           })
+
+          // Ahora vamos a clonar las tablas por defecto del proyecto en Monitoring phase
+          axios.get('/dataTables/' + projectOriginalID)
+          .then( (responseDataTables) => {
+            this.projectToClone.dataTables = responseDataTables.data;
+
+            
+            // Se copian las tablas de transportation en el Monitoring del clonado
+            axios.get('/dataTables/' + this.projectClonedID)
+            .then((responseDataTablesProjectCloned) => {
+              let projectClonedTables = responseDataTablesProjectCloned.data;
+
+              // Reasignamos a cada tabla que vamos a copiar, el ID de su correspondiente en el proyecto
+              // cuando se creó el clon y el proyecto asociado
+              this.projectToClone.dataTables.transportationData._id = projectClonedTables.transportationData._id;
+              this.projectToClone.dataTables.transportationData.project = this.projectToClone._id;
+      
+              axios.put('/dataTables/' + this.projectClonedID, this.projectToClone.dataTables.transportationData, {params: {
+              projectId: this.projectClonedID,
+              dataTableName: 'transportation'
+              }})
+              .catch( (error) => {
+                console.log("Error: ", error);
+              })
+
+              this.projectToClone.dataTables.materialData._id = projectClonedTables.materialData._id;
+              this.projectToClone.dataTables.materialData.project = this.projectToClone._id;
+
+              // Se copian las tablas de material en el monitoring del clone
+              axios.put('/dataTables/' + this.projectClonedID, this.projectToClone.dataTables.materialData, {params: {
+              projectId: this.projectClonedID,
+              dataTableName: 'material'
+              }})
+              .catch( (error) => {
+                console.log("Error: ", error);
+              })
+
+              this.projectToClone.dataTables.eventsData._id = projectClonedTables.eventsData._id;
+              this.projectToClone.dataTables.eventsData.project = this.projectToClone._id;
+
+              // Se copian las tablas de events en el monitoring del clone
+              axios.put('/dataTables/' + this.projectClonedID, this.projectToClone.dataTables.eventsData, {params: {
+                projectId: this.projectClonedID,
+                dataTableName: 'events'
+              }})
+              .catch( (error) => {
+                console.log("Error: ", error);
+              })
+
+
+            })
+            
+          })
+          .catch( (errorDT) => {
+            console.log('error' + errorDT);
+          })
+
+
+
+          // Ahora vamos a clonar las tablas por defecto del proyecto en Design phase
+          axios.get('/dataTables/' + projectOriginalInitialID)
+          .then( (responseDataTablesInitial) => {
+            this.projectClonedInitial.dataTables = responseDataTablesInitial.data;
+            
+            
+            // Se copian las tablas de transportation en el Design del clonado
+            axios.get('/dataTables/' + this.projectInitialID)
+            .then((responseDataTablesProjectClonedInitial) => {
+              let projectClonedTablesInitial = responseDataTablesProjectClonedInitial.data;
+
+              // Reasignamos a cada tabla que vamos a copiar, el ID de su correspondiente en el proyecto
+              // cuando se creó el clon y el proyecto asociado
+              this.projectClonedInitial.dataTables.transportationData._id = projectClonedTablesInitial.transportationData._id;
+              this.projectClonedInitial.dataTables.transportationData.project = this.projectClonedInitial._id;
+      
+              axios.put('/dataTables/' + this.projectInitialID, this.projectClonedInitial.dataTables.transportationData, {params: {
+              projectId: this.projectInitialID,
+              dataTableName: 'transportation'
+              }})
+              .catch( (error) => {
+                console.log("Error: ", error);
+              })
+
+              this.projectClonedInitial.dataTables.materialData._id = projectClonedTablesInitial.materialData._id;
+              this.projectClonedInitial.dataTables.materialData.project = this.projectClonedInitial._id;
+
+              // Se copian las tablas de material en el design del clone
+              axios.put('/dataTables/' + this.projectInitialID, this.projectClonedInitial.dataTables.materialData, {params: {
+              projectId: this.projectInitialID,
+              dataTableName: 'material'
+              }})
+              .catch( (error) => {
+                console.log("Error: ", error);
+              })
+
+              this.projectClonedInitial.dataTables.eventsData._id = projectClonedTablesInitial.eventsData._id;
+              this.projectClonedInitial.dataTables.eventsData.project = this.projectClonedInitial._id;
+
+              // Se copian las tablas de events en el monitoring del clone
+              axios.put('/dataTables/' + this.projectInitialID, this.projectClonedInitial.dataTables.eventsData, {params: {
+                projectId: this.projectInitialID,
+                dataTableName: 'events'
+              }})
+              .catch( (error) => {
+                console.log("Error: ", error);
+              })
+
+
+            })
+            
+          })
+          .catch( (errorDT) => {
+            console.log('error' + errorDT);
+          })
+
         })
       })
     },
