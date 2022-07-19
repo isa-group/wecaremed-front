@@ -261,8 +261,8 @@
     <div class="card col-12">
 
       <div style="display: flex; align-items: center; justify-content: space-between;">
-        <h2 v-if="project.isInitialProject">Project's base data</h2>
-        <h2 v-else-if="!project.isInitialProject">Project's scenario data</h2>
+        <h2 v-if="project.isInitialProject">Project data. Design mode</h2>
+        <h2 v-else-if="!project.isInitialProject">Project data. Monitoring mode</h2>
       </div>
 
       <TabView>
