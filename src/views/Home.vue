@@ -65,13 +65,13 @@
 
         <Column class="centered-cell" field="from" header="From" :sortable="true">
           <template #body="slotProps">
-            {{(new Date(slotProps.data.from).getMonth() + 1).toString().padStart(2, "0") + '/' + new Date(slotProps.data.from).getFullYear()}}
+            {{slotProps.data.from}}
           </template>
         </Column>
 
         <Column class="centered-cell" field="to" header="To" :sortable="true">
-        <template #body="slotProps">
-            {{(new Date(slotProps.data.to).getMonth() + 1).toString().padStart(2, "0") + '/' + new Date(slotProps.data.to).getFullYear()}}
+          <template #body="slotProps">
+            {{slotProps.data.to}}
           </template>
         </Column>
 
@@ -98,7 +98,7 @@
 
           <Column class="centered-cell" style="width: 7%;" field="differenceCF" header="Difference in CF between the two phases" :sortable="true">
             <template #body="slotProps">
-              {{round(slotProps.data.initialProjectData.initialCF - slotProps.data.currentCF)}}
+              <span :class="getTextColorFromCFIndex(slotProps.data.differenceCF)">{{slotProps.data.differenceCF}}</span>
             </template>
          </Column>
         </template>
@@ -223,7 +223,10 @@ export default {
               }
             }
             project.initialProjectData = result
-            this.projects.push(project);
+            project.differenceCF = this.round(project.initialProjectData.initialCF - project.currentCF)
+            project.from = (new Date(project.from).getMonth() + 1).toString().padStart(2, "0") + '/' + new Date(project.from).getFullYear()
+            project.to = (new Date(project.to).getMonth() + 1).toString().padStart(2, "0") + '/' + new Date(project.to).getFullYear()
+            this.projects.unshift(project);
           }
         })
         .catch((e)=>{
@@ -235,9 +238,6 @@ export default {
         console.log('error' + e);
       })
 
-      
-
-      
     },
     exportCSV() {
       this.$refs.dt.exportCSV();
