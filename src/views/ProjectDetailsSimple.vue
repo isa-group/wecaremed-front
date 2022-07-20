@@ -2046,6 +2046,50 @@ export default {
           .catch((e)=>{
             console.log('error' + e);
           })
+
+          // Nos traemos las tablas del Monitoring para asignar sus ID a las nuevas
+          // tablas que vamos a exportar copia de Design
+          axios.get('/dataTables/' + this.project.initialProject)
+          .then( (responseTablesMonitoring) => {
+            let designTables = Object.assign({}, this.project.dataTables);
+            let monitoringTables = responseTablesMonitoring.data;
+            // Asignamos los ID de las tablas de monitoring a las copias del desing
+            // además, les asociamos el proyecto monitoring
+            designTables.transportationData._id = monitoringTables.transportationData._id;
+            designTables.transportationData.project = this.project.initialProject
+
+            axios.put('/dataTables/' + this.project.initialProject, designTables.transportationData, {params: {
+            projectId: this.project.initialProject,
+            dataTableName: 'transportation'
+            }})
+            .catch( (error) => {
+              console.log("Error: ", error);
+            })
+
+            designTables.materialData._id = monitoringTables.materialData._id;
+            designTables.materialData.project = this.project.initialProject
+
+            axios.put('/dataTables/' + this.project.initialProject, designTables.materialData, {params: {
+            projectId: this.project.initialProject,
+            dataTableName: 'material'
+            }})
+            .catch( (error) => {
+              console.log("Error: ", error);
+            })
+
+            designTables.eventsData._id = monitoringTables.eventsData._id;
+            designTables.eventsData.project = this.project.initialProject
+
+            axios.put('/dataTables/' + this.project.initialProject, designTables.eventsData, {params: {
+            projectId: this.project.initialProject,
+            dataTableName: 'events'
+            }})
+            .catch( (error) => {
+              console.log("Error: ", error);
+            })
+
+          })
+
         })
         .catch((e)=>{
           console.log('error' + e);
