@@ -8,8 +8,8 @@
       <div class="card">
 
         <div style="display: flex; align-items: center; justify-content: space-between;">
-          <h2 v-if="project.isInitialProject">Project's design phase data</h2>
-          <h2 v-else-if="!project.isInitialProject">Project's monitoring period data</h2>
+          <h2 v-if="project.isInitialProject">Project data. Design mode</h2>
+          <h2 v-else-if="!project.isInitialProject">Project data. Monitoring mode</h2>
         </div>
 
         <!-- Data -->
