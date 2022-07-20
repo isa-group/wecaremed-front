@@ -1288,7 +1288,7 @@
                       </div>
 
                       <div>
-                            <Button label="Reset values" @click="resetTableValuesToDefault('transportation')" class="p-button-info" />
+                            <Button label="Reset values" @click="resetTableValuesToDefault('events')" class="p-button-info" />
                       </div>
 
                     </div>
@@ -2224,23 +2224,130 @@ export default {
       })
     },
     resetTableValuesToDefault(table) {
-      axios.put('/projects/resetDefaultValues/' + this.project._id,this.project.dataTables.transportationData, {params: {
-        projectId: this.project._id,
-        dataTableName: table
-      }})
-      .then( () => {
-        this.$toast.add({severity:'success', summary: 'Successful', detail: 'The values has been reset to default', life: 3000});
-        axios.get(`/dataTables/${this.$route.params.id}`)
-        .then( (responseDataTables) => {
-          this.project.dataTables = responseDataTables.data;
-        })
-        .catch( (errorDT) => {
-          console.log('error' + errorDT);
-        })
-      })
-      .catch( (error) => {
-        console.log("Error: ", error);
-      })
+
+      let oldEventTableForEurope = {}
+      switch(table) {
+        case 'transportation':
+          // En este caso vamos a hacer una copia de transportation para que no resetee los valores de 
+          // la tabla de transportation para Europe (Events)
+          oldEventTableForEurope = Object.assign({}, this.project.dataTables.transportationData.percentageDistributionTravelDistance['europe']);
+
+          // reseteamos las tablas para luego meter los valores para europe y volver a guardar
+          axios.put('/projects/resetDefaultValues/' + this.project._id, this.project.dataTables.transportationData, {params: {
+            projectId: this.project._id,
+            dataTableName: table
+          }})
+          .then( () => {
+
+            axios.get('/dataTables/' + this.project._id)
+            .then( (responseDataTableTransportation) => {
+               // Ya tenemos las tablas por defecto
+
+
+              this.project.dataTables = responseDataTableTransportation.data;
+
+              // Reasignamos los valores de la tabla de events para no perderlos en el reseteo
+              this.project.dataTables.transportationData.percentageDistributionTravelDistance['europe'].car = oldEventTableForEurope.car;
+              this.project.dataTables.transportationData.percentageDistributionTravelDistance['europe'].motorbikes = oldEventTableForEurope.motorbikes;
+              this.project.dataTables.transportationData.percentageDistributionTravelDistance['europe'].bus = oldEventTableForEurope.bus;
+              this.project.dataTables.transportationData.percentageDistributionTravelDistance['europe'].taxi = oldEventTableForEurope.taxi;
+              this.project.dataTables.transportationData.percentageDistributionTravelDistance['europe'].internationalRail = oldEventTableForEurope.internationalRail;
+              this.project.dataTables.transportationData.percentageDistributionTravelDistance['europe'].nationalRail = oldEventTableForEurope.nationalRail;
+              this.project.dataTables.transportationData.percentageDistributionTravelDistance['europe'].lightRailTramUnderground = oldEventTableForEurope.lightRailTramUnderground;
+              this.project.dataTables.transportationData.percentageDistributionTravelDistance['europe'].ferries = oldEventTableForEurope.ferries;
+              this.project.dataTables.transportationData.percentageDistributionTravelDistance['europe'].cycling = oldEventTableForEurope.cycling;
+              this.project.dataTables.transportationData.percentageDistributionTravelDistance['europe'].walking = oldEventTableForEurope.walking;
+              this.project.dataTables.transportationData.percentageDistributionTravelDistance['europe'].other = oldEventTableForEurope.other;
+
+              // Ahora mandamos a la DB la tabla de nuevo para actualizarla
+              axios.put('/dataTables/' + this.project._id, this.project.dataTables.transportationData, {params: {
+                projectId: this.project._id,
+                dataTableName: 'transportation'
+              }})
+              .catch( (errorDT) => {
+                console.log("Error: ", errorDT);
+              })
+              })
+            .catch( (errorGetDefaultTables) => {
+              console.log("Error: ", errorGetDefaultTables);
+            })
+              
+          })
+          .catch( (error) => {
+              console.log("Error: ", error);
+          })
+
+          break;
+
+        case 'events':
+          // En este caso vamos a hacer una copia de transportation para que no resetee los valores de 
+          // la tabla de transportation excepto para Europe (Events)
+          // reseteamos las tablas para luego meter los valores para europe y volver a guardar
+          axios.put('/projects/resetDefaultValues/' + this.project._id, this.project.dataTables.transportationData, {params: {
+            projectId: this.project._id,
+            dataTableName: 'transportation'
+          }})
+          .then( () => {
+            axios.get('/dataTables/' + this.project._id)
+            .then( ( responseDataTableMaterials) => {
+              // Ya tenemos las tablas por defecto
+              console.log("Valores por defecto de events", responseDataTableMaterials.data.transportationData)
+              let defaultValuesForEurope = responseDataTableMaterials.data.transportationData.percentageDistributionTravelDistance['europe'];
+
+              // Reasignamos los valores de la tabla de events para no perderlos en el reseteo
+              this.project.dataTables.transportationData.percentageDistributionTravelDistance['europe'].car = defaultValuesForEurope.car;
+              this.project.dataTables.transportationData.percentageDistributionTravelDistance['europe'].motorbikes = defaultValuesForEurope.motorbikes;
+              this.project.dataTables.transportationData.percentageDistributionTravelDistance['europe'].bus = defaultValuesForEurope.bus;
+              this.project.dataTables.transportationData.percentageDistributionTravelDistance['europe'].taxi = defaultValuesForEurope.taxi;
+              this.project.dataTables.transportationData.percentageDistributionTravelDistance['europe'].internationalRail = defaultValuesForEurope.internationalRail;
+              this.project.dataTables.transportationData.percentageDistributionTravelDistance['europe'].nationalRail = defaultValuesForEurope.nationalRail;
+              this.project.dataTables.transportationData.percentageDistributionTravelDistance['europe'].lightRailTramUnderground = defaultValuesForEurope.lightRailTramUnderground;
+              this.project.dataTables.transportationData.percentageDistributionTravelDistance['europe'].ferries = defaultValuesForEurope.ferries;
+              this.project.dataTables.transportationData.percentageDistributionTravelDistance['europe'].cycling = defaultValuesForEurope.cycling;
+              this.project.dataTables.transportationData.percentageDistributionTravelDistance['europe'].walking = defaultValuesForEurope.walking;
+              this.project.dataTables.transportationData.percentageDistributionTravelDistance['europe'].other = defaultValuesForEurope.other;
+
+              // Ahora mandamos a la DB la tabla de nuevo para actualizarla
+              axios.put('/dataTables/' + this.project._id, this.project.dataTables.transportationData, {params: {
+                projectId: this.project._id,
+                dataTableName: 'transportation'
+              }})
+              .catch( (errorDT) => {
+                console.log("Error: ", errorDT);
+              })
+
+            })
+            .catch( (errorGetDefaultTables) => {
+              console.log("Error: ", errorGetDefaultTables);
+            }) 
+          })
+          .catch( (error) => {
+              console.log("Error: ", error);
+          })
+
+          break;
+
+        case 'material':
+          axios.put('/projects/resetDefaultValues/' + this.project._id, this.project.dataTables.transportationData, {params: {
+            projectId: this.project._id,
+            dataTableName: table
+          }})
+          .then( () => {
+            this.$toast.add({severity:'success', summary: 'Successful', detail: 'The values has been reset to default', life: 3000});
+            axios.get(`/dataTables/${this.$route.params.id}`)
+            .then( (responseDataTables) => {
+              this.project.dataTables = responseDataTables.data;
+            })
+            .catch( (errorDT) => {
+              console.log('error' + errorDT);
+            })
+          })
+          .catch( (error) => {
+            console.log("Error: ", error);
+          })
+
+          break;
+      }
     },
 
     },
