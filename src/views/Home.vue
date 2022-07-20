@@ -193,7 +193,9 @@ export default {
         'name': {value: null, matchMode: FilterMatchMode.STARTS_WITH},
         'callId': {value: null, matchMode: FilterMatchMode.STARTS_WITH},
         'proposalId': {value: null, matchMode: FilterMatchMode.STARTS_WITH}
-      }
+      },
+      fromAux: "",
+      toAux:""
     }
   },
   created() {
@@ -224,6 +226,8 @@ export default {
             }
             project.initialProjectData = result
             project.differenceCF = this.round(project.initialProjectData.initialCF - project.currentCF)
+            this.fromAux = project.from;
+            this.toAux = project.to;
             project.from = (new Date(project.from).getMonth() + 1).toString().padStart(2, "0") + '/' + new Date(project.from).getFullYear()
             project.to = (new Date(project.to).getMonth() + 1).toString().padStart(2, "0") + '/' + new Date(project.to).getFullYear()
             this.projects.unshift(project);
@@ -299,6 +303,8 @@ export default {
       this.projectToClone.name = this.projects[this.projectToClone.tableIndex].name + "_copy_" + nextNumCopies;
       this.projectToClone.numCopies = 0;
       this.projectToClone.isInitialProject = new Boolean(false);
+      this.projectToClone.from = this.fromAux;
+      this.projectToClone.to = this.toAux;
 
       // We create a copy of the clone for create a initial project to the clone
       this.projectClonedInitial._id = new mongoose.Types.ObjectId();
@@ -338,12 +344,24 @@ export default {
               
             }
             this.projects[this.projectToClone.tableIndex].numCopies = nextNumCopies;
-            axios.put('/projects/' + projectOriginalID, this.projects[this.projectToClone.tableIndex])
+
+
+            // Volvemos a poner en el formato correcto el from y el to del proyecto original
+            // porque lo modificamos para la tabla y que en el CSV salga en el formato correcto
+            // Vamos a hacer una copia del proyecto original para enviarlo a la BD con la fecha bien
+            // y así no modificar el que utilizamos para la vista y que se vea bien en la tabla
+            let projectOriginalCopy = Object.assign({}, this.projects[this.projectToClone.tableIndex])
+            projectOriginalCopy.from = this.fromAux;
+            projectOriginalCopy.to = this.toAux;
+            axios.put('/projects/' + projectOriginalID, projectOriginalCopy)
             .catch((e) => {
               console.log('error ', e);
             })
+            // Volvemos a dar el formato correcto para la tabla al proyecto cuando ya lo hemos posteado
+            this.projectToClone.from = this.projects[this.projectToClone.tableIndex].from;
+            this.projectToClone.to = this.projects[this.projectToClone.tableIndex].to;
 
-            this.projects.push(this.projectToClone);
+            this.projects.unshift(this.projectToClone);
             this.projectToClone = {};
           })
           .catch((error)=>{
