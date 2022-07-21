@@ -2226,12 +2226,13 @@ export default {
     resetTableValuesToDefault(table) {
 
       let oldEventTableForEurope = {}
+      let defaultValuesForEurope = {}
       switch(table) {
         case 'transportation':
           // En este caso vamos a hacer una copia de transportation para que no resetee los valores de 
           // la tabla de transportation para Europe (Events)
           oldEventTableForEurope = Object.assign({}, this.project.dataTables.transportationData.percentageDistributionTravelDistance['europe']);
-
+          
           // reseteamos las tablas para luego meter los valores para europe y volver a guardar
           axios.put('/projects/resetDefaultValues/' + this.project._id, this.project.dataTables.transportationData, {params: {
             projectId: this.project._id,
@@ -2264,10 +2265,13 @@ export default {
                 projectId: this.project._id,
                 dataTableName: 'transportation'
               }})
+              .then(() => {
+                this.$toast.add({severity:'success', summary: 'Successful', detail: 'The values has been reset to default', life: 3000});
+              })
               .catch( (errorDT) => {
                 console.log("Error: ", errorDT);
               })
-              })
+            })
             .catch( (errorGetDefaultTables) => {
               console.log("Error: ", errorGetDefaultTables);
             })
@@ -2283,6 +2287,7 @@ export default {
           // En este caso vamos a hacer una copia de transportation para que no resetee los valores de 
           // la tabla de transportation excepto para Europe (Events)
           // reseteamos las tablas para luego meter los valores para europe y volver a guardar
+          
           axios.put('/projects/resetDefaultValues/' + this.project._id, this.project.dataTables.transportationData, {params: {
             projectId: this.project._id,
             dataTableName: 'transportation'
@@ -2291,9 +2296,8 @@ export default {
             axios.get('/dataTables/' + this.project._id)
             .then( ( responseDataTableMaterials) => {
               // Ya tenemos las tablas por defecto
-              console.log("Valores por defecto de events", responseDataTableMaterials.data.transportationData)
-              let defaultValuesForEurope = responseDataTableMaterials.data.transportationData.percentageDistributionTravelDistance['europe'];
-
+              defaultValuesForEurope = Object.assign({}, responseDataTableMaterials.data.transportationData.percentageDistributionTravelDistance['europe']);
+              this.project.dataTables.transportationData._id = responseDataTableMaterials.data.transportationData._id
               // Reasignamos los valores de la tabla de events para no perderlos en el reseteo
               this.project.dataTables.transportationData.percentageDistributionTravelDistance['europe'].car = defaultValuesForEurope.car;
               this.project.dataTables.transportationData.percentageDistributionTravelDistance['europe'].motorbikes = defaultValuesForEurope.motorbikes;
@@ -2312,6 +2316,9 @@ export default {
                 projectId: this.project._id,
                 dataTableName: 'transportation'
               }})
+              .then(() => {
+                this.$toast.add({severity:'success', summary: 'Successful', detail: 'The values has been reset to default', life: 3000});
+              })
               .catch( (errorDT) => {
                 console.log("Error: ", errorDT);
               })
