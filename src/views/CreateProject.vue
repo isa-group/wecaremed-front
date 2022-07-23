@@ -2,6 +2,9 @@
   
   <Topbar />
 
+  {{[newProject.from]}}<br>
+  {{[newProject.to]}}
+
   <div class="grid" style="justify-content: center;">
     <div class="col-5">
 			<div class="card">
@@ -177,6 +180,8 @@ export default {
     },
     updateProject() {
       this.submitted = true
+      this.newProject.from = new Date(this.newProject.from.getFullYear(), this.newProject.from.getMonth(), 2)
+      this.newProject.to = new Date(this.newProject.to.getFullYear(), this.newProject.to.getMonth() + 1, 0)
       axios.put('/projects/' + this.newProject._id, this.newProject)
       .then(() => {
         this.axios.get(`/projects/` + this.newProject.initialProject)
@@ -188,6 +193,8 @@ export default {
           initialProjectToUpdate.to = this.newProject.to;
           initialProjectToUpdate.callId = this.newProject.callId;
           initialProjectToUpdate.proposalId = this.newProject.proposalId;
+
+          console.log("initialProjectToUpdate: ", initialProjectToUpdate)
 
           axios.put('/projects/' + this.newProject.initialProject, initialProjectToUpdate)
           .catch((errorUpdateInitial) => {
