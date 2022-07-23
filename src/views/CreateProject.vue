@@ -2,9 +2,6 @@
   
   <Topbar />
 
-  {{[newProject.from]}}<br>
-  {{[newProject.to]}}
-
   <div class="grid" style="justify-content: center;">
     <div class="col-5">
 			<div class="card">
@@ -193,8 +190,6 @@ export default {
           initialProjectToUpdate.to = this.newProject.to;
           initialProjectToUpdate.callId = this.newProject.callId;
           initialProjectToUpdate.proposalId = this.newProject.proposalId;
-
-          console.log("initialProjectToUpdate: ", initialProjectToUpdate)
 
           axios.put('/projects/' + this.newProject.initialProject, initialProjectToUpdate)
           .catch((errorUpdateInitial) => {
