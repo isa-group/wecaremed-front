@@ -278,10 +278,10 @@ export default {
       })
     },
 
-    confirmCloneProject(index) {
+    async confirmCloneProject(index) {
       this.projectToClone = Object.assign({}, this.projects[index]);
       this.projectToClone.tableIndex = index;
-      this.projectClonedInitial = this.getProjectFromDB(this.projects[index].initialProject);
+      this.projectClonedInitial = await this.getProjectFromDB(this.projects[index].initialProject);
       this.cloneProjectDialog = true;
     },
 
@@ -356,8 +356,8 @@ export default {
       this.updateProject(projectOriginalID,projectOriginalCopy);
 
       // // Volvemos a dar el formato correcto para la tabla al proyecto cuando ya lo hemos posteado
-      // this.projectToClone.from = this.projects[this.projectToClone.tableIndex].from;
-      // this.projectToClone.to = this.projects[this.projectToClone.tableIndex].to;
+      this.projectToClone.from = this.projects[this.projectToClone.tableIndex].from;
+      this.projectToClone.to = this.projects[this.projectToClone.tableIndex].to;
 
       this.projects.unshift(this.projectToClone);
       this.projectToClone = {};
@@ -412,6 +412,7 @@ export default {
 
     clonePartners(projectOriginalID, projectClonID) {
       // Copiamos para el clon los partners
+      
       axios.get(`/partners?projectId=`+projectOriginalID)
       .then((responsePartners) => {
         for (var partner of responsePartners.data){
