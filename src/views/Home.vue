@@ -277,370 +277,294 @@ export default {
         console.log('error' + e);
       })
     },
+
     confirmCloneProject(index) {
       this.projectToClone = Object.assign({}, this.projects[index]);
-      
-      axios.get(`/projects/` + this.projects[index].initialProject)
+      this.projectToClone.tableIndex = index;
+      this.projectClonedInitial = this.getProjectFromDB(this.projects[index].initialProject);
+      this.cloneProjectDialog = true;
+    },
+
+    async getProjectFromDB(projectID){
+      var project = {};
+
+      await axios.get(`/projects/` + projectID)
       .then((response) => {
-        this.projectClonedInitial = response.data;
+        project = response.data;
       })
       .catch((e)=>{
         console.log('error' + e);
       });
-      this.projectToClone.tableIndex = index;
-      this.cloneProjectDialog = true;
+
+      return project;
     },
-    cloneProject() { 
-      let nextNumCopies = this.projects[this.projectToClone.tableIndex].numCopies + 1;
+    
+    async cloneProject() { 
+      let nextNumCopies = this.projects[this.projectToClone.tableIndex].numCopies + 1; // Variable para actualizar el número de copias del proyecto que clonamos
       this.cloneProjectDialog = false;
       this.submitted = true
+
+      let projectOriginal = this.projects[this.projectToClone.tableIndex];
       
-      let projectOriginalID = this.projects[this.projectToClone.tableIndex]._id;
+      let projectOriginalID = projectOriginal._id;
       let projectOriginalInitialID = this.projectClonedInitial._id;
 
-      // We create the clone of the project, the ID of the clone, the new name and the isInitialProject to false
+      // Asignamos al proyecto ya copiado las propiedades correctas para un nuevo proyecto (número de copias a 0...)
       this.projectToClone._id = new mongoose.Types.ObjectId(); 
-      this.projectToClone.name = this.projects[this.projectToClone.tableIndex].name + "_copy_" + nextNumCopies;
+      this.projectToClone.name = projectOriginal.name + "_copy_" + nextNumCopies;
       this.projectToClone.numCopies = 0;
       this.projectToClone.isInitialProject = new Boolean(false);
       this.projectToClone.from = this.fromAux;
       this.projectToClone.to = this.toAux;
 
-      // We create a copy of the clone for create a initial project to the clone
+      // Asignamos las propiedades adecuadas para el proyecto en Design phase asociado al clon
       this.projectClonedInitial._id = new mongoose.Types.ObjectId();
-      this.projectClonedInitial.name = this.projects[this.projectToClone.tableIndex].name + "_copy_" + nextNumCopies
+      this.projectClonedInitial.name = projectOriginal.name + "_copy_" + nextNumCopies
       this.projectClonedInitial.numCopies = 0;
 
-      // Send to DB the clone of the project
-      axios.post('/projects', this.projectToClone)
+      // Enviamos a la BD el proyecto clon en Monitoring phase y obtenemos su respuesta para tener el id asociado del clon
+      let responsePostCloneMonitoring = await  this.postProject(this.projectToClone);
+      // En la respuesta, copiamos el id que ha generado mongoose del proyecto clon para asociárselo 
+      // al proyecto clon en Design phase 
+      this.projectClonedID = responsePostCloneMonitoring._id;
+      this.projectClonedInitial.initialProject = responsePostCloneMonitoring._id;
+
+      // Enviamos a la BD el proyecto clon en Design phase (el proyecto initial asociado)
+      let responsePostCloneDesign = await this.postProject(this.projectClonedInitial);
+      // En la respuesta, copiamos el id que ha generado mongoose del proyecto clon en design phase
+      // para asociárselo al clon del monitoring phase
+      this.projectInitialID = responsePostCloneDesign._id;
+      this.projectToClone.initialProject = this.projectInitialID;
+
+      // Actualizamos en la DB el proyecto en Monitoring phase con la propiedad que lo asocia con su Design phase
+      this.updateProject(this.projectClonedID,this.projectToClone);
+
+      // Clonamos los partners del Monitoring phase
+      this.clonePartners(projectOriginalID, this.projectClonedID);
+      // Clonamos los partners del Design phase
+      this.clonePartners(projectOriginalInitialID, this.projectInitialID);
+
+      // Actualizamos la propiedad de número de copias del proyecto original
+      projectOriginal.numCopies = nextNumCopies;
+      // Volvemos a poner en el formato correcto el from y el to del proyecto original
+      // porque lo modificamos para la tabla y que en el CSV salga en el formato correcto
+      // Vamos a hacer una copia del proyecto original para enviarlo a la BD con la fecha bien
+      // y así no modificar el que utilizamos para la vista y que se vea bien en la tabla
+      let projectOriginalCopy = Object.assign({}, projectOriginal);
+      projectOriginalCopy.from = this.fromAux;
+      projectOriginalCopy.to = this.toAux;
+      this.updateProject(projectOriginalID,projectOriginalCopy);
+
+      // // Volvemos a dar el formato correcto para la tabla al proyecto cuando ya lo hemos posteado
+      // this.projectToClone.from = this.projects[this.projectToClone.tableIndex].from;
+      // this.projectToClone.to = this.projects[this.projectToClone.tableIndex].to;
+
+      this.projects.unshift(this.projectToClone);
+      this.projectToClone = {};
+
+      // Copiamos para el clon del Monitoring phase los printable deliverables del original
+      this.clonePrintableDeliverables(projectOriginalID, this.projectClonedID);
+      // Copiamos para el clon del Design phase los printable deliverables del original
+      this.clonePrintableDeliverables(projectOriginalInitialID, this.projectInitialID);
+
+      // Copiamos para el clon del Monitoring phase los customs del original
+      this.cloneCustoms(projectOriginalID, this.projectClonedID);
+      // Copiamos para el clon del Design phase los customs del original
+      this.cloneCustoms(projectOriginalInitialID, this.projectInitialID);
+
+      // Copiamos los external experts del original en Monitoring phase para su clon en Monitoring phase
+      this.cloneExternalExperts(projectOriginalID, this.projectClonedID);
+      // Copiamos los external experts del original en Design phase para su clon en Design phase
+      this.cloneExternalExperts(projectOriginalInitialID, this.projectInitialID);
+
+      // Copiamos los events del original en Monitoring phase para su clon en Monitoring phase
+      this.cloneEvents(projectOriginalID, this.projectClonedID);
+      // Copiamos los events del original en Design phase para su clon en Design phase
+      this.cloneEvents(projectOriginalInitialID, this.projectInitialID);
+
+      // Ahora vamos a clonar las tablas por defecto del proyecto en Monitoring phase
+      this.cloneDefaultTables(projectOriginalID, this.projectToClone, this.projectClonedID);
+      // Ahora vamos a clonar las tablas por defecto del proyecto en Design phase
+      this.cloneDefaultTables(projectOriginalInitialID, this.projectClonedInitial, this.projectInitialID);
+    },
+
+    async postProject(project) {
+
+      let response = {};
+
+      await axios.post('/projects', project)
       .then((req) => {
-        // Copy the clone ID for the initialProject value of the initial project
-        this.projectClonedID = req.data._id;
-        this.projectClonedInitial.initialProject = req.data._id;
-        
-        // Send to DB the initial project
-        axios.post('/projects', this.projectClonedInitial)
-        .then( (response) => {
-          // Copy the initial project ID for the clone project
-          this.projectInitialID = response.data._id;
-          this.projectToClone.initialProject = this.projectInitialID;
-
-          // Send to DB the update of the clone project with the initialProject value updated
-          axios.put('/projects/' + this.projectClonedID, this.projectToClone)
-          .catch((e) => {
-            console.log('error ', e);
-          })
-
-          // Copiamos para el clon los partners
-          axios.get(`/partners?projectId=`+projectOriginalID)
-          .then((responsePartners) => {
-            for (var partner of responsePartners.data){
-              partner._id = new mongoose.Types.ObjectId();
-              partner.project = this.projectClonedID;
-              axios.post('/partners', partner)
-              .catch((error) =>{
-                console.log(error);
-              })
-              
-            }
-            this.projects[this.projectToClone.tableIndex].numCopies = nextNumCopies;
-
-
-            // Volvemos a poner en el formato correcto el from y el to del proyecto original
-            // porque lo modificamos para la tabla y que en el CSV salga en el formato correcto
-            // Vamos a hacer una copia del proyecto original para enviarlo a la BD con la fecha bien
-            // y así no modificar el que utilizamos para la vista y que se vea bien en la tabla
-            let projectOriginalCopy = Object.assign({}, this.projects[this.projectToClone.tableIndex])
-            projectOriginalCopy.from = this.fromAux;
-            projectOriginalCopy.to = this.toAux;
-            axios.put('/projects/' + projectOriginalID, projectOriginalCopy)
-            .catch((e) => {
-              console.log('error ', e);
-            })
-            // Volvemos a dar el formato correcto para la tabla al proyecto cuando ya lo hemos posteado
-            this.projectToClone.from = this.projects[this.projectToClone.tableIndex].from;
-            this.projectToClone.to = this.projects[this.projectToClone.tableIndex].to;
-
-            this.projects.unshift(this.projectToClone);
-            this.projectToClone = {};
-          })
-          .catch((error)=>{
-              this.errors = error.response.data
-          })
-
-          // Copiamos para el initial los partners
-          axios.get(`/partners?projectId=`+projectOriginalInitialID)
-          .then((responsePartners) => {
-            for (var partner of responsePartners.data){
-              partner._id = new mongoose.Types.ObjectId();
-              partner.project = this.projectInitialID;
-              axios.post('/partners', partner)
-            }
-            this.projectClonedInitial = {};
-          })
-          .catch((error)=>{
-              this.errors = error.response.data
-          })
-
-
-
-
-          // Copiamos para el clon los printable deliverables del original
-          this.axios.get(`/printableDeliverables?projectId=`+ projectOriginalID)
-          .then((responsePD) => {
-            for (let printableDeliverable of responsePD.data){
-              printableDeliverable._id = new mongoose.Types.ObjectId();
-              printableDeliverable.project = this.projectClonedID;
-              axios.post('/printableDeliverables', printableDeliverable)
-              .catch((error) =>{console.log(error)})
-            }
-          })
-          .catch((e)=>{
-            console.log('error', e);
-          })
-          
-          // Copiamos para el clon del initial los printable deliverables del initial
-          this.axios.get(`/printableDeliverables?projectId=`+ projectOriginalInitialID)
-          .then((responsePD) => {
-            for (let printableDeliverable of responsePD.data){
-              printableDeliverable._id = new mongoose.Types.ObjectId();
-              printableDeliverable.project = this.projectInitialID;
-              axios.post('/printableDeliverables', printableDeliverable)
-              .catch((error) =>{console.log(error)}) 
-            }
-          })
-          .catch((e)=>{
-            console.log('error', e);
-          })
-          
-
-          // Copiamos para el clon del original los customs del original
-          axios.get('/customs?projectId=' + projectOriginalID, { params: {
-              projectId: projectOriginalID
-            }
-          })
-          .then( (responseCustom) => {
-            for(let custom of responseCustom.data) {
-              custom._id = new mongoose.Types.ObjectId();
-              custom.project = this.projectClonedID;
-              axios.post('/customs', custom)
-              .catch((e)=>{
-                console.log('error' + e);
-              })
-                          }
-          })
-          .catch((e)=>{
-            console.log('error' + e);
-          })
-
-          // Copiamos los customs del initial para el clon del initial
-          axios.get('/customs?projectId=' +  projectOriginalInitialID, { params: {
-              projectId:  projectOriginalInitialID
-            }
-          })
-          .then( (responseCustom) => {
-            for(let custom of responseCustom.data) {
-              custom._id = new mongoose.Types.ObjectId();
-              custom.project = this.projectInitialID;
-
-              axios.post('/customs', custom)
-              .catch((e)=>{
-                console.log('error' + e);
-              })
-            }
-          })
-          .catch((e)=>{
-            console.log('error' + e);
-          })
-
-          // Copiamos los external experts del original para su clon
-          this.axios.get(`/externalExperts?projectId=` + projectOriginalID)
-          .then((response) => {
-            for(let externalExpert of response.data) {
-              externalExpert._id = new mongoose.Types.ObjectId();
-              externalExpert.project = this.projectClonedID;
-
-              axios.post('/externalExperts', externalExpert)
-              .catch((e)=>{
-                console.log('error' + e);
-              })
-            }
-          })
-          .catch((e)=>{
-            console.log('error' + e);
-          })
-
-
-          // Copiamos los external experts del initial para el clon del initial
-          this.axios.get(`/externalExperts?projectId=` + projectOriginalInitialID)
-          .then((response) => {
-            for(let externalExpert of response.data) {
-              externalExpert._id = new mongoose.Types.ObjectId();
-              externalExpert.project = this.projectInitialID;
-
-              axios.post('/externalExperts', externalExpert)
-              .catch((e)=>{
-                console.log('error' + e);
-              })
-            }
-          })
-          .catch((e)=>{
-            console.log('error' + e);
-          })
-
-          // Copiamos los events del original para su clon
-          this.axios.get(`/events?projectId=` + projectOriginalID)
-          .then((response) => {
-          for(let event of response.data) {
-              event._id = new mongoose.Types.ObjectId();
-              event.project = this.projectClonedID;
-
-              axios.post('/events', event)
-              .catch((e)=>{
-                console.log('error' + e);
-              })
-            }
-
-          })
-          .catch((e)=>{
-            console.log('error' + e);
-          })
-
-          // Copiamos los events del initial para el clon del initial
-          this.axios.get(`/events?projectId=` + projectOriginalInitialID)
-          .then((response) => {
-          for(let event of response.data) {
-              event._id = new mongoose.Types.ObjectId();
-              event.project = this.projectInitialID;
-
-              axios.post('/events', event)
-              .catch((e)=>{
-                console.log('error' + e);
-              })
-            }
-
-          })
-          .catch((e)=>{
-            console.log('error' + e);
-          })
-
-          // Ahora vamos a clonar las tablas por defecto del proyecto en Monitoring phase
-          axios.get('/dataTables/' + projectOriginalID)
-          .then( (responseDataTables) => {
-            this.projectToClone.dataTables = responseDataTables.data;
-
-            
-            // Se copian las tablas de transportation en el Monitoring del clonado
-            axios.get('/dataTables/' + this.projectClonedID)
-            .then((responseDataTablesProjectCloned) => {
-              let projectClonedTables = responseDataTablesProjectCloned.data;
-
-              // Reasignamos a cada tabla que vamos a copiar, el ID de su correspondiente en el proyecto
-              // cuando se creó el clon y el proyecto asociado
-              this.projectToClone.dataTables.transportationData._id = projectClonedTables.transportationData._id;
-              this.projectToClone.dataTables.transportationData.project = this.projectToClone._id;
+        response = req.data;
+      })
+      .catch( (error) => {
+            console.log('error' + error);
+      })
       
-              axios.put('/dataTables/' + this.projectClonedID, this.projectToClone.dataTables.transportationData, {params: {
-              projectId: this.projectClonedID,
-              dataTableName: 'transportation'
-              }})
-              .catch( (error) => {
-                console.log("Error: ", error);
-              })
+      return response;
+    },
 
-              this.projectToClone.dataTables.materialData._id = projectClonedTables.materialData._id;
-              this.projectToClone.dataTables.materialData.project = this.projectToClone._id;
-
-              // Se copian las tablas de material en el monitoring del clone
-              axios.put('/dataTables/' + this.projectClonedID, this.projectToClone.dataTables.materialData, {params: {
-              projectId: this.projectClonedID,
-              dataTableName: 'material'
-              }})
-              .catch( (error) => {
-                console.log("Error: ", error);
-              })
-
-              this.projectToClone.dataTables.eventsData._id = projectClonedTables.eventsData._id;
-              this.projectToClone.dataTables.eventsData.project = this.projectToClone._id;
-
-              // Se copian las tablas de events en el monitoring del clone
-              axios.put('/dataTables/' + this.projectClonedID, this.projectToClone.dataTables.eventsData, {params: {
-                projectId: this.projectClonedID,
-                dataTableName: 'events'
-              }})
-              .catch( (error) => {
-                console.log("Error: ", error);
-              })
-
-
-            })
-            
-          })
-          .catch( (errorDT) => {
-            console.log('error' + errorDT);
-          })
-
-
-
-          // Ahora vamos a clonar las tablas por defecto del proyecto en Design phase
-          axios.get('/dataTables/' + projectOriginalInitialID)
-          .then( (responseDataTablesInitial) => {
-            this.projectClonedInitial.dataTables = responseDataTablesInitial.data;
-            
-            
-            // Se copian las tablas de transportation en el Design del clonado
-            axios.get('/dataTables/' + this.projectInitialID)
-            .then((responseDataTablesProjectClonedInitial) => {
-              let projectClonedTablesInitial = responseDataTablesProjectClonedInitial.data;
-
-              // Reasignamos a cada tabla que vamos a copiar, el ID de su correspondiente en el proyecto
-              // cuando se creó el clon y el proyecto asociado
-              this.projectClonedInitial.dataTables.transportationData._id = projectClonedTablesInitial.transportationData._id;
-              this.projectClonedInitial.dataTables.transportationData.project = this.projectClonedInitial._id;
-      
-              axios.put('/dataTables/' + this.projectInitialID, this.projectClonedInitial.dataTables.transportationData, {params: {
-              projectId: this.projectInitialID,
-              dataTableName: 'transportation'
-              }})
-              .catch( (error) => {
-                console.log("Error: ", error);
-              })
-
-              this.projectClonedInitial.dataTables.materialData._id = projectClonedTablesInitial.materialData._id;
-              this.projectClonedInitial.dataTables.materialData.project = this.projectClonedInitial._id;
-
-              // Se copian las tablas de material en el design del clone
-              axios.put('/dataTables/' + this.projectInitialID, this.projectClonedInitial.dataTables.materialData, {params: {
-              projectId: this.projectInitialID,
-              dataTableName: 'material'
-              }})
-              .catch( (error) => {
-                console.log("Error: ", error);
-              })
-
-              this.projectClonedInitial.dataTables.eventsData._id = projectClonedTablesInitial.eventsData._id;
-              this.projectClonedInitial.dataTables.eventsData.project = this.projectClonedInitial._id;
-
-              // Se copian las tablas de events en el monitoring del clone
-              axios.put('/dataTables/' + this.projectInitialID, this.projectClonedInitial.dataTables.eventsData, {params: {
-                projectId: this.projectInitialID,
-                dataTableName: 'events'
-              }})
-              .catch( (error) => {
-                console.log("Error: ", error);
-              })
-
-
-            })
-            
-          })
-          .catch( (errorDT) => {
-            console.log('error' + errorDT);
-          })
-
-        })
+    updateProject(projectID, project) {
+      axios.put('/projects/' + projectID, project)
+      .catch((e) => {
+        console.log('error ', e);
       })
     },
+
+    clonePartners(projectOriginalID, projectClonID) {
+      // Copiamos para el clon los partners
+      axios.get(`/partners?projectId=`+projectOriginalID)
+      .then((responsePartners) => {
+        for (var partner of responsePartners.data){
+          partner._id = new mongoose.Types.ObjectId();
+          partner.project = projectClonID;
+          axios.post('/partners', partner)
+          .catch((error) =>{
+            console.log(error);
+          })
+          
+        }
+      })
+      .catch((errorGet) =>{
+            console.log(errorGet);
+      })
+
+    },
+
+    clonePrintableDeliverables(projectOriginalID, projectClonID) {
+      // Copiamos para el clon los printable deliverables del original
+      axios.get(`/printableDeliverables?projectId=`+ projectOriginalID)
+      .then((responsePD) => {
+        for (let printableDeliverable of responsePD.data){
+          printableDeliverable._id = new mongoose.Types.ObjectId();
+          printableDeliverable.project = projectClonID;
+          axios.post('/printableDeliverables', printableDeliverable)
+          .catch((error) =>{console.log(error)})
+        }
+      })
+      .catch((e)=>{
+        console.log('error', e);
+      })
+    },
+
+    cloneCustoms(projectOriginalID, projectClonID) {
+      // Copiamos para el clon del original los customs del original
+      axios.get('/customs?projectId=' + projectOriginalID, { params: {
+          projectId: projectOriginalID
+        }
+      })
+      .then( (responseCustom) => {
+        for(let custom of responseCustom.data) {
+          custom._id = new mongoose.Types.ObjectId();
+          custom.project = projectClonID;
+          axios.post('/customs', custom)
+          .catch((e)=>{
+            console.log('error' + e);
+          })
+                      }
+      })
+      .catch((e)=>{
+        console.log('error' + e);
+      })      
+    },
+
+    cloneExternalExperts(projectOriginalID, projectClonID) {
+      axios.get(`/externalExperts?projectId=` + projectOriginalID)
+      .then((response) => {
+        for(let externalExpert of response.data) {
+          externalExpert._id = new mongoose.Types.ObjectId();
+          externalExpert.project = projectClonID;
+
+          axios.post('/externalExperts', externalExpert)
+          .catch((e)=>{
+            console.log('error' + e);
+          })
+        }
+      })
+      .catch((e)=>{
+        console.log('error' + e);
+      })
+    },
+
+    cloneEvents(projectOriginalID, projectClonID) {
+      axios.get(`/events?projectId=` + projectOriginalID)
+      .then((response) => {
+      for(let event of response.data) {
+          event._id = new mongoose.Types.ObjectId();
+          event.project = projectClonID;
+
+          axios.post('/events', event)
+          .catch((e)=>{
+            console.log('error' + e);
+          })
+        }
+
+      })
+      .catch((e)=>{
+        console.log('error' + e);
+      })
+    },
+
+    cloneDefaultTables(projectOriginalID, projectClon, projectClonID) {
+      axios.get('/dataTables/' + projectOriginalID)
+      .then( (responseDataTables) => {
+        projectClon.dataTables = responseDataTables.data;
+
+        
+        // Se copian las tablas de transportation en el Monitoring del clonado
+        axios.get('/dataTables/' + projectClonID)
+        .then((responseDataTablesProjectCloned) => {
+          let projectClonedTables = responseDataTablesProjectCloned.data;
+
+          // Reasignamos a cada tabla que vamos a copiar, el ID de su correspondiente en el proyecto
+          // cuando se creó el clon y el proyecto asociado
+          projectClon.dataTables.transportationData._id = projectClonedTables.transportationData._id;
+          projectClon.dataTables.transportationData.project = projectClon._id;
+  
+          axios.put('/dataTables/' + projectClonID, projectClon.dataTables.transportationData, {params: {
+          projectId: projectClonID,
+          dataTableName: 'transportation'
+          }})
+          .catch( (error) => {
+            console.log("Error: ", error);
+          })
+
+          projectClon.dataTables.materialData._id = projectClonedTables.materialData._id;
+          projectClon.dataTables.materialData.project = projectClon._id;
+
+          // Se copian las tablas de material en el monitoring del clone
+          axios.put('/dataTables/' + projectClonID, projectClon.dataTables.materialData, {params: {
+          projectId: projectClonID,
+          dataTableName: 'material'
+          }})
+          .catch( (error) => {
+            console.log("Error: ", error);
+          })
+
+          projectClon.dataTables.eventsData._id = projectClonedTables.eventsData._id;
+          projectClon.dataTables.eventsData.project = projectClon._id;
+
+          // Se copian las tablas de events en el monitoring del clone
+          axios.put('/dataTables/' + projectClonID, projectClon.dataTables.eventsData, {params: {
+            projectId: projectClonID,
+            dataTableName: 'events'
+          }})
+          .catch( (error) => {
+            console.log("Error: ", error);
+          })
+
+
+        })
+        
+      })
+      .catch( (errorDT) => {
+        console.log('error' + errorDT);
+      })
+
+
+
+
+    },
+
     round(num) {
       return Math.round((num + Number.EPSILON) * 100) / 100
     }
