@@ -42,12 +42,17 @@
           </div>
 
 					<div class="field col-12 md:col-12">
-						<label for="projectCallId">Project Call ID</label>
+						<label for="projectStatus">Project status</label>
+            <Dropdown v-model="newProject.status" :options="projectStatusOptions" id="projectStatus" name="projectStatus" class="ml-2" />
+					</div>
+
+          <div class="field col-12 md:col-12">
+						<label for="projectCallId">Project call ID</label>
             <InputText v-model="newProject.callId" id="projectCallId" name="projectCallId" />
 					</div>
 
 					<div class="field col-12 md:col-12">
-						<label for="fundingId">Proposal ID</label>
+						<label for="fundingId">Project number</label>
             <InputText v-model="newProject.proposalId" id="fundingId" name="fundingId" />
 					</div>
 
@@ -74,6 +79,7 @@
 <script>
 import InputText from 'primevue/inputtext'
 import Calendar from 'primevue/calendar'
+import Dropdown from 'primevue/dropdown'
 import Button from 'primevue/button'
 import axios from "axios";
 import mongoose from "mongoose"
@@ -84,6 +90,7 @@ export default {
   components: {
     InputText,
     Calendar,
+    Dropdown,
     Button,
     Topbar
   },
@@ -95,6 +102,7 @@ export default {
         to: new Date(new Date().getFullYear() + 2, new Date().getMonth(), 0),
         callId: "",
         proposalId: "",
+        status: "0 - Draft",
         isInitialProject: new Boolean(false),
         initialCF: 0,
         currentCF: 0,
@@ -131,6 +139,11 @@ export default {
       },
       errors: [],
       submitted: false,
+      projectStatusOptions: [
+        "0 - Draft", "1 - Scenario analysis", "2 - Best design", "3 - Submitted", "4 - Approved", "5 - End of year 1 monitoring report", "6 - End of year 2 monitoring report",
+        "7 - End of year 3 monitoring report", "8 - End of year 4 monitoring report", "9 - End of year 5 monitoring report", "10 - End of year 6 monitoring report",
+        "11 - Final monitoring report"
+      ],
     }
   },
   computed: {
@@ -184,12 +197,13 @@ export default {
         this.axios.get(`/projects/` + this.newProject.initialProject)
         .then((response) => {
 
-          let initialProjectToUpdate= response.data;
+          let initialProjectToUpdate = response.data;
           initialProjectToUpdate.name = this.newProject.name;
           initialProjectToUpdate.from = this.newProject.from;
           initialProjectToUpdate.to = this.newProject.to;
           initialProjectToUpdate.callId = this.newProject.callId;
           initialProjectToUpdate.proposalId = this.newProject.proposalId;
+          initialProjectToUpdate.status = this.newProject.status;
 
           axios.put('/projects/' + this.newProject.initialProject, initialProjectToUpdate)
           .catch((errorUpdateInitial) => {

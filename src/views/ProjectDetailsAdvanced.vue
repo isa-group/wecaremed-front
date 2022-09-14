@@ -440,8 +440,8 @@
                 <template v-if="selectedPartner">
                   <div class="mb-5">
                   <label for="partnerEquipmentDropdown">Showing data for partner: </label>
-                    <Dropdown class="ml-2" :options="project.partners" optionLabel="name" optionValue="name"
-                              v-model="selectedPartnerForEquipmentSimple" @change="updateSelectedPartner" />
+                  <Dropdown class="ml-2" :options="project.partners" optionLabel="name" optionValue="name"
+                            v-model="selectedPartnerForEquipmentSimple" @change="updateSelectedPartner" />
                   </div> 
 
                   <div class="card">
@@ -1412,6 +1412,7 @@
                     <h2 class="mb-2">Difference in the CF between the two phases:
                       <Badge :value="round(projectInitial.initialCF - project.currentCF)  + ' t CO₂e'" class="ml-2 differenceCF" size="xlarge" :severity="getTextColorFromCFIndex(projectInitial.initialCF - project.currentCF)" />
                     </h2>
+                    CO₂ compensation manual: https://co2compensationmanuallink.com/
                   </div>
                 </div>
 

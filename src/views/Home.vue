@@ -12,15 +12,20 @@
 
       <DataTable :value="projects" :paginator="true" class="p-datatable-gridlines" dataKey="id" ref="dt" :exportFilename="$store.state.toggleValue == false ? 'WECAREMED - My projects in Design phase' : 'WECAREMED - My projects in Monitoring phase'"
       :rowHover="true" sortMode="multiple" :rows="10" :loading="loading" responsiveLayout="scroll"  v-model:filters="filters"
-      filterDisplay="row">
+      filterDisplay="row" @filter="calculateDifferenceInCF($event)">
         
         <template #header>
             <div class="flex justify-content-between flex-column sm:flex-row">
               <div>
                 <router-link to="/createProject">
-                  <Button class="p-button-info"><i class="pi pi-plus mr-2"/>Create a new project</Button>
+                  <Button class="p-button-info h-full font-bold"><i class="pi pi-plus mr-2"/>Create a new project</Button>
                 </router-link>
               </div>
+
+              <div class="text-center">
+                <h3 v-if="Object.values(filters).length > 0 && Object.values(filters).some(v => v.value)">Difference in CF between the "Design" and "Monitoring" phases: {{filteredValues}}</h3>
+              </div>
+
               <Button icon="pi pi-external-link" :label="$store.state.toggleValue == false ? 'Export Design phase data to CSV' 
               : 'Export Monitoring phase data to CSV'" @click="exportCSV($event)" />
             </div>
@@ -43,6 +48,15 @@
          </template>
         </Column>
 
+        <Column class="centered-cell" field="status" header="Status" :sortable="true">
+          <template #body="slotProps">
+            {{slotProps.data.status}}
+          </template>
+          <template #filter="{filterModel,filterCallback}">
+           <InputText type="text" v-model="filterModel.value" @input="filterCallback()" class="p-column-filter centered-cell" placeholder="Search by Status" v-tooltip.top.focus="'Filter as you type'"/>
+         </template>
+        </Column>
+
         <Column class="centered-cell" field="callId" header="Call ID" :sortable="true">
           <template #body="slotProps">
             {{slotProps.data.callId}}
@@ -52,14 +66,12 @@
          </template>
         </Column>
 
-        <Column class="centered-cell" field="proposalId" header  ="Proposal ID" :sortable="true">
-          
+        <Column class="centered-cell" field="proposalId" header="Project number" :sortable="true">
           <template #body="slotProps">
             {{slotProps.data.proposalId}}
           </template>
-
          <template #filter="{filterModel,filterCallback}">
-           <InputText  type="text" v-model="filterModel.value" @input="filterCallback()" class="p-column-filter centered-cell" placeholder="Search by Proposal ID" v-tooltip.top.focus="'Filter as you type'"/>
+           <InputText  type="text" v-model="filterModel.value" @input="filterCallback()" class="p-column-filter centered-cell" placeholder="Search by Project number" v-tooltip.top.focus="'Filter as you type'"/>
          </template>
         </Column>
 
@@ -189,10 +201,12 @@ export default {
       projects: [],
       initialProjects: [],
       cloneProjectDialog: false,
+      filteredValues: [],
       filters: {
-        'name': {value: null, matchMode: FilterMatchMode.STARTS_WITH},
-        'callId': {value: null, matchMode: FilterMatchMode.STARTS_WITH},
-        'proposalId': {value: null, matchMode: FilterMatchMode.STARTS_WITH}
+        'name': {value: null, matchMode: FilterMatchMode.CONTAINS},
+        'status': {value: null, matchMode: FilterMatchMode.CONTAINS},
+        'callId': {value: null, matchMode: FilterMatchMode.CONTAINS},
+        'proposalId': {value: null, matchMode: FilterMatchMode.CONTAINS}
       },
       fromAux: "",
       toAux:""
@@ -205,6 +219,9 @@ export default {
     this.loading = false;
   },
   methods: {
+    calculateDifferenceInCF(event) {
+      this.filteredValues = event.filteredValue.map(p => p.differenceCF).reduce((a, b) => a + b, 0)
+    },
     getProjects() {
 
       this.axios.get('/projects/initialProjects', { params: {
