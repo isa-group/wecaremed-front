@@ -53,8 +53,10 @@
             {{slotProps.data.status}}
           </template>
           <template #filter="{filterModel,filterCallback}">
-           <InputText type="text" v-model="filterModel.value" @input="filterCallback()" class="p-column-filter centered-cell" placeholder="Search by Status" v-tooltip.top.focus="'Filter as you type'"/>
-         </template>
+            <Dropdown v-model="filterModel.value" :options="projectStatusOptions" optionLabel="label" optionValue="value"
+            placeholder="Search by Status" class="p-column-filter centered-cell"
+            v-tooltip.top.focus="'Select a value to filter'" @change="filterCallback()" />
+          </template>
         </Column>
 
         <Column class="centered-cell" field="callId" header="Call ID" :sortable="true">
@@ -177,6 +179,7 @@ import DataTable from 'primevue/datatable'
 import Column from 'primevue/column'
 import Topbar from '@/components/Topbar.vue';
 import Dialog from 'primevue/dialog';
+import Dropdown from 'primevue/dropdown';
 import Toast from 'primevue/toast';
 import axios from 'axios'
 import mongoose from "mongoose"
@@ -190,6 +193,7 @@ export default {
     DataTable,
     Column,
     Topbar,
+    Dropdown,
     Dialog,
     InputText,
     Toast
@@ -204,12 +208,26 @@ export default {
       filteredValues: [],
       filters: {
         'name': {value: null, matchMode: FilterMatchMode.CONTAINS},
-        'status': {value: null, matchMode: FilterMatchMode.CONTAINS},
+        'status': {value: null, matchMode: FilterMatchMode.EQUALS},
         'callId': {value: null, matchMode: FilterMatchMode.CONTAINS},
         'proposalId': {value: null, matchMode: FilterMatchMode.CONTAINS}
       },
       fromAux: "",
-      toAux:""
+      toAux:"",
+      projectStatusOptions: [
+        {label: "0 - Draft", value: "0 - Draft"},
+        {label: "1 - Scenario analysis", value: "1 - Scenario analysis"},
+        {label: "2 - Best design", value: "2 - Best design"}, 
+        {label: "3 - Submitted", value: "3 - Submitted"}, 
+        {label: "4 - Approved", value: "4 - Approved"}, 
+        {label: "5 - End of year 1 monitoring report", value: "5 - End of year 1 monitoring report"}, 
+        {label: "6 - End of year 2 monitoring report", value: "6 - End of year 2 monitoring report"},
+        {label: "7 - End of year 3 monitoring report", value: "7 - End of year 3 monitoring report"}, 
+        {label: "8 - End of year 4 monitoring report", value: "8 - End of year 4 monitoring report"}, 
+        {label: "9 - End of year 5 monitoring report", value: "9 - End of year 5 monitoring report"}, 
+        {label: "10 - End of year 6 monitoring report", value: "10 - End of year 6 monitoring report"},
+        {label: "11 - Final monitoring report", value: "11 - Final monitoring report"}
+      ]
     }
   },
   created() {
