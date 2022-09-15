@@ -1556,7 +1556,11 @@ export default {
       this.initPrintableDeliverableFilters();
     },
     updateSelectedPartner(event) {
-      this.$store.dispatch("updateSelectedPartner", event.value);
+      if(!this.isTheOwner()) {
+        this.$toast.add({severity:'error', summary: 'ERROR', detail: 'The data modified will not be saved since you are not the owner of this project.', life: 3000});
+      } else {
+        this.$store.dispatch("updateSelectedPartner", event.value);
+      }
     },
     getProject(){
       this.axios.get(`/projects/${this.$route.params.id}`)
@@ -1596,127 +1600,153 @@ export default {
             console.log('error' + e);
           })
         }
+        this.disableInputsWhenNotIsTheOwner();
       })
       .catch((e)=>{
         console.log('error' + e);
       })
     },
     addPrintableDeliverable() {
-      let newPrintableDeliverable = {
-        deliverableType: "Select a deliverable type",
-        deliverableName: "Select a deliverable name",
-        copies: 1,
-        avgPagesPerCopy: 1,
-        size: "A4",
-        project: this.project._id
-      }
+      if(!this.isTheOwner()) {
+        this.$toast.add({severity:'error', summary: 'ERROR', detail: 'The data modified will not be saved since you are not the owner of this project.', life: 3000});
+      } else {
+        let newPrintableDeliverable = {
+          deliverableType: "Select a deliverable type",
+          deliverableName: "Select a deliverable name",
+          copies: 1,
+          avgPagesPerCopy: 1,
+          size: "A4",
+          project: this.project._id
+        }
 
-      this.axios.post('/printableDeliverables', newPrintableDeliverable)
-      .then((response) => {
-        this.project.printableDeliverables.push(response.data)
-        this.$toast.add({severity:'success', summary: 'Successful', detail: 'Printable deliverable created', life: 3000});
-      })
-      .catch((e)=>{
-        console.log('error' + e);
-      })
+        this.axios.post('/printableDeliverables', newPrintableDeliverable)
+        .then((response) => {
+          this.project.printableDeliverables.push(response.data)
+          this.$toast.add({severity:'success', summary: 'Successful', detail: 'Printable deliverable created', life: 3000});
+        })
+        .catch((e)=>{
+          console.log('error' + e);
+        })
+      }
+      
     },
     addPartner() {
-      let newPartner = {
-        _id: new Mongoose.Types.ObjectId(),
-        name: "New partner",
-        country: "Select a country",
-        employeesPersonMonths: "",
-        externalExpertsPersonMonths: "",
-        employeesWorkingWPP: "",
-        seasonalEmployees: "",
-        externalExperts: "",
-        coordinator: false,
 
-        pcsBoughtDuringProject: 0,
-        pcsFlatScreenBoughtDuringProject: 0,
-        laptopsBoughtDuringProject: 0,
-        flatScreensBoughtDuringProject: 0,
-        printersBoughtDuringProject: 0,
-        copyMachinesBoughtDuringProject: 0,
+      if(!this.isTheOwner()) {
+        this.$toast.add({severity:'error', summary: 'ERROR', detail: 'The data modified will not be saved since you are not the owner of this project.', life: 3000});
+      } else {
+        let newPartner = {
+          _id: new Mongoose.Types.ObjectId(),
+          name: "New partner",
+          country: "Select a country",
+          employeesPersonMonths: "",
+          externalExpertsPersonMonths: "",
+          employeesWorkingWPP: "",
+          seasonalEmployees: "",
+          externalExperts: "",
+          coordinator: false,
 
-        totalWeightOtherElectricalEquipment: 0,
+          pcsBoughtDuringProject: 0,
+          pcsFlatScreenBoughtDuringProject: 0,
+          laptopsBoughtDuringProject: 0,
+          flatScreensBoughtDuringProject: 0,
+          printersBoughtDuringProject: 0,
+          copyMachinesBoughtDuringProject: 0,
 
-        totalWeightVehicles: 0,
-        totalWeightMachines: 0,
-        totalWeightFurniture: 0,
-        project: this.project._id
-      }
+          totalWeightOtherElectricalEquipment: 0,
 
-      let noCoordinator = this.project.partners.filter(p => p.coordinator === true).length === 0
-        
-      if (noCoordinator)
-        newPartner.coordinator = true
-        
-      this.axios.post('/partners', newPartner)
-      .then((response) => {
-        this.project.partners.push(response.data)
-
-        if (noCoordinator) {
-          this.onCellEditCompletePartnerCoordinator(this.project.partners[0])
+          totalWeightVehicles: 0,
+          totalWeightMachines: 0,
+          totalWeightFurniture: 0,
+          project: this.project._id
         }
 
-        if (this.project.partners.length === 1)
-          this.$store.dispatch("updateSelectedPartner", newPartner.name)
-        
-        this.$toast.add({severity:'success', summary: 'Successful', detail: 'Partner created', life: 3000});
-      })
-      .catch((e)=>{
-        console.log('error' + e);
-      })
+        let noCoordinator = this.project.partners.filter(p => p.coordinator === true).length === 0
+          
+        if (noCoordinator)
+          newPartner.coordinator = true
+          
+        this.axios.post('/partners', newPartner)
+        .then((response) => {
+          this.project.partners.push(response.data)
+
+          if (noCoordinator) {
+            this.onCellEditCompletePartnerCoordinator(this.project.partners[0])
+          }
+
+          if (this.project.partners.length === 1)
+            this.$store.dispatch("updateSelectedPartner", newPartner.name)
+          
+          this.$toast.add({severity:'success', summary: 'Successful', detail: 'Partner created', life: 3000});
+        })
+        .catch((e)=>{
+          console.log('error' + e);
+        })
+      }
     },
     deletePartner(index) {
-      let partner = this.project.partners[index]
+
+      if(!this.isTheOwner()) {
+        this.$toast.add({severity:'error', summary: 'ERROR', detail: 'The data modified will not be saved since you are not the owner of this project.', life: 3000});
+      } else {
+        let partner = this.project.partners[index]
       
-      this.axios.delete('/partners/' + partner._id)
-      .then(() => {
+        this.axios.delete('/partners/' + partner._id)
+        .then(() => {
 
-        if (this.project.partners.length === 1) {
-          this.project.partners = []
-          this.$store.dispatch("updateSelectedPartner", "");
-        } else {
+          if (this.project.partners.length === 1) {
+            this.project.partners = []
+            this.$store.dispatch("updateSelectedPartner", "");
+          } else {
 
-          this.project.partners.splice(index, 1)
-          
-          if (this.project.partners.filter(p => p.coordinator === true).length === 0)
-              this.onCellEditCompletePartnerCoordinator(this.project.partners[0])
-          
-          if (this.selectedPartnerForEquipmentSimple === partner.name)
-            this.$store.dispatch("updateSelectedPartner", this.project.partners.filter(p => p._id !== partner._id)[0].name)
+            this.project.partners.splice(index, 1)
+            
+            if (this.project.partners.filter(p => p.coordinator === true).length === 0)
+                this.onCellEditCompletePartnerCoordinator(this.project.partners[0])
+            
+            if (this.selectedPartnerForEquipmentSimple === partner.name)
+              this.$store.dispatch("updateSelectedPartner", this.project.partners.filter(p => p._id !== partner._id)[0].name)
 
-          this.axios.get(`/partners?projectId=${this.$route.params.id}`)
-          .then((response) => {
-            this.project.partners = response.data;
-          })
-          .catch((e)=>{
-            console.log('error' + e);
-          })
-        }
-        this.$toast.add({severity:'success', summary: 'Successful', detail: 'Partner deleted', life: 3000});
-      })
-      .catch((e)=>{
-        console.log('error' + e);
-      })
+            this.axios.get(`/partners?projectId=${this.$route.params.id}`)
+            .then((response) => {
+              this.project.partners = response.data;
+            })
+            .catch((e)=>{
+              console.log('error' + e);
+            })
+          }
+          this.$toast.add({severity:'success', summary: 'Successful', detail: 'Partner deleted', life: 3000});
+        })
+        .catch((e)=>{
+          console.log('error' + e);
+        })
+      }
     },
     savePrintableDeliverables() {
-      this.axios.put('/printableDeliverables/updateAll', this.project.printableDeliverables)
-      .then(() => {
-        this.$toast.add({severity:'success', summary: 'Successful', detail: 'All Printable Deliverables updated', life: 2000});
-      }).catch((error) =>{
-        console.log(error)
-      })
+
+      if(!this.isTheOwner()) {
+        this.$toast.add({severity:'error', summary: 'ERROR', detail: 'The data modified will not be saved since you are not the owner of this project.', life: 3000});
+      } else {
+        this.axios.put('/printableDeliverables/updateAll', this.project.printableDeliverables)
+        .then(() => {
+          this.$toast.add({severity:'success', summary: 'Successful', detail: 'All Printable Deliverables updated', life: 2000});
+        }).catch((error) =>{
+          console.log(error)
+        })
+      }
     },
     savePartners() {
-      this.axios.put('/partners/updateAll', this.project.partners)
-      .then(() => {
-        this.$toast.add({severity:'success', summary: 'Successful', detail: 'All Partners updated', life: 2000});
-      }).catch((error) =>{
-        console.log(error)
-      })
+
+      if(!this.isTheOwner()) {
+        this.$toast.add({severity:'error', summary: 'ERROR', detail: 'The data modified will not be saved since you are not the owner of this project.', life: 3000});
+      } else {
+        this.axios.put('/partners/updateAll', this.project.partners)
+        .then(() => {
+          this.$toast.add({severity:'success', summary: 'Successful', detail: 'All Partners updated', life: 2000});
+        }).catch((error) =>{
+          console.log(error)
+        })
+      }
     },
     getDeliverableNames(deliverableType) {
       for (let option in this.deliverableOptions) {
@@ -1726,119 +1756,153 @@ export default {
       }
     },
     deletePrintableDeliverable(index) {
-      let printableDeliverable = this.project.printableDeliverables[index]
 
-      this.axios.delete('/printableDeliverables/' + printableDeliverable._id)
-      .then(() => {
+      if(!this.isTheOwner()) {
+        this.$toast.add({severity:'error', summary: 'ERROR', detail: 'The data modified will not be saved since you are not the owner of this project.', life: 3000});
+      } else {
+        let printableDeliverable = this.project.printableDeliverables[index]
 
-        this.axios.get(`/printableDeliverables?projectId=${this.$route.params.id}`)
-        .then((response) => {
-          this.project.printableDeliverables = response.data;
+        this.axios.delete('/printableDeliverables/' + printableDeliverable._id)
+        .then(() => {
+
+          this.axios.get(`/printableDeliverables?projectId=${this.$route.params.id}`)
+          .then((response) => {
+            this.project.printableDeliverables = response.data;
+          })
+          .catch((e)=>{
+            console.log('error' + e);
+          })
+          this.$toast.add({severity:'success', summary: 'Successful', detail: 'Printable deliverable deleted', life: 3000});
         })
         .catch((e)=>{
           console.log('error' + e);
         })
-        this.$toast.add({severity:'success', summary: 'Successful', detail: 'Printable deliverable deleted', life: 3000});
-      })
-      .catch((e)=>{
-        console.log('error' + e);
-      })
+      }
     },
     onCellEditComplete(field, newValue) {
-      if (newValue === this.onFocusValue) return;
 
-      const paramsData = {}
-      paramsData[field] = newValue;
+      if(!this.isTheOwner()) {
+        this.$toast.add({severity:'error', summary: 'ERROR', detail: 'The data modified will not be saved since you are not the owner of this project.', life: 3000});
+      } else {
 
-      axios.put("/projects/" + this.project._id, paramsData).then(() => {
-        this.project[field] = newValue
-        this.$toast.add({severity:'success', summary: 'Successful', detail: 'Project updated', life: 3000});
-      }).catch(error =>{
-        console.log(error)
-      })
+        if (newValue === this.onFocusValue) return;
+
+        const paramsData = {}
+        paramsData[field] = newValue;
+
+        axios.put("/projects/" + this.project._id, paramsData).then(() => {
+          this.project[field] = newValue
+          this.$toast.add({severity:'success', summary: 'Successful', detail: 'Project updated', life: 3000});
+        }).catch(error =>{
+          console.log(error)
+        })
+      }
     },
     onCellEditCompletePartner(event) {
-      let { data, newValue, newData, field } = event;
 
-      if (newValue === data[field]) return;
+      if(!this.isTheOwner()) {
+        this.$toast.add({severity:'error', summary: 'ERROR', detail: 'The data modified will not be saved since you are not the owner of this project.', life: 3000});
+      } else {
 
-      const paramsData = {}
+        let { data, newValue, newData, field } = event;
 
-      newData[field] = newValue;
-      paramsData[field] = newValue;
+        if (newValue === data[field]) return;
 
-      if (field === "name") {
-        this.$store.dispatch("updateSelectedPartner", newValue);
+        const paramsData = {}
+
+        newData[field] = newValue;
+        paramsData[field] = newValue;
+
+        if (field === "name") {
+          this.$store.dispatch("updateSelectedPartner", newValue);
+        }
+        
+        axios.put("/partners/" + data._id, paramsData).then(() => {
+          this.project.partners.splice(this.project.partners.indexOf(data), 1, newData)
+          // this.$toast.add({severity:'success', summary: 'Successful', detail: 'Partner updated', life: 3000});
+        }).catch(error =>{
+          console.log(error)
+        })
       }
-      
-      axios.put("/partners/" + data._id, paramsData).then(() => {
-        this.project.partners.splice(this.project.partners.indexOf(data), 1, newData)
-        // this.$toast.add({severity:'success', summary: 'Successful', detail: 'Partner updated', life: 3000});
-      }).catch(error =>{
-        console.log(error)
-      })
     },
     onCellEditCompletePartnerCoordinator(partner) {
-      const paramsData = {}
-      paramsData["_id"] = partner._id;
-      this.project.partners.map(p => {
-        if (p._id === partner._id) {
-          p.coordinator = true
-        } else {
-          p.coordinator = false
-        }
-      });
 
-      axios.put(`/partners/updateCoordinator?=${this.$route.params.id}`, paramsData).then(() => {
-        this.project.coordinator = partner._id
-        this.$toast.add({severity:'success', summary: 'Successful', detail: 'Project coordinator updated', life: 3000});
-      }).catch(error =>{
-        console.log(error)
-      })
+      if(!this.isTheOwner()) {
+        this.$toast.add({severity:'error', summary: 'ERROR', detail: 'The data modified will not be saved since you are not the owner of this project.', life: 3000});
+      } else {
+        const paramsData = {}
+        paramsData["_id"] = partner._id;
+        this.project.partners.map(p => {
+          if (p._id === partner._id) {
+            p.coordinator = true
+          } else {
+            p.coordinator = false
+          }
+        });
+
+        axios.put(`/partners/updateCoordinator?=${this.$route.params.id}`, paramsData).then(() => {
+          this.project.coordinator = partner._id
+          this.$toast.add({severity:'success', summary: 'Successful', detail: 'Project coordinator updated', life: 3000});
+        }).catch(error =>{
+          console.log(error)
+        })
+      }
+      
     },
     onCellEditCompletePartnerEquipment(field, newValue) {
       
-      if (newValue === this.onFocusValue) return;
+      if(!this.isTheOwner()) {
+        this.$toast.add({severity:'error', summary: 'ERROR', detail: 'The data modified will not be saved since you are not the owner of this project.', life: 3000});
+      } else {
+        if (newValue === this.onFocusValue) return;
 
-      let partnerId = this.selectedPartner._id
-      const paramsData = {}
-      paramsData[field] = newValue;
-      
-      axios.put("/partners/" + partnerId, paramsData).then(() => {
-        this.project[field] = newValue
-        this.$toast.add({severity:'success', summary: 'Successful', detail: 'Partner equipment data updated', life: 3000});
-      }).catch(error =>{
-        console.log(error)
-      })
+        let partnerId = this.selectedPartner._id
+        const paramsData = {}
+        paramsData[field] = newValue;
+        
+        axios.put("/partners/" + partnerId, paramsData).then(() => {
+          this.project[field] = newValue
+          this.$toast.add({severity:'success', summary: 'Successful', detail: 'Partner equipment data updated', life: 3000});
+        }).catch(error =>{
+          console.log(error)
+        })
+      }
     },
     onCellEditCompletePrintableDeliverable(event) {
-      let { data, newValue, newData, field } = event;
 
-      if (newValue === data[field]) return;
+      if(!this.isTheOwner()) {
+        this.$toast.add({severity:'error', summary: 'ERROR', detail: 'The data modified will not be saved since you are not the owner of this project.', life: 3000});
+      } else {
+        let { data, newValue, newData, field } = event;
 
-      const paramsData = {}
+        if (newValue === data[field]) return;
 
-      newData[field] = newValue;
-      paramsData[field] = newValue;
+        const paramsData = {}
 
-      if (field === "deliverableType") {
-        paramsData["deliverableName"] = "Select a deliverable name"
-        newData["deliverableName"] = "Select a deliverable name"
+        newData[field] = newValue;
+        paramsData[field] = newValue;
 
-        let newPrintableDeliverable = this.deliverableOptions.filter(d => d.value == newValue)[0]
+        if (field === "deliverableType") {
+          paramsData["deliverableName"] = "Select a deliverable name"
+          newData["deliverableName"] = "Select a deliverable name"
 
-        paramsData["avgPagesPerCopy"] = newPrintableDeliverable.avgPagesPerCopy
-        newData["avgPagesPerCopy"] = newPrintableDeliverable.avgPagesPerCopy
-        paramsData["size"] = newPrintableDeliverable.size
-        newData["size"] = newPrintableDeliverable.size
+          let newPrintableDeliverable = this.deliverableOptions.filter(d => d.value == newValue)[0]
+
+          paramsData["avgPagesPerCopy"] = newPrintableDeliverable.avgPagesPerCopy
+          newData["avgPagesPerCopy"] = newPrintableDeliverable.avgPagesPerCopy
+          paramsData["size"] = newPrintableDeliverable.size
+          newData["size"] = newPrintableDeliverable.size
+        }
+        
+        axios.put("/printableDeliverables/" + data._id, paramsData).then(() => {
+          this.project.printableDeliverables.splice(this.project.printableDeliverables.indexOf(data), 1, newData)
+          // this.$toast.add({severity:'success', summary: 'Successful', detail: 'Printable deliverables updated', life: 3000});
+        }).catch(error =>{
+          console.log(error)
+        })
       }
+
       
-      axios.put("/printableDeliverables/" + data._id, paramsData).then(() => {
-        this.project.printableDeliverables.splice(this.project.printableDeliverables.indexOf(data), 1, newData)
-        // this.$toast.add({severity:'success', summary: 'Successful', detail: 'Printable deliverables updated', life: 3000});
-      }).catch(error =>{
-        console.log(error)
-      })
     },
     checkEventsNotFilled() {
       if (this.project.publicOnSiteEventsNumber === 0) {
@@ -1918,6 +1982,9 @@ export default {
       return res;
     },
     saveCurrentProject(){
+      if(!this.isTheOwner()) {
+        this.$toast.add({severity:'error', summary: 'ERROR', detail: 'The data modified will not be saved since you are not the owner of this project.', life: 3000});
+      } else {
         this.savePrintableDeliverables();
         this.savePartners();
         axios.put("/projects/" + this.project._id, this.project).then(() => {
@@ -1925,438 +1992,487 @@ export default {
         }).catch(error =>{
           console.log(error)
        })
+      }
     },
     updateScenarioValues(){
 
-      // Para entender bien la lógicq debemos recordar que initialProject es el proyecto en fase Base
+      if(!this.isTheOwner()) {
+        this.$toast.add({severity:'error', summary: 'ERROR', detail: 'The data modified will not be saved since you are not the owner of this project.', life: 3000});
+      } else {
 
-      // Eliminamos el proyecto en etapa Scenario
-      axios.delete('/projects/' + this.project.initialProject)
-        .then(() => {
-          
-          // Aquí, creamos una copia del proyecto en la etapa Base para la fase Scenario
-          let newScenarioProject = Object.assign({}, this.project);
-          // Aquí ponemos que no es initial, ya que la propiedad isInitial es true si es el proyecto en fase Base
-          newScenarioProject.isInitialProject = new Boolean(false);
-          newScenarioProject._id = this.project.initialProject;
-          newScenarioProject.initialProject = this.project._id;
+        // Para entender bien la lógicq debemos recordar que initialProject es el proyecto en fase Base
 
-          // A cada partner que tiene la copia de Base, ahora le asignamos el ID del proyecto Scenario
-          for(let partner of newScenarioProject.partners){
-            partner.project = this.project.initialProject;
-          }
-
-          // Ídem para los Printable Deliverables
-          for(let pd of newScenarioProject.printableDeliverables) {
-            pd.project = this.project.initialProject;
-          }
-
-          // Guardamos el nuevo proyecto en fase Scenario, que tendrá los mismos valores que el proyecto en Base
-          axios.post('/projects', newScenarioProject,{
-          auth: {
-              username: this.$store.state.username,
-              password: this.$store.state.password
-            }
-          })
-          .then( () => {
-
-            // Aquí, lo que hacemos es guardar cada nuevo Printable Deliverable copia del Base con un ID nuevo propio, pero
-            // que ya tiene asociado el ID del proyecto en fase Scenario
-            for (let pd of newScenarioProject.printableDeliverables){
-              pd._id = new Mongoose.Types.ObjectId();
-              this.axios.post('/printableDeliverables', pd)
-              .catch((e)=>{
-                console.log('error' + e);
-              })
-            }
-
-            // Ídem para Partners
-            for(let partner of newScenarioProject.partners) {
-              partner._id = new Mongoose.Types.ObjectId();
-              this.axios.post('/partners', partner)
-              .catch((e)=>{
-                console.log('error' + e);
-              })
-            }
-            this.$toast.add({severity:'success', summary: 'Successful', detail: 'All Printable deliverables saved', life: 3000});
-            this.$toast.add({severity:'success', summary: 'Successful', detail: 'All Partners saved', life: 3000});
+        // Eliminamos el proyecto en etapa Scenario
+        axios.delete('/projects/' + this.project.initialProject)
+          .then(() => {
             
-          })
-          .catch( (error) => {
-            console.log('error', error);
-          })
+            // Aquí, creamos una copia del proyecto en la etapa Base para la fase Scenario
+            let newScenarioProject = Object.assign({}, this.project);
+            // Aquí ponemos que no es initial, ya que la propiedad isInitial es true si es el proyecto en fase Base
+            newScenarioProject.isInitialProject = new Boolean(false);
+            newScenarioProject._id = this.project.initialProject;
+            newScenarioProject.initialProject = this.project._id;
 
-          // Nos traemos de la BD todos los customs aosicados al proyecto en fase Base
-          axios.get('/customs?projectId=' + this.project._id, { params: {
-              projectId: this.project._id
+            // A cada partner que tiene la copia de Base, ahora le asignamos el ID del proyecto Scenario
+            for(let partner of newScenarioProject.partners){
+              partner.project = this.project.initialProject;
             }
-          })
-          .then( (response) => {
-            this.project.customs = response.data;
 
-            // Asociamos a cada custom un nuevo ID y les asociamos el ID del proyecto nuevo Scenario
-            for(let custom of this.project.customs) {
-              custom._id = new Mongoose.Types.ObjectId();
-              custom.project = this.project.initialProject;
+            // Ídem para los Printable Deliverables
+            for(let pd of newScenarioProject.printableDeliverables) {
+              pd.project = this.project.initialProject;
+            }
 
-              this.axios.post('/customs', custom)
-              .catch((e)=>{
-                console.log('error' + e);
+            // Guardamos el nuevo proyecto en fase Scenario, que tendrá los mismos valores que el proyecto en Base
+            axios.post('/projects', newScenarioProject,{
+            auth: {
+                username: this.$store.state.username,
+                password: this.$store.state.password
+              }
+            })
+            .then( () => {
+
+              // Aquí, lo que hacemos es guardar cada nuevo Printable Deliverable copia del Base con un ID nuevo propio, pero
+              // que ya tiene asociado el ID del proyecto en fase Scenario
+              for (let pd of newScenarioProject.printableDeliverables){
+                pd._id = new Mongoose.Types.ObjectId();
+                this.axios.post('/printableDeliverables', pd)
+                .catch((e)=>{
+                  console.log('error' + e);
+                })
+              }
+
+              // Ídem para Partners
+              for(let partner of newScenarioProject.partners) {
+                partner._id = new Mongoose.Types.ObjectId();
+                this.axios.post('/partners', partner)
+                .catch((e)=>{
+                  console.log('error' + e);
+                })
+              }
+              this.$toast.add({severity:'success', summary: 'Successful', detail: 'All Printable deliverables saved', life: 3000});
+              this.$toast.add({severity:'success', summary: 'Successful', detail: 'All Partners saved', life: 3000});
+              
+            })
+            .catch( (error) => {
+              console.log('error', error);
+            })
+
+            // Nos traemos de la BD todos los customs aosicados al proyecto en fase Base
+            axios.get('/customs?projectId=' + this.project._id, { params: {
+                projectId: this.project._id
+              }
+            })
+            .then( (response) => {
+              this.project.customs = response.data;
+
+              // Asociamos a cada custom un nuevo ID y les asociamos el ID del proyecto nuevo Scenario
+              for(let custom of this.project.customs) {
+                custom._id = new Mongoose.Types.ObjectId();
+                custom.project = this.project.initialProject;
+
+                this.axios.post('/customs', custom)
+                .catch((e)=>{
+                  console.log('error' + e);
+                })
+              }
+              this.$toast.add({severity:'success', summary: 'Successful', detail: 'All Customs saved', life: 3000});
+            })
+            .catch((e)=>{
+              console.log('error' + e);
+            })
+
+            // Ídem para los external experts
+            this.axios.get(`/externalExperts?projectId=` + this.project._id)
+            .then((response) => {
+              this.project.externalExperts = response.data;
+              for(let externalExpert of response.data) {
+                externalExpert._id = new Mongoose.Types.ObjectId();
+                externalExpert.project = this.project.initialProject;
+                axios.post('/externalExperts', externalExpert)
+                .catch((e)=>{
+                  console.log('error' + e);
+                })
+              }
+              this.$toast.add({severity:'success', summary: 'Successful', detail: 'All external experts saved', life: 3000});
+            })
+            .catch((e)=>{
+              console.log('error' + e);
+            })
+
+            // Ídem para los events
+            this.axios.get(`/events?projectId=` + this.project._id)
+            .then((response) => {
+              
+            for(let event of response.data) {
+                event._id = new Mongoose.Types.ObjectId();
+                event.project = this.project.initialProject;
+
+                axios.post('/events', event)
+                .catch((e)=>{
+                  console.log('error' + e);
+                })
+              }
+            this.$toast.add({severity:'success', summary: 'Successful', detail: 'All events saved', life: 3000});
+            })
+            .catch((e)=>{
+              console.log('error' + e);
+            })
+
+            // Nos traemos las tablas del Monitoring para asignar sus ID a las nuevas
+            // tablas que vamos a exportar copia de Design
+            axios.get('/dataTables/' + this.project.initialProject)
+            .then( (responseTablesMonitoring) => {
+              let designTables = Object.assign({}, this.project.dataTables);
+              let monitoringTables = responseTablesMonitoring.data;
+              // Asignamos los ID de las tablas de monitoring a las copias del desing
+              // además, les asociamos el proyecto monitoring
+              designTables.transportationData._id = monitoringTables.transportationData._id;
+              designTables.transportationData.project = this.project.initialProject
+
+              axios.put('/dataTables/' + this.project.initialProject, designTables.transportationData, {params: {
+              projectId: this.project.initialProject,
+              dataTableName: 'transportation'
+              }})
+              .catch( (error) => {
+                console.log("Error: ", error);
               })
-            }
-            this.$toast.add({severity:'success', summary: 'Successful', detail: 'All Customs saved', life: 3000});
+
+              designTables.materialData._id = monitoringTables.materialData._id;
+              designTables.materialData.project = this.project.initialProject
+
+              axios.put('/dataTables/' + this.project.initialProject, designTables.materialData, {params: {
+              projectId: this.project.initialProject,
+              dataTableName: 'material'
+              }})
+              .catch( (error) => {
+                console.log("Error: ", error);
+              })
+
+              designTables.eventsData._id = monitoringTables.eventsData._id;
+              designTables.eventsData.project = this.project.initialProject
+
+              axios.put('/dataTables/' + this.project.initialProject, designTables.eventsData, {params: {
+              projectId: this.project.initialProject,
+              dataTableName: 'events'
+              }})
+              .catch( (error) => {
+                console.log("Error: ", error);
+              })
+
+            })
+
           })
           .catch((e)=>{
             console.log('error' + e);
           })
+      }
 
-          // Ídem para los external experts
-          this.axios.get(`/externalExperts?projectId=` + this.project._id)
-          .then((response) => {
-            this.project.externalExperts = response.data;
-            for(let externalExpert of response.data) {
-              externalExpert._id = new Mongoose.Types.ObjectId();
-              externalExpert.project = this.project.initialProject;
-              axios.post('/externalExperts', externalExpert)
-              .catch((e)=>{
-                console.log('error' + e);
-              })
-            }
-            this.$toast.add({severity:'success', summary: 'Successful', detail: 'All external experts saved', life: 3000});
-          })
-          .catch((e)=>{
-            console.log('error' + e);
-          })
-
-          // Ídem para los events
-          this.axios.get(`/events?projectId=` + this.project._id)
-          .then((response) => {
-            
-          for(let event of response.data) {
-              event._id = new Mongoose.Types.ObjectId();
-              event.project = this.project.initialProject;
-
-              axios.post('/events', event)
-              .catch((e)=>{
-                console.log('error' + e);
-              })
-            }
-          this.$toast.add({severity:'success', summary: 'Successful', detail: 'All events saved', life: 3000});
-          })
-          .catch((e)=>{
-            console.log('error' + e);
-          })
-
-          // Nos traemos las tablas del Monitoring para asignar sus ID a las nuevas
-          // tablas que vamos a exportar copia de Design
-          axios.get('/dataTables/' + this.project.initialProject)
-          .then( (responseTablesMonitoring) => {
-            let designTables = Object.assign({}, this.project.dataTables);
-            let monitoringTables = responseTablesMonitoring.data;
-            // Asignamos los ID de las tablas de monitoring a las copias del desing
-            // además, les asociamos el proyecto monitoring
-            designTables.transportationData._id = monitoringTables.transportationData._id;
-            designTables.transportationData.project = this.project.initialProject
-
-            axios.put('/dataTables/' + this.project.initialProject, designTables.transportationData, {params: {
-            projectId: this.project.initialProject,
-            dataTableName: 'transportation'
-            }})
-            .catch( (error) => {
-              console.log("Error: ", error);
-            })
-
-            designTables.materialData._id = monitoringTables.materialData._id;
-            designTables.materialData.project = this.project.initialProject
-
-            axios.put('/dataTables/' + this.project.initialProject, designTables.materialData, {params: {
-            projectId: this.project.initialProject,
-            dataTableName: 'material'
-            }})
-            .catch( (error) => {
-              console.log("Error: ", error);
-            })
-
-            designTables.eventsData._id = monitoringTables.eventsData._id;
-            designTables.eventsData.project = this.project.initialProject
-
-            axios.put('/dataTables/' + this.project.initialProject, designTables.eventsData, {params: {
-            projectId: this.project.initialProject,
-            dataTableName: 'events'
-            }})
-            .catch( (error) => {
-              console.log("Error: ", error);
-            })
-
-          })
-
-        })
-        .catch((e)=>{
-          console.log('error' + e);
-        })
     },
 
     onCellEditCompleteTransportationData(newValue, country, fieldTable) {
-      // La variable isInitial la vamos a usar para saber si el valor del campo
-      // es para el proyecto en la fase inicial o si es de la fase de ejecución
-      if(newValue == this.onFocusValue) return;
-      this.project.dataTables.transportationData.percentageDistributionTravelDistance[country][fieldTable] = newValue;
 
-      let sum = 0;
+      if(!this.isTheOwner()) {
+        this.$toast.add({severity:'error', summary: 'ERROR', detail: 'The data modified will not be saved since you are not the owner of this project.', life: 3000});
+      } else {
+        // La variable isInitial la vamos a usar para saber si el valor del campo
+        // es para el proyecto en la fase inicial o si es de la fase de ejecución
+        if(newValue == this.onFocusValue) return;
+        this.project.dataTables.transportationData.percentageDistributionTravelDistance[country][fieldTable] = newValue;
 
-      for (let field of Object.values(this.project.dataTables.transportationData.percentageDistributionTravelDistance[country])){
-        sum += field;
-      }
+        let sum = 0;
 
-      if (country == "europe") {
-        sum -= this.project.dataTables.transportationData.percentageDistributionTravelDistance[country].internationalRail
-      }
-
-      if (this.round4Decimals(sum) != 1) {
-        this.$toast.add({severity:'warn', summary: 'Warning', detail: 'Sum of the values of the table is not equal to 1, it is: ' + this.round4Decimals(sum), life: 3000});
-      }
-
-      axios.put('/dataTables/' + this.project._id, this.project.dataTables.transportationData, {params: {
-        projectId: this.project._id,
-        dataTableName: 'transportation'
-      }})
-      .then( () => {
-        if(this.round4Decimals(sum) == 1){
-          this.$toast.add({severity:'success', summary: 'Successful', detail: 'Percentage distribution of travels updated', life: 3000});
+        for (let field of Object.values(this.project.dataTables.transportationData.percentageDistributionTravelDistance[country])){
+          sum += field;
         }
-      })
-      .catch( (error) => {
-        console.log("Error: ", error);
-      })
+
+        if (country == "europe") {
+          sum -= this.project.dataTables.transportationData.percentageDistributionTravelDistance[country].internationalRail
+        }
+
+        if (this.round4Decimals(sum) != 1) {
+          this.$toast.add({severity:'warn', summary: 'Warning', detail: 'Sum of the values of the table is not equal to 1, it is: ' + this.round4Decimals(sum), life: 3000});
+        }
+
+        axios.put('/dataTables/' + this.project._id, this.project.dataTables.transportationData, {params: {
+          projectId: this.project._id,
+          dataTableName: 'transportation'
+        }})
+        .then( () => {
+          if(this.round4Decimals(sum) == 1){
+            this.$toast.add({severity:'success', summary: 'Successful', detail: 'Percentage distribution of travels updated', life: 3000});
+          }
+        })
+        .catch( (error) => {
+          console.log("Error: ", error);
+        })
+      }
     },
 
     onCellEditCompleteTransportationData2(newValue, fieldTable) {
-      // La variable isInitial la vamos a usar para saber si el valor del campo
-      // es para el proyecto en la fase inicial o si es de la fase de ejecución
-      if(newValue == this.onFocusValue) return;
-      this.project.dataTables.transportationData.percentageDistributionCarsFleet[fieldTable] = newValue;
 
-           let sum = 0;
+      if(!this.isTheOwner()) {
+        this.$toast.add({severity:'error', summary: 'ERROR', detail: 'The data modified will not be saved since you are not the owner of this project.', life: 3000});
+      } else {
 
-      for(let field of  Object.values(this.project.dataTables.transportationData.percentageDistributionCarsFleet)){
-        sum += field;
-      }
+        // La variable isInitial la vamos a usar para saber si el valor del campo
+        // es para el proyecto en la fase inicial o si es de la fase de ejecución
+        if(newValue == this.onFocusValue) return;
+        this.project.dataTables.transportationData.percentageDistributionCarsFleet[fieldTable] = newValue;
 
-      if(this.round4Decimals(sum) != 1) {
-        this.$toast.add({severity:'warn', summary: 'Warning', detail: 'Sum of the values of the table is not equal to 1, it is: ' + this.round4Decimals(sum), life: 3000});
-      }
+            let sum = 0;
 
-
-      axios.put('/dataTables/' + this.project._id, this.project.dataTables.transportationData, {params: {
-        projectId: this.project._id,
-        dataTableName: 'transportation'
-      }})
-      .then( () => {
-        if(this.round4Decimals(sum) == 1){
-          this.$toast.add({severity:'success', summary: 'Successful', detail: 'Percentage distribution of travels updated', life: 3000});
+        for(let field of  Object.values(this.project.dataTables.transportationData.percentageDistributionCarsFleet)){
+          sum += field;
         }
-      })
-      .catch( (error) => {
-        console.log("Error: ", error);
-      })
+
+        if(this.round4Decimals(sum) != 1) {
+          this.$toast.add({severity:'warn', summary: 'Warning', detail: 'Sum of the values of the table is not equal to 1, it is: ' + this.round4Decimals(sum), life: 3000});
+        }
+
+
+        axios.put('/dataTables/' + this.project._id, this.project.dataTables.transportationData, {params: {
+          projectId: this.project._id,
+          dataTableName: 'transportation'
+        }})
+        .then( () => {
+          if(this.round4Decimals(sum) == 1){
+            this.$toast.add({severity:'success', summary: 'Successful', detail: 'Percentage distribution of travels updated', life: 3000});
+          }
+        })
+        .catch( (error) => {
+          console.log("Error: ", error);
+        })
+      }
     },
 
     onCellEditCompleteMaterialsData(newValue, material, fieldTable) {
-      // La variable isInitial la vamos a usar para saber si el valor del campo
-      // es para el proyecto en la fase inicial o si es de la fase de ejecución
-      if(newValue == this.onFocusValue) return;
-      this.project.dataTables.materialData.percentageDistributionMaterialsUse[material][fieldTable] = newValue;
 
-           let sum = 0;
+      if(!this.isTheOwner()) {
+        this.$toast.add({severity:'error', summary: 'ERROR', detail: 'The data modified will not be saved since you are not the owner of this project.', life: 3000});
+      } else {
+        // La variable isInitial la vamos a usar para saber si el valor del campo
+        // es para el proyecto en la fase inicial o si es de la fase de ejecución
+        if(newValue == this.onFocusValue) return;
+        this.project.dataTables.materialData.percentageDistributionMaterialsUse[material][fieldTable] = newValue;
 
-      for(let field of  Object.values(this.project.dataTables.materialData.percentageDistributionMaterialsUse[material])){
-        sum += field;
-      }
+            let sum = 0;
 
-      if(this.round4Decimals(sum) != 1) {
-        this.$toast.add({severity:'warn', summary: 'Warning', detail: 'Sum of the values of the table is not equal to 1, it is: ' + this.round4Decimals(sum), life: 3000});
-      }
-
-
-      axios.put('/dataTables/' + this.project._id, this.project.dataTables.materialData, {params: {
-        projectId: this.project._id,
-        dataTableName: 'material'
-      }})
-      .then( () => {
-        if(this.round4Decimals(sum) == 1){
-          this.$toast.add({severity:'success', summary: 'Successful', detail: 'Percentage distribution of travels updated', life: 3000});
+        for(let field of  Object.values(this.project.dataTables.materialData.percentageDistributionMaterialsUse[material])){
+          sum += field;
         }
-      })
-      .catch( (error) => {
-        console.log("Error: ", error);
-      })
+
+        if(this.round4Decimals(sum) != 1) {
+          this.$toast.add({severity:'warn', summary: 'Warning', detail: 'Sum of the values of the table is not equal to 1, it is: ' + this.round4Decimals(sum), life: 3000});
+        }
+
+
+        axios.put('/dataTables/' + this.project._id, this.project.dataTables.materialData, {params: {
+          projectId: this.project._id,
+          dataTableName: 'material'
+        }})
+        .then( () => {
+          if(this.round4Decimals(sum) == 1){
+            this.$toast.add({severity:'success', summary: 'Successful', detail: 'Percentage distribution of travels updated', life: 3000});
+          }
+        })
+        .catch( (error) => {
+          console.log("Error: ", error);
+        })
+      }
+
     },
 
     onCellEditCompleteEventsData(newValue, event, fieldTable) {
-      // La variable isInitial la vamos a usar para saber si el valor del campo
-      // es para el proyecto en la fase inicial o si es de la fase de ejecución
-      if(newValue == this.onFocusValue) return;
-      this.project.dataTables.eventsData.percentageDistributionInternationalNationalTravels[event][fieldTable] = newValue;
 
-      let sum = 0;
+      if(!this.isTheOwner()) {
+        this.$toast.add({severity:'error', summary: 'ERROR', detail: 'The data modified will not be saved since you are not the owner of this project.', life: 3000});
+      } else {
 
-      for(let field of Object.values(this.project.dataTables.eventsData.percentageDistributionInternationalNationalTravels[event])){
-        sum += field;
-      }
+        // La variable isInitial la vamos a usar para saber si el valor del campo
+        // es para el proyecto en la fase inicial o si es de la fase de ejecución
+        if(newValue == this.onFocusValue) return;
+        this.project.dataTables.eventsData.percentageDistributionInternationalNationalTravels[event][fieldTable] = newValue;
 
-      if(this.round4Decimals(sum) != 1) {
-        console.log("La suma es: ", sum);
-        this.$toast.add({severity:'warn', summary: 'Warning', detail: 'Sum of the values of the table is not equal to 1, it is: ' + this.round4Decimals(sum), life: 3000});
-      }
+        let sum = 0;
 
-
-      axios.put('/dataTables/' + this.project._id, this.project.dataTables.eventsData, {params: {
-        projectId: this.project._id,
-        dataTableName: 'events'
-      }})
-      .then( () => {
-        if(this.round4Decimals(sum) == 1){
-          this.$toast.add({severity:'success', summary: 'Successful', detail: 'Percentage distribution of travels updated', life: 3000});
+        for(let field of Object.values(this.project.dataTables.eventsData.percentageDistributionInternationalNationalTravels[event])){
+          sum += field;
         }
-      })
-      .catch( (error) => {
-        console.log("Error: ", error);
-      })
+
+        if(this.round4Decimals(sum) != 1) {
+          console.log("La suma es: ", sum);
+          this.$toast.add({severity:'warn', summary: 'Warning', detail: 'Sum of the values of the table is not equal to 1, it is: ' + this.round4Decimals(sum), life: 3000});
+        }
+
+
+        axios.put('/dataTables/' + this.project._id, this.project.dataTables.eventsData, {params: {
+          projectId: this.project._id,
+          dataTableName: 'events'
+        }})
+        .then( () => {
+          if(this.round4Decimals(sum) == 1){
+            this.$toast.add({severity:'success', summary: 'Successful', detail: 'Percentage distribution of travels updated', life: 3000});
+          }
+        })
+        .catch( (error) => {
+          console.log("Error: ", error);
+        })
+      }
+
+      
     },
     resetTableValuesToDefault(table) {
 
-      let oldEventTableForEurope = {}
-      let defaultValuesForEurope = {}
-      switch(table) {
-        case 'transportation':
-          // En este caso vamos a hacer una copia de transportation para que no resetee los valores de 
-          // la tabla de transportation para Europe (Events)
-          oldEventTableForEurope = Object.assign({}, this.project.dataTables.transportationData.percentageDistributionTravelDistance['europe']);
-          
-          // reseteamos las tablas para luego meter los valores para europe y volver a guardar
-          axios.put('/projects/resetDefaultValues/' + this.project._id, this.project.dataTables.transportationData, {params: {
-            projectId: this.project._id,
-            dataTableName: table
-          }})
-          .then( () => {
+      if(!this.isTheOwner()) {
+        this.$toast.add({severity:'error', summary: 'ERROR', detail: 'The data modified will not be saved since you are not the owner of this project.', life: 3000});
+      } else {
 
-            axios.get('/dataTables/' + this.project._id)
-            .then( (responseDataTableTransportation) => {
-               // Ya tenemos las tablas por defecto
+        let oldEventTableForEurope = {}
+        let defaultValuesForEurope = {}
+        switch(table) {
+          case 'transportation':
+            // En este caso vamos a hacer una copia de transportation para que no resetee los valores de 
+            // la tabla de transportation para Europe (Events)
+            oldEventTableForEurope = Object.assign({}, this.project.dataTables.transportationData.percentageDistributionTravelDistance['europe']);
+            
+            // reseteamos las tablas para luego meter los valores para europe y volver a guardar
+            axios.put('/projects/resetDefaultValues/' + this.project._id, this.project.dataTables.transportationData, {params: {
+              projectId: this.project._id,
+              dataTableName: table
+            }})
+            .then( () => {
+
+              axios.get('/dataTables/' + this.project._id)
+              .then( (responseDataTableTransportation) => {
+                // Ya tenemos las tablas por defecto
 
 
-              this.project.dataTables = responseDataTableTransportation.data;
+                this.project.dataTables = responseDataTableTransportation.data;
 
-              // Reasignamos los valores de la tabla de events para no perderlos en el reseteo
-              this.project.dataTables.transportationData.percentageDistributionTravelDistance['europe'].car = oldEventTableForEurope.car;
-              this.project.dataTables.transportationData.percentageDistributionTravelDistance['europe'].motorbikes = oldEventTableForEurope.motorbikes;
-              this.project.dataTables.transportationData.percentageDistributionTravelDistance['europe'].bus = oldEventTableForEurope.bus;
-              this.project.dataTables.transportationData.percentageDistributionTravelDistance['europe'].taxi = oldEventTableForEurope.taxi;
-              this.project.dataTables.transportationData.percentageDistributionTravelDistance['europe'].internationalRail = oldEventTableForEurope.internationalRail;
-              this.project.dataTables.transportationData.percentageDistributionTravelDistance['europe'].nationalRail = oldEventTableForEurope.nationalRail;
-              this.project.dataTables.transportationData.percentageDistributionTravelDistance['europe'].lightRailTramUnderground = oldEventTableForEurope.lightRailTramUnderground;
-              this.project.dataTables.transportationData.percentageDistributionTravelDistance['europe'].ferries = oldEventTableForEurope.ferries;
-              this.project.dataTables.transportationData.percentageDistributionTravelDistance['europe'].cycling = oldEventTableForEurope.cycling;
-              this.project.dataTables.transportationData.percentageDistributionTravelDistance['europe'].walking = oldEventTableForEurope.walking;
-              this.project.dataTables.transportationData.percentageDistributionTravelDistance['europe'].other = oldEventTableForEurope.other;
+                // Reasignamos los valores de la tabla de events para no perderlos en el reseteo
+                this.project.dataTables.transportationData.percentageDistributionTravelDistance['europe'].car = oldEventTableForEurope.car;
+                this.project.dataTables.transportationData.percentageDistributionTravelDistance['europe'].motorbikes = oldEventTableForEurope.motorbikes;
+                this.project.dataTables.transportationData.percentageDistributionTravelDistance['europe'].bus = oldEventTableForEurope.bus;
+                this.project.dataTables.transportationData.percentageDistributionTravelDistance['europe'].taxi = oldEventTableForEurope.taxi;
+                this.project.dataTables.transportationData.percentageDistributionTravelDistance['europe'].internationalRail = oldEventTableForEurope.internationalRail;
+                this.project.dataTables.transportationData.percentageDistributionTravelDistance['europe'].nationalRail = oldEventTableForEurope.nationalRail;
+                this.project.dataTables.transportationData.percentageDistributionTravelDistance['europe'].lightRailTramUnderground = oldEventTableForEurope.lightRailTramUnderground;
+                this.project.dataTables.transportationData.percentageDistributionTravelDistance['europe'].ferries = oldEventTableForEurope.ferries;
+                this.project.dataTables.transportationData.percentageDistributionTravelDistance['europe'].cycling = oldEventTableForEurope.cycling;
+                this.project.dataTables.transportationData.percentageDistributionTravelDistance['europe'].walking = oldEventTableForEurope.walking;
+                this.project.dataTables.transportationData.percentageDistributionTravelDistance['europe'].other = oldEventTableForEurope.other;
 
-              // Ahora mandamos a la DB la tabla de nuevo para actualizarla
-              axios.put('/dataTables/' + this.project._id, this.project.dataTables.transportationData, {params: {
-                projectId: this.project._id,
-                dataTableName: 'transportation'
-              }})
-              .then(() => {
-                this.$toast.add({severity:'success', summary: 'Successful', detail: 'The values has been reset to default', life: 3000});
+                // Ahora mandamos a la DB la tabla de nuevo para actualizarla
+                axios.put('/dataTables/' + this.project._id, this.project.dataTables.transportationData, {params: {
+                  projectId: this.project._id,
+                  dataTableName: 'transportation'
+                }})
+                .then(() => {
+                  this.$toast.add({severity:'success', summary: 'Successful', detail: 'The values has been reset to default', life: 3000});
+                })
+                .catch( (errorDT) => {
+                  console.log("Error: ", errorDT);
+                })
+              })
+              .catch( (errorGetDefaultTables) => {
+                console.log("Error: ", errorGetDefaultTables);
+              })
+                
+            })
+            .catch( (error) => {
+                console.log("Error: ", error);
+            })
+
+            break;
+
+          case 'events':
+            // En este caso vamos a hacer una copia de transportation para que no resetee los valores de 
+            // la tabla de transportation excepto para Europe (Events)
+            // reseteamos las tablas para luego meter los valores para europe y volver a guardar
+            
+            axios.put('/projects/resetDefaultValues/' + this.project._id, this.project.dataTables.transportationData, {params: {
+              projectId: this.project._id,
+              dataTableName: 'transportation'
+            }})
+            .then( () => {
+              axios.get('/dataTables/' + this.project._id)
+              .then( ( responseDataTableMaterials) => {
+                // Ya tenemos las tablas por defecto
+                defaultValuesForEurope = Object.assign({}, responseDataTableMaterials.data.transportationData.percentageDistributionTravelDistance['europe']);
+                this.project.dataTables.transportationData._id = responseDataTableMaterials.data.transportationData._id
+                // Reasignamos los valores de la tabla de events para no perderlos en el reseteo
+                this.project.dataTables.transportationData.percentageDistributionTravelDistance['europe'].car = defaultValuesForEurope.car;
+                this.project.dataTables.transportationData.percentageDistributionTravelDistance['europe'].motorbikes = defaultValuesForEurope.motorbikes;
+                this.project.dataTables.transportationData.percentageDistributionTravelDistance['europe'].bus = defaultValuesForEurope.bus;
+                this.project.dataTables.transportationData.percentageDistributionTravelDistance['europe'].taxi = defaultValuesForEurope.taxi;
+                this.project.dataTables.transportationData.percentageDistributionTravelDistance['europe'].internationalRail = defaultValuesForEurope.internationalRail;
+                this.project.dataTables.transportationData.percentageDistributionTravelDistance['europe'].nationalRail = defaultValuesForEurope.nationalRail;
+                this.project.dataTables.transportationData.percentageDistributionTravelDistance['europe'].lightRailTramUnderground = defaultValuesForEurope.lightRailTramUnderground;
+                this.project.dataTables.transportationData.percentageDistributionTravelDistance['europe'].ferries = defaultValuesForEurope.ferries;
+                this.project.dataTables.transportationData.percentageDistributionTravelDistance['europe'].cycling = defaultValuesForEurope.cycling;
+                this.project.dataTables.transportationData.percentageDistributionTravelDistance['europe'].walking = defaultValuesForEurope.walking;
+                this.project.dataTables.transportationData.percentageDistributionTravelDistance['europe'].other = defaultValuesForEurope.other;
+
+                // Ahora mandamos a la DB la tabla de nuevo para actualizarla
+                axios.put('/dataTables/' + this.project._id, this.project.dataTables.transportationData, {params: {
+                  projectId: this.project._id,
+                  dataTableName: 'transportation'
+                }})
+                .then(() => {
+                  this.$toast.add({severity:'success', summary: 'Successful', detail: 'The values has been reset to default', life: 3000});
+                })
+                .catch( (errorDT) => {
+                  console.log("Error: ", errorDT);
+                })
+
+              })
+              .catch( (errorGetDefaultTables) => {
+                console.log("Error: ", errorGetDefaultTables);
+              }) 
+            })
+            .catch( (error) => {
+                console.log("Error: ", error);
+            })
+
+            break;
+
+          case 'material':
+            axios.put('/projects/resetDefaultValues/' + this.project._id, this.project.dataTables.transportationData, {params: {
+              projectId: this.project._id,
+              dataTableName: table
+            }})
+            .then( () => {
+              this.$toast.add({severity:'success', summary: 'Successful', detail: 'The values has been reset to default', life: 3000});
+              axios.get(`/dataTables/${this.$route.params.id}`)
+              .then( (responseDataTables) => {
+                this.project.dataTables = responseDataTables.data;
               })
               .catch( (errorDT) => {
-                console.log("Error: ", errorDT);
+                console.log('error' + errorDT);
               })
             })
-            .catch( (errorGetDefaultTables) => {
-              console.log("Error: ", errorGetDefaultTables);
-            })
-              
-          })
-          .catch( (error) => {
+            .catch( (error) => {
               console.log("Error: ", error);
-          })
-
-          break;
-
-        case 'events':
-          // En este caso vamos a hacer una copia de transportation para que no resetee los valores de 
-          // la tabla de transportation excepto para Europe (Events)
-          // reseteamos las tablas para luego meter los valores para europe y volver a guardar
-          
-          axios.put('/projects/resetDefaultValues/' + this.project._id, this.project.dataTables.transportationData, {params: {
-            projectId: this.project._id,
-            dataTableName: 'transportation'
-          }})
-          .then( () => {
-            axios.get('/dataTables/' + this.project._id)
-            .then( ( responseDataTableMaterials) => {
-              // Ya tenemos las tablas por defecto
-              defaultValuesForEurope = Object.assign({}, responseDataTableMaterials.data.transportationData.percentageDistributionTravelDistance['europe']);
-              this.project.dataTables.transportationData._id = responseDataTableMaterials.data.transportationData._id
-              // Reasignamos los valores de la tabla de events para no perderlos en el reseteo
-              this.project.dataTables.transportationData.percentageDistributionTravelDistance['europe'].car = defaultValuesForEurope.car;
-              this.project.dataTables.transportationData.percentageDistributionTravelDistance['europe'].motorbikes = defaultValuesForEurope.motorbikes;
-              this.project.dataTables.transportationData.percentageDistributionTravelDistance['europe'].bus = defaultValuesForEurope.bus;
-              this.project.dataTables.transportationData.percentageDistributionTravelDistance['europe'].taxi = defaultValuesForEurope.taxi;
-              this.project.dataTables.transportationData.percentageDistributionTravelDistance['europe'].internationalRail = defaultValuesForEurope.internationalRail;
-              this.project.dataTables.transportationData.percentageDistributionTravelDistance['europe'].nationalRail = defaultValuesForEurope.nationalRail;
-              this.project.dataTables.transportationData.percentageDistributionTravelDistance['europe'].lightRailTramUnderground = defaultValuesForEurope.lightRailTramUnderground;
-              this.project.dataTables.transportationData.percentageDistributionTravelDistance['europe'].ferries = defaultValuesForEurope.ferries;
-              this.project.dataTables.transportationData.percentageDistributionTravelDistance['europe'].cycling = defaultValuesForEurope.cycling;
-              this.project.dataTables.transportationData.percentageDistributionTravelDistance['europe'].walking = defaultValuesForEurope.walking;
-              this.project.dataTables.transportationData.percentageDistributionTravelDistance['europe'].other = defaultValuesForEurope.other;
-
-              // Ahora mandamos a la DB la tabla de nuevo para actualizarla
-              axios.put('/dataTables/' + this.project._id, this.project.dataTables.transportationData, {params: {
-                projectId: this.project._id,
-                dataTableName: 'transportation'
-              }})
-              .then(() => {
-                this.$toast.add({severity:'success', summary: 'Successful', detail: 'The values has been reset to default', life: 3000});
-              })
-              .catch( (errorDT) => {
-                console.log("Error: ", errorDT);
-              })
-
             })
-            .catch( (errorGetDefaultTables) => {
-              console.log("Error: ", errorGetDefaultTables);
-            }) 
-          })
-          .catch( (error) => {
-              console.log("Error: ", error);
-          })
 
-          break;
+            break;
+        }
 
-        case 'material':
-          axios.put('/projects/resetDefaultValues/' + this.project._id, this.project.dataTables.transportationData, {params: {
-            projectId: this.project._id,
-            dataTableName: table
-          }})
-          .then( () => {
-            this.$toast.add({severity:'success', summary: 'Successful', detail: 'The values has been reset to default', life: 3000});
-            axios.get(`/dataTables/${this.$route.params.id}`)
-            .then( (responseDataTables) => {
-              this.project.dataTables = responseDataTables.data;
-            })
-            .catch( (errorDT) => {
-              console.log('error' + errorDT);
-            })
-          })
-          .catch( (error) => {
-            console.log("Error: ", error);
-          })
-
-          break;
       }
     },
 
+    isTheOwner() {
+      var res = false;
+      var currentUserId = this.$store.state.userId;
+      var projectOwnerId = this.project.user;
+
+      if(currentUserId === projectOwnerId) {
+        res = true;
+      }
+
+      return res;
+    }
     },
   computed: {
     ...mapState([
