@@ -16,7 +16,7 @@
 
 				<TabView>
 					<TabPanel header="Data">
-            <div id="pdfPrintDiv" style="display: none">
+            <div id="pdfPrintDiv" style="position: absolute; z-index: -999;">
               
               <h1>{{project.name}}&nbsp;
                 ({{ (new Date(project.from).getMonth() + 1).toString().padStart(2, "0") + '/' + new Date(project.from).getFullYear()}} -&nbsp;
@@ -268,9 +268,40 @@
                 <li style="margin-bottom: 10px; font-size: 20px">Materials: {{project.materialsAdvancedCF}}</li>
                 <li style="margin-bottom: 10px; font-size: 20px">Printable deliverables: {{project.printableDeliverablesAdvancedCF}}</li>
                 <li style="margin-bottom: 10px; font-size: 20px">Equipment: {{project.equipmentAdvancedCF}}</li>
-                <li style="font-size: 20px">Events: {{project.eventsAdvancedCF}}</li>
+                <li style="margin-bottom: 10px; font-size: 20px">Events: {{project.eventsAdvancedCF}}</li>
               </ul>
 
+              <h3 style="margin-bottom: 20px;">Analysis of the project's monitoring period data</h3>
+
+
+              <div class="flex justify-content-around text-center">
+
+                <div class="col-12">
+                  <div class="col-6" style="position: relative; left: 50%; transform: translateX(-50%);">
+                    <Chart id="chart5" type="radar" :data="chartDataExecution" :options="chartOptions" />
+                    <div id="result" />
+                  </div>
+
+                  <div class="col-12">
+                    <div class="col-12 flex justify-content-center">
+                      <h2 class="col-6 mb-2">Design phase CF:
+                       {{projectInitial.initialCF}} t CO<sub style="font-size: 22px">2</sub>e
+                      </h2>
+
+                      <h2 class="col-6 mb-2">Monitoring phase CF:
+                        {{project.currentCF}} t CO<sub style="font-size: 22px">2</sub>e
+                      </h2>
+                    </div>
+
+                    <h2 class="mb-2">Difference in the CF between the two phases:
+                      {{round(projectInitial.initialCF - project.currentCF)}} t CO<sub style="font-size: 22px">2</sub>e
+                    </h2>
+
+                    <p>CO<sub style="font-size: 12px">2</sub> compensation manual: https://co2compensationmanuallink.com/</p>
+                  </div>
+                </div>
+              </div>
+              
             </div>
 
             <div class="card col-12">
@@ -440,8 +471,8 @@
                 <template v-if="selectedPartner">
                   <div class="mb-5">
                   <label for="partnerEquipmentDropdown">Showing data for partner: </label>
-                    <Dropdown class="ml-2" :options="project.partners" optionLabel="name" optionValue="name"
-                              v-model="selectedPartnerForEquipmentSimple" @change="updateSelectedPartner" />
+                  <Dropdown class="ml-2" :options="project.partners" optionLabel="name" optionValue="name"
+                            v-model="selectedPartnerForEquipmentSimple" @change="updateSelectedPartner" />
                   </div> 
 
                   <div class="card">
@@ -1395,7 +1426,7 @@
                 <div class="col-12">
                   <div class="col-6" style="position: relative; left: 50%; transform: translateX(-50%);">
                   <!-- <h4>Project monitoring period data</h4> -->
-                  <Chart type="radar" :data="chartDataExecution" :options="chartOptions" />
+                    <Chart ref="chart" type="radar" :data="chartDataExecution" :options="chartOptions" />
                   </div>
 
                   <div class="col-12">
@@ -1412,6 +1443,7 @@
                     <h2 class="mb-2">Difference in the CF between the two phases:
                       <Badge :value="round(projectInitial.initialCF - project.currentCF)  + ' t CO₂e'" class="ml-2 differenceCF" size="xlarge" :severity="getTextColorFromCFIndex(projectInitial.initialCF - project.currentCF)" />
                     </h2>
+                    CO₂ compensation manual: https://co2compensationmanuallink.com/
                   </div>
                 </div>
 
@@ -1649,7 +1681,8 @@ export default {
       eventsLoaded: false,
       displayUpdateScenarioValues: false,
       durationHoursPerDayFlag: false,
-      projectAdvancedAndInitialInfo: []
+      projectAdvancedAndInitialInfo: [],
+      chartImageUrl: ""
     }
   },
   created() {
@@ -1680,6 +1713,13 @@ export default {
     },
 
     generatePDF() {
+      var c5 = document.getElementById("chart5").firstChild
+      var target = new Image();
+      target.src = c5.toDataURL();
+      target.style.width = "750px"
+      target.style.height = "750px"
+      document.getElementById('result').appendChild(target);
+
       pdfMake.vfs = pdfFonts.pdfMake.vfs;
       var html = htmlToPdfmake(document.getElementById('pdfPrintDiv').innerHTML);
       const documentDefinition = { content: html, pageOrientation: 'landscape' };
