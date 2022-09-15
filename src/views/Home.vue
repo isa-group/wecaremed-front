@@ -22,10 +22,6 @@
                 </router-link>
               </div>
 
-              <div class="text-center">
-                <h3 v-if="Object.values(filters).length > 0 && Object.values(filters).some(v => v.value)">Difference in CF between the "Design" and "Monitoring" phases: {{filteredValues}}</h3>
-              </div>
-
               <Button icon="pi pi-external-link" :label="$store.state.toggleValue == false ? 'Export Design phase data to CSV' 
               : 'Export Monitoring phase data to CSV'" @click="exportCSV($event)" />
             </div>
@@ -135,7 +131,16 @@
             </router-link>
           </template>
         </Column>
-      
+
+        <template #footer>
+            <div class="text-center">
+              <h2 v-if="Object.values(filters).length > 0 && Object.values(filters).some(v => v.value)">Difference in CF between the "Design" and "Monitoring" phases: 
+                <Badge :value="filteredValues + ' t CO₂e'" size="xlarge" class="currentCF" :severity="getTextColorFromCFIndex(filteredValues)"
+                  v-tooltip.bottom="'Monitoring Phase CF'"/>
+              </h2>
+            </div>
+        </template>
+
       </DataTable>
 
       <Dialog v-model:visible="deleteProjectDialog" :style="{width: '450px'}" header="Confirm" :modal="true">
@@ -181,6 +186,7 @@ import Topbar from '@/components/Topbar.vue';
 import Dialog from 'primevue/dialog';
 import Dropdown from 'primevue/dropdown';
 import Toast from 'primevue/toast';
+import Badge from 'primevue/badge'
 import axios from 'axios'
 import mongoose from "mongoose"
 import {FilterMatchMode} from 'primevue/api';
@@ -194,6 +200,7 @@ export default {
     Column,
     Topbar,
     Dropdown,
+    Badge,
     Dialog,
     InputText,
     Toast
