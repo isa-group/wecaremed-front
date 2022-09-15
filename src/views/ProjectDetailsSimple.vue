@@ -1557,7 +1557,7 @@ export default {
     },
     updateSelectedPartner(event) {
       if(!this.isTheOwner()) {
-        this.$toast.add({severity:'error', summary: 'ERROR', detail: 'The data modified will not be saved since you are not the owner of this project.', life: 3000});
+        this.$toast.add({severity:'error', summary: 'ERROR', detail: 'You cannot modify this project\'s data since you are not the owner.', life: 3000});
       } else {
         this.$store.dispatch("updateSelectedPartner", event.value);
       }
@@ -1608,7 +1608,7 @@ export default {
     },
     addPrintableDeliverable() {
       if(!this.isTheOwner()) {
-        this.$toast.add({severity:'error', summary: 'ERROR', detail: 'The data modified will not be saved since you are not the owner of this project.', life: 3000});
+        this.$toast.add({severity:'error', summary: 'ERROR', detail: 'You cannot modify this project\'s data since you are not the owner.', life: 3000});
       } else {
         let newPrintableDeliverable = {
           deliverableType: "Select a deliverable type",
@@ -1633,7 +1633,7 @@ export default {
     addPartner() {
 
       if(!this.isTheOwner()) {
-        this.$toast.add({severity:'error', summary: 'ERROR', detail: 'The data modified will not be saved since you are not the owner of this project.', life: 3000});
+        this.$toast.add({severity:'error', summary: 'ERROR', detail: 'You cannot modify this project\'s data since you are not the owner.', life: 3000});
       } else {
         let newPartner = {
           _id: new Mongoose.Types.ObjectId(),
@@ -1687,7 +1687,7 @@ export default {
     deletePartner(index) {
 
       if(!this.isTheOwner()) {
-        this.$toast.add({severity:'error', summary: 'ERROR', detail: 'The data modified will not be saved since you are not the owner of this project.', life: 3000});
+        this.$toast.add({severity:'error', summary: 'ERROR', detail: 'You cannot modify this project\'s data since you are not the owner.', life: 3000});
       } else {
         let partner = this.project.partners[index]
       
@@ -1725,7 +1725,7 @@ export default {
     savePrintableDeliverables() {
 
       if(!this.isTheOwner()) {
-        this.$toast.add({severity:'error', summary: 'ERROR', detail: 'The data modified will not be saved since you are not the owner of this project.', life: 3000});
+        this.$toast.add({severity:'error', summary: 'ERROR', detail: 'You cannot modify this project\'s data since you are not the owner.', life: 3000});
       } else {
         this.axios.put('/printableDeliverables/updateAll', this.project.printableDeliverables)
         .then(() => {
@@ -1738,7 +1738,7 @@ export default {
     savePartners() {
 
       if(!this.isTheOwner()) {
-        this.$toast.add({severity:'error', summary: 'ERROR', detail: 'The data modified will not be saved since you are not the owner of this project.', life: 3000});
+        this.$toast.add({severity:'error', summary: 'ERROR', detail: 'You cannot modify this project\'s data since you are not the owner.', life: 3000});
       } else {
         this.axios.put('/partners/updateAll', this.project.partners)
         .then(() => {
@@ -1758,7 +1758,7 @@ export default {
     deletePrintableDeliverable(index) {
 
       if(!this.isTheOwner()) {
-        this.$toast.add({severity:'error', summary: 'ERROR', detail: 'The data modified will not be saved since you are not the owner of this project.', life: 3000});
+        this.$toast.add({severity:'error', summary: 'ERROR', detail: 'You cannot modify this project\'s data since you are not the owner.', life: 3000});
       } else {
         let printableDeliverable = this.project.printableDeliverables[index]
 
@@ -1983,7 +1983,7 @@ export default {
     },
     saveCurrentProject(){
       if(!this.isTheOwner()) {
-        this.$toast.add({severity:'error', summary: 'ERROR', detail: 'The data modified will not be saved since you are not the owner of this project.', life: 3000});
+        this.$toast.add({severity:'error', summary: 'ERROR', detail: 'You cannot modify this project\'s data since you are not the owner.', life: 3000});
       } else {
         this.savePrintableDeliverables();
         this.savePartners();
@@ -1997,7 +1997,7 @@ export default {
     updateScenarioValues(){
 
       if(!this.isTheOwner()) {
-        this.$toast.add({severity:'error', summary: 'ERROR', detail: 'The data modified will not be saved since you are not the owner of this project.', life: 3000});
+        this.$toast.add({severity:'error', summary: 'ERROR', detail: 'You cannot modify this project\'s data since you are not the owner.', life: 3000});
       } else {
 
         // Para entender bien la lógicq debemos recordar que initialProject es el proyecto en fase Base
@@ -2325,7 +2325,7 @@ export default {
     resetTableValuesToDefault(table) {
 
       if(!this.isTheOwner()) {
-        this.$toast.add({severity:'error', summary: 'ERROR', detail: 'The data modified will not be saved since you are not the owner of this project.', life: 3000});
+        this.$toast.add({severity:'error', summary: 'ERROR', detail: 'You cannot modify this project\'s data since you are not the owner.', life: 3000});
       } else {
 
         let oldEventTableForEurope = {}
