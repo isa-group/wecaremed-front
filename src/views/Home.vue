@@ -12,15 +12,16 @@
 
       <DataTable :value="projects" :paginator="true" class="p-datatable-gridlines" dataKey="id" ref="dt" :exportFilename="$store.state.toggleValue == false ? 'WECAREMED - My projects in Design phase' : 'WECAREMED - My projects in Monitoring phase'"
       :rowHover="true" sortMode="multiple" :rows="10" :loading="loading" responsiveLayout="scroll"  v-model:filters="filters"
-      filterDisplay="row">
+      filterDisplay="row" @filter="calculateDifferenceInCF($event)">
         
         <template #header>
             <div class="flex justify-content-between flex-column sm:flex-row">
               <div>
                 <router-link to="/createProject">
-                  <Button class="p-button-info"><i class="pi pi-plus mr-2"/>Create a new project</Button>
+                  <Button class="p-button-info h-full font-bold"><i class="pi pi-plus mr-2"/>Create a new project</Button>
                 </router-link>
               </div>
+
               <Button icon="pi pi-external-link" :label="$store.state.toggleValue == false ? 'Export Design phase data to CSV' 
               : 'Export Monitoring phase data to CSV'" @click="exportCSV($event)" />
             </div>
@@ -43,6 +44,17 @@
          </template>
         </Column>
 
+        <Column class="centered-cell" field="status" header="Status" :sortable="true">
+          <template #body="slotProps">
+            {{slotProps.data.status}}
+          </template>
+          <template #filter="{filterModel,filterCallback}">
+            <Dropdown v-model="filterModel.value" :options="projectStatusOptions" optionLabel="label" optionValue="value"
+            placeholder="Search by Status" class="p-column-filter centered-cell"
+            v-tooltip.top.focus="'Select a value to filter'" @change="filterCallback()" />
+          </template>
+        </Column>
+
         <Column class="centered-cell" field="callId" header="Call ID" :sortable="true">
           <template #body="slotProps">
             {{slotProps.data.callId}}
@@ -52,14 +64,12 @@
          </template>
         </Column>
 
-        <Column class="centered-cell" field="proposalId" header  ="Proposal ID" :sortable="true">
-          
+        <Column class="centered-cell" field="proposalId" header="Project number" :sortable="true">
           <template #body="slotProps">
             {{slotProps.data.proposalId}}
           </template>
-
          <template #filter="{filterModel,filterCallback}">
-           <InputText  type="text" v-model="filterModel.value" @input="filterCallback()" class="p-column-filter centered-cell" placeholder="Search by Proposal ID" v-tooltip.top.focus="'Filter as you type'"/>
+           <InputText  type="text" v-model="filterModel.value" @input="filterCallback()" class="p-column-filter centered-cell" placeholder="Search by Project number" v-tooltip.top.focus="'Filter as you type'"/>
          </template>
         </Column>
 
@@ -121,7 +131,16 @@
             </router-link>
           </template>
         </Column>
-      
+
+        <template #footer>
+            <div class="text-center">
+              <h2 v-if="Object.values(filters).length > 0 && Object.values(filters).some(v => v.value)">Difference in CF between the "Design" and "Monitoring" phases: 
+                <Badge :value="filteredValues + ' t CO₂e'" size="xlarge" class="currentCF" :severity="getTextColorFromCFIndex(filteredValues)"
+                  v-tooltip.bottom="'Monitoring Phase CF'"/>
+              </h2>
+            </div>
+        </template>
+
       </DataTable>
 
       <Dialog v-model:visible="deleteProjectDialog" :style="{width: '450px'}" header="Confirm" :modal="true">
@@ -165,7 +184,9 @@ import DataTable from 'primevue/datatable'
 import Column from 'primevue/column'
 import Topbar from '@/components/Topbar.vue';
 import Dialog from 'primevue/dialog';
+import Dropdown from 'primevue/dropdown';
 import Toast from 'primevue/toast';
+import Badge from 'primevue/badge'
 import axios from 'axios'
 import mongoose from "mongoose"
 import {FilterMatchMode} from 'primevue/api';
@@ -178,6 +199,8 @@ export default {
     DataTable,
     Column,
     Topbar,
+    Dropdown,
+    Badge,
     Dialog,
     InputText,
     Toast
@@ -189,13 +212,29 @@ export default {
       projects: [],
       initialProjects: [],
       cloneProjectDialog: false,
+      filteredValues: [],
       filters: {
-        'name': {value: null, matchMode: FilterMatchMode.STARTS_WITH},
-        'callId': {value: null, matchMode: FilterMatchMode.STARTS_WITH},
-        'proposalId': {value: null, matchMode: FilterMatchMode.STARTS_WITH}
+        'name': {value: null, matchMode: FilterMatchMode.CONTAINS},
+        'status': {value: null, matchMode: FilterMatchMode.EQUALS},
+        'callId': {value: null, matchMode: FilterMatchMode.CONTAINS},
+        'proposalId': {value: null, matchMode: FilterMatchMode.CONTAINS}
       },
       fromAux: "",
-      toAux:""
+      toAux:"",
+      projectStatusOptions: [
+        {label: "0 - Draft", value: "0 - Draft"},
+        {label: "1 - Scenario analysis", value: "1 - Scenario analysis"},
+        {label: "2 - Best design", value: "2 - Best design"}, 
+        {label: "3 - Submitted", value: "3 - Submitted"}, 
+        {label: "4 - Approved", value: "4 - Approved"}, 
+        {label: "5 - End of year 1 monitoring report", value: "5 - End of year 1 monitoring report"}, 
+        {label: "6 - End of year 2 monitoring report", value: "6 - End of year 2 monitoring report"},
+        {label: "7 - End of year 3 monitoring report", value: "7 - End of year 3 monitoring report"}, 
+        {label: "8 - End of year 4 monitoring report", value: "8 - End of year 4 monitoring report"}, 
+        {label: "9 - End of year 5 monitoring report", value: "9 - End of year 5 monitoring report"}, 
+        {label: "10 - End of year 6 monitoring report", value: "10 - End of year 6 monitoring report"},
+        {label: "11 - Final monitoring report", value: "11 - Final monitoring report"}
+      ]
     }
   },
   created() {
@@ -205,6 +244,9 @@ export default {
     this.loading = false;
   },
   methods: {
+    calculateDifferenceInCF(event) {
+      this.filteredValues = event.filteredValue.map(p => p.differenceCF).reduce((a, b) => a + b, 0)
+    },
     getProjects() {
 
       this.axios.get('/projects/initialProjects', { params: {
