@@ -135,7 +135,7 @@
         <template #footer>
             <div class="text-center">
               <h2 v-if="Object.values(filters).length > 0 && Object.values(filters).some(v => v.value)">Difference in CF between the "Design" and "Monitoring" phases: 
-                <Badge :value="filteredValues + ' t CO₂e'" size="xlarge" class="currentCF" :severity="getTextColorFromCFIndex(filteredValues)"
+                <Badge :value="round(filteredValues) + ' t CO₂e'" size="xlarge" class="currentCF" :severity="getTextColorFromCFIndex(filteredValues)"
                   v-tooltip.bottom="'Monitoring Phase CF'"/>
               </h2>
             </div>
